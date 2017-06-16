@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using System.Text;
-using Plugin.Connectivity;
+//using Plugin.Connectivity;
 using Serilog;
 using System.Collections;
 using System.Collections.Generic;
@@ -82,8 +82,8 @@ namespace Cascade
 		}
 		
 		public static void EnsureNetwork () {
-			if (!CrossConnectivity.Current.IsConnected)
-				throw new NoNetworkException ("Not connected to the internet");
+//			if (!CrossConnectivity.Current.IsConnected)
+//				throw new NoNetworkException ("Not connected to the internet");
 		}
 
 		public static void EnsureAuthorized (HttpResponseMessage aResponse, string aMessage=null) {
