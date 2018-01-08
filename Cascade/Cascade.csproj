@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -42,14 +45,27 @@
     <Compile Include="BzJsonSerialization.cs" />
     <Compile Include="CascadeDataLayer.cs" />
     <Compile Include="CascadeModelJsonConverter.cs" />
-    <Compile Include="CascadeStoreResponse.cs" />
     <Compile Include="CascadeUtils.cs" />
+    <Compile Include="Gopher.cs" />
     <Compile Include="HttpService.cs" />
     <Compile Include="ICascadeModel.cs" />
     <Compile Include="ICascadeStore.cs" />
+    <Compile Include="OpResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestOp.cs" />
     <Compile Include="RestServerStore.cs" />
     <Compile Include="SqliteNetStore.cs" />
+    <Compile Include="Utils\TypeExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Cascade.csproj" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StandardExceptionsDotNet\StandardExceptions\StandardExceptions.csproj">
+      <Project>{279B3169-C79F-497D-A77B-E6E10E0CB2AA}</Project>
+      <Name>StandardExceptions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

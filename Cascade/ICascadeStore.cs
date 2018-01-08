@@ -2,15 +2,20 @@
 using System.Threading.Tasks;
 
 namespace Cascade {
-	public interface ICascadeStore
-	{
-		// may leak exceptions for connection etc
-		// do not leak exceptions for not found
-		Task<CascadeStoreResponse<M>> Read<M>(string aResourceId) where M : class, ICascadeModel, new();
-		Task<CascadeStoreResponse<M>> Read<M>(long aResourceId) where M : class, ICascadeModel, new();
-		Task<CascadeStoreResponse<List<M>>> ReadAll<M>() where M : class, ICascadeModel, new();
-		Task<CascadeStoreResponse<M>> Write<M>(M value) where M : class, ICascadeModel, new();
-		Task<CascadeStoreResponse<M>> Destroy<M>(string aResourceId) where M : class, ICascadeModel, new();
-		Task<CascadeStoreResponse<M>> DestroyExcept<M>(IEnumerable<string> aResourceIds) where M : class, ICascadeModel, new();
+
+	public interface ICascadeStore {
+		bool Local { get; }
+		bool Origin { get; }
+		
+		Task<OpResponse> Create(RequestOp aRequestOp);		
+		Task<OpResponse> Read(RequestOp aRequestOp);
+		Task<OpResponse> ReadAll(RequestOp aRequestOp);
+		Task<OpResponse> Update(RequestOp aRequestOp);
+		Task<OpResponse> Destroy(RequestOp aRequestOp);
+		Task<OpResponse> Execute(RequestOp aRequestOp);
+		
+		void Replace(ICascadeModel aModel);
+		void KeySet(string aKey, object aValue);
+		object KeyGet(string aKey, object aDefault = null);				
 	}
 }

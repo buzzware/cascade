@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Cascade {
 
-	public class CascadeModelJsonConverter : BzCreationConverter<M> {
+	public class CascadeModelJsonConverter<M> : BzCreationConverter<M> {
 
 		protected override M Create(Type aType, JObject aJObject)
 		{

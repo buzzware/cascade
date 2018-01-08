@@ -157,7 +157,7 @@ namespace Buzzware {
 					p.Readable = false;
 			}						
 			
-			var tpa = type.GetAttribute<TypePropertyAttribute>();
+			var tpa = type.GetCustomAttribute<TypePropertyAttribute>();		// was var tpa = type.GetAttribute<TypePropertyAttribute>();
 			if (tpa != null) {
 				var prop = createProperty(type, tpa.Property, type.Name);
 				result.Add(prop);
