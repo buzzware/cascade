@@ -31,12 +31,13 @@ namespace Cascade
 		//
 		
 		public async Task<M> Read<M>(RequestOp aRequestOp) //string aResourceId, bool aFresh = true, bool aFallback = true)
-			where M : class, ICascadeModel, new()
-		{
+			where M : class, ICascadeModel, new() {
+			aRequestOp.Verb = RequestOp.Verbs.Read;
 			var gopher = new Gopher(this,aRequestOp);
 			var response = await gopher.Run();
-			return response.ResultObject as M;
-
+			var result = response.ResultObject;
+			response.ResultKey = aRequestOp.ResultKey ?? GetKeyFrom(result);
+			return result as M;
 //			CascadeUtils.EnsureIsResourceId(aRequestOp.Id);
 //			OpResponse localResponse = null;
 //			OpResponse remoteResponse = null;
@@ -125,6 +126,7 @@ namespace Cascade
 			where M : class,
 			ICascadeModel, new()
 		{
+			aRequestOp.Verb = RequestOp.Verbs.ReadAll;			
 			return null;
 //			OpResponse<List<M>> localResponse = null;
 //			OpResponse<List<M>> remoteResponse = null;
@@ -208,7 +210,9 @@ namespace Cascade
 //			return result;
 		}
 
-		public async Task<M> Write<M>(RequestOp aRequestOp) where M : class, ICascadeModel, new() {
+		public async Task<M> Update<M>(RequestOp aRequestOp) where M : class, ICascadeModel, new() {
+			aRequestOp.Verb = RequestOp.Verbs.Update;
+
 			return null;
 //			M result = default(M);
 //			OpResponse<M> localResponse = null;
@@ -290,7 +294,25 @@ namespace Cascade
 				case RequestOp.Verbs.Execute:
 					return aStore.Execute(aRequestOp);
 			}
-			return null;
+			throw new StandardException("Unsupported Verb "+aRequestOp.Verb.ToString());
+		}
+
+		public string GetKeyFrom(object aModel) {
+			return GetResourceFrom(aModel) + "__" + GetIdFrom(aModel);
+		}
+
+		private string GetIdFrom(object aModel) {
+			ICascadeModel cm = aModel as ICascadeModel;
+			if (cm==null)
+				throw new StandardException("aModel is not a ICascadeModel");
+			return cm.GetResourceId();
+		}
+
+		public string GetResourceFrom(object aModel) {
+			ICascadeModel cm = aModel as ICascadeModel;
+			if (cm==null)
+				throw new StandardException("aModel is not a ICascadeModel");
+			return cm.GetResource();
 		}
 	}
 }
