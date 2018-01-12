@@ -43,7 +43,9 @@ namespace Test {
 					return null;
 				}
 			});
+			
 			var opResponse = await cdl.Read<Thing>(new RequestOp() {Id = "1"});
+			
 			Assert.That(opResponse.Colour,Is.EqualTo("red"));
 			Assert.That(opResponse.Size,Is.EqualTo("large"));
 			Assert.That(opResponse.Id,Is.EqualTo(1));

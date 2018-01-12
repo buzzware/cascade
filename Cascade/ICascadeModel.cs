@@ -1,7 +1,7 @@
 ﻿namespace Cascade {
 	public interface ICascadeModel
 	{
-		string GetResource();		
-		string GetResourceId();
+		string GetResource();			// rename to CascadeResource
+		string GetResourceId();		// rename to CascadeId
 	}
 }

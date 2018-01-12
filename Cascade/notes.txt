@@ -1,0 +1,5 @@
+* add OpResponse ReadDocument(url or key) and ReadDocument<DataDocModel>(url or key)
++ kept in OpResponse as JSON
++ cached in layers as JSON
++ optionally manufactured as DataDocModel just before returning
+
