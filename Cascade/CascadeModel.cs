@@ -1,7 +1,13 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.ComponentModel;
+using PropertyChanged;
 
 namespace Cascade {
-	public abstract class CascadeModel : ICascadeModel {
+	
+	[AddINotifyPropertyChangedInterface]
+	public abstract class CascadeModel : ICascadeModel,INotifyPropertyChanged {
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
 		public string GetResource() {
 			return this.GetType().Name;
 		}
