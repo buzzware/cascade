@@ -26,6 +26,11 @@ namespace Cascade
 		{
 		}
 
+		// see https://stackoverflow.com/questions/17480990/get-name-of-generic-class-without-tilde
+		public string ResourceFromType<T>() {
+			return typeof(T).Name.Split('`')[0];
+		}
+				
 		//
 		//	CORE METHODS
 		//
@@ -33,6 +38,8 @@ namespace Cascade
 		public async Task<M> Read<M>(RequestOp aRequestOp) //string aResourceId, bool aFresh = true, bool aFallback = true)
 			where M : class, ICascadeModel, new() {
 			aRequestOp.Verb = RequestOp.Verbs.Read;
+			if (aRequestOp.Key == null)
+				aRequestOp.Key = CascadeUtils.JoinKey(ResourceFromType<M>(),aRequestOp.Id);
 			var gopher = new Gopher(this,aRequestOp);
 			var response = await gopher.Run();
 			var result = response.ResultObject;
@@ -121,7 +128,6 @@ namespace Cascade
 //			return result;
 		}
 
-		
 		public async Task<List<M>> ReadAll<M>(RequestOp aRequestOp)
 			where M : class,
 			ICascadeModel, new()

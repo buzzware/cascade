@@ -16,11 +16,11 @@ namespace Test {
 
 	[TestFixture]
 	public class CascadeSimpleReadTests {
-		[Test]
-		public async Task SimpleRead() {
+		//[Test]
+		public async Task SimpleOneStoreRead() {
 			var cdl = new CascadeDataLayer();
 			cdl.Layers.Add(new MockStore(origin:true,local:true){
-				handleOp = async (aOp) => {
+				handleOp = async (store,aOp) => {
 					switch (aOp.Verb) {
 						case RequestOp.Verbs.Read:							
 							var thing = new Thing(){
@@ -50,6 +50,59 @@ namespace Test {
 			Assert.That(opResponse.Size,Is.EqualTo("large"));
 			Assert.That(opResponse.Id,Is.EqualTo(1));
 		}
-	}
 
+		[Test]
+		public async Task TwoStoreReadDataNotLocal() {
+			var cdl = new CascadeDataLayer();
+			var origin = new MockStore(origin: true, local: false){
+				handleOp = async (store,aOp) => {
+					switch (aOp.Verb) {
+						case RequestOp.Verbs.Read:
+							var thing = new Thing(){
+								Id = CascadeUtils.LongId(aOp.Id),
+								Colour = "red",
+								Size = "large"
+							};
+							var resultKey = aOp.ResultKey ?? cdl.GetKeyFrom(thing);
+							return new OpResponse(){
+								Connected = true,
+								Present = true,
+								Index = aOp.Index,
+								ResultKey = resultKey,
+								Results = new Dictionary<string, object>(){
+									{resultKey, thing}
+								}
+							};
+							break;
+					}
+					return null;
+				}
+			};
+			cdl.Layers.Add(origin);
+			var localStore = new MockStore(origin: false, local: true){
+				handleOp = async (store,aOp) => {
+					switch (aOp.Verb) {
+						case RequestOp.Verbs.Read:
+							var storeResponse = new OpResponse(){
+								Connected = true,
+								Index = aOp.Index,
+								Present = store.cache.ContainsKey(aOp.Key)
+							};							
+							if (storeResponse.Present)
+								storeResponse.SetResult(aOp.Key,store.cache[aOp.Key]);
+							return storeResponse;
+							break;
+					}
+					return null;
+				}
+			};
+			cdl.Layers.Add(localStore);
+						
+			var opResponse = await cdl.Read<Thing>(new RequestOp() {Id = "1"});
+			
+			Assert.That(opResponse.Colour,Is.EqualTo("red"));
+			Assert.That(opResponse.Size,Is.EqualTo("large"));
+			Assert.That(opResponse.Id,Is.EqualTo(1));
+		}
+	}
 }

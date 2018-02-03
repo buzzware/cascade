@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Xsl.Runtime;
 
 namespace Cascade {
 	public class OpResponse {
@@ -19,6 +20,14 @@ namespace Cascade {
 				else
 					return null;
 			}
+		}
+
+		// helper function
+		public void SetResult(string aResultKey, object aValue) {
+			if (Results==null)
+				Results = new Dictionary<string, object>();
+			ResultKey = aResultKey;
+			Results[ResultKey] = aValue;
 		}
 		
 		// generic type M is only used for vanity properties/methods

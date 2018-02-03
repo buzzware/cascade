@@ -58,5 +58,12 @@ namespace Cascade {
 		}
 
 
+		public static string JoinKey(string resource, string id) {
+			if (resource==null)
+				throw new ArgumentException("A key needs a resource");
+			if (id == null)
+				return resource;
+			return resource + "__" + id;
+		}
 	}
 }
