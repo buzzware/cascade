@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using StandardExceptions;
 
@@ -30,13 +32,28 @@ namespace Cascade
 		public string ResourceFromType<T>() {
 			return typeof(T).Name.Split('`')[0];
 		}
-				
+
+		private string GetConfigIntegrityError() {
+			if (Layers.Count > 0) {
+				if (!Layers[0].Origin)
+					return "The first layer must be marked Origin = true";
+				for (int i = 0; i < Layers.Count; i++) {
+					if (i==0)
+						continue;
+					if (Layers[i].Origin)
+						return "Only the first layer should be marked Origin = true";
+				}
+			}
+			return null;
+		}
+		
 		//
 		//	CORE METHODS
 		//
 		
 		public async Task<M> Read<M>(RequestOp aRequestOp) //string aResourceId, bool aFresh = true, bool aFallback = true)
 			where M : class, ICascadeModel, new() {
+			CheckConfigIntegrity();
 			aRequestOp.Verb = RequestOp.Verbs.Read;
 			if (aRequestOp.Key == null)
 				aRequestOp.Key = CascadeUtils.JoinKey(ResourceFromType<M>(),aRequestOp.Id);
@@ -128,10 +145,19 @@ namespace Cascade
 //			return result;
 		}
 
+		private void CheckConfigIntegrity() {
+			var error = GetConfigIntegrityError();
+			if (error==null)
+				return;
+			throw new ConfigurationException(error);
+		}
+
+
 		public async Task<List<M>> ReadAll<M>(RequestOp aRequestOp)
 			where M : class,
 			ICascadeModel, new()
 		{
+			CheckConfigIntegrity();
 			aRequestOp.Verb = RequestOp.Verbs.ReadAll;			
 			return null;
 //			OpResponse<List<M>> localResponse = null;
