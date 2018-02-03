@@ -8,10 +8,10 @@ namespace Cascade {
 		
 		public event PropertyChangedEventHandler PropertyChanged;
 		
-		public string GetResource() {
+		public string CascadeResource() {
 			return this.GetType().Name;
 		}
 
-		public abstract string GetResourceId();
+		public abstract string CascadeId();
 	}
 }

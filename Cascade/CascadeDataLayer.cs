@@ -305,14 +305,14 @@ namespace Cascade
 			ICascadeModel cm = aModel as ICascadeModel;
 			if (cm==null)
 				throw new StandardException("aModel is not a ICascadeModel");
-			return cm.GetResourceId();
+			return cm.CascadeId();
 		}
 
 		public string GetResourceFrom(object aModel) {
 			ICascadeModel cm = aModel as ICascadeModel;
 			if (cm==null)
 				throw new StandardException("aModel is not a ICascadeModel");
-			return cm.GetResource();
+			return cm.CascadeResource();
 		}
 	}
 }
