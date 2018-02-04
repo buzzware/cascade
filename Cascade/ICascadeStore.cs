@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 namespace Cascade {
 
 	public interface ICascadeStore {
+		
+		CascadeDataLayer Cascade { get; }
+		
 		bool Local { get; }
 		bool Origin { get; }
 		

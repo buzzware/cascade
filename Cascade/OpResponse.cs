@@ -12,7 +12,8 @@ namespace Cascade {
 		public string ResultKey;
 
 		public object Error;
-		
+		public bool FromOrigin;	// was this data from the Origin store ? 
+
 		public object ResultObject {
 			get {
 				if (Results != null && ResultKey != null && Results.ContainsKey(ResultKey))

@@ -15,6 +15,7 @@ namespace Cascade {
 			OpResponse opResponse;
 			if (RequestOp.IsWriteVerb(requestOp.Verb) || requestOp.Fresh) {
 				opResponse = await cascadeDataLayer.Do(cascadeDataLayer.originStore, requestOp);
+				opResponse.FromOrigin = true;
 				if (opResponse.Connected && (opResponse.ResultObject != null || requestOp.Verb == RequestOp.Verbs.Destroy) &&
 				    opResponse.Error == null) {
 					if (cascadeDataLayer.Layers.Count > 1)
@@ -114,7 +115,9 @@ namespace Cascade {
 			seq.Reverse();
 			foreach (var layer in seq) {
 				var response = await cascadeDataLayer.Do(layer, requestOp1);
+				response.FromOrigin = layer.Origin;
 				if (response.Connected && response.Present) {
+					CascadeWriteDown(response, cascadeDataLayer.Layers.IndexOf(layer) + 1);
 					return response;
 				}
 			}

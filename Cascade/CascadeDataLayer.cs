@@ -38,10 +38,10 @@ namespace Cascade
 				if (!Layers[0].Origin)
 					return "The first layer must be marked Origin = true";
 				for (int i = 0; i < Layers.Count; i++) {
-					if (i==0)
-						continue;
-					if (Layers[i].Origin)
+					if (i>0 && Layers[i].Origin)
 						return "Only the first layer should be marked Origin = true";
+					if (Layers[i].Cascade != this)
+						return "All layers must have Cascade set to this CascadeDataLayer";
 				}
 			}
 			return null;
@@ -53,15 +53,8 @@ namespace Cascade
 		
 		public async Task<M> Read<M>(RequestOp aRequestOp) //string aResourceId, bool aFresh = true, bool aFallback = true)
 			where M : class, ICascadeModel, new() {
-			CheckConfigIntegrity();
-			aRequestOp.Verb = RequestOp.Verbs.Read;
-			if (aRequestOp.Key == null)
-				aRequestOp.Key = CascadeUtils.JoinKey(ResourceFromType<M>(),aRequestOp.Id);
-			var gopher = new Gopher(this,aRequestOp);
-			var response = await gopher.Run();
-			var result = response.ResultObject;
-			response.ResultKey = aRequestOp.ResultKey ?? GetKeyFrom(result);
-			return result as M;
+			var response = await ReadResponse<M>(aRequestOp);
+			return response.ResultObject as M;
 //			CascadeUtils.EnsureIsResourceId(aRequestOp.Id);
 //			OpResponse localResponse = null;
 //			OpResponse remoteResponse = null;
@@ -143,6 +136,18 @@ namespace Cascade
 //				}
 //			}
 //			return result;
+		}
+
+		public async Task<OpResponse> ReadResponse<M>(RequestOp aRequestOp) where M : class, ICascadeModel, new() {
+			CheckConfigIntegrity();
+			aRequestOp.Verb = RequestOp.Verbs.Read;
+			if (aRequestOp.Key == null)
+				aRequestOp.Key = CascadeUtils.JoinKey(ResourceFromType<M>(), aRequestOp.Id);
+			var gopher = new Gopher(this, aRequestOp);
+			var response = await gopher.Run();
+			var result = response.ResultObject;
+			response.ResultKey = aRequestOp.ResultKey ?? GetKeyFrom(result);
+			return response;
 		}
 
 		private void CheckConfigIntegrity() {

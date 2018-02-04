@@ -5,9 +5,13 @@ using Cascade;
 
 namespace Test {
 	public class MockStore : ICascadeStore {
+		
+		public CascadeDataLayer Cascade { get; }
+		
 		public Func<MockStore,RequestOp,Task<OpResponse>> handleOp;
 
-		public MockStore(bool origin, bool local) {
+		public MockStore(CascadeDataLayer cascade, bool origin, bool local) {
+			Cascade = cascade;
 			Origin = origin;
 			Local = local;
 		}
@@ -41,15 +45,15 @@ namespace Test {
 		}
 
 		public void Replace(ICascadeModel aModel) {
-			throw new NotImplementedException();
+			KeySet(Cascade.GetKeyFrom(aModel),aModel);
 		}
 
 		public void KeySet(string aKey, object aValue) {
-			throw new NotImplementedException();
+			cache[aKey] = aValue;
 		}
 
 		public object KeyGet(string aKey, object aDefault = null) {
-			throw new NotImplementedException();
+			return cache.ContainsKey(aKey) ? cache[aKey] : aDefault;
 		}
 	}
 }

@@ -19,7 +19,7 @@ namespace Test {
 		//[Test]
 		public async Task SimpleOneStoreRead() {
 			var cdl = new CascadeDataLayer();
-			cdl.Layers.Add(new MockStore(origin:true,local:true){
+			cdl.Layers.Add(new MockStore(cdl,origin:true,local:true){
 				handleOp = async (store,aOp) => {
 					switch (aOp.Verb) {
 						case RequestOp.Verbs.Read:							
@@ -54,7 +54,7 @@ namespace Test {
 		[Test]
 		public async Task TwoStoreReadDataNotLocal() {
 			var cdl = new CascadeDataLayer();
-			var origin = new MockStore(origin: true, local: false){
+			var origin = new MockStore(cdl,origin: true, local: false){
 				handleOp = async (store,aOp) => {
 					switch (aOp.Verb) {
 						case RequestOp.Verbs.Read:
@@ -79,7 +79,8 @@ namespace Test {
 				}
 			};
 			cdl.Layers.Add(origin);
-			var localStore = new MockStore(origin: false, local: true){
+			
+			var localStore = new MockStore(cdl,origin: false, local: true){
 				handleOp = async (store,aOp) => {
 					switch (aOp.Verb) {
 						case RequestOp.Verbs.Read:
@@ -98,11 +99,21 @@ namespace Test {
 			};
 			cdl.Layers.Add(localStore);
 						
-			var opResponse = await cdl.Read<Thing>(new RequestOp() {Id = "1"});
+			var opResponse = await cdl.ReadResponse<Thing>(new RequestOp() {Id = "1"});
+			var result = opResponse.ResultObject as Thing;
 			
-			Assert.That(opResponse.Colour,Is.EqualTo("red"));
-			Assert.That(opResponse.Size,Is.EqualTo("large"));
-			Assert.That(opResponse.Id,Is.EqualTo(1));
+			Assert.That(opResponse.FromOrigin,Is.True);
+			Assert.That(result.Colour,Is.EqualTo("red"));
+			Assert.That(result.Size,Is.EqualTo("large"));
+			Assert.That(result.Id,Is.EqualTo(1));
+			
+			opResponse = await cdl.ReadResponse<Thing>(new RequestOp() {Id = "1"});
+			result = opResponse.ResultObject as Thing;
+
+			Assert.That(opResponse.FromOrigin,Is.False);
+			Assert.That(result.Colour,Is.EqualTo("red"));
+			Assert.That(result.Size,Is.EqualTo("large"));
+			Assert.That(result.Id,Is.EqualTo(1));			
 		}
 	}
 }
