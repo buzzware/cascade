@@ -113,7 +113,16 @@ namespace Test {
 			Assert.That(opResponse.FromOrigin,Is.False);
 			Assert.That(result.Colour,Is.EqualTo("red"));
 			Assert.That(result.Size,Is.EqualTo("large"));
-			Assert.That(result.Id,Is.EqualTo(1));			
+			Assert.That(result.Id,Is.EqualTo(1));
+			
+			opResponse = await cdl.ReadResponse<Thing>(new RequestOp() {Id = "1", Fresh = true});
+			var result2 = opResponse.ResultObject as Thing;
+
+			Assert.That(opResponse.FromOrigin,Is.True);
+			Assert.That(result2.Colour,Is.EqualTo("red"));
+			Assert.That(result2.Size,Is.EqualTo("large"));
+			Assert.That(result2.Id,Is.EqualTo(1));			
+			Assert.That(result2,Is.Not.SameAs(result));
 		}
 	}
 }
