@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cascade", "Cascade\Cascade.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{DB17FD80-622A-476B-936F-3891E13479E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardExceptions", "..\StandardExceptionsDotNet\StandardExceptions\StandardExceptions.csproj", "{279B3169-C79F-497D-A77B-E6E10E0CB2AA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CascadeCacheRnD", "CascadeCacheRnD\CascadeCacheRnD.csproj", "{249DD8E9-D6A6-40CF-BAEA-654715D51B71}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{DB17FD80-622A-476B-936F-3891E13479E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB17FD80-622A-476B-936F-3891E13479E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB17FD80-622A-476B-936F-3891E13479E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{279B3169-C79F-497D-A77B-E6E10E0CB2AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{279B3169-C79F-497D-A77B-E6E10E0CB2AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{279B3169-C79F-497D-A77B-E6E10E0CB2AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{279B3169-C79F-497D-A77B-E6E10E0CB2AA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{249DD8E9-D6A6-40CF-BAEA-654715D51B71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{249DD8E9-D6A6-40CF-BAEA-654715D51B71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{249DD8E9-D6A6-40CF-BAEA-654715D51B71}.Release|Any CPU.ActiveCfg = Release|Any CPU

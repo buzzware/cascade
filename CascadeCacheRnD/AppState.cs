@@ -4,11 +4,9 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using PropertyChanged;
 
 namespace Cascade {
 
-	[AddINotifyPropertyChangedInterface]
 	public class Account : CascadeModel {
 		//public event PropertyChangedEventHandler PropertyChanged;
 
