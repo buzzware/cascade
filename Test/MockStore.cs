@@ -18,7 +18,8 @@ namespace Test {
 
 		public bool Local { get; }
 		public bool Origin { get; }
-		public Dictionary<string,object> cache = new Dictionary<string, object>();
+		public Dictionary<string,object> Models = new Dictionary<string, object>();
+		public Dictionary<string,string> JsonStore = new Dictionary<string, string>();
 				
 		public Task<OpResponse> Create(RequestOp aRequestOp) {
 			return handleOp != null ? handleOp(this,aRequestOp) : null;
@@ -45,15 +46,15 @@ namespace Test {
 		}
 
 		public void Replace(ICascadeModel aModel) {
-			KeySet(Cascade.GetKeyFrom(aModel),aModel);
+			Models[Cascade.GetKeyFrom(aModel)] = aModel;
 		}
 
-		public void KeySet(string aKey, object aValue) {
-			cache[aKey] = aValue;
+		public void KeySet(string aKey, string aValue) {
+			JsonStore[aKey] = aValue;
 		}
 
-		public object KeyGet(string aKey, object aDefault = null) {
-			return cache.ContainsKey(aKey) ? cache[aKey] : aDefault;
+		public object KeyGet(string aKey, string aDefault = null) {
+			return JsonStore.ContainsKey(aKey) ? JsonStore[aKey] : aDefault;
 		}
 	}
 }

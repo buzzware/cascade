@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using StandardExceptions;
 
 namespace Cascade
@@ -351,5 +352,10 @@ namespace Cascade
 				throw new StandardException("aModel is not a ICascadeModel");
 			return cm.CascadeResource();
 		}
+
+		public string JsonSerialize(object source) {
+			return JsonConvert.SerializeObject(source);
+		}
+		
 	}
 }

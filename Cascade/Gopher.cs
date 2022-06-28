@@ -105,7 +105,7 @@ namespace Cascade {
 				if (opResponse.ResultObject is ICascadeModel)
 					layer.Replace(opResponse.ResultObject as ICascadeModel);
 				else
-					layer.KeySet(opResponse.ResultKey, opResponse.ResultObject);
+					layer.KeySet(opResponse.ResultKey, cascadeDataLayer.JsonSerialize(opResponse.ResultObject));
 			}
 		}
 

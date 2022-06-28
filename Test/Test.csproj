@@ -45,6 +45,7 @@
     <Compile Include="CascadeSimpleReadTests.cs" />
     <Compile Include="MockStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Thing.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cascade\Cascade.csproj">
