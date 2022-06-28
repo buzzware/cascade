@@ -1,43 +1,89 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Cascade {
+	
+	public enum RequestVerb {
+		None,
+		Create,
+		Read,
+		Update,
+		Destroy,
+		Query,
+		Execute
+	};
+	
 	public class RequestOp {
+		public const int FRESHNESS_DEFAULT = 5*60;
 
-		public enum Verbs {
-			None,
-			Create,
-			Read,
-			ReadAll,
-			Update,
-			Destroy,
-			Execute
-		};
-
-		public static bool IsWriteVerb(Verbs aVerb) {
-			return aVerb == RequestOp.Verbs.Create ||
-			       aVerb == RequestOp.Verbs.Update ||
-			       aVerb == RequestOp.Verbs.Execute;
+		public RequestOp(
+			long timeMs, 
+			Type type, 
+			RequestVerb verb, 
+			object? id, 
+			int freshnessSeconds
+		) {
+			TimeMs = timeMs;
+			Type = type;
+			Verb = verb;
+			Id = id;
+			FreshnessSeconds = freshnessSeconds;
 		}
 
-		public static Verbs VerbFromString(string aString) {
-			Verbs verb;
-			return Verbs.TryParse(aString, true, out verb) ? verb : Verbs.None;
+		public static bool IsWriteVerb(RequestVerb aVerb) {
+			return aVerb == RequestVerb.Create ||
+			       aVerb == RequestVerb.Update ||
+			       aVerb == RequestVerb.Execute;
 		}
-				
-		public Verbs Verb;		// what we are doing
-		public int Index;		
+
+		public static RequestVerb VerbFromString(string aString) {
+			RequestVerb verb;
+			return RequestVerb.TryParse(aString, true, out verb) ? verb : RequestVerb.None;
+		}
+
+		public readonly long TimeMs;
+		public readonly Type Type;
+		public readonly RequestVerb Verb;		// what we are doing
+		public readonly object? Id;			// eg. 34
+		public readonly string? Key;		// eg. Products or Products__34
+		
+		
+		public int? IdAsInt {
+			get {
+				if (Id == null)
+					return null;
+				if ((Id is int) || (Id is long))
+					return (int)Id;
+				return null;
+			}
+		}
+
+		public long? IdAsLong {
+			get {
+				if (Id == null)
+					return null;
+				if ((Id is int) || (Id is long))
+					return (long)Id;
+				return null;
+			}
+		}
+
+		public String? IdAsString {
+			get {
+				if (Id == null)
+					return null;
+				if ((Id is int) || (Id is long))
+					return ((long)Id).ToString();
+				return null;
+			}
+		}
 		
 		// only one of Key or Id would normally be used
-		public string Key;		// eg. Products or Products__34
-		public string Id;			// eg. 34
-		
-		public object Value;			// the value we are writing/updating/creating with
-		public string ResultKey;	// a key for storing the result value under
 
-		public bool Fresh = false;		// must go direct to the server first instead of caches
-		public bool Fallback = true;	// when the first source request fails (eg. does not contain or is offline), try other sources
+		public readonly int FreshnessSeconds = FRESHNESS_DEFAULT;
+		public readonly bool Fallback = true;	// when the first source request fails (eg. does not contain or is offline), try other sources
 
-		public IDictionary<string, string> Params;	// app specific paramters for the request
-		public bool Exclusive = false;				// probably should deprecate this
+		public readonly IDictionary<string, string> Params;	// app specific paramters for the request
 	}
+
 }
