@@ -9,28 +9,28 @@ namespace Cascade {
 		public OpResponse(
 			RequestOp requestOp,
 			long timeMs,
-			bool? connected = null,
-			bool? present = null,
-			object? result = null,
-			long? arrivedAtMs = null
+			bool connected,
+			bool present,
+			long? arrivedAtMs,
+			object? result
 		) {
 			RequestOp = requestOp;
 			TimeMs = timeMs;
 			Connected = connected;
 			Present = present;
-			Result = result;
 			ArrivedAtMs = arrivedAtMs;
+			Result = result;
 		}
 
 		public readonly RequestOp RequestOp;
 		public readonly long TimeMs;
-		public readonly bool? Connected;	// layer available ?
-		public readonly bool? Present;		// present in cache? Result can be null if known to not exist on origin
+		public readonly bool Connected;	// layer available ?
+		public readonly bool Present;		// present in cache? Result can be null if known to not exist on origin
 		public readonly object? Result;								// for create, read, update
 		public long? ArrivedAtMs;
 
 		public bool PresentAndFresh() => 
-			Connected==true && Present == true && ArrivedAtMs != null && (TimeMs-ArrivedAtMs) < RequestOp.FreshnessSeconds*1000;
+			Connected==true && Present == true && (TimeMs-ArrivedAtMs) < RequestOp.FreshnessSeconds*1000;
 		// 		
 		// public int Index;		
 		// public IDictionary<string, object> Results;		// we store results as object internally

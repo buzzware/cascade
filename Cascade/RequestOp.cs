@@ -16,6 +16,16 @@ namespace Cascade {
 	public class RequestOp {
 		public const int FRESHNESS_DEFAULT = 5*60;
 
+		public static RequestOp ReadOp<Model>(object id, int freshnessSeconds = 0) {
+			return new RequestOp(
+				CascadeUtils.NowMs,
+				typeof(Model),
+				RequestVerb.Read,
+				id,
+				freshnessSeconds: freshnessSeconds
+			);
+		}
+		
 		public RequestOp(
 			long timeMs, 
 			Type type, 

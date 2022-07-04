@@ -1,9 +1,19 @@
 ﻿using System;
+using deniszykov.TypeConversion;
 
 namespace Cascade {
 	public static class CascadeUtils {
-		
+		private static TypeConversionProvider? _converter;
+
 		public static long NowMs => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+		public static object? ConvertTo(Type type, object value, object? defaultValue = null) {
+			if (_converter==null)
+				_converter = new TypeConversionProvider();
+			object? result;
+			var success = _converter.GetConverter(value.GetType(), type).TryConvert(value, out result);
+			return success ? result : defaultValue;
+		}
 		
 		// public static string[] SplitKey(string aKey) {
 		// 	return aKey.Split(new string[] {"__"},StringSplitOptions.RemoveEmptyEntries);
