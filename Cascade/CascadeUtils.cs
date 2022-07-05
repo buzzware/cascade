@@ -7,7 +7,9 @@ namespace Cascade {
 
 		public static long NowMs => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-		public static object? ConvertTo(Type type, object value, object? defaultValue = null) {
+		public static object? ConvertTo(Type type, object? value, object? defaultValue = null) {
+			if (value == null)
+				return null;
 			if (_converter==null)
 				_converter = new TypeConversionProvider();
 			object? result;

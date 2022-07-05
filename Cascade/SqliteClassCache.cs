@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Cascade;
 using SQLite;
+using Test;
 
-namespace Test {
+namespace Cascade {
 
 	public class CascadeModelMeta {
 		[PrimaryKey]
@@ -22,12 +22,12 @@ namespace Test {
 			_database = database;
 		}
 
-		public CascadeDataLayer Cascade { get; set; }
+		public CascadeDataLayer? Cascade { get; set; }
 		
 		public async Task<OpResponse> Fetch(RequestOp requestOp) {
 			if (requestOp.Type != typeof(Model))
 				throw new Exception("requestOp.Type != typeof(Model)");
-			var id = (IdType) CascadeUtils.ConvertTo(typeof(IdType), requestOp.Id); //  ((IdType)requestOp.Id)!;
+			var id = (IdType?) CascadeUtils.ConvertTo(typeof(IdType), requestOp.Id); //  ((IdType)requestOp.Id)!;
 			if (id == null)
 				throw new Exception("Unable to get right value for Id");
 			
@@ -35,7 +35,7 @@ namespace Test {
 				var meta = await _database.Get<CascadeModelMeta>(CascadeModelMeta.GenerateId<Model>(id));
 				return new OpResponse(
 					requestOp,
-					Cascade.NowMs,
+					Cascade!.NowMs,
 					connected: true,
 					exists: true,
 					result: await _database.Get<Model>(id),
@@ -45,7 +45,7 @@ namespace Test {
 			else {
 				return new OpResponse(
 					requestOp,
-					Cascade.NowMs,
+					Cascade!.NowMs,
 					connected: true,
 					exists: false,
 					result: null,

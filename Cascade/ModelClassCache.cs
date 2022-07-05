@@ -16,7 +16,7 @@ namespace Cascade {
 		public async Task<OpResponse> Fetch(RequestOp requestOp) {
 			if (requestOp.Type != typeof(Model))
 				throw new Exception("requestOp.Type != typeof(Model)");
-			var id = (IdType) CascadeUtils.ConvertTo(typeof(IdType), requestOp.Id); //  ((IdType)requestOp.Id)!;
+			var id = (IdType?) CascadeUtils.ConvertTo(typeof(IdType), requestOp.Id);  //  ((IdType)requestOp.Id)!;
 			if (id == null)
 				throw new Exception("Unable to get right value for Id");
 
@@ -43,7 +43,10 @@ namespace Cascade {
 		}
 
 		public Task Store(object id, object model, long arrivedAt) {
-			return Store((IdType)id, (Model)model, arrivedAt);
+			var idTyped = (IdType?) CascadeUtils.ConvertTo(typeof(IdType), id);
+			if (idTyped == null)
+				throw new Exception("Bad id");
+			return Store(idTyped, (Model)model, arrivedAt);
 		}
 
 		public async Task Store(IdType id, Model model, long arrivedAt) {

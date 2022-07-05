@@ -9,19 +9,14 @@ namespace Test {
 	
 	[TestFixture]
 	public class ReadTests {
-		[Test]
-		public async Task ReadWithoutCache() {
-			var origin = new MockOrigin();
-			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig());
-			var thing = await cascade.Read<Thing>(5);
-			Assert.AreEqual(5,thing!.Id);
-		}
 		
-		[Test]
-		public async Task ReadWithModelCachesMultitest() {
-			var origin = new MockOrigin(nowMs:1000,handleRequest: (origin, requestOp) => {
+		MockOrigin origin;
+
+		[SetUp]
+		public void SetUp() {
+			origin = new MockOrigin(nowMs:1000,handleRequest: (origin, requestOp) => {
 				var nowMs = origin.NowMs;
-				var thing = new Thing(requestOp.IdAsInt ?? 0);
+				var thing = new Thing() { Id = requestOp.IdAsInt ?? 0 };
 				thing.UpdatedAtMs = requestOp.TimeMs;
 				return Task.FromResult(new OpResponse(
 					requestOp: requestOp,
@@ -32,6 +27,17 @@ namespace Test {
 					arrivedAtMs: nowMs
 				));
 			});
+		}
+		
+		[Test]
+		public async Task ReadWithoutCache() {
+			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig());
+			var thing = await cascade.Read<Thing>(5);
+			Assert.AreEqual(5,thing!.Id);
+		}
+		
+		[Test]
+		public async Task ReadWithModelCachesMultitest() {
 			var thingModelStore1 = new ModelClassCache<Thing, long>();
 			var cache1 = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
 				{typeof(Thing), thingModelStore1}

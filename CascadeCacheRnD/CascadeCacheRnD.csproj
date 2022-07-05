@@ -85,17 +85,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gadget.cs" />
     <Compile Include="original\AppInitializer.cs" />
     <Compile Include="original\AppState.cs" />
     <Compile Include="original\ModelDictionary.cs" />
     <Compile Include="original\ObservableDictionary.cs" />
     <Compile Include="original\Tests.cs" />
-    <Compile Include="SqliteClassCache.cs" />
-    <Compile Include="SqliteCacheTests.cs" />
-    <Compile Include="SqliteTests.cs" />
-    <Compile Include="TestDatabase.cs" />
-    <Compile Include="Thing.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -108,6 +102,10 @@
     <ProjectReference Include="..\Cascade\Cascade.csproj">
       <Project>{0d56ed45-0aa5-4576-a179-3adf1a772413}</Project>
       <Name>Cascade</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Test\Test.csproj">
+      <Project>{db17fd80-622a-476b-936f-3891e13479e9}</Project>
+      <Name>Test</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
