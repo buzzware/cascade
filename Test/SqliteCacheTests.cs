@@ -95,7 +95,7 @@ namespace CascadeCacheRnD {
 		}
 		
 		[Test]
-		public async Task SimpleTest() {
+		public async Task SimpleReadThroughCache() {
 			var path = System.IO.Path.GetTempFileName();
 			var conn = new SQLite.SQLiteAsyncConnection(path);
 			var db = new TestDatabase(conn);
@@ -113,6 +113,14 @@ namespace CascadeCacheRnD {
 
 			Assert.AreEqual(5, thing1!.Id);
 			Assert.AreEqual(cascade.NowMs, thing1.UpdatedAtMs);
+
+			origin.IncNowMs();
+			
+			var thing2 = await cascade.Read<Thing>(5, freshnessSeconds: 2);
+			Assert.AreEqual(thing1.UpdatedAtMs, thing2!.UpdatedAtMs);
+			
+			var thing3 = await cascade.Read<Thing>(5, freshnessSeconds: 0);
+			Assert.AreEqual(origin.NowMs, thing3!.UpdatedAtMs);
 		}
 	}
 }
