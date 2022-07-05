@@ -20,13 +20,18 @@ namespace Cascade
 			CascadeConfig config
 		) {
 			Origin = origin;
+			Origin.Cascade = this;
 			CacheLayers = cacheLayers;
+			foreach (var cache in cacheLayers)
+				cache.Cascade = this;
 			Config = config;
 		}
 
+		public long NowMs => Origin.NowMs;
+		
 		public async Task<M?> Read<M>(int id, int? freshnessSeconds = null) where M : class {
 			var req = new RequestOp(
-				CascadeUtils.NowMs,
+				NowMs,
 				typeof(M),
 				RequestVerb.Read,
 				id,
@@ -38,7 +43,7 @@ namespace Cascade
 
 		public async Task<M?> Read<M>(string id, int? freshnessSeconds = null) where M : class {
 			var req = new RequestOp(
-				CascadeUtils.NowMs,
+				NowMs,
 				typeof(M),
 				RequestVerb.Read,
 				id,
@@ -50,7 +55,7 @@ namespace Cascade
 
 		public async Task<M?> Read<M>(long id, int? freshnessSeconds = null) where M : class {
 			var req = new RequestOp(
-				CascadeUtils.NowMs,
+				NowMs,
 				typeof(M),
 				RequestVerb.Read,
 				id,

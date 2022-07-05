@@ -30,7 +30,7 @@ namespace Cascade {
 		public long? ArrivedAtMs;
 
 		public bool PresentAndFresh() => 
-			Connected==true && Present == true && (TimeMs-ArrivedAtMs) < RequestOp.FreshnessSeconds*1000;
+			Connected==true && Present == true && (TimeMs-ArrivedAtMs) <= RequestOp.FreshnessSeconds*1000;
 		// 		
 		// public int Index;		
 		// public IDictionary<string, object> Results;		// we store results as object internally
