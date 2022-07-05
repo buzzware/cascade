@@ -16,7 +16,9 @@ namespace Test {
 		public void SetUp() {
 			origin = new MockOrigin(nowMs:1000,handleRequest: (origin, requestOp) => {
 				var nowMs = origin.NowMs;
-				var thing = new Thing() { Id = requestOp.IdAsInt ?? 0 };
+				var thing = new Thing() {
+					Id = requestOp.IdAsInt ?? 0
+				};
 				thing.UpdatedAtMs = requestOp.TimeMs;
 				return Task.FromResult(new OpResponse(
 					requestOp: requestOp,

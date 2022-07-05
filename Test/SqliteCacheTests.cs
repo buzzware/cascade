@@ -10,9 +10,11 @@ namespace CascadeCacheRnD {
 	[TestFixture]
 	public class SqliteCacheTests {
 
-		[Test]
-		public async Task TestMetadata() {
-			var origin = new MockOrigin(nowMs: 1000, handleRequest: (origin, requestOp) => {
+		MockOrigin origin;
+
+		[SetUp]
+		public void SetUp() {
+			origin = new MockOrigin(nowMs: 1000, handleRequest: (origin, requestOp) => {
 				var nowMs = origin.NowMs;
 				var thing = new Thing() {
 					Id = requestOp.IdAsInt ?? 0
@@ -27,7 +29,10 @@ namespace CascadeCacheRnD {
 					arrivedAtMs: nowMs
 				));
 			});
-			
+		}
+
+		[Test]
+		public async Task TestMetadata() {
 			var path = System.IO.Path.GetTempFileName();
 			var conn = new SQLite.SQLiteAsyncConnection(path);
 			var db = new TestDatabase(conn);
@@ -91,22 +96,6 @@ namespace CascadeCacheRnD {
 		
 		[Test]
 		public async Task SimpleTest() {
-			var origin = new MockOrigin(nowMs: 1000, handleRequest: (origin, requestOp) => {
-				var nowMs = origin.NowMs;
-				var thing = new Thing() {
-					Id = requestOp.IdAsInt ?? 0
-				};
-				thing.UpdatedAtMs = requestOp.TimeMs;
-				return Task.FromResult(new OpResponse(
-					requestOp: requestOp,
-					nowMs,
-					connected: true,
-					exists: true,
-					result: thing,
-					arrivedAtMs: nowMs
-				));
-			});
-			
 			var path = System.IO.Path.GetTempFileName();
 			var conn = new SQLite.SQLiteAsyncConnection(path);
 			var db = new TestDatabase(conn);
