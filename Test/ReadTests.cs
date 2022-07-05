@@ -1,17 +1,14 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Cascade;
 using Cascade.testing;
 using NUnit.Framework;
-using Test;
 
-namespace CascadeCacheRnD {
+namespace Test {
 	
 	[TestFixture]
-	public class SimpleRead {
+	public class ReadTests {
 		[Test]
 		public async Task ReadWithoutCache() {
 			var origin = new MockOrigin();
@@ -21,7 +18,7 @@ namespace CascadeCacheRnD {
 		}
 		
 		[Test]
-		public async Task ReadWithCacheMultitest() {
+		public async Task ReadWithModelCachesMultitest() {
 			var origin = new MockOrigin(nowMs:1000,handleRequest: (origin, requestOp) => {
 				var nowMs = origin.NowMs;
 				var thing = new Thing(requestOp.IdAsInt ?? 0);
@@ -95,5 +92,4 @@ namespace CascadeCacheRnD {
 			Assert.AreEqual(thing6.UpdatedAtMs,(store1ThingResponse.Result as Thing)!.UpdatedAtMs);
 		}
 	}
-
 }
