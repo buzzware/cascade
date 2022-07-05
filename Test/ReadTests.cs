@@ -27,7 +27,7 @@ namespace Test {
 					requestOp: requestOp,
 					nowMs,
 					connected: true,
-					present: true,
+					exists: true,
 					result: thing,
 					arrivedAtMs: nowMs
 				));

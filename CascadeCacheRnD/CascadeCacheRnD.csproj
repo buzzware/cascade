@@ -30,6 +30,7 @@
     <Reference Include="deniszykov.TypeConversion, Version=3.0.6.0, Culture=neutral, PublicKeyToken=7fa17a4c44bad980, processorArchitecture=MSIL">
       <HintPath>..\packages\deniszykov.TypeConversion.3.0.6\lib\net461\deniszykov.TypeConversion.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
@@ -40,8 +41,8 @@
       <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="Serilog">
-      <HintPath>..\..\..\..\..\Applications\Rider.app\Contents\lib\ReSharperHost\TestRunner\net461\Serilog.dll</HintPath>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.10.0\lib\net46\Serilog.dll</HintPath>
     </Reference>
     <Reference Include="SQLite-net, Version=1.8.116.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\sqlite-net-pcl.1.8.116\lib\netstandard2.0\SQLite-net.dll</HintPath>
@@ -84,13 +85,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gadget.cs" />
     <Compile Include="original\AppInitializer.cs" />
     <Compile Include="original\AppState.cs" />
     <Compile Include="original\ModelDictionary.cs" />
     <Compile Include="original\ObservableDictionary.cs" />
     <Compile Include="original\Tests.cs" />
-    <Compile Include="SqliteDatabase.cs" />
+    <Compile Include="SqliteClassCache.cs" />
+    <Compile Include="SqliteCacheTests.cs" />
     <Compile Include="SqliteTests.cs" />
+    <Compile Include="TestDatabase.cs" />
     <Compile Include="Thing.cs" />
   </ItemGroup>
   <ItemGroup>

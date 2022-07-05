@@ -38,7 +38,11 @@
     <Reference Include="deniszykov.TypeConversion, Version=3.0.6.0, Culture=neutral, PublicKeyToken=7fa17a4c44bad980, processorArchitecture=MSIL">
       <HintPath>..\packages\deniszykov.TypeConversion.3.0.6\lib\net45\deniszykov.TypeConversion.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="mscorlib" />
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.10.0\lib\net46\Serilog.dll</HintPath>
+    </Reference>
     <Reference Include="SQLite-net, Version=1.8.116.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\sqlite-net-pcl.1.8.116\lib\netstandard2.0\SQLite-net.dll</HintPath>
     </Reference>

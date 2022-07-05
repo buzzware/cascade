@@ -1,75 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Serilog;
 using SQLite;
 
 namespace Test {
-
-
-	public class TestDatabase : SqliteDatabase {
-		public TestDatabase(SQLiteAsyncConnection connection) : base(connection) {
-		}
-		
-		public Task EnsureTablesExist() {
-			return Connection.RunInTransactionAsync(conn => {
-				conn.CreateTable<Thing>();
-			});
-		}
-		
-		public Task DeleteAllTables()
-		{
-			return Connection.RunInTransactionAsync(conn => {
-				conn.DropTable<Thing>();
-			});
-		}
-
-		public async Task Reset()
-		{
-			await DeleteAllTables();
-			await EnsureTablesExist();
-		}
-		
-		
-		// public T load<T>(long id) where T : class, new()
-		// {
-		// 	lock (_connection) {
-		// 		var t = tableName<T>();
-		// 		var pk = typeof(T).GetPrimaryKey().GetColumnName();
-		// 		return _connection.FindWithQuery<T>("select * from " + t + " where "+pk+" = ?", id);
-		// 	}
-		// }
-
-
-
-		// public string exportDatabase()
-		// {
-		// 	var outName = platform.downloadPath(FreeCommon.HISTORYDB_FILENAME.Replace(".db", "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".db"));
-		// 	// copy platform.combineWritablePath(IntelMain.HISTORYDB_FILENAME) to /sdcard/Download/
-		// 	var sourceName = platform.combineWritablePath(FreeCommon.HISTORYDB_FILENAME);
-		// 	if (platform.fileExists(sourceName)) {
-		// 		platform.copyFile(sourceName, outName);
-		// 		return outName;
-		// 	}
-		// 	return null;
-		// }
-		//
-		// public bool importDatabase()
-		// {
-		// 	var sourceName = platform.downloadPath(FreeCommon.HISTORYDB_FILENAME);
-		// 	var destName = platform.combineWritablePath(FreeCommon.HISTORYDB_FILENAME);
-		// 	if (platform.fileExists(sourceName)) {
-		// 		platform.copyFile(sourceName, destName);
-		// 		return true;
-		// 	}
-		// 	return false;
-		// }
-
-
-
-	}
-	
-	
 	public class SqliteDatabase {
 		
 		// use withConnection instead of this
@@ -99,15 +35,15 @@ namespace Test {
 			return model;
 		}
 
-		public async Task<T?> Get<T>(long id) where T : new() {
+		public async Task<T?> Get<T>(object id) where T : new() {
 			return await Connection.FindAsync<T>(id);
 		}
-		public async Task<T?> Get<T>(int id) where T : new() {
-			return await Connection.FindAsync<T>(id);
-		}
-		public async Task<T?> Get<T>(String id) where T : new() {
-			return await Connection.FindAsync<T>(id);
-		}
+		// public async Task<T?> Get<T>(int id) where T : new() {
+		// 	return await Connection.FindAsync<T>(id);
+		// }
+		// public async Task<T?> Get<T>(String id) where T : new() {
+		// 	return await Connection.FindAsync<T>(id);
+		// }
 		
 		public async Task<bool> Update(object obj, bool aEnsure = true) {
 			if (obj==null)
@@ -152,6 +88,23 @@ namespace Test {
 
 		public async Task Delete(object model) {
 			await Connection.DeleteAsync(model);
+		}
+		
+		public async Task<bool> Exists<Model>(object id) {
+			bool exists = false;
+			try
+			{
+				exists = await Connection.ExecuteScalarAsync<bool>("SELECT EXISTS(SELECT 1 FROM " + TableName<Model>() + " WHERE ID=?)", id);
+			}
+			catch (Exception ex)
+			{
+				exists = false;
+			}
+			return exists;
+		}
+
+		public string TableName<Model>() {
+			return Connection.TableMappings.First(m => m.MappedType == typeof(Model)).TableName;
 		}
 
 		//public Query<T>("select * from packets where kin=0 and journey_id=? order by timems", aJourney.id);
@@ -259,6 +212,12 @@ namespace Test {
 			// lock (Connection) {
 				return Connection.CloseAsync();
 			// }
+		}
+
+		public async Task DropAllTables() {
+			foreach (var tm in Connection.TableMappings) {
+				await Connection.DropTableAsync(tm);
+			}
 		}
 	}
 }

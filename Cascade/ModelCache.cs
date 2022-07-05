@@ -41,18 +41,35 @@ namespace Cascade {
 		}
 
 
-		public Task Store(OpResponse opResponse) {
+		public async Task Store(OpResponse opResponse) {
 			if (opResponse.RequestOp.Type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(opResponse.RequestOp.Type))
 				throw new Exception("No type store for that type");
-			var store = classCache[opResponse.RequestOp.Type];
-			return store.Store(opResponse);
-		}
+			if (!opResponse.Connected)
+				throw new Exception("Don't attempt to store responses from a disconnected store");
 
+			//IdType id = (IdType) CascadeUtils.ConvertTo(typeof(IdType), opResponse.RequestOp.Id);
+			var id = opResponse.RequestOp.Id;
+			if (id == null)
+				throw new Exception("Unable to get right value for Id");
+			long arrivedAt = opResponse.ArrivedAtMs ?? Cascade.NowMs;
+			
+			var cache = classCache[opResponse.RequestOp.Type];
+			
+			if (!opResponse.Exists) {
+				await cache.Remove(id);
+			} else {
+				if (opResponse.Result is null)
+					throw new Exception("When Present is true, Result cannot be null");
+				//Model model = (opResponse.Result as Model)!;
+				await cache.Store(id, opResponse.Result, arrivedAt);
+			}
+		}
+		
 		public async Task Clear() {
 			foreach (var kv in classCache) {
-				kv.Value.Clear();
+				await kv.Value.Clear();
 			}
 		}
 	}

@@ -10,14 +10,14 @@ namespace Cascade {
 			RequestOp requestOp,
 			long timeMs,
 			bool connected,
-			bool present,
+			bool exists,
 			long? arrivedAtMs,
 			object? result
 		) {
 			RequestOp = requestOp;
 			TimeMs = timeMs;
 			Connected = connected;
-			Present = present;
+			Exists = exists;
 			ArrivedAtMs = arrivedAtMs;
 			Result = result;
 		}
@@ -25,12 +25,12 @@ namespace Cascade {
 		public readonly RequestOp RequestOp;
 		public readonly long TimeMs;
 		public readonly bool Connected;	// layer available ?
-		public readonly bool Present;		// present in cache? Result can be null if known to not exist on origin
+		public readonly bool Exists;		// present in cache? Result can be null if known to not exist on origin
 		public readonly object? Result;								// for create, read, update
 		public long? ArrivedAtMs;
 
 		public bool PresentAndFresh() => 
-			Connected==true && Present == true && (TimeMs-ArrivedAtMs) <= RequestOp.FreshnessSeconds*1000;
+			Connected==true && Exists == true && (TimeMs-ArrivedAtMs) <= RequestOp.FreshnessSeconds*1000;
 		// 		
 		// public int Index;		
 		// public IDictionary<string, object> Results;		// we store results as object internally
