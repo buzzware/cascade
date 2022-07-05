@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace SuperModel {
+	
 	public class MutationAttemptException : Exception {
 		public MutationAttemptException(string message) : base(message) {
 		}

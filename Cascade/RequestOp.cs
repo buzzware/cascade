@@ -91,7 +91,6 @@ namespace Cascade {
 		// only one of Key or Id would normally be used
 
 		public readonly int FreshnessSeconds = FRESHNESS_DEFAULT;
-		public readonly bool Fallback = true;	// when the first source request fails (eg. does not contain or is offline), try other sources
 
 		public readonly IDictionary<string, string> Params;	// app specific paramters for the request
 	}

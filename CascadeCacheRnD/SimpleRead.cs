@@ -4,188 +4,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Cascade;
+using Cascade.testing;
 using NUnit.Framework;
 using Test;
 
 namespace CascadeCacheRnD {
-	
-	public class MockOrigin : ICascadeOrigin {
-		private Func<RequestOp,Task<OpResponse>>? HandleRequest;
-
-		public MockOrigin(long aNowMs = 1000) {
-			NowMs = aNowMs;
-		}
-
-		public CascadeDataLayer Cascade { get; set; } 
-		
-		public long NowMs { get; set; }
-
-		public long IncNowMs(long incMs=1000) {
-			return NowMs += incMs;
-		}
-
-		public Task<OpResponse> ProcessRequest(RequestOp request) {
-			if (HandleRequest != null)
-				return HandleRequest(request);
-			
-			var nowMs = NowMs;
-			var thing = new Thing(request.IdAsInt ?? 0);
-			thing.UpdatedAtMs = request.TimeMs;
-			return Task.FromResult(new OpResponse(
-				requestOp: request,
-				nowMs,
-				connected: true,
-				present: true,
-				result: thing,
-				arrivedAtMs: nowMs
-			));
-		}
-	}
-
-	
-	public interface IModelTypeStore {
-		CascadeDataLayer Cascade { get; set; }
-		Task<OpResponse> Fetch(RequestOp requestOp);
-		Task Store(OpResponse opResponse);
-
-		Task Store(object id, object model, long arrivedAt);
-		Task Remove(object id);
-		Task Clear();
-	}
-
-	public class ModelTypeStore<Model, IdType> : IModelTypeStore 
-		where Model : class {
-		private readonly Dictionary<IdType, Tuple<Model, long>> models = new Dictionary<IdType, Tuple<Model, long>>();
-
-		public CascadeDataLayer Cascade { get; set; }
-
-		public ModelTypeStore() {
-			
-		}
-		
-		public async Task<OpResponse> Fetch(RequestOp requestOp) {
-			if (requestOp.Type != typeof(Model))
-				throw new Exception("requestOp.Type != typeof(Model)");
-			var id = (IdType) CascadeUtils.ConvertTo(typeof(IdType), requestOp.Id); //  ((IdType)requestOp.Id)!;
-			if (id == null)
-				throw new Exception("Unable to get right value for Id");
-
-			if (models.ContainsKey(id)) {
-				return new OpResponse(
-					requestOp,
-					Cascade.NowMs,
-					connected: true,
-					present: true,
-					result: models[id].Item1,
-					arrivedAtMs: models[id].Item2
-				);
-			}
-			else {
-				return new OpResponse(
-					requestOp,
-					Cascade.NowMs,
-					connected: true,
-					present: false,
-					result: null,
-					arrivedAtMs: null
-				);
-			}
-			
-		}
-
-		public Task Store(object id, object model, long arrivedAt) {
-			return Store((IdType)id, (Model)model, arrivedAt);
-		}
-
-		public Task Remove(object id) {
-			return Remove((IdType)id);
-		}
-
-		public async Task Clear() {
-			models.Clear();
-		}
-
-		public async Task Store(IdType id, Model model, long arrivedAt) {
-			models[id] = new Tuple<Model, long>(model, arrivedAt);
-		}
-
-		public async Task Remove(IdType id) {
-			models.Remove(id);
-		}
-
-		public async Task Store(OpResponse opResponse) {
-			if (!opResponse.Connected)
-				throw new Exception("Don't attempt to store responses from a disconnected store");
-			IdType id = (IdType) CascadeUtils.ConvertTo(typeof(IdType), opResponse.RequestOp.Id);
-			if (id == null)
-				throw new Exception("Unable to get right value for Id");
-			long arrivedAt = opResponse.ArrivedAtMs ?? Cascade.NowMs;
-			if (!opResponse.Present) {
-				await Remove(id);
-			} else {
-				if (opResponse.Result is null)
-					throw new Exception("When Present is true, Result cannot be null");
-				Model model = (opResponse.Result as Model)!;
-				await Store(id, model, arrivedAt);
-			}
-		}
-
-	}
-	
-	public class ModelCache : ICascadeCache {
-		private Dictionary<Type, IModelTypeStore> typeStores;
-		
-		private CascadeDataLayer _cascade;
-		public CascadeDataLayer Cascade {
-			get => _cascade;
-			set {
-				_cascade = value;
-				foreach (var ts in typeStores) {
-					ts.Value.Cascade = _cascade;
-				}
-			}
-		}
-
-		public ModelCache(Dictionary<Type, IModelTypeStore> typeStores) {
-			this.typeStores = typeStores;
-		}
-		
-		public Task<OpResponse> Fetch(RequestOp requestOp) {
-			if (requestOp.Type is null)
-				throw new Exception("Type cannot be null");
-			if (!typeStores.ContainsKey(requestOp.Type))
-				throw new Exception("No type store for that type");
-			
-			var store = typeStores[requestOp.Type];
-			return store.Fetch(requestOp);
-		}
-
-		public Task Store(Type type, object id, object model, long arrivedAt) {
-			if (type is null)
-				throw new Exception("Type cannot be null");
-			if (!typeStores.ContainsKey(type))
-				throw new Exception("No type store for that type");
-			var store = typeStores[type];
-			return store.Store(id,model,arrivedAt);
-		}
-
-
-		public Task Store(OpResponse opResponse) {
-			if (opResponse.RequestOp.Type is null)
-				throw new Exception("Type cannot be null");
-			if (!typeStores.ContainsKey(opResponse.RequestOp.Type))
-				throw new Exception("No type store for that type");
-			var store = typeStores[opResponse.RequestOp.Type];
-			return store.Store(opResponse);
-		}
-
-		public async Task Clear() {
-			foreach (var kv in typeStores) {
-				kv.Value.Clear();
-			}
-		}
-	}
-	
 	
 	[TestFixture]
 	public class SimpleRead {
@@ -199,13 +22,25 @@ namespace CascadeCacheRnD {
 		
 		[Test]
 		public async Task ReadWithCacheMultitest() {
-			var origin = new MockOrigin();
-			var thingModelStore1 = new ModelTypeStore<Thing, long>();
-			var cache1 = new ModelCache(typeStores: new Dictionary<Type, IModelTypeStore>() {
+			var origin = new MockOrigin(nowMs:1000,handleRequest: (origin, requestOp) => {
+				var nowMs = origin.NowMs;
+				var thing = new Thing(requestOp.IdAsInt ?? 0);
+				thing.UpdatedAtMs = requestOp.TimeMs;
+				return Task.FromResult(new OpResponse(
+					requestOp: requestOp,
+					nowMs,
+					connected: true,
+					present: true,
+					result: thing,
+					arrivedAtMs: nowMs
+				));
+			});
+			var thingModelStore1 = new ModelClassCache<Thing, long>();
+			var cache1 = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
 				{typeof(Thing), thingModelStore1}
 			});
-			var thingModelStore2 = new ModelTypeStore<Thing, long>();
-			var cache2 = new ModelCache(typeStores: new Dictionary<Type, IModelTypeStore>() {
+			var thingModelStore2 = new ModelClassCache<Thing, long>();
+			var cache2 = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
 				{typeof(Thing), thingModelStore2}
 			});
 			
