@@ -66,20 +66,7 @@ namespace Test {
 		// }
 
 
-		public async Task<T> Create<T>(T model) {
-			await Connection.InsertAsync(model);
-			return model;
-		}
 
-		public async Task<T> Get<T>(long id) where T : new() {
-			return await Connection.GetAsync<T>(id);
-		}
-		public async Task<T> Get<T>(int id) where T : new() {
-			return await Connection.GetAsync<T>(id);
-		}
-		public async Task<T> Get<T>(String id) where T : new() {
-			return await Connection.GetAsync<T>(id);
-		}
 	}
 	
 	
@@ -107,6 +94,65 @@ namespace Test {
 		}
 
 
+		public async Task<T> Create<T>(T model) {
+			await Connection.InsertAsync(model);
+			return model;
+		}
+
+		public async Task<T?> Get<T>(long id) where T : new() {
+			return await Connection.FindAsync<T>(id);
+		}
+		public async Task<T?> Get<T>(int id) where T : new() {
+			return await Connection.FindAsync<T>(id);
+		}
+		public async Task<T?> Get<T>(String id) where T : new() {
+			return await Connection.FindAsync<T>(id);
+		}
+		
+		public async Task<bool> Update(object obj, bool aEnsure = true) {
+			if (obj==null)
+				throw new ArgumentNullException();
+			//lock (_connection) {
+			int rowsAffected = 0;
+			try
+			{
+				rowsAffected = await Connection.UpdateAsync(obj);
+				Log.Debug($"HistoryDatabase: Updated {rowsAffected} rows");
+			} catch(Exception e) {
+				Log.Debug(e.Message);
+				throw e;
+			}
+			var success = rowsAffected > 0;
+			if (!success && aEnsure)
+				throw new Exception("Record not found to update " + obj.GetType().Name); //+ " " + GetPrimaryKey(obj).ToString());
+			return success;
+			//}
+		}
+		
+		public async Task Upsert(object obj) {
+			var success = await Update(obj, false);
+			if (!success)
+				await Connection.InsertAsync(obj);
+		}
+		
+		
+		// public async Task<T> Update<T>(object id, Dictionary<String, object> changes) {
+		// 	
+		// 	
+		//   
+		// 	//var results = Connection.UpdateAsync(changes);
+		// 	var results = Connection.ExecuteAsync("UPDATE ? SET Price = ? Where Id = ?", 1000000, 2);
+		// 	
+		// 	
+		// }
+
+		public async Task Delete<Model>(object id) {
+			await Connection.DeleteAsync<Model>(id);
+		}
+
+		public async Task Delete(object model) {
+			await Connection.DeleteAsync(model);
+		}
 
 		//public Query<T>("select * from packets where kin=0 and journey_id=? order by timems", aJourney.id);
 
