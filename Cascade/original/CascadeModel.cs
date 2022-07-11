@@ -2,7 +2,7 @@
 
 namespace Cascade {
 	
-	public abstract class CascadeModel<I> : SuperModel.SuperModel, ICascadeModel<I>,INotifyPropertyChanged {
+	public abstract class CascadeModel : SuperModel.SuperModel, ICascadeModel,INotifyPropertyChanged {
 		
 		public event PropertyChangedEventHandler PropertyChanged;
 		
@@ -10,6 +10,6 @@ namespace Cascade {
 			return this.GetType().Name;
 		}
 
-		public abstract I CascadeId();
+		public abstract object CascadeId();
 	}
 }

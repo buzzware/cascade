@@ -18,7 +18,7 @@ namespace Cascade.testing {
 			return NowMs += incMs;
 		}
 
-		public Task<OpResponse> ProcessRequest(RequestOp request) {
+		public virtual Task<OpResponse> ProcessRequest(RequestOp request) {
 			if (HandleRequest != null)
 				return HandleRequest(this,request);
 			throw new NotImplementedException("Attach HandleRequest or override this");

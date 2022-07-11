@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SQLite;
 using Test;
@@ -60,6 +61,10 @@ namespace Cascade {
 				ModelId = CascadeModelMeta.GenerateId<Model>(id),
 				ArrivedAt = arrivedAt
 			});
+		}
+
+		public Task StoreCollection(string key, object[] ids, long aArrivedAt) {
+			throw new NotImplementedException();
 		}
 
 		public async Task Remove(object id) {

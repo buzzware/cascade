@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Cascade {
 	
 	public enum RequestVerb {
 		None,
 		Create,
-		Read,
+		Get,
 		Update,
 		Destroy,
 		Query,
@@ -16,28 +17,44 @@ namespace Cascade {
 	public class RequestOp {
 		public const int FRESHNESS_DEFAULT = 5*60;
 
-		public static RequestOp ReadOp<Model>(object id, long timeMs, int freshnessSeconds = 0) {
+		public static RequestOp GetOp<Model>(object id, long timeMs, int freshnessSeconds = 0) {
 			return new RequestOp(
 				timeMs,
 				typeof(Model),
-				RequestVerb.Read,
+				RequestVerb.Get,
 				id,
 				freshnessSeconds: freshnessSeconds
 			);
 		}
 		
+		public static RequestOp QueryOp<Model>(string key, object criteria, long timeMs, int freshnessSeconds = 0) {
+			return new RequestOp(
+				timeMs,
+				typeof(Model),
+				RequestVerb.Query,
+				null,
+				criteria: criteria,
+				key: key,
+				freshnessSeconds: freshnessSeconds
+			);
+		}
+		
 		public RequestOp(
-			long timeMs, 
-			Type type, 
-			RequestVerb verb, 
-			object? id, 
-			int freshnessSeconds
+			long timeMs,
+			Type type,
+			RequestVerb verb,
+			object? id,
+			int freshnessSeconds, 
+			object? criteria = null,
+			string? key = null
 		) {
 			TimeMs = timeMs;
 			Type = type;
 			Verb = verb;
 			Id = id;
 			FreshnessSeconds = freshnessSeconds;
+			Criteria = criteria;
+			Key = key;
 		}
 
 		public static bool IsWriteVerb(RequestVerb aVerb) {
@@ -54,9 +71,9 @@ namespace Cascade {
 		public readonly long TimeMs;
 		public readonly Type Type;
 		public readonly RequestVerb Verb;		// what we are doing
-		public readonly object? Id;			// eg. 34
+		public readonly object Id;			// eg. 34
 		public readonly string? Key;		// eg. Products or Products__34
-		
+		public object Criteria { get; set; }
 		
 		public int? IdAsInt {
 			get {
@@ -87,7 +104,8 @@ namespace Cascade {
 				return null;
 			}
 		}
-		
+
+
 		// only one of Key or Id would normally be used
 
 		public readonly int FreshnessSeconds = FRESHNESS_DEFAULT;

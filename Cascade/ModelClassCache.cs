@@ -6,6 +6,7 @@ namespace Cascade {
 	public class ModelClassCache<Model, IdType> : IModelClassCache 
 		where Model : class {
 		private readonly Dictionary<IdType, Tuple<Model, long>> models = new Dictionary<IdType, Tuple<Model, long>>();
+		private readonly Dictionary<string, Tuple<object[], long>> collections = new Dictionary<string, Tuple<object[], long>>();
 
 		public CascadeDataLayer Cascade { get; set; }
 
@@ -16,29 +17,56 @@ namespace Cascade {
 		public async Task<OpResponse> Fetch(RequestOp requestOp) {
 			if (requestOp.Type != typeof(Model))
 				throw new Exception("requestOp.Type != typeof(Model)");
-			var id = (IdType?) CascadeUtils.ConvertTo(typeof(IdType), requestOp.Id);  //  ((IdType)requestOp.Id)!;
-			if (id == null)
-				throw new Exception("Unable to get right value for Id");
+			switch (requestOp.Verb) {
+				case RequestVerb.Get:
+					var id = (IdType?) CascadeUtils.ConvertTo(typeof(IdType), requestOp.Id);  //  ((IdType)requestOp.Id)!;
+					if (id == null)
+						throw new Exception("Unable to get right value for Id");
 
-			if (models.ContainsKey(id)) {
-				return new OpResponse(
-					requestOp,
-					Cascade.NowMs,
-					connected: true,
-					exists: true,
-					result: models[id].Item1,
-					arrivedAtMs: models[id].Item2
-				);
-			}
-			else {
-				return new OpResponse(
-					requestOp,
-					Cascade.NowMs,
-					connected: true,
-					exists: false,
-					result: null,
-					arrivedAtMs: null
-				);
+					if (models.ContainsKey(id)) {
+						return new OpResponse(
+							requestOp,
+							Cascade.NowMs,
+							connected: true,
+							exists: true,
+							result: models[id].Item1,
+							arrivedAtMs: models[id].Item2
+						);
+					}
+					else {
+						return new OpResponse(
+							requestOp,
+							Cascade.NowMs,
+							connected: true,
+							exists: false,
+							result: null,
+							arrivedAtMs: null
+						);
+					}
+					break;
+				case RequestVerb.Query:
+					if (collections.ContainsKey(requestOp.Key!)) {
+						return new OpResponse(
+							requestOp,
+							Cascade.NowMs,
+							connected: true,
+							exists: true,
+							result: collections[requestOp.Key!].Item1,
+							arrivedAtMs: collections[requestOp.Key!].Item2
+						);
+					} else {
+						return new OpResponse(
+							requestOp,
+							Cascade.NowMs,
+							connected: true,
+							exists: false,
+							result: null,
+							arrivedAtMs: null
+						);
+					}
+					break;
+				default:
+					throw new NotImplementedException($"Unsupported {requestOp.Verb}");
 			}
 		}
 
@@ -53,6 +81,10 @@ namespace Cascade {
 			models[id] = new Tuple<Model, long>(model, arrivedAt);
 		}
 		
+		public async Task StoreCollection(string key, object[] ids, long arrivedAt) {
+			collections[key] = new Tuple<object[], long>(ids, arrivedAt);
+		}
+
 		public Task Remove(object id) {
 			return Remove((IdType)id);
 		}

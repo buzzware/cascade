@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
 namespace Cascade {
-	public interface ICascadeModel<I> {
+	public interface ICascadeModel {
 		string CascadeResource();
-		I CascadeId();
+		object CascadeId();
 	}
 }

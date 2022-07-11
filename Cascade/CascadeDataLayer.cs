@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using SQLite;
 
 namespace Cascade
 {
@@ -28,53 +30,74 @@ namespace Cascade
 		}
 
 		public long NowMs => Origin.NowMs;
+
+		public Task<OpResponse> GetResponse<M>(int id, int? freshnessSeconds = null) where M : class {
+			var req = RequestOp.GetOp<M>(
+				id,
+				NowMs,
+				freshnessSeconds ?? Config.DefaultFreshnessSeconds
+			);
+			return ProcessRequest(req);
+		}
 		
-		public async Task<M?> Read<M>(int id, int? freshnessSeconds = null) where M : class {
-			var req = new RequestOp(
-				NowMs,
-				typeof(M),
-				RequestVerb.Read,
-				id,
-				freshnessSeconds ?? Config.DefaultFreshnessSeconds
-			);
-			var response = await ProcessRequest(req);
-			return response.Result as M;
+		public async Task<M?> Get<M>(int id, int? freshnessSeconds = null) where M : class {
+			return (await this.GetResponse<M>(id, freshnessSeconds)).Result as M;
 		}
 
-		public async Task<M?> Read<M>(string id, int? freshnessSeconds = null) where M : class {
-			var req = new RequestOp(
-				NowMs,
-				typeof(M),
-				RequestVerb.Read,
+		public Task<OpResponse> GetResponse<M>(string id, int? freshnessSeconds = null) where M : class {
+			var req = RequestOp.GetOp<M>(
 				id,
+				NowMs,
 				freshnessSeconds ?? Config.DefaultFreshnessSeconds
 			);
-			var response = await ProcessRequest(req);
-			return response.Result as M;
+			return ProcessRequest(req);
 		}
 
-		public async Task<M?> Read<M>(long id, int? freshnessSeconds = null) where M : class {
-			var req = new RequestOp(
-				NowMs,
-				typeof(M),
-				RequestVerb.Read,
+		public async Task<M?> Get<M>(string id, int? freshnessSeconds = null) where M : class {
+			return (await this.GetResponse<M>(id, freshnessSeconds)).Result as M;
+		}
+		
+		public Task<OpResponse> GetResponse<M>(long id, int? freshnessSeconds = null) where M : class {
+			var req = RequestOp.GetOp<M>(
 				id,
+				NowMs,
 				freshnessSeconds ?? Config.DefaultFreshnessSeconds
 			);
-			var response = await ProcessRequest(req);
-			return response.Result as M;
+			return ProcessRequest(req);
 		}
 
+		public async Task<M?> Get<M>(long id, int? freshnessSeconds = null) where M : class {
+			return (await this.GetResponse<M>(id, freshnessSeconds)).Result as M;
+		}
+		
+		public Task<OpResponse> QueryResponse<M>(string key, object criteria, int? freshnessSeconds = null) {
+			var req = RequestOp.QueryOp<M>(
+				key,
+				criteria,
+				NowMs,
+				freshnessSeconds ?? Config.DefaultFreshnessSeconds
+			);
+			return ProcessRequest(req);
+		}
+
+		public async Task<IEnumerable<M>> Query<M>(string key, object criteria, int? freshnessSeconds = null) {
+			var response = await QueryResponse<M>(key, criteria, freshnessSeconds);
+			var results = response.Results.Cast<M>();
+			//return Array.ConvertAll<object,M>(response.Results) ?? Array.Empty<M>();
+			return results;
+		}
+		
 		private Task<OpResponse> ProcessRequest(RequestOp req) {
 			switch (req.Verb) {
-				case RequestVerb.Read:
-					return ProcessRead(req);
+				case RequestVerb.Get:
+				case RequestVerb.Query:
+					return ProcessReadOrQuery(req);
 				default:
 					throw new ArgumentException("Unsupported verb");
 			}
 		}
-
-		private async Task<OpResponse> ProcessRead(RequestOp requestOp) {
+		
+		private async Task<OpResponse> ProcessReadOrQuery(RequestOp requestOp) {
 			object? value;
 			ICascadeCache? layerFound = null;
 			OpResponse? opResponse = null;
@@ -92,12 +115,42 @@ namespace Cascade
 			if (opResponse==null)
 				opResponse = await Origin.ProcessRequest(requestOp);
 			
-			// store in each layer before the layer it was found in
-			if (opResponse != null) {
+			if (requestOp.Verb == RequestVerb.Query && opResponse.IsIdResults) {
+				var modelResponses = await GetModelsForIds(requestOp.Type, requestOp.FreshnessSeconds, opResponse.ResultIds);
+				// don't need to do this because the get above will achieve the same
+				// foreach (var modelResponse in modelResponses) {
+				// 	await StoreInPreviousCaches(opResponse, layerFound);		
+				// }
+				await StoreInPreviousCaches(opResponse, layerFound);					// just store ResultIds
+				opResponse = opResponse.withChanges(result: modelResponses);	// modify the response with models instead of ids
+			} else {
 				await StoreInPreviousCaches(opResponse, layerFound);
 			}
+			return opResponse!;
+		}
 
-			return opResponse;
+		private async Task<IEnumerable<OpResponse>> GetModelsForIds(Type type, int freshnessSeconds, IEnumerable<object> ids) {
+			const int MaxParallelRequests = 10;
+
+			OpResponse[] allResponses = new OpResponse[ids.Count()];
+			for (var i = 0; i < ids.Count(); i += MaxParallelRequests) {
+				var someIds = ids.Skip(i).Take(MaxParallelRequests);
+				var someGetResponses = await Task.WhenAll(	// wait on all requests in parallel
+					someIds.Select(id => ProcessRequest(				// map each id to a get request and process it
+							new RequestOp(
+								NowMs,
+								type,
+								RequestVerb.Get,
+								id,
+								freshnessSeconds
+							)
+						)
+					)
+				);
+				for (int j = 0; j < someGetResponses.Length; j++)	// fill allResponses array from responses
+					allResponses[i + j] = someGetResponses[j];
+			}
+			return allResponses;
 		}
 
 		private async Task StoreInPreviousCaches(OpResponse opResponse, ICascadeCache? layerFound) {
@@ -456,7 +509,7 @@ namespace Cascade
 // 		public string JsonSerialize(object source) {
 // 			return JsonConvert.SerializeObject(source);
 // 		}
-		
+
 	}
 
 }

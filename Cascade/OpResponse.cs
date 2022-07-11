@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Cascade {
 	public class OpResponse {
@@ -22,6 +25,24 @@ namespace Cascade {
 			Result = result;
 		}
 
+		public OpResponse withChanges(
+			RequestOp? requestOp = null,
+			long? timeMs = null,
+			bool? connected = null,
+			bool? exists = null,
+			long? arrivedAtMs = null,
+			object? result = null
+		) {
+			return new OpResponse(
+				requestOp: requestOp ?? this.RequestOp,
+				timeMs: timeMs ?? this.TimeMs,
+				connected: connected ?? this.Connected,
+				exists: exists ?? this.Exists,
+				arrivedAtMs: arrivedAtMs ?? this.ArrivedAtMs,
+				result: result ?? this.Result
+			);
+		}
+		
 		public readonly RequestOp RequestOp;
 		public readonly long TimeMs;
 		public readonly bool Connected;	// layer available ?
@@ -31,6 +52,49 @@ namespace Cascade {
 
 		public bool PresentAndFresh() => 
 			Connected==true && Exists == true && (TimeMs-ArrivedAtMs) <= RequestOp.FreshnessSeconds*1000;
+
+		public bool ResultIsEmpty() {
+			if (Result == null)
+				return true;
+			object[]? objects = Result as object[];
+			if (objects != null)
+				return objects.Length == 0;
+			IEnumerable? inumerable = Result as IEnumerable;
+			if (inumerable != null)
+				return !inumerable.GetEnumerator().MoveNext();
+			ICollection? icollection = Result as ICollection;
+			if (icollection != null)
+				return !icollection.GetEnumerator().MoveNext();
+			return false;				// there is something there that we can't identify
+		}
+
+		public object[] Results {
+			get {
+				if (Result == null)
+					return new object[] { };
+				object[]? enumerable = Result as object[];
+				return enumerable ?? new object[] { };
+			}
+		}
+
+		public bool IsModelResults => Results.FirstOrDefault()?.GetType().IsClass ?? false;
+		public bool IsIdResults => Results.FirstOrDefault()?.GetType().IsPrimitive ?? false;
+
+		public object[] ResultIds {
+			get {
+				var results = Results;
+				if (!results.Any())
+					return results;
+				var first = results.FirstOrDefault();
+				if (first.GetType().IsPrimitive)
+					return results;
+				else if (first is ICascadeModel)
+					return results.Select(m => (m as ICascadeModel)!.CascadeId()).ToArray();
+				else
+					throw new Exception("Result is IEnumerable but not of ICascadeModel");
+			}
+		}
+
 		// 		
 		// public int Index;		
 		// public IDictionary<string, object> Results;		// we store results as object internally

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cascade {
@@ -36,8 +37,17 @@ namespace Cascade {
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(type))
 				throw new Exception("No type store for that type");
-			var store = classCache[type];
+			var store = classCache[type]!;
 			return store.Store(id,model,arrivedAt);
+		}
+
+		public Task StoreCollection(Type type, string key, object[] ids, long arrivedAt) {
+			if (type is null)
+				throw new Exception("Type cannot be null");
+			if (!classCache.ContainsKey(type))
+				throw new Exception("No type store for that type");
+			var store = classCache[type]!;
+			return store.StoreCollection(key,ids,arrivedAt);
 		}
 
 
@@ -49,21 +59,40 @@ namespace Cascade {
 			if (!opResponse.Connected)
 				throw new Exception("Don't attempt to store responses from a disconnected store");
 
-			//IdType id = (IdType) CascadeUtils.ConvertTo(typeof(IdType), opResponse.RequestOp.Id);
-			var id = opResponse.RequestOp.Id;
-			if (id == null)
-				throw new Exception("Unable to get right value for Id");
 			long arrivedAt = opResponse.ArrivedAtMs ?? Cascade.NowMs;
 			
 			var cache = classCache[opResponse.RequestOp.Type];
-			
-			if (!opResponse.Exists) {
-				await cache.Remove(id);
-			} else {
-				if (opResponse.Result is null)
-					throw new Exception("When Present is true, Result cannot be null");
-				//Model model = (opResponse.Result as Model)!;
-				await cache.Store(id, opResponse.Result, arrivedAt);
+
+			switch (opResponse.RequestOp.Verb) {
+				case RequestVerb.Get:
+				case RequestVerb.Update:
+				case RequestVerb.Create:
+				case RequestVerb.Destroy:
+					//IdType id = (IdType) CascadeUtils.ConvertTo(typeof(IdType), opResponse.RequestOp.Id);
+					var id = opResponse.RequestOp.Id;
+					if (id == null)
+						throw new Exception("Unable to get right value for Id");
+					if (!opResponse.Exists) {
+						await cache.Remove(id);
+					} else {
+						if (opResponse.Result is null)
+							throw new Exception("When Present is true, Result cannot be null");
+						//Model model = (opResponse.Result as Model)!;
+						await cache.Store(id, opResponse.Result, arrivedAt);
+					}
+					break;
+				case RequestVerb.Query:
+					if (opResponse.IsModelResults) {
+						// var results = opResponse.Results(); // as IEnumerable<ICascadeModel>)!;
+						// var models = CascadeUtils.ConvertTo(typeof(IEnumerable<ICascadeModel>),results)! as IEnumerable<ICascadeModel>;
+						var models = opResponse.Results.Select(r => (r as ICascadeModel)!);
+						foreach (var model in models)
+							await cache.Store(model.CascadeId(), model, arrivedAt);
+					}
+					await cache.StoreCollection(opResponse.RequestOp.Key!, opResponse.ResultIds, arrivedAt);
+					break;
+				default:
+					break;
 			}
 		}
 		

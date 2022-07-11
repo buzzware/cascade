@@ -2,16 +2,16 @@
 using SQLite;
 
 namespace Test {
-	public class Thing : CascadeModel<long> {
+	public class Thing : CascadeModel {
 		
 		[PrimaryKey, AutoIncrement]
-		public long Id { get; set; }
-		public string? Colour { get; set; }
+		public long id { get; set; }
+		public string? colour { get; set; }
 		public string? Size { get; set; }
-		public long UpdatedAtMs { get; set; }
+		public long updatedAtMs { get; set; }
 
-		public override long CascadeId() {
-			return Id;
+		public override object CascadeId() {
+			return id;
 		}
 
 		public Thing() {
@@ -22,10 +22,10 @@ namespace Test {
 			string? size = null,
 			long? updatedAtMs = null
 		) {
-			var result = new Thing() {Id = this.Id};
-			result.Colour = colour ?? this.Colour;
+			var result = new Thing() {id = this.id};
+			result.colour = colour ?? this.colour;
 			result.Size = size ?? this.Size;
-			result.UpdatedAtMs = updatedAtMs ?? this.UpdatedAtMs;
+			result.updatedAtMs = updatedAtMs ?? this.updatedAtMs;
 			return result;
 		}
 	}

@@ -1,17 +1,19 @@
-﻿using Cascade;
+﻿// ReSharper disable ParameterHidesMember
+
+using Cascade;
 using SQLite;
 
 namespace Test {
-	public class Gadget : CascadeModel<string> {
+	public class Gadget : CascadeModel {
 		
 		[PrimaryKey]
-		public string Id { get; set; }
-		public double? Weight { get; set; }
-		public double? Power { get; set; }
-		public long UpdatedAtMs { get; set; }
+		public string id { get; set; }
+		public double? weight { get; set; }
+		public double? power { get; set; }
+		public long updatedAtMs { get; set; }
 
-		public override string CascadeId() {
-			return Id;
+		public override object CascadeId() {
+			return id;
 		}
 
 		public Gadget() {
@@ -22,10 +24,10 @@ namespace Test {
 			double? power = null,
 			long? updatedAtMs = null
 		) {
-			var result = new Gadget() {Id = this.Id};
-			result.Weight = weight ?? this.Weight;
-			result.Power = power ?? this.Power;
-			result.UpdatedAtMs = updatedAtMs ?? this.UpdatedAtMs;
+			var result = new Gadget() {id = this.id};
+			result.weight = weight ?? this.weight;
+			result.power = power ?? this.power;
+			result.updatedAtMs = updatedAtMs ?? this.updatedAtMs;
 			return result;
 		}
 	}
