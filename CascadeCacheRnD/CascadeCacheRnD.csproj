@@ -105,7 +105,6 @@
     <Compile Include="original\ModelDictionary.cs" />
     <Compile Include="original\ObservableDictionary.cs" />
     <Compile Include="original\Tests.cs" />
-    <Compile Include="QueryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

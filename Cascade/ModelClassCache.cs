@@ -76,16 +76,17 @@ namespace Cascade {
 			return response.Result as Model;
 		}
 
-		public Task Store(object id, object model, long arrivedAt) {
+		public async Task Store(object id, object model, long arrivedAt) {
 			var idTyped = (IdType?) CascadeUtils.ConvertTo(typeof(IdType), id);
 			if (idTyped == null)
 				throw new Exception("Bad id");
-			return Store(idTyped, (Model)model, arrivedAt);
+			models[idTyped] = new Tuple<Model, long>((Model)model, arrivedAt);
+			// return Store(idTyped, (Model)model, arrivedAt);
 		}
 
-		public async Task Store(IdType id, Model model, long arrivedAt) {
-			models[id] = new Tuple<Model, long>(model, arrivedAt);
-		}
+		// public async Task Store(IdType id, Model model, long arrivedAt) {
+		// 	models[id] = new Tuple<Model, long>(model, arrivedAt);
+		// }
 		
 		public async Task StoreCollection(string key, ImmutableArray<object> ids, long arrivedAt) {
 			collections[key] = new Tuple<ImmutableArray<object>, long>(ids, arrivedAt);

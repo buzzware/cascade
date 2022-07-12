@@ -24,7 +24,9 @@ namespace Test {
 				var model = idModel.Value!;
 				var result = crit.ToList().All(kv => {
 					var mv = model!.GetType().GetProperty(kv.Key)!.GetValue(model);
-					return kv.Value!.GetValue<object>() == mv;
+					var v = kv.Value!.GetValue<object>();
+					var equal = CascadeUtils.IsEqual(mv, v);   //(v == null && mv == null) || (v != null && v.Equals(mv)); 
+					return equal;
 				});
 				return result;
 			}).ToImmutableArray();
@@ -105,13 +107,16 @@ namespace Test {
 		
 		MockOrigin2 origin;
 		MockModelClassOrigin<Thing> thingOrigin;
+		MockModelClassOrigin<Gadget> gadgetOrigin;
 
 		[SetUp]
 		public void SetUp() {
 			thingOrigin = new MockModelClassOrigin<Thing>();
+			gadgetOrigin = new MockModelClassOrigin<Gadget>();
 			origin = new MockOrigin2(
 				new Dictionary<Type, IModelClassOrigin>() {
-					{ typeof(Thing), thingOrigin }
+					{ typeof(Thing), thingOrigin },
+					{ typeof(Gadget), gadgetOrigin },
 				},
 				1000
 			);
@@ -150,9 +155,9 @@ namespace Test {
 				{ typeof(Thing), thingModelStore1 }
 			});
 			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { cache1 }, new CascadeConfig());
-			var redThings = (await cascade.Query<Thing>("red_things", new JsonObject {
+			var redThings = await cascade.Query<Thing>("red_things", new JsonObject {
 				["colour"] = "red"
-			})).ToImmutableArray();
+			});
 			var redIds = redThings.Select(t => t.id).ToImmutableArray();
 			Assert.That(redIds, Is.EqualTo(new long[] {1, 3}));
 			
@@ -189,12 +194,41 @@ namespace Test {
 		}
 
 
-		// [Test]
-		// public async Task QueryWithSqliteCache() {
-		// 	
-		// 	
-		// 	
-		// }
+		[Test]
+		public async Task QueryWithSqliteCache() {
+			var path = System.IO.Path.GetTempFileName();
+			var conn = new SQLite.SQLiteAsyncConnection(path);
+			var db = new TestDatabase(conn);
+			await db.Reset();
+			
+			Gadget[] allGadgets = new[] {
+				new Gadget() { id = "aaa", power = 1, weight = 100 },
+				new Gadget() { id = "bbb", power = 2, weight = 123 },
+				new Gadget() { id = "ccc", power = 3, weight = 456 },
+				new Gadget() { id = "ddd", power = 4, weight = 100 }
+			};
+			foreach (var t in allGadgets)
+				await gadgetOrigin.Store(t.id, t);
+			
+			var memoryGadgetCache = new ModelClassCache<Gadget, string>();
+			var memoryCache = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
+				{ typeof(Gadget), memoryGadgetCache }
+			});
+
+			var sqliteGadgetCache = new SqliteClassCache<Gadget, string>(db);
+			await sqliteGadgetCache.Setup();
+			var sqliteCache = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
+				{ typeof(Gadget), sqliteGadgetCache }
+			});
+			
+			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { memoryCache, sqliteCache }, new CascadeConfig());
+			
+			var gadgets100 = await cascade.Query<Gadget>("gadgets100", new JsonObject {
+				["weight"] = 100
+			});
+			var gadgets100Ids = gadgets100.Select(t => t.id).ToImmutableArray();
+			Assert.That(gadgets100Ids, Is.EqualTo(new string[] {"aaa", "ddd"}));
+		}
 
 
 

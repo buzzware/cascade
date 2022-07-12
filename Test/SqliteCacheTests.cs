@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Cascade;
 using Cascade.testing;
 using NUnit.Framework;
-using Test;
 
-namespace CascadeCacheRnD {
+namespace Test {
 	[TestFixture]
 	public class SqliteCacheTests {
 
@@ -121,6 +122,41 @@ namespace CascadeCacheRnD {
 			
 			var thing3 = await cascade.Get<Thing>(5, freshnessSeconds: 0);
 			Assert.AreEqual(origin.NowMs, thing3!.updatedAtMs);
+		}
+
+
+		[Test]
+		public async Task TestCollections() {
+			var path = System.IO.Path.GetTempFileName();
+			var conn = new SQLite.SQLiteAsyncConnection(path);
+			var db = new TestDatabase(conn);
+			await db.Reset();
+
+			var sqliteThingCache = new SqliteClassCache<Thing, long>(db);
+			await sqliteThingCache.Setup();
+			var sqliteGadgetCache = new SqliteClassCache<Gadget, string>(db);
+			await sqliteGadgetCache.Setup();
+			var cache = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
+				{ typeof(Thing), sqliteThingCache },
+				{ typeof(Gadget), sqliteGadgetCache }
+			});
+			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { cache }, new CascadeConfig() { DefaultFreshnessSeconds = 1 });
+
+			var collection_key = "my_things";
+			var ids = ImmutableArray.Create<object>(1, 2, 3);
+			var response = await cache.Fetch(RequestOp.QueryOp<Thing>(collection_key, new JsonObject(), 0));
+			Assert.AreEqual(false,response.Exists);
+			Assert.AreEqual(null,response.Result);
+			await cache.StoreCollection(typeof(Thing), collection_key, ids, 0);
+
+			response = await cache.Fetch(RequestOp.QueryOp<Thing>(collection_key, null, 0));
+			Assert.IsTrue(CascadeUtils.IsEqualEnumerable(ids,response.ResultIds));
+			
+			response = await cache.Fetch(RequestOp.QueryOp<Thing>("not_my_key", null, 0));
+			Assert.IsFalse(response.Exists);
+			
+			response = await cache.Fetch(RequestOp.QueryOp<Gadget>(collection_key, null, 0));
+			Assert.IsFalse(response.Exists);
 		}
 	}
 }
