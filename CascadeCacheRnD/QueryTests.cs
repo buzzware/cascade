@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -42,6 +43,9 @@ namespace Test {
 	}
 	
 	public class MockOrigin2 : MockOrigin {
+
+		public int RequestCount { get; protected set; }
+
 		private readonly Dictionary<Type,IModelClassOrigin> classOrigins;
 		// private Func<MockOrigin,RequestOp,Task<OpResponse>>? HandleRequest;
 
@@ -51,6 +55,9 @@ namespace Test {
 		}
 		
 		public override async Task<OpResponse> ProcessRequest(RequestOp request) {
+
+			RequestCount += 1;
+			
 			object? result = null;
 			
 			var co = classOrigins[request.Type];
@@ -136,8 +143,8 @@ namespace Test {
 				new Thing() { id = 3, colour = "red" },
 				new Thing() { id = 4, colour = "yellow" },
 			};
-			foreach (var thing in allThings)
-				await thingOrigin.Store(thing.id, thing);
+			foreach (var t in allThings)
+				await thingOrigin.Store(t.id, t);
 			var thingModelStore1 = new ModelClassCache<Thing, long>();
 			var cache1 = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
 				{ typeof(Thing), thingModelStore1 }
@@ -148,9 +155,49 @@ namespace Test {
 			})).ToArray();
 			var redIds = redThings.Select(t => t.id).ToArray();
 			Assert.That(redIds, Is.EqualTo(new long[] {1, 3}));
-	}
-		
-		
+			
+			// check that collection & models are in cache
+			Thing? thing;
+			
+			thing = await thingModelStore1.Fetch<Thing>(1);
+			Assert.AreEqual(1,thing.id);
+			Assert.AreEqual("red",thing.colour);
+			thing = await thingModelStore1.Fetch<Thing>(3);
+			Assert.AreEqual(3,thing.id);
+			Assert.AreEqual("red",thing.colour);
+			thing = await thingModelStore1.Fetch<Thing>(2);
+			Assert.AreEqual(null, thing);
+
+			var rcBefore = origin.RequestCount;
+			origin.IncNowMs();
+			
+			// request with freshness=2
+			var redThings2 = await cascade.Query<Thing>("red_things", new JsonObject {
+				["colour"] = "red"
+			}, freshnessSeconds: 2);
+			Assert.That(redThings2.Select(t => t.id).ToImmutableArray(), Is.EqualTo(new long[] {1, 3}));	// same response
+			Assert.AreEqual(rcBefore,origin.RequestCount);	// didn't use origin
+			
+			rcBefore = origin.RequestCount;
+			origin.IncNowMs();
+			
+			redThings2 = (await cascade.Query<Thing>("red_things", new JsonObject {
+				["colour"] = "red"
+			}, freshnessSeconds: 0)).ToArray();
+			Assert.That(redThings2.Select(t => t.id).ToImmutableArray(), Is.EqualTo(new long[] {1, 3}));	// same response
+			Assert.AreEqual(rcBefore+1,origin.RequestCount);	// did use origin
+		}
+
+
+		// [Test]
+		// public async Task QueryWithSqliteCache() {
+		// 	
+		// 	
+		// 	
+		// }
+
+
+
 		// [Test]
 		// public async Task ReadWithoutCache() {
 		// 	var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig());

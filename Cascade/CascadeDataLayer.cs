@@ -80,9 +80,9 @@ namespace Cascade
 			return ProcessRequest(req);
 		}
 
-		public async Task<IEnumerable<M>> Query<M>(string key, object criteria, int? freshnessSeconds = null) {
+		public async Task<M[]> Query<M>(string key, object criteria, int? freshnessSeconds = null) {
 			var response = await QueryResponse<M>(key, criteria, freshnessSeconds);
-			var results = response.Results.Cast<M>();
+			var results = response.Results.Cast<M>().ToArray();
 			//return Array.ConvertAll<object,M>(response.Results) ?? Array.Empty<M>();
 			return results;
 		}
@@ -122,7 +122,7 @@ namespace Cascade
 				// 	await StoreInPreviousCaches(opResponse, layerFound);		
 				// }
 				await StoreInPreviousCaches(opResponse, layerFound);					// just store ResultIds
-				opResponse = opResponse.withChanges(result: modelResponses);	// modify the response with models instead of ids
+				opResponse = opResponse.withChanges(result: modelResponses.Select(r=>r.Result).ToArray());	// modify the response with models instead of ids
 			} else {
 				await StoreInPreviousCaches(opResponse, layerFound);
 			}

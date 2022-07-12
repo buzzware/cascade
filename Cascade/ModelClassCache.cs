@@ -70,6 +70,11 @@ namespace Cascade {
 			}
 		}
 
+		public async Task<Model?> Fetch<Model>(object id, int freshnessSeconds = 0) where Model : class {
+			var response = await Fetch(RequestOp.GetOp<Model>(id, Cascade.NowMs, freshnessSeconds: freshnessSeconds));
+			return response.Result as Model;
+		}
+
 		public Task Store(object id, object model, long arrivedAt) {
 			var idTyped = (IdType?) CascadeUtils.ConvertTo(typeof(IdType), id);
 			if (idTyped == null)
