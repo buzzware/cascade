@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace Cascade {
 			return store.Store(id,model,arrivedAt);
 		}
 
-		public Task StoreCollection(Type type, string key, object[] ids, long arrivedAt) {
+		public Task StoreCollection(Type type, string key, ImmutableArray<object> ids, long arrivedAt) {
 			if (type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(type))

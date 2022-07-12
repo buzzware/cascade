@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
@@ -80,9 +81,9 @@ namespace Cascade
 			return ProcessRequest(req);
 		}
 
-		public async Task<M[]> Query<M>(string key, object criteria, int? freshnessSeconds = null) {
+		public async Task<ImmutableArray<M>> Query<M>(string key, object criteria, int? freshnessSeconds = null) {
 			var response = await QueryResponse<M>(key, criteria, freshnessSeconds);
-			var results = response.Results.Cast<M>().ToArray();
+			var results = response.Results.Cast<M>().ToImmutableArray();
 			//return Array.ConvertAll<object,M>(response.Results) ?? Array.Empty<M>();
 			return results;
 		}
@@ -122,7 +123,7 @@ namespace Cascade
 				// 	await StoreInPreviousCaches(opResponse, layerFound);		
 				// }
 				await StoreInPreviousCaches(opResponse, layerFound);					// just store ResultIds
-				opResponse = opResponse.withChanges(result: modelResponses.Select(r=>r.Result).ToArray());	// modify the response with models instead of ids
+				opResponse = opResponse.withChanges(result: modelResponses.Select(r=>r.Result).ToImmutableArray());	// modify the response with models instead of ids
 			} else {
 				await StoreInPreviousCaches(opResponse, layerFound);
 			}
@@ -150,7 +151,7 @@ namespace Cascade
 				for (int j = 0; j < someGetResponses.Length; j++)	// fill allResponses array from responses
 					allResponses[i + j] = someGetResponses[j];
 			}
-			return allResponses;
+			return allResponses.ToImmutableArray();
 		}
 
 		private async Task StoreInPreviousCaches(OpResponse opResponse, ICascadeCache? layerFound) {
@@ -348,7 +349,7 @@ namespace Cascade
 // //						}
 // //						if (aRequestOp.Exclusive)
 // //						{
-// //							IEnumerable<string> ids = items.Select(i => i.GetResourceId()).ToArray();
+// //							IEnumerable<string> ids = items.Select(i => i.GetResourceId()).ToImmutableArray();
 // //							await localStore.DestroyExcept<M>(ids);
 // //						}
 // //					}

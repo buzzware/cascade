@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -56,31 +57,34 @@ namespace Cascade {
 		public bool ResultIsEmpty() {
 			if (Result == null)
 				return true;
-			object[]? objects = Result as object[];
-			if (objects != null)
-				return objects.Length == 0;
+			IEnumerable<object>? inumerableObj = Result as IEnumerable<object>;
+			if (inumerableObj != null)
+				return !inumerableObj.GetEnumerator().MoveNext();
 			IEnumerable? inumerable = Result as IEnumerable;
 			if (inumerable != null)
 				return !inumerable.GetEnumerator().MoveNext();
+			object[]? objects = Result as object[];
+			if (objects != null)
+				return objects.Length == 0;
 			ICollection? icollection = Result as ICollection;
 			if (icollection != null)
 				return !icollection.GetEnumerator().MoveNext();
 			return false;				// there is something there that we can't identify
 		}
 
-		public object[] Results {
+		public ImmutableArray<object> Results {
 			get {
 				if (Result == null)
-					return new object[] { };
-				object[]? enumerable = Result as object[];
-				return enumerable ?? new object[] { };
+					return ImmutableArray<object>.Empty;
+				IEnumerable<object>? enumerable = Result is IEnumerable<object> ? (IEnumerable<object>)Result : default;
+				return enumerable?.ToImmutableArray() ?? ImmutableArray<object>.Empty;
 			}
 		}
 
 		public bool IsModelResults => Results.FirstOrDefault()?.GetType().IsClass ?? false;
 		public bool IsIdResults => Results.FirstOrDefault()?.GetType().IsPrimitive ?? false;
 
-		public object[] ResultIds {
+		public ImmutableArray<object> ResultIds {
 			get {
 				var results = Results;
 				if (!results.Any())
@@ -89,7 +93,7 @@ namespace Cascade {
 				if (first.GetType().IsPrimitive)
 					return results;
 				else if (first is ICascadeModel)
-					return results.Select(m => (m as ICascadeModel)!.CascadeId()).ToArray();
+					return results.Select(m => (m as ICascadeModel)!.CascadeId()).ToImmutableArray();
 				else
 					throw new Exception("Result is IEnumerable but not of ICascadeModel");
 			}

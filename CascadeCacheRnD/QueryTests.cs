@@ -27,8 +27,8 @@ namespace Test {
 					return kv.Value!.GetValue<object>() == mv;
 				});
 				return result;
-			}).ToArray();
-			var enumerable2 = enumerable1.Select(k => ((object) k.Value)!).ToArray();
+			}).ToImmutableArray();
+			var enumerable2 = enumerable1.Select(k => ((object) k.Value)!).ToImmutableArray();
 			return enumerable2;
 		}
 		
@@ -152,8 +152,8 @@ namespace Test {
 			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { cache1 }, new CascadeConfig());
 			var redThings = (await cascade.Query<Thing>("red_things", new JsonObject {
 				["colour"] = "red"
-			})).ToArray();
-			var redIds = redThings.Select(t => t.id).ToArray();
+			})).ToImmutableArray();
+			var redIds = redThings.Select(t => t.id).ToImmutableArray();
 			Assert.That(redIds, Is.EqualTo(new long[] {1, 3}));
 			
 			// check that collection & models are in cache
@@ -183,7 +183,7 @@ namespace Test {
 			
 			redThings2 = (await cascade.Query<Thing>("red_things", new JsonObject {
 				["colour"] = "red"
-			}, freshnessSeconds: 0)).ToArray();
+			}, freshnessSeconds: 0)).ToImmutableArray();
 			Assert.That(redThings2.Select(t => t.id).ToImmutableArray(), Is.EqualTo(new long[] {1, 3}));	// same response
 			Assert.AreEqual(rcBefore+1,origin.RequestCount);	// did use origin
 		}

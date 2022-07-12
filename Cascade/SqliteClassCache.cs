@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 using SQLite;
 using Test;
@@ -63,7 +64,7 @@ namespace Cascade {
 			});
 		}
 
-		public Task StoreCollection(string key, object[] ids, long aArrivedAt) {
+		public Task StoreCollection(string key, ImmutableArray<object> ids, long aArrivedAt) {
 			throw new NotImplementedException();
 		}
 
