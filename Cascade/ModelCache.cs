@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace Cascade {
 			return store.Store(id,model,arrivedAt);
 		}
 
-		public Task StoreCollection(Type type, string key, ImmutableArray<object> ids, long arrivedAt) {
+		public Task StoreCollection(Type type, string key, IEnumerable ids, long arrivedAt) {
 			if (type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(type))
@@ -86,7 +87,7 @@ namespace Cascade {
 					if (opResponse.IsModelResults) {
 						// var results = opResponse.Results(); // as IEnumerable<ICascadeModel>)!;
 						// var models = CascadeUtils.ConvertTo(typeof(IEnumerable<ICascadeModel>),results)! as IEnumerable<ICascadeModel>;
-						var models = opResponse.Results.Select(r => (r as ICascadeModel)!);
+						var models = opResponse.Results.Cast<Object>().Select(r => (r as ICascadeModel)!);
 						foreach (var model in models)
 							await cache.Store(model.CascadeId(), model, arrivedAt);
 					}

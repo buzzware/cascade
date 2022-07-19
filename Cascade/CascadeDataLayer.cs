@@ -86,7 +86,7 @@ namespace Cascade {
 			return ProcessRequest(req);
 		}
 
-		public async Task<ImmutableArray<M>> Query<M>(string key, object criteria, int? freshnessSeconds = null) {
+		public async Task<IEnumerable<M>> Query<M>(string key, object criteria, int? freshnessSeconds = null) {
 			var response = await QueryResponse<M>(key, criteria, freshnessSeconds);
 			var results = response.Results.Cast<M>().ToImmutableArray();
 			//return Array.ConvertAll<object,M>(response.Results) ?? Array.Empty<M>();
@@ -364,8 +364,9 @@ namespace Cascade {
 			return opResponse!;
 		}
 
-		private async Task<IEnumerable<OpResponse>> GetModelsForIds(Type type, int freshnessSeconds, IEnumerable<object> ids) {
+		private async Task<IEnumerable<OpResponse>> GetModelsForIds(Type type, int freshnessSeconds, IEnumerable iids) {
 			const int MaxParallelRequests = 10;
+			var ids = iids.Cast<object>();
 
 			OpResponse[] allResponses = new OpResponse[ids.Count()];
 			for (var i = 0; i < ids.Count(); i += MaxParallelRequests) {

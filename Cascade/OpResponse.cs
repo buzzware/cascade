@@ -72,7 +72,7 @@ namespace Cascade {
 			return false;				// there is something there that we can't identify
 		}
 
-		public ImmutableArray<object> Results {
+		public IEnumerable Results {
 			get {
 				if (Result == null)
 					return ImmutableArray<object>.Empty;
@@ -81,12 +81,14 @@ namespace Cascade {
 			}
 		}
 
-		public bool IsModelResults => Results.FirstOrDefault()?.GetType().IsClass ?? false;
-		public bool IsIdResults => Results.FirstOrDefault()?.GetType().IsPrimitive ?? false;
+		public object? FirstResult => (Result as IEnumerable)?.Cast<object>().FirstOrDefault(); 
 
-		public ImmutableArray<object> ResultIds {
+		public bool IsModelResults => FirstResult?.GetType()?.IsClass ?? false;
+		public bool IsIdResults => FirstResult?.GetType().IsPrimitive ?? false;
+
+		public IEnumerable ResultIds {
 			get {
-				var results = Results;
+				var results = Results.Cast<object>();
 				if (!results.Any())
 					return results;
 				var first = results.FirstOrDefault();

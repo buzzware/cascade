@@ -1,13 +1,15 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cascade {
 	public class ModelClassCache<Model, IdType> : IModelClassCache 
 		where Model : class {
 		private readonly Dictionary<IdType, Tuple<Model, long>> models = new Dictionary<IdType, Tuple<Model, long>>();
-		private readonly Dictionary<string, Tuple<ImmutableArray<object>, long>> collections = new Dictionary<string, Tuple<ImmutableArray<object>, long>>();
+		private readonly Dictionary<string, Tuple<IEnumerable, long>> collections = new Dictionary<string, Tuple<IEnumerable, long>>();
 
 		public CascadeDataLayer Cascade { get; set; }
 
@@ -88,8 +90,8 @@ namespace Cascade {
 		// 	models[id] = new Tuple<Model, long>(model, arrivedAt);
 		// }
 		
-		public async Task StoreCollection(string key, ImmutableArray<object> ids, long arrivedAt) {
-			collections[key] = new Tuple<ImmutableArray<object>, long>(ids, arrivedAt);
+		public async Task StoreCollection(string key, IEnumerable ids, long arrivedAt) {
+			collections[key] = new Tuple<IEnumerable, long>(ids, arrivedAt);
 		}
 
 		public Task Remove(object id) {

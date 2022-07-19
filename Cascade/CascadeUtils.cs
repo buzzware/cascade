@@ -22,7 +22,7 @@ namespace Cascade {
 			return success ? result : defaultValue;
 		}
 
-		public static ImmutableArray<object> DecodeJsonArray(string stringArray) {
+		public static IEnumerable DecodeJsonArray(string stringArray) {
 			var elements = JsonSerializer.Deserialize<List<JsonElement>>(stringArray)!;
 			var objects = elements.Select<JsonElement,object>(e => {
 				switch (e.ValueKind) {

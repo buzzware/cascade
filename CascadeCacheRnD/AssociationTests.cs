@@ -101,6 +101,7 @@ namespace Cascade {
 			
 			var parent = await cascade.Get<Parent>(1);
 			Assert.AreEqual(1, parent!.id);
+			Assert.IsNull(parent.Children);
 			await cascade.Populate(parent, "Children");
 			Assert.AreEqual(2,parent.Children!.Count());
 			Assert.IsTrue(parent.Children!.Any(c=>c.id==5));

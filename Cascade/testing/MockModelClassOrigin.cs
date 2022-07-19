@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace Cascade.testing {
 
 		private readonly Dictionary<object, M> models = new Dictionary<object, M>();
 
-		public async Task<IEnumerable<object>> Query(object criteria,string key) {
+		public async Task<IEnumerable> Query(object criteria,string key) {
 			JsonElement? crit = criteria as JsonElement?;
 			if (crit == null)
 				crit = JsonSerializer.SerializeToElement(criteria);
@@ -56,7 +57,7 @@ namespace Cascade.testing {
 				});
 				return critList;
 			}).ToImmutableArray();
-			var enumerable2 = enumerable1.Select(k => ((object?) k.Value)!).ToImmutableArray();
+			var enumerable2 = enumerable1.Select(k => k.Value).ToImmutableArray<M>();
 			return enumerable2;
 		}
 		

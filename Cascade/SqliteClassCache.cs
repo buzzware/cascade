@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace Cascade {
 			return $"{typeof(Model).Name}__{key}";			
 		}
 		
-		public ImmutableArray<object> objectIds {
+		public IEnumerable objectIds {
 			get {
 				return CascadeUtils.DecodeJsonArray(this.ids);
 				// var jarray =  
@@ -122,7 +123,7 @@ namespace Cascade {
 			});
 		}
 
-		public async Task StoreCollection(string key, ImmutableArray<object> ids, long arrivedAt) {
+		public async Task StoreCollection(string key, IEnumerable ids, long arrivedAt) {
 			await _database.Connection.InsertOrReplaceAsync(new CascadeCollection() {
 				model_key = CascadeCollection.GenerateId<Model>(key),
 				ids = JsonSerializer.Serialize(ids),
