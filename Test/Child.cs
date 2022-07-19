@@ -3,8 +3,8 @@
 using Cascade;
 using SQLite;
 
-namespace Test {
-	public class Gadget : CascadeModel {
+namespace Cascade {
+	public class Child : CascadeModel {
 		
 		[PrimaryKey]
 		public string id { get; set; }
@@ -16,15 +16,15 @@ namespace Test {
 			return id;
 		}
 
-		public Gadget() {
+		public Child() {
 		}
 
-		public Gadget withChanges(
+		public Child withChanges(
 			double? weight = null,
 			double? power = null,
 			long? updatedAtMs = null
 		) {
-			var result = new Gadget() {id = this.id};
+			var result = new Child() {id = this.id};
 			result.weight = weight ?? this.weight;
 			result.power = power ?? this.power;
 			result.updatedAtMs = updatedAtMs ?? this.updatedAtMs;

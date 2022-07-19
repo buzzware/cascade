@@ -5,7 +5,7 @@ using Cascade;
 using Cascade.testing;
 using NUnit.Framework;
 
-namespace Test {
+namespace Cascade {
 	[TestFixture]
 	public class SqliteTests {
 		[Test]
@@ -15,23 +15,23 @@ namespace Test {
 			var db = new TestDatabase(conn);
 			await db.Reset();
 
-			var thing1 = new Thing() {
+			var thing1 = new Parent() {
 				colour = "red"
 			};
-			thing1 = await db.Create<Thing>(thing1);
+			thing1 = await db.Create<Parent>(thing1);
 			Assert.Greater(thing1.id,0);
 			
-			var loaded = await db.Get<Thing>(thing1.id);
+			var loaded = await db.Get<Parent>(thing1.id);
 			Assert.AreEqual(thing1.id,loaded.id);
 
 			thing1.colour = "green";
 			await db.Update(thing1);
 
-			var thing2 = await db.Get<Thing>(thing1.id);
+			var thing2 = await db.Get<Parent>(thing1.id);
 			Assert.AreEqual(thing1.colour,thing2.colour);
 
 			await db.Delete(thing2);
-			var thing3 = await db.Get<Thing>(thing2.id);
+			var thing3 = await db.Get<Parent>(thing2.id);
 			Assert.IsNull(thing3);
 		}
 	}

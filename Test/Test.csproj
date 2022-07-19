@@ -107,7 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gadget.cs" />
+    <Compile Include="Child.cs" />
     <Compile Include="original\CascadeSimpleReadTests.cs" />
     <Compile Include="original\MockStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -116,7 +116,7 @@
     <Compile Include="SqliteCacheTests.cs" />
     <Compile Include="SqliteTests.cs" />
     <Compile Include="TestDatabase.cs" />
-    <Compile Include="Thing.cs" />
+    <Compile Include="Parent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

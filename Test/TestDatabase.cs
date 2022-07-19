@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
 using SQLite;
 
-namespace Test {
+namespace Cascade {
 	public class TestDatabase : SqliteDatabase {
 		public TestDatabase(SQLiteAsyncConnection connection) : base(connection) {
 		}
 		
 		public Task EnsureTablesExist() {
 			return Connection.RunInTransactionAsync(conn => {
-				conn.CreateTable<Thing>();
+				conn.CreateTable<Parent>();
 			});
 		}
 		

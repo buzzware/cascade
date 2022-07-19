@@ -8,176 +8,65 @@ using Cascade;
 using Cascade.testing;
 using NUnit.Framework;
 
-namespace Test {
-
-	public interface IModelClassOrigin {
-		Task<IEnumerable<object>> Query(object criteria, string key);
-		Task<object?> Get(object id);
-	}
-
-	public class MockModelClassOrigin<M> : IModelClassOrigin {
-		private readonly Dictionary<object, M> models = new Dictionary<object, M>();
-
-		public async Task<IEnumerable<object>> Query(object criteria,string key) {
-			var enumerable1 = models.ToList().FindAll(idModel => {
-				var crit = criteria as JsonObject;
-				var model = idModel.Value!;
-				var result = crit.ToList().All(kv => {
-					var mv = model!.GetType().GetProperty(kv.Key)!.GetValue(model);
-					var v = kv.Value!.GetValue<object>();
-					var equal = CascadeUtils.IsEqual(mv, v);   //(v == null && mv == null) || (v != null && v.Equals(mv)); 
-					return equal;
-				});
-				return result;
-			}).ToImmutableArray();
-			var enumerable2 = enumerable1.Select(k => ((object) k.Value)!).ToImmutableArray();
-			return enumerable2;
-		}
-		
-		public async Task<object?> Get(object id) {
-			models.TryGetValue(id, out var result);
-			return result;
-		}
-
-		public async Task Store(object id, M model) {
-			models[id] = model;
-		}
-	}
-	
-	public class MockOrigin2 : MockOrigin {
-
-		public int RequestCount { get; protected set; }
-
-		private readonly Dictionary<Type,IModelClassOrigin> classOrigins;
-		// private Func<MockOrigin,RequestOp,Task<OpResponse>>? HandleRequest;
-
-		public MockOrigin2(Dictionary<Type, IModelClassOrigin> classOrigins, long nowMs = 1000)  {
-			NowMs = nowMs;
-			this.classOrigins = classOrigins;
-		}
-		
-		public override async Task<OpResponse> ProcessRequest(RequestOp request) {
-
-			RequestCount += 1;
-			
-			object? result = null;
-			
-			var co = classOrigins[request.Type];
-			
-			switch (request.Verb) {
-				case RequestVerb.Query:
-					result = await co.Query(request.Criteria,request.Key!);
-					break;
-				case RequestVerb.Get: 
-					result = await co.Get(request.Id);
-					break;
-				default:
-					throw new NotImplementedException();
-			}
-
-			return new OpResponse(
-				request,
-				NowMs,
-				true,
-				true,
-				NowMs,
-				result
-			);
-		}
-
-
-		// public CascadeDataLayer Cascade { get; set; } 
-		//
-		// public long NowMs { get; set; }
-		//
-		// public long IncNowMs(long incMs=1000) {
-		// 	return NowMs += incMs;
-		// }
-		//
-		// public Task<OpResponse> ProcessRequest(RequestOp request) {
-		// 	if (HandleRequest != null)
-		// 		return HandleRequest(this,request);
-		// 	throw new NotImplementedException("Attach HandleRequest or override this");
-		// }
-	}
-	
-
+namespace Cascade {
 	[TestFixture]
 	public class QueryTests {
 		
 		MockOrigin2 origin;
-		MockModelClassOrigin<Thing> thingOrigin;
-		MockModelClassOrigin<Gadget> gadgetOrigin;
+		MockModelClassOrigin<Parent> thingOrigin;
+		MockModelClassOrigin<Child> gadgetOrigin;
 
 		[SetUp]
 		public void SetUp() {
-			thingOrigin = new MockModelClassOrigin<Thing>();
-			gadgetOrigin = new MockModelClassOrigin<Gadget>();
+			thingOrigin = new MockModelClassOrigin<Parent>();
+			gadgetOrigin = new MockModelClassOrigin<Child>();
 			origin = new MockOrigin2(
 				new Dictionary<Type, IModelClassOrigin>() {
-					{ typeof(Thing), thingOrigin },
-					{ typeof(Gadget), gadgetOrigin },
+					{ typeof(Parent), thingOrigin },
+					{ typeof(Child), gadgetOrigin },
 				},
 				1000
 			);
-
-
-
-			// origin = new MockOrigin(nowMs:1000,handleRequest: (origin, requestOp) => {
-			// 	var nowMs = origin.NowMs;
-			// 	var thing = new Thing() {
-			// 		Id = requestOp.IdAsInt ?? 0
-			// 	};
-			// 	thing.UpdatedAtMs = requestOp.TimeMs;
-			// 	return Task.FromResult(new OpResponse(
-			// 		requestOp: requestOp,
-			// 		nowMs,
-			// 		connected: true,
-			// 		exists: true,
-			// 		result: thing,
-			// 		arrivedAtMs: nowMs
-			// 	));
-			// });
 		}
 
 		[Test]
 		public async Task Simple() {
-			Thing[] allThings = new[] {
-				new Thing() { id = 1, colour = "red" },
-				new Thing() { id = 2, colour = "green" },
-				new Thing() { id = 3, colour = "red" },
-				new Thing() { id = 4, colour = "yellow" },
+			Parent[] allThings = new[] {
+				new Parent() { id = 1, colour = "red" },
+				new Parent() { id = 2, colour = "green" },
+				new Parent() { id = 3, colour = "red" },
+				new Parent() { id = 4, colour = "yellow" },
 			};
 			foreach (var t in allThings)
 				await thingOrigin.Store(t.id, t);
-			var thingModelStore1 = new ModelClassCache<Thing, long>();
+			var thingModelStore1 = new ModelClassCache<Parent, long>();
 			var cache1 = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
-				{ typeof(Thing), thingModelStore1 }
+				{ typeof(Parent), thingModelStore1 }
 			});
 			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { cache1 }, new CascadeConfig());
-			var redThings = await cascade.Query<Thing>("red_things", new JsonObject {
+			var redThings = await cascade.Query<Parent>("red_things", new JsonObject {
 				["colour"] = "red"
 			});
 			var redIds = redThings.Select(t => t.id).ToImmutableArray();
 			Assert.That(redIds, Is.EqualTo(new long[] {1, 3}));
 			
 			// check that collection & models are in cache
-			Thing? thing;
+			Parent? thing;
 			
-			thing = await thingModelStore1.Fetch<Thing>(1);
+			thing = await thingModelStore1.Fetch<Parent>(1);
 			Assert.AreEqual(1,thing.id);
 			Assert.AreEqual("red",thing.colour);
-			thing = await thingModelStore1.Fetch<Thing>(3);
+			thing = await thingModelStore1.Fetch<Parent>(3);
 			Assert.AreEqual(3,thing.id);
 			Assert.AreEqual("red",thing.colour);
-			thing = await thingModelStore1.Fetch<Thing>(2);
+			thing = await thingModelStore1.Fetch<Parent>(2);
 			Assert.AreEqual(null, thing);
 
 			var rcBefore = origin.RequestCount;
 			origin.IncNowMs();
 			
 			// request with freshness=2
-			var redThings2 = await cascade.Query<Thing>("red_things", new JsonObject {
+			var redThings2 = await cascade.Query<Parent>("red_things", new JsonObject {
 				["colour"] = "red"
 			}, freshnessSeconds: 2);
 			Assert.That(redThings2.Select(t => t.id).ToImmutableArray(), Is.EqualTo(new long[] {1, 3}));	// same response
@@ -186,7 +75,7 @@ namespace Test {
 			rcBefore = origin.RequestCount;
 			origin.IncNowMs();
 			
-			redThings2 = (await cascade.Query<Thing>("red_things", new JsonObject {
+			redThings2 = (await cascade.Query<Parent>("red_things", new JsonObject {
 				["colour"] = "red"
 			}, freshnessSeconds: 0)).ToImmutableArray();
 			Assert.That(redThings2.Select(t => t.id).ToImmutableArray(), Is.EqualTo(new long[] {1, 3}));	// same response
@@ -201,29 +90,29 @@ namespace Test {
 			var db = new TestDatabase(conn);
 			await db.Reset();
 			
-			Gadget[] allGadgets = new[] {
-				new Gadget() { id = "aaa", power = 1, weight = 100 },
-				new Gadget() { id = "bbb", power = 2, weight = 123 },
-				new Gadget() { id = "ccc", power = 3, weight = 456 },
-				new Gadget() { id = "ddd", power = 4, weight = 100 }
+			Child[] allGadgets = new[] {
+				new Child() { id = "aaa", power = 1, weight = 100 },
+				new Child() { id = "bbb", power = 2, weight = 123 },
+				new Child() { id = "ccc", power = 3, weight = 456 },
+				new Child() { id = "ddd", power = 4, weight = 100 }
 			};
 			foreach (var t in allGadgets)
 				await gadgetOrigin.Store(t.id, t);
 			
-			var memoryGadgetCache = new ModelClassCache<Gadget, string>();
+			var memoryGadgetCache = new ModelClassCache<Child, string>();
 			var memoryCache = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
-				{ typeof(Gadget), memoryGadgetCache }
+				{ typeof(Child), memoryGadgetCache }
 			});
 
-			var sqliteGadgetCache = new SqliteClassCache<Gadget, string>(db);
+			var sqliteGadgetCache = new SqliteClassCache<Child, string>(db);
 			await sqliteGadgetCache.Setup();
 			var sqliteCache = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
-				{ typeof(Gadget), sqliteGadgetCache }
+				{ typeof(Child), sqliteGadgetCache }
 			});
 			
 			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { memoryCache, sqliteCache }, new CascadeConfig());
 			
-			var gadgets100 = await cascade.Query<Gadget>("gadgets100", new JsonObject {
+			var gadgets100 = await cascade.Query<Child>("gadgets100", new JsonObject {
 				["weight"] = 100
 			});
 			var gadgets100Ids = gadgets100.Select(t => t.id).ToImmutableArray();

@@ -107,14 +107,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="attributes\BelongsToAttribute.cs" />
+    <Compile Include="attributes\HasManyAttribute.cs" />
     <Compile Include="CascadeConfig.cs" />
     <Compile Include="CascadeDataLayer.cs" />
     <Compile Include="CascadeExceptions.cs" />
     <Compile Include="CascadeUtils.cs" />
     <Compile Include="extensions.cs" />
+    <Compile Include="ForeignKeyCriteria.cs" />
     <Compile Include="interfaces\ICascadeCache.cs" />
     <Compile Include="interfaces\ICascadeOrigin.cs" />
     <Compile Include="interfaces\IModelClassCache.cs" />
+    <Compile Include="interfaces\IModelClassOrigin.cs" />
     <Compile Include="ModelCache.cs" />
     <Compile Include="ModelClassCache.cs" />
     <Compile Include="OpResponse.cs" />
@@ -133,7 +137,10 @@
     <Compile Include="SqliteClassCache.cs" />
     <Compile Include="SqliteDatabase.cs" />
     <Compile Include="SuperModel.cs" />
+    <Compile Include="testing\MockModelClassOrigin.cs" />
     <Compile Include="testing\MockOrigin.cs" />
+    <Compile Include="testing\MockOrigin2.cs" />
+    <Compile Include="utilities\EnumerableAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Cascade.csproj" />

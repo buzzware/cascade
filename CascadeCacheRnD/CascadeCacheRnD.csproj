@@ -100,6 +100,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssociationTests.cs" />
     <Compile Include="original\AppInitializer.cs" />
     <Compile Include="original\AppState.cs" />
     <Compile Include="original\ModelDictionary.cs" />

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Serilog;
 using SQLite;
 
-namespace Test {
+namespace Cascade {
 	public class SqliteDatabase {
 		
 		// use withConnection instead of this

@@ -1,8 +1,8 @@
 ﻿using Cascade;
 using SQLite;
 
-namespace Test {
-	public class Thing : CascadeModel {
+namespace Cascade {
+	public class Parent : CascadeModel {
 		
 		[PrimaryKey, AutoIncrement]
 		public long id { get; set; }
@@ -14,15 +14,15 @@ namespace Test {
 			return id;
 		}
 
-		public Thing() {
+		public Parent() {
 		}
 		
-		public Thing withChanges(
+		public Parent withChanges(
 			string? colour = null,
 			string? size = null,
 			long? updatedAtMs = null
 		) {
-			var result = new Thing() {id = this.id};
+			var result = new Parent() {id = this.id};
 			result.colour = colour ?? this.colour;
 			result.Size = size ?? this.Size;
 			result.updatedAtMs = updatedAtMs ?? this.updatedAtMs;

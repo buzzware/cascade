@@ -27,7 +27,7 @@ namespace Cascade {
 			var objects = elements.Select<JsonElement,object>(e => {
 				switch (e.ValueKind) {
 						case JsonValueKind.Number:
-							return e.GetDouble()!;
+							return e.GetInt64()!;
 						break;
 						case JsonValueKind.String:
 							return e.GetString()!;

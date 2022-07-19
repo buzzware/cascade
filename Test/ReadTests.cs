@@ -5,7 +5,7 @@ using Cascade;
 using Cascade.testing;
 using NUnit.Framework;
 
-namespace Test {
+namespace Cascade {
 	
 	[TestFixture]
 	public class ReadTests {
@@ -16,7 +16,7 @@ namespace Test {
 		public void SetUp() {
 			origin = new MockOrigin(nowMs:1000,handleRequest: (origin, requestOp) => {
 				var nowMs = origin.NowMs;
-				var thing = new Thing() {
+				var thing = new Parent() {
 					id = requestOp.IdAsInt ?? 0
 				};
 				thing.updatedAtMs = requestOp.TimeMs;
@@ -34,70 +34,70 @@ namespace Test {
 		[Test]
 		public async Task ReadWithoutCache() {
 			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig());
-			var thing = await cascade.Get<Thing>(5);
+			var thing = await cascade.Get<Parent>(5);
 			Assert.AreEqual(5,thing!.id);
 		}
 		
 		[Test]
 		public async Task ReadWithModelCachesMultitest() {
-			var thingModelStore1 = new ModelClassCache<Thing, long>();
+			var thingModelStore1 = new ModelClassCache<Parent, long>();
 			var cache1 = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
-				{typeof(Thing), thingModelStore1}
+				{typeof(Parent), thingModelStore1}
 			});
-			var thingModelStore2 = new ModelClassCache<Thing, long>();
+			var thingModelStore2 = new ModelClassCache<Parent, long>();
 			var cache2 = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
-				{typeof(Thing), thingModelStore2}
+				{typeof(Parent), thingModelStore2}
 			});
 			
 			// read from origin
 			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {cache1,cache2}, new CascadeConfig() {DefaultFreshnessSeconds = 1});
-			var thing1 = await cascade.Get<Thing>(5);
+			var thing1 = await cascade.Get<Parent>(5);
 			
 			Assert.AreEqual(5,thing1!.id);
 			Assert.AreEqual(cascade.NowMs,thing1.updatedAtMs);
 			
 			// should also be in both caches
-			var store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Thing>(5,cascade.NowMs));
-			Assert.AreEqual((store1ThingResponse.Result as Thing)!.id,5);
-			Assert.AreEqual(cascade.NowMs,(store1ThingResponse.Result as Thing)!.updatedAtMs);
-			var store2ThingResponse = await thingModelStore2.Fetch(RequestOp.GetOp<Thing>(5,cascade.NowMs));
-			Assert.AreEqual((store2ThingResponse.Result as Thing)!.id,5);
-			Assert.AreEqual(cascade.NowMs,(store2ThingResponse.Result as Thing)!.updatedAtMs);
+			var store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
+			Assert.AreEqual((store1ThingResponse.Result as Parent)!.id,5);
+			Assert.AreEqual(cascade.NowMs,(store1ThingResponse.Result as Parent)!.updatedAtMs);
+			var store2ThingResponse = await thingModelStore2.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
+			Assert.AreEqual((store2ThingResponse.Result as Parent)!.id,5);
+			Assert.AreEqual(cascade.NowMs,(store2ThingResponse.Result as Parent)!.updatedAtMs);
 
 			origin.IncNowMs();
 			
 			// freshness=5 allows for cached version 
-			var thing2 = (await cascade.Get<Thing>(5,freshnessSeconds: 5))!;
+			var thing2 = (await cascade.Get<Parent>(5,freshnessSeconds: 5))!;
 			Assert.AreEqual(thing1.updatedAtMs,thing2.updatedAtMs);
 			
 			// freshness=0 doesn't allow for cached version 
-			var thing3 = (await cascade.Get<Thing>(5,freshnessSeconds: 0))!;
+			var thing3 = (await cascade.Get<Parent>(5,freshnessSeconds: 0))!;
 			Assert.AreEqual(origin.NowMs,thing3.updatedAtMs);
 
 			// caches should also be updated
-			store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Thing>(5,cascade.NowMs));
-			Assert.AreEqual(origin.NowMs,(store1ThingResponse.Result as Thing)!.updatedAtMs);
-			store2ThingResponse = await thingModelStore2.Fetch(RequestOp.GetOp<Thing>(5,cascade.NowMs));
-			Assert.AreEqual(origin.NowMs,(store2ThingResponse.Result as Thing)!.updatedAtMs);
+			store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
+			Assert.AreEqual(origin.NowMs,(store1ThingResponse.Result as Parent)!.updatedAtMs);
+			store2ThingResponse = await thingModelStore2.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
+			Assert.AreEqual(origin.NowMs,(store2ThingResponse.Result as Parent)!.updatedAtMs);
 			
 			origin.IncNowMs(2000);
 			
 			// freshness=2 should allow for cached version 
-			var thing4 = (await cascade.Get<Thing>(5,freshnessSeconds: 2))!;
+			var thing4 = (await cascade.Get<Parent>(5,freshnessSeconds: 2))!;
 			Assert.AreEqual(thing3.updatedAtMs,thing4.updatedAtMs);
 
 			// freshness=1 should get fresh version 
-			var thing5 = (await cascade.Get<Thing>(5,freshnessSeconds: 1))!;
+			var thing5 = (await cascade.Get<Parent>(5,freshnessSeconds: 1))!;
 			Assert.AreEqual(origin.NowMs,thing5.updatedAtMs);
 			
 			origin.IncNowMs(1000);
 			
 			// clear cache1, freshnessSeconds=1 should return value from cache2 and update cache1
 			await cache1.Clear();
-			var thing6 = (await cascade.Get<Thing>(thing4.id,freshnessSeconds: 1))!;			// should get cache2 version
+			var thing6 = (await cascade.Get<Parent>(thing4.id,freshnessSeconds: 1))!;			// should get cache2 version
 			Assert.AreEqual(thing6.updatedAtMs,thing5.updatedAtMs);
-			store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Thing>(5,cascade.NowMs));
-			Assert.AreEqual(thing6.updatedAtMs,(store1ThingResponse.Result as Thing)!.updatedAtMs);
+			store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
+			Assert.AreEqual(thing6.updatedAtMs,(store1ThingResponse.Result as Parent)!.updatedAtMs);
 		}
 	}
 }
