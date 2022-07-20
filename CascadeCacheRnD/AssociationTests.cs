@@ -81,7 +81,7 @@ namespace Cascade {
 		
 
 		[Test]
-		public async Task PopulateHasManyWithoutCache() {
+		public async Task PopulateHasManyAndBelongsToWithoutCache() {
 			Parent[] allParent = new[] {
 				new Parent() { id = 1, colour = "red" },
 				new Parent() { id = 2, colour = "green" }
@@ -107,6 +107,10 @@ namespace Cascade {
 			Assert.IsTrue(parent.Children!.Any(c=>c.id==5));
 			Assert.IsTrue(parent.Children!.Any(c=>c.id==6));
 			Assert.IsFalse(parent.Children!.Any(c=>c.id==7));
+
+			var child = parent.Children!.FirstOrDefault()!;
+			await cascade.Populate(child, "Parent");
+			Assert.AreSame(parent,child.Parent);
 		}
 		
 		/*

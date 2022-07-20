@@ -106,9 +106,6 @@ namespace Cascade {
 		
 		// =================== PRIVATE METHODS =========================
 		
-		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute) {
-			throw new NotImplementedException();
-		}
 
 		public static Type[] GetTypeLayers(Type type) {
 			List<Type>? result = new List<Type>();
@@ -266,9 +263,10 @@ namespace Cascade {
 			propertyInfo.SetValue(target, newValue);
 		}
 			
-			
-			
-			
+		private void SetModelProperty(object model, PropertyInfo propertyInfo, object? value) {
+			propertyInfo.SetValue(model,value);
+		}
+		
 			
 			//
 			//
@@ -332,6 +330,25 @@ namespace Cascade {
 			}
 		}
 		
+		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute) {
+			var foreignModelType = DeNullType(propertyInfo.PropertyType);
+			var idProperty = modelType.GetProperty(attribute.IdProperty);
+			var id = idProperty.GetValue(model);
+			if (id == null)
+				return;
+			
+			var requestOp = new RequestOp(
+				NowMs,
+				foreignModelType,
+				RequestVerb.Get,
+				id,
+				freshnessSeconds: Config.DefaultFreshnessSeconds
+			);
+			var opResponse = await ProcessRequest(requestOp);
+			SetModelProperty(model, propertyInfo, opResponse.Result);
+		}
+
+
 		private async Task<OpResponse> ProcessReadOrQuery(RequestOp requestOp) {
 			object? value;
 			ICascadeCache? layerFound = null;
