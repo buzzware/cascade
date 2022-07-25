@@ -62,11 +62,15 @@ namespace Cascade.testing {
 		}
 		
 		public async Task<object?> Get(object id) {
-			models.TryGetValue(id, out var result);
+			var idType = CascadeUtils.GetCascadeIdType(typeof(M));
+			var id2 = CascadeUtils.ConvertTo(idType!, id);
+			models.TryGetValue(id2!, out var result);
 			return result;
 		}
 
 		public async Task Store(object id, M model) {
+			var idType = CascadeUtils.GetCascadeIdType(typeof(M));
+			var id2 = CascadeUtils.ConvertTo(idType!, id);
 			models[id] = model;
 		}
 	}

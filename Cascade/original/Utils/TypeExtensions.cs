@@ -1,4 +1,6 @@
-﻿namespace Easy.Common.Extensions
+﻿using System.Linq;
+
+namespace Easy.Common.Extensions
 {
     using System;
     using System.Collections.Concurrent;
@@ -6,7 +8,6 @@
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Reflection;
 
     /// <summary>

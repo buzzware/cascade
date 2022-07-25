@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using deniszykov.TypeConversion;
 
@@ -20,6 +21,35 @@ namespace Cascade {
 			object? result;
 			var success = _converter.GetConverter(value.GetType(), type).TryConvert(value, out result);
 			return success ? result : defaultValue;
+		}
+
+		
+		// public async Task Populate(ICascadeModel model, string property) {
+		// 	var modelType = model.GetType();
+		// 	var propertyInfo = modelType.GetProperty(property);
+		//
+		// 	if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute),true).FirstOrDefault() is HasManyAttribute hasMany) {
+		// 		await processHasMany(model, modelType, propertyInfo!, hasMany);
+		// 	} else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute),true).FirstOrDefault() is BelongsToAttribute belongsTo) {
+		// 		await processBelongsTo(model, modelType, propertyInfo!, belongsTo);
+		// 	}
+		// }
+		
+		public static Type GetCascadeIdType(Type cascadeModelType) {
+			return CascadeIdPropertyRequired(cascadeModelType).PropertyType;
+		}
+
+		public static Type GetCascadeIdType(object cascadeModel) {
+			return CascadeIdPropertyRequired(cascadeModel).PropertyType;
+		}
+
+		public static PropertyInfo CascadeIdPropertyRequired(Type cascadeModelType) {
+			return cascadeModelType.GetProperties().FirstOrDefault(pi => Attribute.IsDefined(pi, typeof(CascadeIdAttribute))) 
+			       ?? throw new MissingMemberException("The model is missing [CascadeId] on an id property");
+		}
+
+		public static PropertyInfo CascadeIdPropertyRequired(object cascadeModel) {
+			return CascadeIdPropertyRequired(cascadeModel.GetType());
 		}
 
 		public static IEnumerable DecodeJsonArray(string stringArray) {

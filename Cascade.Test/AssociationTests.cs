@@ -1,39 +1,37 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Cascade;
 using Cascade.testing;
 using NUnit.Framework;
 
-namespace Cascade {
-	class Parent : CascadeModel {
-		public int id { get; set; }
+namespace Cascade.Test {
+	// class Parent : CascadeModel {
+	// 	public int id { get; set; }
+	//
+	// 	[HasMany(foreignIdProperty: "parentId")]
+	// 	public IEnumerable<Child>? Children { get; set; }
+	//
+	// 	public string colour { get; set; }
+	// 	public override object CascadeId() {
+	// 		return id;
+	// 	}
+	// }
 
-		[HasMany(foreignIdProperty: "parentId")]
-		public IEnumerable<Child>? Children { get; set; }
 
-		public string colour { get; set; }
-		public override object CascadeId() {
-			return id;
-		}
-	}
-
-
-	class Child : CascadeModel {
-		public int id { get; set; }
-		public int? parentId { get; set; }
-		
-		[BelongsTo(idProperty: "parentId")]
-		public Parent? Parent { get; set; }
-
-		public override object CascadeId() {
-			return id;
-		}
-		
-		public int age { get; set; }
-	}
+	// class Child : CascadeModel {
+	// 	public int id { get; set; }
+	// 	public int? parentId { get; set; }
+	// 	
+	// 	[BelongsTo(idProperty: "parentId")]
+	// 	public Parent? Parent { get; set; }
+	//
+	// 	public override object CascadeId() {
+	// 		return id;
+	// 	}
+	// 	
+	// 	public int age { get; set; }
+	// }
 
 
 	[TestFixture]
@@ -89,10 +87,10 @@ namespace Cascade {
 			foreach (var p in allParent)
 				await parentOrigin.Store(p.id, p);
 			Child[] allChildren = new[] {
-				new Child() { id = 5, parentId = 1, age = 2 },
-				new Child() { id = 6, parentId = 1, age = 4 },
-				new Child() { id = 7, parentId = 2, age = 5 },
-				new Child() { id = 8, parentId = 2, age = 7 },
+				new Child() { id = "5", parentId = 1, age = 2 },
+				new Child() { id = "6", parentId = 1, age = 4 },
+				new Child() { id = "7", parentId = 2, age = 5 },
+				new Child() { id = "8", parentId = 2, age = 7 },
 			};
 			foreach (var c in allChildren)
 				await childOrigin.Store(c.id, c);
@@ -104,9 +102,9 @@ namespace Cascade {
 			Assert.IsNull(parent.Children);
 			await cascade.Populate(parent, "Children");
 			Assert.AreEqual(2,parent.Children!.Count());
-			Assert.IsTrue(parent.Children!.Any(c=>c.id==5));
-			Assert.IsTrue(parent.Children!.Any(c=>c.id==6));
-			Assert.IsFalse(parent.Children!.Any(c=>c.id==7));
+			Assert.IsTrue(parent.Children!.Any(c=>c.id=="5"));
+			Assert.IsTrue(parent.Children!.Any(c=>c.id=="6"));
+			Assert.IsFalse(parent.Children!.Any(c=>c.id=="7"));
 
 			var child = parent.Children!.FirstOrDefault()!;
 			await cascade.Populate(child, "Parent");

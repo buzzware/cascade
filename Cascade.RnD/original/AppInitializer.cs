@@ -4,7 +4,7 @@
 //using Xamarin.UITest;
 //using Xamarin.UITest.Queries;
 //
-//namespace CascadeCacheRnD
+//namespace Cascade.RnD
 //{
 //	public class AppInitializer
 //	{
