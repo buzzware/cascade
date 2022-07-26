@@ -87,9 +87,8 @@ namespace Cascade {
 					if (opResponse.IsModelResults) {
 						// var results = opResponse.Results(); // as IEnumerable<ICascadeModel>)!;
 						// var models = CascadeUtils.ConvertTo(typeof(IEnumerable<ICascadeModel>),results)! as IEnumerable<ICascadeModel>;
-						var models = opResponse.Results.Cast<Object>().Select(r => (r as ICascadeModel)!);
-						foreach (var model in models)
-							await cache.Store(model.CascadeId(), model, arrivedAt);
+						foreach (var model in opResponse.Results)
+							await cache.Store(CascadeTypeUtils.GetCascadeId(model), model, arrivedAt);
 					}
 					await cache.StoreCollection(opResponse.RequestOp.Key!, opResponse.ResultIds, arrivedAt);
 					break;

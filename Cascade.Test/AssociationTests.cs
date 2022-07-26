@@ -13,9 +13,6 @@ namespace Cascade.Test {
 	// 	public IEnumerable<Child>? Children { get; set; }
 	//
 	// 	public string colour { get; set; }
-	// 	public override object CascadeId() {
-	// 		return id;
-	// 	}
 	// }
 
 
@@ -25,11 +22,7 @@ namespace Cascade.Test {
 	// 	
 	// 	[BelongsTo(idProperty: "parentId")]
 	// 	public Parent? Parent { get; set; }
-	//
-	// 	public override object CascadeId() {
-	// 		return id;
-	// 	}
-	// 	
+	//// 	
 	// 	public int age { get; set; }
 	// }
 

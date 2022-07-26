@@ -34,7 +34,7 @@ namespace Cascade {
 		
 		public IEnumerable objectIds {
 			get {
-				return CascadeUtils.DecodeJsonArray(this.ids);
+				return CascadeTypeUtils.DecodeJsonArray(this.ids);
 				// var jarray =  
 				// // var jarray = JsonArray.Parse(this.ids).AsArray();
 				// var first = jarray[0];
@@ -62,7 +62,7 @@ namespace Cascade {
 				throw new Exception("requestOp.Type != typeof(Model)");
 			switch (requestOp.Verb) {
 				case RequestVerb.Get:
-					var id = (IdType?)CascadeUtils.ConvertTo(typeof(IdType), requestOp.Id); //  ((IdType)requestOp.Id)!;
+					var id = (IdType?)CascadeTypeUtils.ConvertTo(typeof(IdType), requestOp.Id); //  ((IdType)requestOp.Id)!;
 					if (id == null)
 						throw new Exception("Unable to get right value for Id");
 

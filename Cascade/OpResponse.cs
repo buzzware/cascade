@@ -94,10 +94,8 @@ namespace Cascade {
 				var first = results.FirstOrDefault();
 				if (first.GetType().IsPrimitive)
 					return results;
-				else if (first is ICascadeModel)
-					return results.Select(m => (m as ICascadeModel)!.CascadeId()).ToImmutableArray();
 				else
-					throw new Exception("Result is IEnumerable but not of ICascadeModel");
+					return results.Select(CascadeTypeUtils.GetCascadeId).ToImmutableArray();
 			}
 		}
 

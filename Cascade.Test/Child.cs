@@ -4,7 +4,7 @@ using Cascade;
 using SQLite;
 
 namespace Cascade {
-	public class Child : CascadeModel {
+	public class Child : SuperModel {
 		
 		[Cascade.CascadeId]
 		[SQLite.PrimaryKey]
@@ -19,10 +19,6 @@ namespace Cascade {
 		public double? power { get; set; }
 		public int age { get; set; }
 		public long updatedAtMs { get; set; }
-
-		public override object CascadeId() {
-			return id;
-		}
 
 		public Child() {
 		}

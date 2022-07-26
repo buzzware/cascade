@@ -122,11 +122,9 @@
     <Compile Include="ModelClassCache.cs" />
     <Compile Include="OpResponse.cs" />
     <Compile Include="original\BzJsonSerialization.cs" />
-    <Compile Include="original\CascadeModel.cs" />
     <Compile Include="original\CascadeModelJsonConverter.cs" />
     <Compile Include="original\Gopher.cs" />
     <Compile Include="original\HttpService.cs" />
-    <Compile Include="original\ICascadeModel.cs" />
     <Compile Include="original\ICascadeStore.cs" />
     <Compile Include="original\RestServerStore.cs" />
     <Compile Include="original\SqliteNetStore.cs" />
@@ -139,6 +137,7 @@
     <Compile Include="testing\MockModelClassOrigin.cs" />
     <Compile Include="testing\MockOrigin.cs" />
     <Compile Include="testing\MockOrigin2.cs" />
+    <Compile Include="utilities\CascadeTypeUtils.cs" />
     <Compile Include="utilities\EnumerableAdapter.cs" />
   </ItemGroup>
   <ItemGroup>

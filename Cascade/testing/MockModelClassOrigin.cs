@@ -52,7 +52,7 @@ namespace Cascade.testing {
 					var mv = model!.GetType().GetProperty(p.Name)!.GetValue(model);
 					//var v = kv.Value!.GetValue<object>();
 					var v = GetNaturalValueFrom(p.Value);
-					var equal = CascadeUtils.IsEqual(mv, v);   //(v == null && mv == null) || (v != null && v.Equals(mv)); 
+					var equal = CascadeTypeUtils.IsEqual(mv, v);   //(v == null && mv == null) || (v != null && v.Equals(mv)); 
 					return equal;
 				});
 				return critList;
@@ -62,15 +62,15 @@ namespace Cascade.testing {
 		}
 		
 		public async Task<object?> Get(object id) {
-			var idType = CascadeUtils.GetCascadeIdType(typeof(M));
-			var id2 = CascadeUtils.ConvertTo(idType!, id);
+			var idType = CascadeTypeUtils.GetCascadeIdType(typeof(M));
+			var id2 = CascadeTypeUtils.ConvertTo(idType!, id);
 			models.TryGetValue(id2!, out var result);
 			return result;
 		}
 
 		public async Task Store(object id, M model) {
-			var idType = CascadeUtils.GetCascadeIdType(typeof(M));
-			var id2 = CascadeUtils.ConvertTo(idType!, id);
+			var idType = CascadeTypeUtils.GetCascadeIdType(typeof(M));
+			var id2 = CascadeTypeUtils.ConvertTo(idType!, id);
 			models[id] = model;
 		}
 	}

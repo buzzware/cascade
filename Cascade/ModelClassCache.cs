@@ -22,7 +22,7 @@ namespace Cascade {
 				throw new Exception("requestOp.Type != typeof(Model)");
 			switch (requestOp.Verb) {
 				case RequestVerb.Get:
-					var id = (IdType?) CascadeUtils.ConvertTo(typeof(IdType), requestOp.Id);  //  ((IdType)requestOp.Id)!;
+					var id = (IdType?) CascadeTypeUtils.ConvertTo(typeof(IdType), requestOp.Id);  //  ((IdType)requestOp.Id)!;
 					if (id == null)
 						throw new Exception("Unable to get right value for Id");
 
@@ -79,7 +79,7 @@ namespace Cascade {
 		}
 
 		public async Task Store(object id, object model, long arrivedAt) {
-			var idTyped = (IdType?) CascadeUtils.ConvertTo(typeof(IdType), id);
+			var idTyped = (IdType?) CascadeTypeUtils.ConvertTo(typeof(IdType), id);
 			if (idTyped == null)
 				throw new Exception("Bad id");
 			models[idTyped] = new Tuple<Model, long>((Model)model, arrivedAt);

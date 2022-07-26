@@ -3,7 +3,7 @@ using Cascade;
 using SQLite;
 
 namespace Cascade {
-	public class Parent : CascadeModel {
+	public class Parent : SuperModel {
 		
 		[Cascade.CascadeId]
 		[SQLite.PrimaryKey, SQLite.AutoIncrement]
@@ -16,10 +16,6 @@ namespace Cascade {
 		public string? colour { get; set; }
 		public string? Size { get; set; }
 		public long updatedAtMs { get; set; }
-
-		public override object CascadeId() {
-			return id;
-		}
 
 		public Parent() {
 		}

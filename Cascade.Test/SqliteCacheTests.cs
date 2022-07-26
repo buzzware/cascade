@@ -150,7 +150,7 @@ namespace Cascade {
 			await cache.StoreCollection(typeof(Parent), collection_key, ids, 0);
 
 			response = await cache.Fetch(RequestOp.QueryOp<Parent>(collection_key, null, 0));
-			Assert.IsTrue(CascadeUtils.IsEqualEnumerable(ids,response.ResultIds));
+			Assert.IsTrue(CascadeTypeUtils.IsEqualEnumerable(ids,response.ResultIds));
 			
 			response = await cache.Fetch(RequestOp.QueryOp<Parent>("not_my_key", null, 0));
 			Assert.IsFalse(response.Exists);

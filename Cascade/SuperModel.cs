@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace SuperModel {
+namespace Cascade {
 	
 	public class MutationAttemptException : Exception {
 		public MutationAttemptException(string message) : base(message) {

@@ -7,7 +7,7 @@ namespace Cascade.Test {
 	[TestFixture]
 	class SuperModelTests {
 		
-		public class Thing : SuperModel.SuperModel {
+		public class Thing : SuperModel {
 
 			// for setting proxyFor
 			public Thing(Thing? proxyFor=null) : base(proxyFor) {
