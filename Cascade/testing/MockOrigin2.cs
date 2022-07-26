@@ -9,7 +9,6 @@ namespace Cascade.testing {
 		public int RequestCount { get; protected set; }
 
 		private readonly Dictionary<Type,IModelClassOrigin> classOrigins;
-		// private Func<MockOrigin,RequestOp,Task<OpResponse>>? HandleRequest;
 
 		public MockOrigin2(Dictionary<Type, IModelClassOrigin> classOrigins, long nowMs = 1000)  {
 			NowMs = nowMs;
