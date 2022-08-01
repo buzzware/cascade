@@ -9,6 +9,7 @@ namespace Cascade {
 		Create,
 		Get,
 		Update,
+		Replace,
 		Destroy,
 		Query,
 		Execute
@@ -38,13 +39,24 @@ namespace Cascade {
 				freshnessSeconds: freshnessSeconds
 			);
 		}
+
+		public static RequestOp CreateOp(object model, long timeMs) {
+			return new RequestOp(
+				timeMs,
+				model.GetType(),
+				RequestVerb.Create,
+				CascadeTypeUtils.GetCascadeId(model),
+				model
+			);
+		}
 		
 		public RequestOp(
 			long timeMs,
 			Type type,
 			RequestVerb verb,
 			object? id,
-			int freshnessSeconds, 
+			object? value = null,
+			int? freshnessSeconds = null, 
 			object? criteria = null,
 			string? key = null
 		) {
@@ -52,6 +64,7 @@ namespace Cascade {
 			Type = type;
 			Verb = verb;
 			Id = id;
+			Value = value;
 			FreshnessSeconds = freshnessSeconds;
 			Criteria = criteria;
 			Key = key;
@@ -72,6 +85,7 @@ namespace Cascade {
 		public readonly Type Type;
 		public readonly RequestVerb Verb;		// what we are doing
 		public readonly object Id;			// eg. 34
+		public readonly object Value;
 		public readonly string? Key;		// eg. Products or Products__34
 		public object Criteria { get; set; }
 		
@@ -108,9 +122,10 @@ namespace Cascade {
 
 		// only one of Key or Id would normally be used
 
-		public readonly int FreshnessSeconds = FRESHNESS_DEFAULT;
+		public readonly int? FreshnessSeconds = FRESHNESS_DEFAULT;
 
 		public readonly IDictionary<string, string> Params;	// app specific paramters for the request
+
 	}
 
 }

@@ -148,6 +148,12 @@
   <ItemGroup>
     <Content Include="original\notes.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StandardExceptionsDotNet\StandardExceptions\StandardExceptions.csproj">
+      <Project>{279b3169-c79f-497d-a77b-e6e10e0cb2aa}</Project>
+      <Name>StandardExceptions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.5\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.5\build\System.Text.Json.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

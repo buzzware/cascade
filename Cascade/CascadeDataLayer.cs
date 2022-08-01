@@ -6,12 +6,14 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Easy.Common.Extensions;
 using Microsoft.CSharp.RuntimeBinder;
 using SQLite;
+using StandardExceptions;
 using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 
 namespace Cascade {
@@ -103,6 +105,36 @@ namespace Cascade {
 				await processBelongsTo(model, modelType, propertyInfo!, belongsTo);
 			}
 		}
+
+		public Task<OpResponse> CreateResponse<M>(M model) {
+			var req = RequestOp.CreateOp(
+				model!,
+				NowMs
+			);
+			return ProcessRequest(req);
+		}
+		
+		public async Task<M> Create<M>(M model) {
+			var response = await CreateResponse<M>(model);
+			if (response.Result is not M result)
+				throw new AssumptionException($"Should be of type {typeof(M).Name}");
+			return result;
+		}
+		
+		public Task<OpResponse> ReplaceResponse<M>(M model) {
+			var req = RequestOp.CreateOp(
+				model!,
+				NowMs
+			);
+			return ProcessRequest(req);
+		}
+		
+		public async Task<M> Replace<M>(M model) {
+			var response = await ReplaceResponse<M>(model);
+			if (response.Result is not M result)
+				throw new AssumptionException($"Should be of type {typeof(M).Name}");
+			return result;
+		}
 		
 		// =================== PRIVATE METHODS =========================
 
@@ -189,6 +221,7 @@ namespace Cascade {
 				foreignType,
 				RequestVerb.Query,
 				null,
+				null,
 				0,
 				new Dictionary<string,object>() { [attribute.ForeignIdProperty] = modelId },
 				key
@@ -203,11 +236,16 @@ namespace Cascade {
 				case RequestVerb.Get:
 				case RequestVerb.Query:
 					return ProcessReadOrQuery(req);
+				case RequestVerb.Create:
+					return ProcessCreate(req);
+				case RequestVerb.Replace:
+					return ProcessReplace(req);
 				default:
 					throw new ArgumentException("Unsupported verb");
 			}
 		}
-		
+
+
 		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute) {
 			var foreignModelType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var idProperty = modelType.GetProperty(attribute.IdProperty);
@@ -246,7 +284,7 @@ namespace Cascade {
 				opResponse = await Origin.ProcessRequest(requestOp);
 			
 			if (requestOp.Verb == RequestVerb.Query && opResponse.IsIdResults) {
-				var modelResponses = await GetModelsForIds(requestOp.Type, requestOp.FreshnessSeconds, opResponse.ResultIds);
+				var modelResponses = await GetModelsForIds(requestOp.Type, requestOp.FreshnessSeconds ?? Config.DefaultFreshnessSeconds, opResponse.ResultIds);
 				// don't need to do this because the get above will achieve the same
 				// foreach (var modelResponse in modelResponses) {
 				// 	await StoreInPreviousCaches(opResponse, layerFound);		
@@ -259,6 +297,18 @@ namespace Cascade {
 			return opResponse!;
 		}
 
+		private async Task<OpResponse> ProcessCreate(RequestOp req) {
+			OpResponse? opResponse = await Origin.ProcessRequest(req);
+			await StoreInPreviousCaches(opResponse);
+			return opResponse!;
+		}
+
+		private async Task<OpResponse> ProcessReplace(RequestOp req) {
+			OpResponse? opResponse = await Origin.ProcessRequest(req);
+			await StoreInPreviousCaches(opResponse);
+			return opResponse!;
+		}
+		
 		private async Task<IEnumerable<OpResponse>> GetModelsForIds(Type type, int freshnessSeconds, IEnumerable iids) {
 			const int MaxParallelRequests = 10;
 			var ids = iids.Cast<object>();
@@ -273,7 +323,7 @@ namespace Cascade {
 								type,
 								RequestVerb.Get,
 								id,
-								freshnessSeconds
+								freshnessSeconds: freshnessSeconds
 							)
 						)
 					)
@@ -284,7 +334,7 @@ namespace Cascade {
 			return allResponses.ToImmutableArray();
 		}
 
-		private async Task StoreInPreviousCaches(OpResponse opResponse, ICascadeCache? layerFound) {
+		private async Task StoreInPreviousCaches(OpResponse opResponse, ICascadeCache? layerFound=null) {
 			var beforeLayer = layerFound == null;
 			foreach (var layer in CacheLayers.Reverse()) {
 				if (!beforeLayer && layer == layerFound)
