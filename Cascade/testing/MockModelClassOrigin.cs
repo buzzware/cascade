@@ -68,6 +68,14 @@ namespace Cascade.testing {
 			return result;
 		}
 
+		public Task<object> Create(object value) {
+			throw new System.NotImplementedException();
+		}
+
+		public Task<object> Replace(object value) {
+			throw new System.NotImplementedException();
+		}
+
 		public async Task Store(object id, M model) {
 			var idType = CascadeTypeUtils.GetCascadeIdType(typeof(M));
 			var id2 = CascadeTypeUtils.ConvertTo(idType!, id);

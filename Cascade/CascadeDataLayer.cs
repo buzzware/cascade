@@ -88,7 +88,7 @@ namespace Cascade {
 			return ProcessRequest(req);
 		}
 
-		public async Task<IEnumerable<M>> Query<M>(string key, object criteria, int? freshnessSeconds = null) {
+		public async Task<IEnumerable<M>> Query<M>(string key, object? criteria=null, int? freshnessSeconds = null) {
 			var response = await QueryResponse<M>(key, criteria, freshnessSeconds);
 			var results = response.Results.Cast<M>().ToImmutableArray();
 			//return Array.ConvertAll<object,M>(response.Results) ?? Array.Empty<M>();
