@@ -79,5 +79,13 @@ namespace Cascade {
 		{ 
 			OnPropertyChanged(e.PropertyName);
 		}
+
+		// public Dictionary<string, object> ToDictionary(Func<string,object,Tuple<string,object>> filter = null) {
+		// 	var result = new Dictionary<string, object>();
+		// 	foreach (var pi in this.GetType().GetProperties()) {
+		// 		var key = pi.Name;
+		// 		var value = pi.GetValue(this);
+		// 	}
+		// }
 	}
 }
