@@ -135,6 +135,10 @@ namespace Cascade {
 				throw new AssumptionException($"Should be of type {typeof(M).Name}");
 			return result;
 		}
+
+		public async Task Destroy<M>(object id) {
+			throw new NotImplementedException();
+		}
 		
 		// =================== PRIVATE METHODS =========================
 

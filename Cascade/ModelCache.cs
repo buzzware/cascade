@@ -71,7 +71,9 @@ namespace Cascade {
 				case RequestVerb.Create:
 				case RequestVerb.Destroy:
 					//IdType id = (IdType) CascadeUtils.ConvertTo(typeof(IdType), opResponse.RequestOp.Id);
-					var id = opResponse.RequestOp.Id;
+					//var id = opResponse.RequestOp.Id;
+					object id = CascadeTypeUtils.GetCascadeId(opResponse.Result);
+					
 					if (id == null)
 						throw new Exception("Unable to get right value for Id");
 					if (!opResponse.Exists) {
