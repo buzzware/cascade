@@ -23,7 +23,8 @@ namespace Cascade {
 		private readonly ICascadeOrigin Origin;
 		private readonly IEnumerable<ICascadeCache> CacheLayers;
 		public readonly CascadeConfig Config;
-		
+		private readonly object lockObject;
+
 		public CascadeDataLayer(
 			ICascadeOrigin origin,
 			IEnumerable<ICascadeCache> cacheLayers,
@@ -35,6 +36,7 @@ namespace Cascade {
 			foreach (var cache in cacheLayers)
 				cache.Cascade = this;
 			Config = config;
+			lockObject = new object();
 		}
 
 		public long NowMs => Origin.NowMs;
@@ -236,16 +238,18 @@ namespace Cascade {
 		}
 		
 		private Task<OpResponse> ProcessRequest(RequestOp req) {
-			switch (req.Verb) {
-				case RequestVerb.Get:
-				case RequestVerb.Query:
-					return ProcessReadOrQuery(req);
-				case RequestVerb.Create:
-					return ProcessCreate(req);
-				case RequestVerb.Replace:
-					return ProcessReplace(req);
-				default:
-					throw new ArgumentException("Unsupported verb");
+			lock (lockObject) {
+				switch (req.Verb) {
+					case RequestVerb.Get:
+					case RequestVerb.Query:
+						return ProcessReadOrQuery(req);
+					case RequestVerb.Create:
+						return ProcessCreate(req);
+					case RequestVerb.Replace:
+						return ProcessReplace(req);
+					default:
+						throw new ArgumentException("Unsupported verb");
+				}
 			}
 		}
 
