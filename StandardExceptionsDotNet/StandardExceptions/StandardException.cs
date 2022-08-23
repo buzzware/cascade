@@ -8,8 +8,9 @@ namespace StandardExceptions {
 		
 		public int Status { get; private set; }
 
-		public object Data { get; set; } = null;
-		
+		public object Result { get; set; } = null;
+		public object Error { get; set; } = null;
+
 		public StandardException (string aMessage=DefaultMessage, Exception aInnerException = null, int aStatus = DefaultStatus) : base (aMessage,aInnerException) {
 			Status = aStatus;
 		}
