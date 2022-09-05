@@ -353,6 +353,11 @@ namespace Cascade {
 			}
 		}
 
+		public async Task ClearCollection(string key) {
+			throw new NotImplementedException();
+		}
+		
+		
 		// 		public ICascadeStore localStore {
 // 			get {
 // 				return Layers?.LastOrDefault(l => l.Local) as ICascadeStore;
