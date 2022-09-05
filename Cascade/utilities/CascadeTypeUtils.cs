@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using deniszykov.TypeConversion;
 using Easy.Common.Extensions;
@@ -22,6 +23,16 @@ namespace Cascade {
 			return result.ToArray();
 		}
 
+		public static bool IsId(object id) {
+			return (id is String) || (id?.GetType().IsPrimitive ?? false);
+		}
+		
+		public static bool IsModel(object id) {
+			if (IsId(id))
+				return false;
+			return id?.GetType()?.IsClass ?? false;
+		}
+		
 		public static Type DeNullType(Type type) {
 			return Nullable.GetUnderlyingType(type) ?? type;
 		}

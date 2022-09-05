@@ -83,8 +83,9 @@ namespace Cascade {
 
 		public object? FirstResult => (Result as IEnumerable)?.Cast<object>().FirstOrDefault(); 
 
-		public bool IsModelResults => FirstResult?.GetType()?.IsClass ?? false;
-		public bool IsIdResults => FirstResult?.GetType().IsPrimitive ?? false;
+		public bool IsModelResults => CascadeTypeUtils.IsModel(FirstResult); 
+
+		public bool IsIdResults => CascadeTypeUtils.IsId(FirstResult);
 
 		public IEnumerable ResultIds {
 			get {
@@ -92,7 +93,7 @@ namespace Cascade {
 				if (!results.Any())
 					return results;
 				var first = results.FirstOrDefault();
-				if (first.GetType().IsPrimitive)
+				if (CascadeTypeUtils.IsId(first))
 					return results;
 				else
 					return results.Select(CascadeTypeUtils.GetCascadeId).ToImmutableArray();
