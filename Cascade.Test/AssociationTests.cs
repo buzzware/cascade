@@ -102,6 +102,11 @@ namespace Cascade.Test {
 			var child = parent.Children!.FirstOrDefault()!;
 			await cascade.Populate(child, "Parent");
 			Assert.AreSame(parent,child.Parent);
+			
+			var parent2 = await cascade.Get<Parent>(1, populate: new string[] {"Children"});
+			Assert.AreEqual(2,parent2.Children!.Count());
+			Assert.IsTrue(parent2.Children!.Any(c=>c.id=="5"));
+			Assert.IsTrue(parent2.Children!.Any(c=>c.id=="6"));
 		}
 		
 		/*
@@ -114,5 +119,9 @@ namespace Cascade.Test {
 		
 		
 		*/
+	}
+
+	public class CascadeGetOption {
+		public IEnumerable<string>? Populate { get; set; }
 	}
 }

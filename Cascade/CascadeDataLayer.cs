@@ -41,57 +41,95 @@ namespace Cascade {
 
 		public long NowMs => Origin.NowMs;
 
-		public Task<OpResponse> GetResponse<M>(int id, int? freshnessSeconds = null) where M : class {
+		public Task<OpResponse> GetResponse<M>(
+			int id, 
+			IEnumerable<string>? populate = null, 
+			int? freshnessSeconds = null
+		) where M : class {
 			var req = RequestOp.GetOp<M>(
 				id,
 				NowMs,
+				populate,
 				freshnessSeconds ?? Config.DefaultFreshnessSeconds
 			);
 			return ProcessRequest(req);
 		}
 		
-		public async Task<M?> Get<M>(int id, int? freshnessSeconds = null) where M : class {
-			return (await this.GetResponse<M>(id, freshnessSeconds)).Result as M;
+		public async Task<M?> Get<M>(
+			int id, 
+			IEnumerable<string>? populate = null, 
+			int? freshnessSeconds = null
+		) where M : class {
+			return (await this.GetResponse<M>(id, populate, freshnessSeconds)).Result as M;
 		}
 
-		public Task<OpResponse> GetResponse<M>(string id, int? freshnessSeconds = null) where M : class {
+		public Task<OpResponse> GetResponse<M>(
+			string id, 
+			IEnumerable<string>? populate = null, 
+			int? freshnessSeconds = null
+		) where M : class {
 			var req = RequestOp.GetOp<M>(
 				id,
 				NowMs,
+				populate: populate,
 				freshnessSeconds ?? Config.DefaultFreshnessSeconds
 			);
 			return ProcessRequest(req);
 		}
 
-		public async Task<M?> Get<M>(string id, int? freshnessSeconds = null) where M : class {
-			return (await this.GetResponse<M>(id, freshnessSeconds)).Result as M;
+		public async Task<M?> Get<M>(
+			string id,
+			IEnumerable<string>? populate = null,
+			int? freshnessSeconds = null
+		) where M : class {
+			return (await this.GetResponse<M>(
+				id,
+				populate,
+				freshnessSeconds
+			)).Result as M;
 		}
 		
-		public Task<OpResponse> GetResponse<M>(long id, int? freshnessSeconds = null) where M : class {
+		public Task<OpResponse> GetResponse<M>(
+			long id, 
+			IEnumerable<string>? populate = null, 
+			int? freshnessSeconds = null
+		) where M : class {
 			var req = RequestOp.GetOp<M>(
 				id,
 				NowMs,
+				populate,
 				freshnessSeconds ?? Config.DefaultFreshnessSeconds
 			);
 			return ProcessRequest(req);
 		}
 
-		public async Task<M?> Get<M>(long id, int? freshnessSeconds = null) where M : class {
-			return (await this.GetResponse<M>(id, freshnessSeconds)).Result as M;
+		public async Task<M?> Get<M>(long id, IEnumerable<string>? populate = null, int? freshnessSeconds = null) where M : class {
+			return (await this.GetResponse<M>(id, populate, freshnessSeconds)).Result as M;
 		}
 		
-		public Task<OpResponse> QueryResponse<M>(string key, object criteria, int? freshnessSeconds = null) {
+		public Task<OpResponse> QueryResponse<M>(
+			string key, 
+			object criteria, 
+			IEnumerable<string>? populate = null, 
+			int? freshnessSeconds = null
+		) {
 			var req = RequestOp.QueryOp<M>(
 				key,
 				criteria,
 				NowMs,
-				freshnessSeconds ?? Config.DefaultFreshnessSeconds
+				populate: populate,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds
 			);
 			return ProcessRequest(req);
 		}
 
-		public async Task<IEnumerable<M>> Query<M>(string key, object? criteria=null, int? freshnessSeconds = null) {
-			var response = await QueryResponse<M>(key, criteria, freshnessSeconds);
+		public async Task<IEnumerable<M>> Query<M>(
+			string key, 
+			object? criteria=null, 
+			IEnumerable<string>? populate = null, 
+			int? freshnessSeconds = null
+		) {
+			var response = await QueryResponse<M>(key, criteria, populate, freshnessSeconds);
 			var results = response.Results.Cast<M>().ToImmutableArray();
 			//return Array.ConvertAll<object,M>(response.Results) ?? Array.Empty<M>();
 			return results;
@@ -108,6 +146,20 @@ namespace Cascade {
 			}
 		}
 
+		public async Task Populate(SuperModel model, string[] associations) {
+			foreach (var association in associations) {
+				await Populate(model, association);
+			}
+		}
+
+		public async Task Populate(IEnumerable<SuperModel> models, string[] associations) {
+			foreach (var model in models) {
+				foreach (var association in associations) {
+					await Populate(model, association);
+				}
+			}
+		}
+		
 		public Task<OpResponse> CreateResponse<M>(M model) {
 			var req = RequestOp.CreateOp(
 				model!,
@@ -227,10 +279,10 @@ namespace Cascade {
 				foreignType,
 				RequestVerb.Query,
 				null,
-				null,
-				0,
-				new Dictionary<string,object>() { [attribute.ForeignIdProperty] = modelId },
-				key
+				value: null,
+				freshnessSeconds: 0,
+				criteria: new Dictionary<string,object>() { [attribute.ForeignIdProperty] = modelId },
+				key: key
 			);
 			var opResponse = await ProcessRequest(requestOp);
 			CascadeTypeUtils.SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
@@ -291,20 +343,30 @@ namespace Cascade {
 			if (opResponse==null)
 				opResponse = await Origin.ProcessRequest(requestOp);
 			
+			var populate = requestOp.Populate?.ToArray() ?? new string[]{};
+			
 			if (requestOp.Verb == RequestVerb.Query && opResponse.IsIdResults) {
 				var modelResponses = await GetModelsForIds(requestOp.Type, requestOp.FreshnessSeconds ?? Config.DefaultFreshnessSeconds, opResponse.ResultIds);
+				IEnumerable<SuperModel> models = modelResponses.Select(r => (SuperModel) r.Result).ToImmutableArray();
+				if (populate.Any()) {
+					await Populate(models, populate);
+				}
 				// don't need to do this because the get above will achieve the same
 				// foreach (var modelResponse in modelResponses) {
 				// 	await StoreInPreviousCaches(opResponse, layerFound);		
 				// }
 				await StoreInPreviousCaches(opResponse, layerFound);					// just store ResultIds
-				opResponse = opResponse.withChanges(result: modelResponses.Select(r=>r.Result).ToImmutableArray());	// modify the response with models instead of ids
+				opResponse = opResponse.withChanges(result: models);	// modify the response with models instead of ids
 			} else {
+				if (populate.Any()) {
+					IEnumerable<SuperModel> results = opResponse.Results.Cast<SuperModel>();
+					await Populate(results, populate);
+				}
 				await StoreInPreviousCaches(opResponse, layerFound);
 			}
 			return opResponse!;
 		}
-
+		
 		private async Task<OpResponse> ProcessCreate(RequestOp req) {
 			OpResponse? opResponse = await Origin.ProcessRequest(req);
 			await StoreInPreviousCaches(opResponse);

@@ -14,25 +14,42 @@ namespace Cascade {
 		public bool LastPageLoaded { get; protected set; }
 		public bool Loading { get; protected set; }
 
-		public CascadePaginator(CascadeDataLayer cascade, object criteria, string collectionPrefix, int perPage) {
+		public CascadePaginator(
+			CascadeDataLayer cascade, 
+			object criteria, 
+			string collectionPrefix, 
+			int perPage,
+			IEnumerable<string>? populate = null, 
+			int? freshnessSeconds = null
+		) {
 			Cascade = cascade;
 			Criteria = criteria;
 			CollectionPrefix = collectionPrefix;
 			PerPage = perPage;
+			Populate = populate;
+			FreshnessSeconds = freshnessSeconds;
 		}
-		
+
+		public int? FreshnessSeconds { get; protected set; }
+		public IEnumerable<string>? Populate { get; protected set; }
+
 		string collectionName(int page) {
 			return CollectionPrefix+"__"+page.ToString("D3");
 		}
 
-		public async Task<IEnumerable<Model>> Query(int page, int? freshnessSeconds = null) {
+		public async Task<IEnumerable<Model>> Query(int page) {
 			if (Loading)
 				throw new ConstraintException("CascadePaginator Query cannot be re-entered when it has not completed");
 			try {
 				Loading = true;
 				var criteriaWithPagination = AddPaginationToCriteria(Criteria,page);
 				queriedPages.Add(page);
-				var results = await Cascade.Query<Model>(collectionName(page), criteriaWithPagination, freshnessSeconds);
+				var results = await Cascade.Query<Model>(
+					collectionName(page), 
+					criteriaWithPagination, 
+					populate: this.Populate, 
+					freshnessSeconds: this.FreshnessSeconds
+				);
 				if (!LastPageLoaded && page > HighestPage) {
 					HighestPage = page;
 					LastPageLoaded = results.Count() < PerPage;

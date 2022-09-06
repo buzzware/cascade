@@ -109,6 +109,7 @@
     <Compile Include="CascadeDataLayer.cs" />
     <Compile Include="CascadeExceptions.cs" />
     <Compile Include="CascadePaginator.cs" />
+    <Compile Include="CascadeQueryOptions.cs" />
     <Compile Include="CascadeUtils.cs" />
     <Compile Include="extensions.cs" />
     <Compile Include="ForeignKeyCriteria.cs" />

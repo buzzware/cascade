@@ -76,8 +76,8 @@ namespace Cascade {
 			get {
 				if (Result == null)
 					return ImmutableArray<object>.Empty;
-				IEnumerable<object>? enumerable = Result is IEnumerable<object> ? (IEnumerable<object>)Result : default;
-				return enumerable?.ToImmutableArray() ?? ImmutableArray<object>.Empty;
+				IEnumerable<object> enumerable = Result is IEnumerable<object> ? ((IEnumerable<object>)Result).ToImmutableArray() : ImmutableArray.Create(Result);
+				return enumerable;
 			}
 		}
 

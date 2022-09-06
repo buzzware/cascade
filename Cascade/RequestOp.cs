@@ -18,25 +18,38 @@ namespace Cascade {
 	public class RequestOp {
 		public const int FRESHNESS_DEFAULT = 5*60;
 
-		public static RequestOp GetOp<Model>(object id, long timeMs, int freshnessSeconds = 0) {
+		public static RequestOp GetOp<Model>(
+			object id,
+			long timeMs = -1,
+			IEnumerable<string>? populate = null,
+			int freshnessSeconds = 0
+		) {
 			return new RequestOp(
-				timeMs,
+				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
 				typeof(Model),
 				RequestVerb.Get,
 				id,
+				populate: populate,
 				freshnessSeconds: freshnessSeconds
 			);
 		}
 		
-		public static RequestOp QueryOp<Model>(string key, object criteria, long timeMs, int freshnessSeconds = 0) {
+		public static RequestOp QueryOp<Model>(
+			string key, 
+			object criteria, 
+			long timeMs, 
+			IEnumerable<string>? populate = null,
+			int freshnessSeconds = 0
+		) {
 			return new RequestOp(
 				timeMs,
 				typeof(Model),
 				RequestVerb.Query,
 				null,
-				criteria: criteria,
-				key: key,
-				freshnessSeconds: freshnessSeconds
+				populate: populate,
+				freshnessSeconds: freshnessSeconds, 
+				criteria: criteria, 
+				key: key
 			);
 		}
 
@@ -46,17 +59,17 @@ namespace Cascade {
 				model.GetType(),
 				RequestVerb.Create,
 				CascadeTypeUtils.GetCascadeId(model),
-				model
+				value: model
 			);
 		}
 		
-		public RequestOp(
-			long timeMs,
+		public RequestOp(long timeMs,
 			Type type,
 			RequestVerb verb,
 			object? id,
 			object? value = null,
-			int? freshnessSeconds = null, 
+			IEnumerable<string>? populate = null,
+			int? freshnessSeconds = null,
 			object? criteria = null,
 			string? key = null
 		) {
@@ -65,11 +78,12 @@ namespace Cascade {
 			Verb = verb;
 			Id = id;
 			Value = value;
+			Populate = populate;
 			FreshnessSeconds = freshnessSeconds;
 			Criteria = criteria;
 			Key = key;
 		}
-
+		
 		public static bool IsWriteVerb(RequestVerb aVerb) {
 			return aVerb == RequestVerb.Create ||
 			       aVerb == RequestVerb.Update ||
@@ -122,6 +136,8 @@ namespace Cascade {
 
 		// only one of Key or Id would normally be used
 
+		public readonly IEnumerable<string>? Populate;
+		
 		public readonly int? FreshnessSeconds = FRESHNESS_DEFAULT;
 
 		public readonly IDictionary<string, string> Params;	// app specific paramters for the request
