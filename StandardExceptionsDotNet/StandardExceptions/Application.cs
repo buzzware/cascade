@@ -40,4 +40,10 @@ namespace StandardExceptions {
 		public AssumptionException (string aMessage=DefaultMessage, Exception aInnerException=null, int aStatus = DefaultStatus) : base (aMessage,aInnerException,aStatus) {
 		}
 	}
+	
+	public class ReentrantException : StandardException {
+		public new const string DefaultMessage = "Operation cannot be re-entered until the original call has returned";
+		public ReentrantException (string aMessage=DefaultMessage, Exception aInnerException=null, int aStatus = DefaultStatus) : base (aMessage,aInnerException,aStatus) {
+		}
+	}
 }
