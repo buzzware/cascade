@@ -12,13 +12,17 @@ namespace Cascade {
 		public static long NowMs => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
 
-		// "Where Collections" are collections whose name begins with "Where__" and is defined using this function.
-		// Their name fully describes what they are - a collection of the given type where the given property has the given value.
+		// "Where Collections" are collections whose key begins with "WHERE__" and is defined using this function.
+		// Their key fully describes what they are - a collection of the given type where the given property has the given value.
 		// In future, the framework could parse and evaluate these names as a query eg. to refresh them
-		// Other collections should not begin with "Where__", and property names or values should not contain more than one consecutive underscore
+		// Other collections should not begin with "WHERE__", and property names or values should not contain more than one consecutive underscore
 		// This function is primarily intended for collections created for associations, especially HasMany.
-		public static string WhereCollectionName(string typeName,string property,string value) {
-			return $"Where__{typeName}__{property}__{value}";
+		public static string WhereCollectionKey(string typeName,string property,string value) {
+			return $"WHERE__{typeName}__{property}__{value}";
+		}
+
+		public static string CollectionKeyFromName(string typeName, string collectionName) {
+			return typeName+"__"+collectionName;
 		}
 		
 		// public async Task Populate(ICascadeModel model, string property) {

@@ -35,7 +35,7 @@ namespace Cascade {
 		}
 		
 		public static RequestOp QueryOp<Model>(
-			string key, 
+			string collectionName, 
 			object criteria, 
 			long timeMs, 
 			IEnumerable<string>? populate = null,
@@ -49,7 +49,7 @@ namespace Cascade {
 				populate: populate,
 				freshnessSeconds: freshnessSeconds, 
 				criteria: criteria, 
-				key: key
+				key: CascadeUtils.CollectionKeyFromName(typeof(Model).Name,collectionName)
 			);
 		}
 

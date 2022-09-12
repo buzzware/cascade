@@ -13,17 +13,17 @@ namespace Cascade {
 	public class ChildCollectionTests {
 		
 		MockOrigin2 origin;
-		MockModelClassOrigin<Parent> thingOrigin;
-		MockModelClassOrigin<Child> gadgetOrigin;
+		MockModelClassOrigin<Parent> parentOrigin;
+		MockModelClassOrigin<Child> childOrigin;
 
 		[SetUp]
 		public void SetUp() {
-			thingOrigin = new MockModelClassOrigin<Parent>();
-			gadgetOrigin = new MockModelClassOrigin<Child>();
+			parentOrigin = new MockModelClassOrigin<Parent>();
+			childOrigin = new MockModelClassOrigin<Child>();
 			origin = new MockOrigin2(
 				new Dictionary<Type, IModelClassOrigin>() {
-					{ typeof(Parent), thingOrigin },
-					{ typeof(Child), gadgetOrigin },
+					{ typeof(Parent), parentOrigin },
+					{ typeof(Child), childOrigin },
 				},
 				1000
 			);
@@ -31,23 +31,63 @@ namespace Cascade {
 
 		[Test]
 		public async Task Simple() {
-			Parent[] allThings = new[] {
+			Parent[] allParents = new[] {
 				new Parent() { id = 1, colour = "red" },
-				new Parent() { id = 2, colour = "green" },
-				new Parent() { id = 3, colour = "red" },
-				new Parent() { id = 4, colour = "yellow" },
+				new Parent() { id = 2, colour = "green" }
 			};
-			foreach (var t in allThings)
-				await thingOrigin.Store(t.id, t);
-			var thingModelStore1 = new ModelClassCache<Parent, long>();
-			var cache1 = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
-				{ typeof(Parent), thingModelStore1 }
+			Child[] allChildren = new[] {
+				new Child() { id = "C1", parentId = 1, weight = 5},
+				new Child() { id = "C2", parentId = 1, weight = 7},
+				new Child() { id = "C3", parentId = 2, weight = 2},
+				new Child() { id = "C4", parentId = 2, weight = 4},
+			};
+			foreach (var p in allParents)
+				await parentOrigin.Store(p.id, p);
+			foreach (var c in allChildren)
+				await childOrigin.Store(c.id, c);
+			var parentCache = new ModelClassCache<Parent, long>();
+			var childCache = new ModelClassCache<Child, string>();
+			var modelCache = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
+				{ typeof(Parent), parentCache },
+				{ typeof(Child), childCache }
 			});
-			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { cache1 }, new CascadeConfig());
+			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { modelCache }, new CascadeConfig());
 			
 			// now setup
+
+			var parent1 = await cascade.Get<Parent>(1, populate: new []{"Children"});
+			Assert.That(parent1.Children.Count(), Is.EqualTo(2));
+
+			// a new child for parent1 is created in the origin
+			var child5 = new Child() { id = "C5", parentId = 1, weight = 11 };
+			await childOrigin.Store(child5.id, child5);
+			
+			Assert.That(parent1.Children.Count(), Is.EqualTo(2));						// doesn't get automatically updated
+			await cascade.Populate(parent1,new []{"Children"}, freshnessSeconds:0);		// populate should update it
+			Assert.That(parent1.Children, Has.Length.EqualTo(3));
+			Assert.That(parent1.Children, Has.Member(child5));	// populate did update the collection correctly
+			
+			// getting the parent again should have 3 children
+			parent1 = await cascade.Get<Parent>(1, populate: new []{"Children"});
+			Assert.That(parent1.Children, Has.Length.EqualTo(3));
+			Assert.That(parent1.Children, Has.Member(child5));
 			
 			
+			var preExistingChildCollection = (await cascade.GetWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString())).ToImmutableArray();
+			Assert.That(preExistingChildCollection, Has.Length.EqualTo(3));
+			// manually add child 6 to local collections
+			var child6 = new Child() { id = "C6", parentId = 1, weight = 13 };
+			await childOrigin.Store(child6.id, child6);		// in place of cascade.Create()
+			preExistingChildCollection = preExistingChildCollection.Insert(0,child6);	// insert as first
+			var collectionIds = preExistingChildCollection.Select(c => c.id).ToImmutableArray();
+			await cascade.SetCacheWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString(), preExistingChildCollection);
+			
+			var laterCollection = (await cascade.GetWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString())).ToImmutableArray();
+			var laterIds = laterCollection.Select(c => c.id).ToImmutableArray();
+			Assert.AreEqual(collectionIds,laterIds);
+
+
+
 			// var redThings = await cascade.Query<Parent>("red_things", new JsonObject {
 			// 	["colour"] = "red"
 			// });

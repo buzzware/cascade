@@ -107,14 +107,40 @@ namespace Cascade {
 			return (await this.GetResponse<M>(id, populate, freshnessSeconds)).Result as M;
 		}
 		
+		public async Task<OpResponse> GetWhereCollectionResponse<Model>(string propertyName, string propertyValue, int? freshnessSeconds = null) {
+			var key = CascadeUtils.WhereCollectionKey(typeof(Model).Name, propertyName, propertyValue);
+			var requestOp = new RequestOp(
+				NowMs,
+				typeof(Model),
+				RequestVerb.Query,
+				null,
+				value: null,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				criteria: new Dictionary<string,object>() { [propertyName] = propertyValue },
+				key: key
+			);
+			var opResponse = await ProcessRequest(requestOp);
+			return opResponse;
+		}
+		
+		public async Task<IEnumerable<M>> GetWhereCollection<M>(string propertyName, string propertyValue, int? freshnessSeconds = null) where M : class {
+			var response = await this.GetWhereCollectionResponse<M>(propertyName, propertyValue, freshnessSeconds);
+			var results = response.Results.Cast<M>().ToImmutableArray();
+			return results;
+		}
+		
+		public async Task SetCacheWhereCollection<T>(string propertyName, string propertyValue, IEnumerable<T> collection) {
+			throw new NotImplementedException();
+		}
+		
 		public Task<OpResponse> QueryResponse<M>(
-			string key, 
+			string collectionName, 
 			object criteria, 
 			IEnumerable<string>? populate = null, 
 			int? freshnessSeconds = null
 		) {
 			var req = RequestOp.QueryOp<M>(
-				key,
+				collectionName,
 				criteria,
 				NowMs,
 				populate: populate,
@@ -124,38 +150,38 @@ namespace Cascade {
 		}
 
 		public async Task<IEnumerable<M>> Query<M>(
-			string key, 
+			string collectionKey, 
 			object? criteria=null, 
 			IEnumerable<string>? populate = null, 
 			int? freshnessSeconds = null
 		) {
-			var response = await QueryResponse<M>(key, criteria, populate, freshnessSeconds);
+			var response = await QueryResponse<M>(collectionKey, criteria, populate, freshnessSeconds);
 			var results = response.Results.Cast<M>().ToImmutableArray();
 			//return Array.ConvertAll<object,M>(response.Results) ?? Array.Empty<M>();
 			return results;
 		}
 
-		public async Task Populate(SuperModel model, string property) {
+		public async Task Populate(SuperModel model, string property, int? freshnessSeconds = null) {
 			var modelType = model.GetType();
 			var propertyInfo = modelType.GetProperty(property);
 
 			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute),true).FirstOrDefault() is HasManyAttribute hasMany) {
-				await processHasMany(model, modelType, propertyInfo!, hasMany);
+				await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds);
 			} else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute),true).FirstOrDefault() is BelongsToAttribute belongsTo) {
-				await processBelongsTo(model, modelType, propertyInfo!, belongsTo);
+				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds);
 			}
 		}
 
-		public async Task Populate(SuperModel model, string[] associations) {
+		public async Task Populate(SuperModel model, string[] associations, int? freshnessSeconds = null) {
 			foreach (var association in associations) {
-				await Populate(model, association);
+				await Populate(model, association, freshnessSeconds);
 			}
 		}
 
-		public async Task Populate(IEnumerable<SuperModel> models, string[] associations) {
+		public async Task Populate(IEnumerable<SuperModel> models, string[] associations, int? freshnessSeconds = null) {
 			foreach (var model in models) {
 				foreach (var association in associations) {
-					await Populate(model, association);
+					await Populate(model, association, freshnessSeconds);
 				}
 			}
 		}
@@ -257,7 +283,7 @@ namespace Cascade {
 
 
 
-		private async Task processHasMany(SuperModel model, Type modelType, PropertyInfo propertyInfo, HasManyAttribute attribute) {
+		private async Task processHasMany(SuperModel model, Type modelType, PropertyInfo propertyInfo, HasManyAttribute attribute, int? freshnessSeconds = null) {
 			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
 			var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
@@ -266,14 +292,14 @@ namespace Cascade {
 				throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
 			
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
-			var key = CascadeUtils.WhereCollectionName(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
+			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
 			var requestOp = new RequestOp(
 				NowMs,
 				foreignType,
 				RequestVerb.Query,
 				null,
 				value: null,
-				freshnessSeconds: 0,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				criteria: new Dictionary<string,object>() { [attribute.ForeignIdProperty] = modelId },
 				key: key
 			);
@@ -299,7 +325,7 @@ namespace Cascade {
 		}
 
 
-		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute) {
+		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null) {
 			var foreignModelType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var idProperty = modelType.GetProperty(attribute.IdProperty);
 			var id = idProperty.GetValue(model);
@@ -311,7 +337,7 @@ namespace Cascade {
 				foreignModelType,
 				RequestVerb.Get,
 				id,
-				freshnessSeconds: Config.DefaultFreshnessSeconds
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds
 			);
 			var opResponse = await ProcessRequest(requestOp);
 			SetModelProperty(model, propertyInfo, opResponse.Result);
@@ -411,6 +437,8 @@ namespace Cascade {
 		public async Task ClearCollection(string key) {
 			throw new NotImplementedException();
 		}
+		
+		
 		
 		
 		// 		public ICascadeStore localStore {

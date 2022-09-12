@@ -52,7 +52,7 @@ namespace Cascade {
 		public long? ArrivedAtMs;
 
 		public bool PresentAndFresh() => 
-			Connected==true && Exists == true && (TimeMs-ArrivedAtMs) <= RequestOp.FreshnessSeconds*1000;
+			 Connected==true && Exists == true && RequestOp.FreshnessSeconds>0 && (TimeMs-ArrivedAtMs) <= RequestOp.FreshnessSeconds*1000;
 
 		public bool ResultIsEmpty() {
 			if (Result == null)

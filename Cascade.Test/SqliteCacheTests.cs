@@ -142,20 +142,20 @@ namespace Cascade {
 			});
 			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { cache }, new CascadeConfig() { DefaultFreshnessSeconds = 1 });
 
-			var collection_key = "my_things";
+			var collection_name = "my_things";
 			var ids = ImmutableArray.Create<object>(1, 2, 3);
-			var response = await cache.Fetch(RequestOp.QueryOp<Parent>(collection_key, new JsonObject(), 0));
+			var response = await cache.Fetch(RequestOp.QueryOp<Parent>(collection_name, new JsonObject(), 0));
 			Assert.AreEqual(false,response.Exists);
 			Assert.AreEqual(null,response.Result);
-			await cache.StoreCollection(typeof(Parent), collection_key, ids, 0);
+			await cache.StoreCollection(typeof(Parent), CascadeUtils.CollectionKeyFromName(typeof(Parent).Name,collection_name), ids, 0);
 
-			response = await cache.Fetch(RequestOp.QueryOp<Parent>(collection_key, null, 0));
+			response = await cache.Fetch(RequestOp.QueryOp<Parent>(collection_name, null, 0));
 			Assert.IsTrue(CascadeTypeUtils.IsEqualEnumerable(ids,response.ResultIds));
 			
 			response = await cache.Fetch(RequestOp.QueryOp<Parent>("not_my_key", null, 0));
 			Assert.IsFalse(response.Exists);
 			
-			response = await cache.Fetch(RequestOp.QueryOp<Child>(collection_key, null, 0));
+			response = await cache.Fetch(RequestOp.QueryOp<Child>(collection_name, null, 0));
 			Assert.IsFalse(response.Exists);
 		}
 	}
