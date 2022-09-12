@@ -130,7 +130,21 @@ namespace Cascade {
 		}
 		
 		public async Task SetCacheWhereCollection<T>(string propertyName, string propertyValue, IEnumerable<T> collection) {
-			throw new NotImplementedException();
+			IEnumerable<object>? ids;
+			if (!collection.Any()) {
+				ids = ImmutableArray<object>.Empty;
+			} else if (CascadeTypeUtils.IsModel(collection.First())) {
+				ids = collection.Select(m => CascadeTypeUtils.GetCascadeId(m)).ToImmutableArray();
+			} else if (CascadeTypeUtils.IsId(collection.First())) {
+				ids = collection.Cast<object>().ToImmutableArray();
+			}
+			else
+				throw new ArgumentException("collection not recognised as ids or models");
+			
+			foreach (var layer in CacheLayers.Reverse()) {
+				var key = CascadeUtils.WhereCollectionKey(typeof(T).Name, propertyName, propertyValue);
+				await layer.StoreCollection(typeof(T),key,ids,NowMs);
+			}
 		}
 		
 		public Task<OpResponse> QueryResponse<M>(
@@ -434,6 +448,8 @@ namespace Cascade {
 			}
 		}
 
+		
+		
 		public async Task ClearCollection(string key) {
 			throw new NotImplementedException();
 		}

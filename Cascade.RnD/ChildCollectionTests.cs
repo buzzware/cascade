@@ -30,7 +30,7 @@ namespace Cascade {
 		}
 
 		[Test]
-		public async Task Simple() {
+		public async Task AddingChildren() {
 			Parent[] allParents = new[] {
 				new Parent() { id = 1, colour = "red" },
 				new Parent() { id = 2, colour = "green" }
@@ -82,10 +82,13 @@ namespace Cascade {
 			var collectionIds = preExistingChildCollection.Select(c => c.id).ToImmutableArray();
 			await cascade.SetCacheWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString(), preExistingChildCollection);
 			
-			var laterCollection = (await cascade.GetWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString())).ToImmutableArray();
-			var laterIds = laterCollection.Select(c => c.id).ToImmutableArray();
-			Assert.AreEqual(collectionIds,laterIds);
+			var cachedCollection = (await cascade.GetWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString(),freshnessSeconds:1000)).ToImmutableArray();
+			var cachedIds = cachedCollection.Select(c => c.id).ToImmutableArray();
+			Assert.AreEqual(collectionIds,cachedIds);
 
+			var freshCollection = (await cascade.GetWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString(),freshnessSeconds:0)).ToImmutableArray();
+			var freshIds = freshCollection.Select(c => c.id).ToImmutableArray();
+			Assert.AreEqual(collectionIds.Sort(),freshIds.Sort());
 
 
 			// var redThings = await cascade.Query<Parent>("red_things", new JsonObject {

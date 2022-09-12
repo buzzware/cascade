@@ -49,9 +49,9 @@ namespace Cascade.testing {
 			var enumerable1 = models.ToList().FindAll(idModel => {
 				var model = idModel.Value!;
 				var critList = crit!.Value.EnumerateObject().All(p => {
-					var mv = model!.GetType().GetProperty(p.Name)!.GetValue(model);
+					var mv = model!.GetType().GetProperty(p.Name)!.GetValue(model)?.ToString();
 					//var v = kv.Value!.GetValue<object>();
-					var v = GetNaturalValueFrom(p.Value);
+					var v = GetNaturalValueFrom(p.Value)?.ToString();
 					var equal = CascadeTypeUtils.IsEqual(mv, v);   //(v == null && mv == null) || (v != null && v.Equals(mv)); 
 					return equal;
 				});
