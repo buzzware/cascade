@@ -42,7 +42,7 @@ namespace Cascade.testing {
 
 		private readonly Dictionary<object, M> models = new Dictionary<object, M>();
 
-		public async Task<IEnumerable> Query(object criteria,string key) {
+		public async Task<IEnumerable> Query(object criteria) {
 			JsonElement? crit = criteria as JsonElement?;
 			if (crit == null)
 				crit = JsonSerializer.SerializeToElement(criteria);

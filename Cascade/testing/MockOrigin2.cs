@@ -25,7 +25,7 @@ namespace Cascade.testing {
 			
 			switch (request.Verb) {
 				case RequestVerb.Query:
-					result = await co.Query(request.Criteria,request.Key!);
+					result = await co.Query(request.Criteria);
 					break;
 				case RequestVerb.Get: 
 					result = await co.Get(request.Id);

@@ -6,32 +6,10 @@ using Cascade.testing;
 using NUnit.Framework;
 
 namespace Cascade.Test {
-	// class Parent : CascadeModel {
-	// 	public int id { get; set; }
-	//
-	// 	[HasMany(foreignIdProperty: "parentId")]
-	// 	public IEnumerable<Child>? Children { get; set; }
-	//
-	// 	public string colour { get; set; }
-	// }
-
-
-	// class Child : CascadeModel {
-	// 	public int id { get; set; }
-	// 	public int? parentId { get; set; }
-	// 	
-	// 	[BelongsTo(idProperty: "parentId")]
-	// 	public Parent? Parent { get; set; }
-	//// 	
-	// 	public int age { get; set; }
-	// }
-
 
 	[TestFixture]
 	public class AssociationTests {
-
-
-
+		
 		MockOrigin2 origin;
 		MockModelClassOrigin<Parent> parentOrigin;
 		MockModelClassOrigin<Child> childOrigin;
@@ -48,27 +26,6 @@ namespace Cascade.Test {
 				1000
 			);
 		}
-
-		// [SetUp]
-		// public void SetUp() {
-		// 	origin = new MockOrigin(nowMs:1000,handleRequest: (origin, requestOp) => {
-		// 		var nowMs = origin.NowMs;
-		// 		var thing = new Thing() {
-		// 			id = requestOp.IdAsInt ?? 0
-		// 		};
-		// 		thing.updatedAtMs = requestOp.TimeMs;
-		// 		return Task.FromResult(new OpResponse(
-		// 			requestOp: requestOp,
-		// 			nowMs,
-		// 			connected: true,
-		// 			exists: true,
-		// 			result: thing,
-		// 			arrivedAtMs: nowMs
-		// 		));
-		// 	});
-		// }
-
-		
 		
 
 		[Test]
@@ -108,20 +65,6 @@ namespace Cascade.Test {
 			Assert.IsTrue(parent2.Children!.Any(c=>c.id=="5"));
 			Assert.IsTrue(parent2.Children!.Any(c=>c.id=="6"));
 		}
-		
-		/*
-		
-		Options for implementing populate (maintaining semi-immutable models) :
-		
-		1. Populate sets a "ImmutableArray<Child> Children" property (unlocks & relocks if SuperModel)
-		2. Populate returns a modified clone of parent with children
-		3. Populate is only available on requests (Get & Query)
-		
-		
-		*/
 	}
 
-	public class CascadeGetOption {
-		public IEnumerable<string>? Populate { get; set; }
-	}
 }

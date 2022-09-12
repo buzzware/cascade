@@ -265,15 +265,8 @@ namespace Cascade {
 			if (foreignType == null)
 				throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
 			
-			// var typeLayers = GetTypeLayers(propertyType);
-			// var nonNullableType = DeNullType(propertyType); 
-			// 	
-			// 	typeLayers.FirstOrDefault(t => t.Name != "Nullable`1");
-			//
-			// var foreignType = isEnumerable ? propertyType.GetGenericArguments().FirstOrDefault() : null;
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
-			var key = $"HasMany__{foreignType.Name}__{attribute.ForeignIdProperty}__{modelId}";
-			
+			var key = CascadeUtils.WhereCollectionName(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
 			var requestOp = new RequestOp(
 				NowMs,
 				foreignType,

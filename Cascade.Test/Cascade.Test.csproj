@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="AssociationTests.cs" />
     <Compile Include="Child.cs" />
+    <Compile Include="CreateTests.cs" />
     <Compile Include="original\CascadeSimpleReadTests.cs" />
     <Compile Include="original\MockStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
