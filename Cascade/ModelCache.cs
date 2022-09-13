@@ -28,7 +28,7 @@ namespace Cascade {
 			if (requestOp.Type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(requestOp.Type))
-				throw new Exception("No type store for that type");
+				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type ${requestOp.Type.Name}");
 			
 			var store = classCache[requestOp.Type];
 			return store.Fetch(requestOp);
@@ -38,7 +38,7 @@ namespace Cascade {
 			if (type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(type))
-				throw new Exception("No type store for that type");
+				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type ${type.Name}");
 			var store = classCache[type]!;
 			return store.Store(id,model,arrivedAt);
 		}
@@ -47,7 +47,7 @@ namespace Cascade {
 			if (type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(type))
-				throw new Exception("No type store for that type");
+				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type ${type.Name}");
 			var store = classCache[type]!;
 			return store.StoreCollection(key,ids,arrivedAt);
 		}
@@ -57,7 +57,7 @@ namespace Cascade {
 			if (opResponse.RequestOp.Type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(opResponse.RequestOp.Type))
-				throw new Exception("No type store for that type");
+				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type ${opResponse.RequestOp.Type.Name}");
 			if (!opResponse.Connected)
 				throw new Exception("Don't attempt to store responses from a disconnected store");
 

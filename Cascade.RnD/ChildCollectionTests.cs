@@ -51,7 +51,12 @@ namespace Cascade {
 				{ typeof(Parent), parentCache },
 				{ typeof(Child), childCache }
 			});
-			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { modelCache }, new CascadeConfig());
+			var cascade = new CascadeDataLayer(
+				origin, 
+				new ICascadeCache[] { modelCache }, 
+				new CascadeConfig(),
+				(action => action())
+			);
 			
 			// now setup
 

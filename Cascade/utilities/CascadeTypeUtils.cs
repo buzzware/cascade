@@ -49,18 +49,18 @@ namespace Cascade {
 			return (type?.Implements<IEnumerable>() ?? false) && type != typeof(string);
 		}
 
-		public static void SetPropertyValue(object target, string propertyName, object value)
-		{
-			// find out the type
-			Type type = target.GetType();
-
-			// get the property information based on the type
-			PropertyInfo property = type.GetProperty(propertyName);
-
-			// Convert.ChangeType does not handle conversion to nullable types
-			// if the property type is nullable, we need to get the underlying type of the property
-			SetModelCollectionProperty(target, property, value);
-		}
+		// public static void SetPropertyValue(object target, string propertyName, object value)
+		// {
+		// 	// find out the type
+		// 	Type type = target.GetType();
+		//
+		// 	// get the property information based on the type
+		// 	PropertyInfo property = type.GetProperty(propertyName);
+		//
+		// 	// Convert.ChangeType does not handle conversion to nullable types
+		// 	// if the property type is nullable, we need to get the underlying type of the property
+		// 	SetModelCollectionProperty(target, property, value);
+		// }
 
 		public static Type GetSingularType(Type type) {
 			var nonNullableTargetType = DeNullType(type);
@@ -113,36 +113,6 @@ namespace Cascade {
 			// 	new object[] { null, items }
 			// );
 			//return result;
-		}
-
-		public static void SetModelCollectionProperty(object target, PropertyInfo propertyInfo, object value) {
-			Type propertyType = propertyInfo.PropertyType;
-			var nonNullableTargetType = DeNullType(propertyType);
-			var isEnumerable = IsEnumerableType(nonNullableTargetType);
-			if (!isEnumerable)
-				throw new ArgumentException("Property type should be IEnumerable");
-			var singularType = isEnumerable ? InnerType(nonNullableTargetType)! : nonNullableTargetType;
-			if (IsNullableType(singularType))
-				throw new ArgumentException("Singular type cannot be nullable");
-			
-			var valueType = value.GetType();
-			if (!IsEnumerableType(valueType))
-				throw new ArgumentException("Value must be IEnumerable");
-			var newValue = value;
-			if (!propertyType.IsAssignableFrom(valueType)) {
-				var valueSingularType = GetSingularType(valueType); 
-				if (valueSingularType != singularType) {
-					var valueSingularIsUntyped = valueSingularType == typeof(object);
-					var isAssignable = singularType.IsAssignableFrom(valueSingularType);
-					if (isAssignable || valueSingularIsUntyped) {
-						newValue = ImmutableArrayOfType(singularType, (IEnumerable) value);
-					}
-					else {
-						throw new ArgumentException($"Singular type of value {valueType.FullName} must match property singular type {singularType.FullName}");
-					}
-				}
-			}
-			propertyInfo.SetValue(target, newValue);
 		}
 
 		private static TypeConversionProvider? _converter;

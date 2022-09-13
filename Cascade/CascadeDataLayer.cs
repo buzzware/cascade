@@ -23,12 +23,23 @@ namespace Cascade {
 		private readonly ICascadeOrigin Origin;
 		private readonly IEnumerable<ICascadeCache> CacheLayers;
 		public readonly CascadeConfig Config;
+		private readonly Action<Action> mainThreadExecutor;
 		private readonly object lockObject;
 
+		/*
+
+		mainThreadExecutor can be null for testing but probably should be 
+
+		Device.BeginInvokeOnMainThread
+
+		within an Xamarin app.  
+
+		*/
 		public CascadeDataLayer(
 			ICascadeOrigin origin,
 			IEnumerable<ICascadeCache> cacheLayers,
-			CascadeConfig config
+			CascadeConfig config, 
+			Action<Action>? mainThreadExecutor = null
 		) {
 			Origin = origin;
 			Origin.Cascade = this;
@@ -36,6 +47,7 @@ namespace Cascade {
 			foreach (var cache in cacheLayers)
 				cache.Cascade = this;
 			Config = config;
+			this.mainThreadExecutor = mainThreadExecutor ?? (action => action());
 			lockObject = new object();
 		}
 
@@ -116,7 +128,7 @@ namespace Cascade {
 				null,
 				value: null,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				criteria: new Dictionary<string,object>() { [propertyName] = propertyValue },
+				criteria: new Dictionary<string, object>() { [propertyName] = propertyValue },
 				key: key
 			);
 			var opResponse = await ProcessRequest(requestOp);
@@ -175,6 +187,9 @@ namespace Cascade {
 			return results;
 		}
 
+		// Note: this can be called on the main or an alternative thread as long as the executor parameter
+		// is provided to the CascadeDataLayer constructor.
+		// The executor will be used for setting UI-bindable properties to avoid threading problems
 		public async Task Populate(SuperModel model, string property, int? freshnessSeconds = null) {
 			var modelType = model.GetType();
 			var propertyInfo = modelType.GetProperty(property);
@@ -271,10 +286,9 @@ namespace Cascade {
 
 
 	private void SetModelProperty(object model, PropertyInfo propertyInfo, object? value) {
-			propertyInfo.SetValue(model,value);
-		}
-		
-			
+		mainThreadExecutor(() => propertyInfo.SetValue(model,value));
+	}
+	
 			//
 			//
 			// // special case for enums
@@ -314,12 +328,11 @@ namespace Cascade {
 				null,
 				value: null,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				criteria: new Dictionary<string,object>() { [attribute.ForeignIdProperty] = modelId },
+				criteria: new Dictionary<string, object>() { [attribute.ForeignIdProperty] = modelId },
 				key: key
 			);
 			var opResponse = await ProcessRequest(requestOp);
-			CascadeTypeUtils.SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
-			//propertyInfo.SetValue(model,opResponse.Results);
+			SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
 		}
 		
 		private Task<OpResponse> ProcessRequest(RequestOp req) {
@@ -803,5 +816,34 @@ namespace Cascade {
 // 			return JsonConvert.SerializeObject(source);
 // 		}
 
+		public void SetModelCollectionProperty(object target, PropertyInfo propertyInfo, object value) {
+			Type propertyType = propertyInfo.PropertyType;
+			var nonNullableTargetType = CascadeTypeUtils.DeNullType(propertyType);
+			var isEnumerable = CascadeTypeUtils.IsEnumerableType(nonNullableTargetType);
+			if (!isEnumerable)
+				throw new ArgumentException("Property type should be IEnumerable");
+			var singularType = isEnumerable ? CascadeTypeUtils.InnerType(nonNullableTargetType)! : nonNullableTargetType;
+			if (CascadeTypeUtils.IsNullableType(singularType))
+				throw new ArgumentException("Singular type cannot be nullable");
+					
+			var valueType = value.GetType();
+			if (!CascadeTypeUtils.IsEnumerableType(valueType))
+				throw new ArgumentException("Value must be IEnumerable");
+			var newValue = value;
+			if (!propertyType.IsAssignableFrom(valueType)) {
+				var valueSingularType = CascadeTypeUtils.GetSingularType(valueType); 
+				if (valueSingularType != singularType) {
+					var valueSingularIsUntyped = valueSingularType == typeof(object);
+					var isAssignable = singularType.IsAssignableFrom(valueSingularType);
+					if (isAssignable || valueSingularIsUntyped) {
+						newValue = CascadeTypeUtils.ImmutableArrayOfType(singularType, (IEnumerable) value);
+					}
+					else {
+						throw new ArgumentException($"Singular type of value {valueType.FullName} must match property singular type {singularType.FullName}");
+					}
+				}
+			}
+			mainThreadExecutor(() => propertyInfo.SetValue(target, newValue));
+		}
 	}
 }
