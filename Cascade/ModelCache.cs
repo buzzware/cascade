@@ -56,7 +56,7 @@ namespace Cascade {
 			if (type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(type))
-				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type ${type.Name}");
+				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type {type.Name}");
 			var store = classCache[type]!;
 			return store.StoreCollection(key,ids,arrivedAt);
 		}
@@ -65,8 +65,10 @@ namespace Cascade {
 		public async Task Store(OpResponse opResponse) {
 			if (opResponse.RequestOp.Type is null)
 				throw new Exception("Type cannot be null");
-			if (!classCache.ContainsKey(opResponse.RequestOp.Type))
-				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type ${opResponse.RequestOp.Type.Name}");
+			if (!classCache.ContainsKey(opResponse.RequestOp.Type)) {
+				Log.Debug($"ModelCache: No type store for that type. Please register a IModelClassCache for the type {opResponse.RequestOp.Type.Name}");
+				return;
+			}
 			if (!opResponse.Connected)
 				throw new Exception("Don't attempt to store responses from a disconnected store");
 
