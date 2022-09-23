@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Cascade {
 	public class ModelCache : ICascadeCache {
@@ -24,14 +25,22 @@ namespace Cascade {
 			this.classCache = aClassCache;
 		}
 		
-		public Task<OpResponse> Fetch(RequestOp requestOp) {
+		public async Task<OpResponse> Fetch(RequestOp requestOp) {
 			if (requestOp.Type is null)
 				throw new Exception("Type cannot be null");
-			if (!classCache.ContainsKey(requestOp.Type))
-				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type ${requestOp.Type.Name}");
-			
+			if (!classCache.ContainsKey(requestOp.Type)) {
+				Log.Debug($"ModelCache: No type store for that type - returning not found. You may wish to register a IModelClassCache for the type ${requestOp.Type.Name}");
+				return new OpResponse(
+					requestOp,
+					Cascade.NowMs,
+					connected: true,
+					exists: false,
+					result: null,
+					arrivedAtMs: null
+				);
+			}
 			var store = classCache[requestOp.Type];
-			return store.Fetch(requestOp);
+			return await store.Fetch(requestOp);
 		}
 
 		public Task Store(Type type, object id, object model, long arrivedAt) {
