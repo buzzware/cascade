@@ -8,5 +8,6 @@ namespace Cascade {
 		Task<object?> Get(object id);
 		Task<object> Create(object value);
 		Task<object> Replace(object value);
+		Task EnsureAuthenticated();
 	}
 }

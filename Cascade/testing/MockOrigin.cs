@@ -13,6 +13,8 @@ namespace Cascade.testing {
 		public CascadeDataLayer Cascade { get; set; } 
 		
 		public long NowMs { get; set; }
+		public async Task EnsureAuthenticated() {
+		}
 
 		public long IncNowMs(long incMs=1000) {
 			return NowMs += incMs;

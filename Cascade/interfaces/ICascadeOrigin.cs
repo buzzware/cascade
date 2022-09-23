@@ -6,5 +6,6 @@ namespace Cascade {
 		
 		CascadeDataLayer Cascade { get; set; }
 		long NowMs { get; }
+		Task EnsureAuthenticated();
 	}
 }

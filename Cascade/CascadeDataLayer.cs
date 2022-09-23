@@ -845,5 +845,9 @@ namespace Cascade {
 			}
 			mainThreadExecutor(() => propertyInfo.SetValue(target, newValue));
 		}
+
+		public async Task EnsureAuthenticated() {
+			await Origin.EnsureAuthenticated();
+		}
 	}
 }

@@ -76,6 +76,9 @@ namespace Cascade.testing {
 			throw new System.NotImplementedException();
 		}
 
+		public async Task EnsureAuthenticated() {
+		}
+
 		public async Task Store(object id, M model) {
 			var idType = CascadeTypeUtils.GetCascadeIdType(typeof(M));
 			var id2 = CascadeTypeUtils.ConvertTo(idType!, id);
