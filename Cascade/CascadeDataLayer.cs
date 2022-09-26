@@ -141,21 +141,22 @@ namespace Cascade {
 			return results;
 		}
 		
-		public async Task SetCacheWhereCollection<T>(string propertyName, string propertyValue, IEnumerable<T> collection) {
+		public async Task SetCacheWhereCollection(Type modelType, string propertyName, string propertyValue, IEnumerable<object> collection) {
 			IEnumerable<object>? ids;
-			if (!collection.Any()) {
+			var enumerable = collection as object[] ?? collection.ToArray();
+			if (!enumerable.Any()) {
 				ids = ImmutableArray<object>.Empty;
-			} else if (CascadeTypeUtils.IsModel(collection.First())) {
-				ids = collection.Select(m => CascadeTypeUtils.GetCascadeId(m)).ToImmutableArray();
-			} else if (CascadeTypeUtils.IsId(collection.First())) {
-				ids = collection.Cast<object>().ToImmutableArray();
+			} else if (CascadeTypeUtils.IsModel(enumerable.First())) {
+				ids = enumerable.Select(m => CascadeTypeUtils.GetCascadeId(m)).ToImmutableArray();
+			} else if (CascadeTypeUtils.IsId(enumerable.First())) {
+				ids = enumerable.Cast<object>().ToImmutableArray();
 			}
 			else
 				throw new ArgumentException("collection not recognised as ids or models");
 			
 			foreach (var layer in CacheLayers.Reverse()) {
-				var key = CascadeUtils.WhereCollectionKey(typeof(T).Name, propertyName, propertyValue);
-				await layer.StoreCollection(typeof(T),key,ids,NowMs);
+				var key = CascadeUtils.WhereCollectionKey(modelType.Name, propertyName, propertyValue);
+				await layer.StoreCollection(modelType,key,ids,NowMs);
 			}
 		}
 		
@@ -198,6 +199,26 @@ namespace Cascade {
 				await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds);
 			} else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute),true).FirstOrDefault() is BelongsToAttribute belongsTo) {
 				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds);
+			}
+		}
+
+		// this is needed eg. when you add models to a HasMany association
+		public async Task UpdateHasMany(SuperModel model, string property, IEnumerable<object> models) {
+			var modelType = model.GetType();
+			var propertyInfo = modelType.GetProperty(property);
+			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute), true).FirstOrDefault() is HasManyAttribute hasMany) {
+				var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+				var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
+				var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
+				foreignType = foreignType != null ? CascadeTypeUtils.DeNullType(foreignType) : null;
+				if (foreignType == null)
+					throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
+			
+				object modelId = CascadeTypeUtils.GetCascadeId(model);
+				await SetCacheWhereCollection(foreignType, property, modelId.ToString(), models);
+				SetModelCollectionProperty(model, propertyInfo, models);
+			} else {
+				throw new ArgumentException($"{property} is not a [HasMany] property");
 			}
 		}
 

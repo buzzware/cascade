@@ -85,7 +85,7 @@ namespace Cascade {
 			await childOrigin.Store(child6.id, child6);		// in place of cascade.Create()
 			preExistingChildCollection = preExistingChildCollection.Insert(0,child6);	// insert as first
 			var collectionIds = preExistingChildCollection.Select(c => c.id).ToImmutableArray();
-			await cascade.SetCacheWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString(), preExistingChildCollection);
+			await cascade.SetCacheWhereCollection(typeof(Child), nameof(Child.parentId), parent1.id.ToString(), preExistingChildCollection);
 			
 			var cachedCollection = (await cascade.GetWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString(),freshnessSeconds:1000)).ToImmutableArray();
 			var cachedIds = cachedCollection.Select(c => c.id).ToImmutableArray();
