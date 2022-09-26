@@ -215,7 +215,7 @@ namespace Cascade {
 					throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
 			
 				object modelId = CascadeTypeUtils.GetCascadeId(model);
-				await SetCacheWhereCollection(foreignType, property, modelId.ToString(), models);
+				await SetCacheWhereCollection(foreignType, hasMany.ForeignIdProperty, modelId.ToString(), models);
 				SetModelCollectionProperty(model, propertyInfo, models);
 			} else {
 				throw new ArgumentException($"{property} is not a [HasMany] property");
