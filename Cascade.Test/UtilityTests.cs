@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Cascade {
+namespace Cascade.Test {
 	
 	[TestFixture]
 	public class UtilityTests {

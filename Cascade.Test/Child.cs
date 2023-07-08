@@ -3,7 +3,7 @@
 using Cascade;
 using SQLite;
 
-namespace Cascade {
+namespace Cascade.Test {
 	public class Child : SuperModel {
 		
 		[Cascade.CascadeId]

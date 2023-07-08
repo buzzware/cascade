@@ -9,7 +9,7 @@
 // using NUnit.Framework;
 // using StandardExceptions;
 //
-// namespace Cascade {
+// namespace Cascade.Test {
 // 	[TestFixture]
 // 	public class SqliteCacheTests {
 //

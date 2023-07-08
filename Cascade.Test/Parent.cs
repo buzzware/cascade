@@ -2,7 +2,7 @@
 using Cascade;
 using SQLite;
 
-namespace Cascade {
+namespace Cascade.Test {
 	public class Parent : SuperModel {
 		
 		[Cascade.CascadeId]

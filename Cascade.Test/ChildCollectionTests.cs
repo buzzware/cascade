@@ -12,7 +12,7 @@ using NUnit.Framework;
 using Serilog;
 using StandardExceptions;
 
-namespace Cascade {
+namespace Cascade.Test {
 	[TestFixture]
 	public class ChildCollectionTests {
 		

@@ -7,7 +7,7 @@ using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using StandardExceptions;
 
-namespace Cascade {
+namespace Cascade.Test {
 	
 	[TestFixture]
 	public class CreateTests {

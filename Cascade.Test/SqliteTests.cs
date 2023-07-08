@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Cascade;
 using NUnit.Framework;
 
-namespace Cascade {
+namespace Cascade.Test {
 	[TestFixture]
 	public class SqliteTests {
 		[Test]

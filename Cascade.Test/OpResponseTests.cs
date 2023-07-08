@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Cascade.Test;
 using NUnit.Framework;
 
-namespace Cascade {
+namespace Cascade.Test {
 
 	[TestFixture]
 	public class OpResponseTests {

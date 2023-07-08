@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using SQLite;
 
-namespace Cascade {
+namespace Cascade.Test {
 	public class TestDatabase : SqliteDatabase {
 		public TestDatabase(SQLiteAsyncConnection connection) : base(connection) {
 		}

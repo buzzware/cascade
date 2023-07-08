@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Cascade {
+namespace Cascade.Test {
 	[TestFixture]
 	public class JsonSerializationTests {
 		private CascadeJsonSerialization sz;
