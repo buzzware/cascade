@@ -1,12 +1,33 @@
-# cascade
-Cascade Data Layer - data management layer for C# client applications
+# Cascade Data Layer 
+## Data management framework for C# client (mobile) applications
 
-Under active development September 2022
+### Usage
 
-## Features
+The main methods used by an application built with Cascade :
 
-* Arbitrary number of cache layers for performance, reducing server load and offline support 
-* Designed to support offline for seconds to long term, including writes (offline write not yet implemented)
-* Abstract origin (server) and cache layers for supporting any existing server or data store
-* One Way Dataflow (from Facebook)
-* Provides SuperModel base class for binding, associations, sometimes immutability, mutable proxy
+1. ```var product = await cascade.Create<Product>(new Product() { colour = "Red" });```
+1. ```var product = await cascade.Get<Product>(25, populate: new string[] { nameof(Product.Manufacturer) });```
+2. ```var redThings = await cascade.Query<Product>("red_products",new JsonObject { ["colour"] = "red" });```
+3. ```var updated = await cascade.Update(product, new JsonObject { ["colour"] = "red" });```
+4. ```await cascade.Destroy(product);```
+
+Using Cascade in an application means : 
+
+1. Using the SuperModel base class and its attributes for all application models
+2. Implementing an origin class for your server(s) API
+3. Constructing an instance of CascadeDataLayer with the desired cache layer(s) and origin  
+4. Using the CascadeDataLayer for application server interactions
+
+### Benefits
+
+1. A clean and simple interface, reminiscent of a HTTP client, for application server interactions
+2. True offline support for all operations
+3. You send and receive models, not JSONElements
+4. Associations between models: BelongsTo, HasMany, HasOne 
+5. easy Get/Query of models with their associations via Populate method/parameter
+6. seamless multilayer caching & persistence, including collections and queries 
+7. Optional memory caching for speed
+8. Optional file system caching/persistence
+9. Supports almost any API server(s) through your own implementation of abstract interfaces
+10. Insulation of application logic from server irregularities and changes 
+
