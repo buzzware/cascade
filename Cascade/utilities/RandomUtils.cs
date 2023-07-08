@@ -1,6 +1,7 @@
 using System;
 
-namespace CivtracDispatch.Common {
+namespace Cascade {
+	
 	public static class RandomUtils {
 		private static readonly Random RandomInstance = new Random();
 

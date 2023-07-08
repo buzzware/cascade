@@ -120,9 +120,6 @@
       <Name>Cascade.Test</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="cascade_offline.md" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
