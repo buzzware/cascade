@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cascade.testing;
 using NUnit.Framework;
+using StandardExceptions;
 
 namespace Cascade.Test {
 
@@ -45,7 +45,7 @@ namespace Cascade.Test {
 			foreach (var c in allChildren)
 				await childOrigin.Store(c.id, c);
 			
-			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { }, new CascadeConfig());
+			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { }, new CascadeConfig(), new MockCascadePlatform(), ErrorControl.Instance, new CascadeJsonSerialization());
 			
 			var parent = await cascade.Get<Parent>(1);
 			Assert.AreEqual(1, parent!.id);

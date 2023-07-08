@@ -1,19 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using Cascade;
-using Cascade.testing;
 using NUnit.Framework;
+using Serilog;
+using StandardExceptions;
 
-namespace Cascade {
+namespace Cascade.Test {
 	
 	[TestFixture]
 	public class ReadTests {
+		
+		private string tempDir;
 		
 		MockOrigin origin;
 
 		[SetUp]
 		public void SetUp() {
+			tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+			Log.Debug($"Cascade cache directory {tempDir}");
+			Directory.CreateDirectory(tempDir);
+			
 			origin = new MockOrigin(nowMs:1000,handleRequest: (origin, requestOp) => {
 				var nowMs = origin.NowMs;
 				var thing = new Parent() {
@@ -31,9 +38,16 @@ namespace Cascade {
 			});
 		}
 		
+		[TearDown]
+		public void TearDown() {
+			if (Directory.Exists(tempDir)) {
+				Directory.Delete(tempDir, true);
+			}
+		}
+		
 		[Test]
 		public async Task ReadWithoutCache() {
-			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig());
+			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig(), new MockCascadePlatform(), ErrorControl.Instance, new CascadeJsonSerialization());
 			var thing = await cascade.Get<Parent>(5);
 			Assert.AreEqual(5,thing!.id);
 		}
@@ -50,7 +64,14 @@ namespace Cascade {
 			});
 			
 			// read from origin
-			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {cache1,cache2}, new CascadeConfig() {DefaultFreshnessSeconds = 1});
+			var cascade = new CascadeDataLayer(
+				origin,
+				new ICascadeCache[] {cache1,cache2}, 
+				new CascadeConfig() {DefaultFreshnessSeconds = 1, StoragePath = tempDir}, 
+				new MockCascadePlatform(), 
+				ErrorControl.Instance, 
+				new CascadeJsonSerialization()
+			);
 			var thing1 = await cascade.Get<Parent>(5);
 			
 			Assert.AreEqual(5,thing1!.id);
@@ -93,7 +114,7 @@ namespace Cascade {
 			origin.IncNowMs(1000);
 			
 			// clear cache1, freshnessSeconds=1 should return value from cache2 and update cache1
-			await cache1.Clear();
+			await cache1.ClearAll();
 			var thing6 = (await cascade.Get<Parent>(thing4.id,freshnessSeconds: 1))!;			// should get cache2 version
 			Assert.AreEqual(thing6.updatedAtMs,thing5.updatedAtMs);
 			store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));

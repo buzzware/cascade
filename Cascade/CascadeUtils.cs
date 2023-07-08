@@ -2,16 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using deniszykov.TypeConversion;
+using System.Threading.Tasks;
 
 namespace Cascade {
 	public static class CascadeUtils {
+		public static DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
 		public static long NowMs => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-
+		
 		// "Where Collections" are collections whose key begins with "WHERE__" and is defined using this function.
 		// Their key fully describes what they are - a collection of the given type where the given property has the given value.
 		// In future, the framework could parse and evaluate these names as a query eg. to refresh them
@@ -21,8 +23,25 @@ namespace Cascade {
 			return $"WHERE__{typeName}__{property}__{value}";
 		}
 
-		public static string CollectionKeyFromName(string typeName, string collectionName) {
-			return typeName+"__"+collectionName;
+		public static Int64 toUnixMilliseconds(System.DateTime aDateTime) {
+			return (Int64)(aDateTime.ToUniversalTime() - epoch).TotalMilliseconds;
+		}
+
+		public static Int64 toUnixMilliseconds(int year, int month = 1, int day = 1, int hour = 0, int min = 0, int sec = 0) {
+			return toUnixMilliseconds(new DateTime(year, month, day, hour, min, sec, DateTimeKind.Utc));
+		}
+		
+		public static DateTime fromUnixMilliseconds(Int64 aTimems) {
+			return epoch.AddMilliseconds(aTimems);
+		}
+		
+		public static async Task<string> LoadFileAsString(string aPath) {
+			string content;
+			using (var stream = new FileStream(aPath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
+			using (var reader = new StreamReader(stream)) {
+				content = await reader.ReadToEndAsync();
+			}
+			return content;
 		}
 		
 		// public async Task Populate(ICascadeModel model, string property) {

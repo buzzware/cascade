@@ -8,6 +8,6 @@ namespace Cascade {
 		Task StoreCollection(string key, IEnumerable ids, long aArrivedAt);
 		Task<OpResponse> Fetch(RequestOp requestOp);
 		Task Remove(object id);
-		Task Clear();
+		Task ClearAll(bool exceptHeld);
 	}
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace StandardExceptions {
 	public class StandardException : Exception {
@@ -10,6 +12,9 @@ namespace StandardExceptions {
 
 		public object Result { get; set; } = null;
 		public object Error { get; set; } = null;
+
+		public new IDictionary<string,object> Data { get; set; }
+		public override string StackTrace => InnerException?.StackTrace;
 
 		public StandardException (string aMessage=DefaultMessage, Exception aInnerException = null, int aStatus = DefaultStatus) : base (aMessage,aInnerException) {
 			Status = aStatus;

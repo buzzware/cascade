@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Cascade;
-using Cascade.testing;
+using Cascade.Test;
 using NUnit.Framework;
+using Serilog;
+using StandardExceptions;
 
 namespace Cascade {
 	[TestFixture]
@@ -55,7 +59,9 @@ namespace Cascade {
 				origin, 
 				new ICascadeCache[] { modelCache }, 
 				new CascadeConfig(),
-				(action => action())
+				new MockCascadePlatform(),
+				ErrorControl.Instance,
+				new CascadeJsonSerialization()
 			);
 			
 			// now setup
@@ -89,11 +95,12 @@ namespace Cascade {
 			
 			var cachedCollection = (await cascade.GetWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString(),freshnessSeconds:1000)).ToImmutableArray();
 			var cachedIds = cachedCollection.Select(c => c.id).ToImmutableArray();
-			Assert.AreEqual(collectionIds,cachedIds);
+
+			Assert.That(cachedIds,Is.EquivalentTo(collectionIds));
 
 			var freshCollection = (await cascade.GetWhereCollection<Child>(nameof(Child.parentId), parent1.id.ToString(),freshnessSeconds:0)).ToImmutableArray();
 			var freshIds = freshCollection.Select(c => c.id).ToImmutableArray();
-			Assert.AreEqual(collectionIds.Sort(),freshIds.Sort());
+			Assert.That(collectionIds.Sort(),Is.EquivalentTo(freshIds.Sort()));
 
 
 			// var redThings = await cascade.Query<Parent>("red_things", new JsonObject {

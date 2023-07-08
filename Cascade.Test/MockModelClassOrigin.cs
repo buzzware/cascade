@@ -1,15 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Cascade;
 
-namespace Cascade.testing {
-	public class MockModelClassOrigin<M> : IModelClassOrigin {
+namespace Cascade.Test {
+	public class MockModelClassOrigin<M> : IModelClassOrigin where M : SuperModel {
 
+		public ICascadeOrigin Origin { get; set; }
+		
 		// static Dictionary<string, object?> DictionaryFromJsonObject(JsonObject jsono) {
 		// 	var result = new Dictionary<string, object?>();
 		// 	foreach (var pair in jsono) {
@@ -68,15 +70,38 @@ namespace Cascade.testing {
 			return result;
 		}
 
-		public Task<object> Create(object value) {
-			throw new System.NotImplementedException();
+		public async Task<object> Create(object value) {
+			var result = OfflineUtils.CreateOffline((SuperModel)value, Origin.NewGuid);
+			var id = CascadeTypeUtils.GetCascadeId(result);
+			models[id] = (M)result;
+			return result;
 		}
+
 
 		public Task<object> Replace(object value) {
 			throw new System.NotImplementedException();
 		}
 
+		public Task<object> Update(object id, IDictionary<string, object> changes, object? model) {
+			throw new System.NotImplementedException();
+		}
+
+		public Task Destroy(object model) {
+			throw new System.NotImplementedException();
+		}
+
 		public async Task EnsureAuthenticated() {
+		}
+
+		public async Task ClearAuthentication() {
+		}
+
+		public Task<object> Execute(RequestOp request, bool connectionOnline) {
+			throw new System.NotImplementedException();
+		}
+		
+		public Task Execute(string action, IDictionary<string, object> parameters) {
+			throw new System.NotImplementedException();
 		}
 
 		public async Task Store(object id, M model) {

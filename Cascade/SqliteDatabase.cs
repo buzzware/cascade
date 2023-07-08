@@ -55,7 +55,7 @@ namespace Cascade {
 				rowsAffected = await Connection.UpdateAsync(obj);
 				Log.Debug($"HistoryDatabase: Updated {rowsAffected} rows");
 			} catch(Exception e) {
-				Log.Debug(e.Message);
+				Log.Error(e.Message);
 				throw e;
 			}
 			var success = rowsAffected > 0;

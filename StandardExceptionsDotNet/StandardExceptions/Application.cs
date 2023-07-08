@@ -29,14 +29,14 @@ namespace StandardExceptions {
 	}
 	
 	public class NoNetworkException : HttpException {
-		public new const string DefaultMessage = "The server could not be reached or did not respond.";
+		public new const string DefaultMessage = "The server could not be reached or did not respond. You could be out of network range.";
 		public const int DefaultStatus = 410;
 		public NoNetworkException (string aMessage=DefaultMessage, Exception aInnerException=null, int aStatus = DefaultStatus) : base (aMessage,aInnerException,aStatus) {
 		}
 	}
 
 	public class AssumptionException : StandardException {
-		public new const string DefaultMessage = "An assumption was not true.";
+		public new const string DefaultMessage = "An internal assumption check was found to be false.";
 		public AssumptionException (string aMessage=DefaultMessage, Exception aInnerException=null, int aStatus = DefaultStatus) : base (aMessage,aInnerException,aStatus) {
 		}
 	}

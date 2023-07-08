@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -8,7 +9,7 @@ using Serilog;
 
 namespace Cascade {
 	public class ModelCache : ICascadeCache {
-		private Dictionary<Type, IModelClassCache> classCache;
+		private ConcurrentDictionary<Type, IModelClassCache> classCache;
 		
 		private CascadeDataLayer _cascade;
 		public CascadeDataLayer Cascade {
@@ -21,8 +22,14 @@ namespace Cascade {
 			}
 		}
 
-		public ModelCache(Dictionary<Type, IModelClassCache> aClassCache) {
-			this.classCache = aClassCache;
+		public async Task ClearAll(bool exceptHeld=true) {
+			foreach (var pair in classCache) {
+				await pair.Value.ClearAll(exceptHeld: exceptHeld);
+			}
+		}
+		
+		public ModelCache(IDictionary<Type, IModelClassCache> aClassCache) {
+			this.classCache = new ConcurrentDictionary<Type, IModelClassCache>(aClassCache);
 		}
 		
 		public async Task<OpResponse> Fetch(RequestOp requestOp) {
@@ -30,24 +37,19 @@ namespace Cascade {
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(requestOp.Type)) {
 				Log.Debug($"ModelCache: No type store for that type - returning not found. You may wish to register a IModelClassCache for the type ${requestOp.Type.Name}");
-				return new OpResponse(
-					requestOp,
-					Cascade.NowMs,
-					connected: true,
-					exists: false,
-					result: null,
-					arrivedAtMs: null
-				);
+				return OpResponse.None(requestOp,Cascade.NowMs,GetType().Name);
 			}
 			var store = classCache[requestOp.Type];
-			return await store.Fetch(requestOp);
+			var opResponse = await store.Fetch(requestOp);
+			opResponse.SourceName = store.GetType().Name;
+			return opResponse;
 		}
 
 		public Task Store(Type type, object id, object model, long arrivedAt) {
 			if (type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(type))
-				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type ${type.Name}");
+				throw new Exception($"ModelCache: No type store for that type. Consider registering a IModelClassCache for the type ${type.Name}");
 			var store = classCache[type]!;
 			return store.Store(id,model,arrivedAt);
 		}
@@ -56,7 +58,7 @@ namespace Cascade {
 			if (type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(type))
-				throw new Exception($"ModelCache: No type store for that type. Please register a IModelClassCache for the type {type.Name}");
+				throw new Exception($"ModelCache: No type store for that type. Consider registering a IModelClassCache for the type {type.Name}");
 			var store = classCache[type]!;
 			return store.StoreCollection(key,ids,arrivedAt);
 		}
@@ -66,11 +68,11 @@ namespace Cascade {
 			if (opResponse.RequestOp.Type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(opResponse.RequestOp.Type)) {
-				Log.Debug($"ModelCache: No type store for that type. Please register a IModelClassCache for the type {opResponse.RequestOp.Type.Name}");
+				Log.Debug($"ModelCache: No type store for that type. Consider registering a IModelClassCache for the type {opResponse.RequestOp.Type.Name}");
 				return;
 			}
-			if (!opResponse.Connected)
-				throw new Exception("Don't attempt to store responses from a disconnected store");
+			// if (!opResponse.Connected)
+			// 	throw new Exception("Don't attempt to store responses from a disconnected store");
 
 			long arrivedAt = opResponse.ArrivedAtMs ?? Cascade.NowMs;
 			
@@ -81,18 +83,17 @@ namespace Cascade {
 				case RequestVerb.Update:
 				case RequestVerb.Create:
 				case RequestVerb.Destroy:
-					//IdType id = (IdType) CascadeUtils.ConvertTo(typeof(IdType), opResponse.RequestOp.Id);
-					//var id = opResponse.RequestOp.Id;
-					object id = CascadeTypeUtils.GetCascadeId(opResponse.Result);
-					
-					if (id == null)
-						throw new Exception("Unable to get right value for Id");
-					if (!opResponse.Exists) {
+				case RequestVerb.Execute:
+					object? id = opResponse.RequestOp.Id ?? CascadeTypeUtils.TryGetCascadeId(opResponse.Result);
+					if (id == null) {
+						Log.Warning("ModelCache.Store: Unable to get valid Id - not caching this");
+						return;
+					}
+					if (opResponse.RequestOp.Verb==RequestVerb.Destroy || !opResponse.Exists) {
 						await cache.Remove(id);
 					} else {
 						if (opResponse.Result is null)
 							throw new Exception("When Present is true, Result cannot be null");
-						//Model model = (opResponse.Result as Model)!;
 						await cache.Store(id, opResponse.Result, arrivedAt);
 					}
 					break;
@@ -107,12 +108,6 @@ namespace Cascade {
 					break;
 				default:
 					break;
-			}
-		}
-		
-		public async Task Clear() {
-			foreach (var kv in classCache) {
-				await kv.Value.Clear();
 			}
 		}
 	}

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cascade;
-using Cascade.testing;
 using NUnit.Framework;
 
 namespace Cascade {

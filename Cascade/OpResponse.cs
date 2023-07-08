@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace Cascade {
 	public class OpResponse {
@@ -50,9 +51,12 @@ namespace Cascade {
 		public readonly bool Exists;		// present in cache? Result can be null if known to not exist on origin
 		public readonly object? Result;								// for create, read, update
 		public long? ArrivedAtMs;
+		public int LayerIndex;
 
+		public string? SourceName;
+		
 		public bool PresentAndFresh() => 
-			 Connected==true && Exists == true && RequestOp.FreshnessSeconds>0 && (TimeMs-ArrivedAtMs) <= RequestOp.FreshnessSeconds*1000;
+			 Connected && Exists && (RequestOp.FreshnessSeconds>0) && ((TimeMs-ArrivedAtMs) <= RequestOp.FreshnessSeconds*1000);
 
 		public bool ResultIsEmpty() {
 			if (Result == null)
@@ -76,8 +80,19 @@ namespace Cascade {
 			get {
 				if (Result == null)
 					return ImmutableArray<object>.Empty;
-				IEnumerable<object> enumerable = Result is IEnumerable<object> ? ((IEnumerable<object>)Result).ToImmutableArray() : ImmutableArray.Create(Result);
-				return enumerable;
+				if (CascadeTypeUtils.IsEnumerableType(Result.GetType())) {
+					//IEnumerable<object> objects = (IEnumerable<object>)Result;
+					return (IEnumerable)CascadeTypeUtils.ImmutableArrayOfType(typeof(object), (IEnumerable) Result);
+				} else {
+					return ImmutableArray.Create(Result);
+				}
+
+				//return ImmutableArray.CreateRange<object>((IEnumerable) Result);
+
+				// if (Result is IEnumerable<object>)
+				// 	return ((IEnumerable<object>)Result).ToImmutableArray();
+				// else
+				// 	return ImmutableArray.CreateRange<object>((IEnumerable) Result);
 			}
 		}
 
@@ -100,6 +115,18 @@ namespace Cascade {
 			}
 		}
 
+		public string ToSummaryString() {
+			string? result = null;
+
+			try {
+				result = Result==null ? null : JsonSerializer.Serialize(Result);
+			}
+			catch (Exception e) {
+				// swallow errors
+			}
+			return $"{result} Connected:{Connected} Exists:{Exists}";
+		}
+		
 		// 		
 		// public int Index;		
 		// public IDictionary<string, object> Results;		// we store results as object internally
@@ -135,5 +162,17 @@ namespace Cascade {
 //					return default(M);
 //			}
 //		}		
+		public static OpResponse None(RequestOp requestOp,long timeMs,string? sourceName = null) {
+			var opResponse = new OpResponse(
+				requestOp,
+				timeMs,
+				connected: true,
+				exists: false,
+				result: null,
+				arrivedAtMs: null
+			);
+			opResponse.SourceName = sourceName;
+			return opResponse;
+		}
 	}
 }

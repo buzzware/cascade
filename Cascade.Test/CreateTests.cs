@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cascade;
-using Cascade.testing;
+using Cascade.Test;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
+using StandardExceptions;
 
 namespace Cascade {
 	
@@ -50,7 +51,7 @@ namespace Cascade {
 		
 		[Test]
 		public async Task CreateWithoutCache() {
-			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig());
+			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig(), new MockCascadePlatform(), ErrorControl.Instance, new CascadeJsonSerialization());
 			var parent = new Parent() {
 				colour = "red"
 			};
@@ -61,7 +62,7 @@ namespace Cascade {
 		
 		[Test]
 		public async Task CreateReplaceWithoutCache() {
-			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig());
+			var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig(), new MockCascadePlatform(), ErrorControl.Instance, new CascadeJsonSerialization());
 			var parent = new Parent() {
 				colour = "red"
 			};

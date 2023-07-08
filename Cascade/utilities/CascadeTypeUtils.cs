@@ -5,9 +5,12 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
-using deniszykov.TypeConversion;
 using Easy.Common.Extensions;
+using TypeConverter;
+using TypeConverter.Converters;
 
 namespace Cascade {
 	
@@ -115,15 +118,30 @@ namespace Cascade {
 			//return result;
 		}
 
-		private static TypeConversionProvider? _converter;
+		private static void registerBothWays<X, Y>(ConverterRegistry r, Type converter) {
+			r.RegisterConverter<X,Y>(converter);
+			r.RegisterConverter<Y,X>(converter);
+		}
+		
+		
+		private static ConverterRegistry buildConverter() {
+			ConverterRegistry r = new ConverterRegistry();
+			// registerBothWays<string,int>(r,typeof(StringToIntegerConverter));
+			// registerBothWays<string,bool>(r,typeof(StringToBoolConverter));
+			return r;
+		} 
+		
+		
+		private static ConverterRegistry? _converter;
 
 		public static object? ConvertTo(Type type, object? value, object? defaultValue = null) {
 			if (value == null)
 				return null;
-			if (_converter==null) _converter = new TypeConversionProvider();
-			object? result;
-			var success = _converter.GetConverter(value.GetType(), type).TryConvert(value, out result);
-			return success ? result : defaultValue;
+			if (_converter == null) _converter = buildConverter();
+			var sourceType = value == null ? null : value.GetType();
+			var tryConvert = _converter.TryConvert(sourceType,type,value,defaultValue);
+			//var tryConvert = _converter.Convert(value.GetType(),value);
+			return tryConvert;
 		}
 
 		public static Type GetCascadeIdType(Type cascadeModelType) {
@@ -138,9 +156,26 @@ namespace Cascade {
 			return CascadeIdPropertyRequired(cascadeModel).GetValue(cascadeModel);
 		}
 
+		public static void SetCascadeId(object cascadeModel, object id) {
+			CascadeIdPropertyRequired(cascadeModel).SetValue(cascadeModel,id);
+		}
+		
+		public static object? TryGetCascadeId(object? cascadeModel) {
+			if (cascadeModel == null)
+				return null;
+			return TryGetCascadeIdProperty(cascadeModel.GetType())?.GetValue(cascadeModel);
+		}
+
+		public static PropertyInfo? TryGetCascadeIdProperty(Type cascadeModelType) {
+			var propertyInfos = cascadeModelType.GetProperties();
+			return propertyInfos.FirstOrDefault(pi => {
+				return Attribute.IsDefined(pi, typeof(CascadeIdAttribute));
+			});
+		}
+
 		public static PropertyInfo CascadeIdPropertyRequired(Type cascadeModelType) {
-			return cascadeModelType.GetProperties().FirstOrDefault(pi => Attribute.IsDefined(pi, typeof(CascadeIdAttribute))) 
-			       ?? throw new MissingMemberException("The model is missing [CascadeId] on an id property");
+			return TryGetCascadeIdProperty(cascadeModelType)
+			  ?? throw new MissingMemberException("The model is missing [CascadeId] on an id property");
 		}
 
 		public static PropertyInfo CascadeIdPropertyRequired(object cascadeModel) {
@@ -226,5 +261,42 @@ namespace Cascade {
 				return true;
 			});
 		}
+		
+		public static bool IsIntegerType(Type type) {
+			return
+				type == typeof(int) ||
+				type == typeof(long) ||
+				type == typeof(byte) ||
+				type == typeof(uint) ||
+				type == typeof(ulong) ||
+				type == typeof(sbyte) ||
+				type == typeof(short) ||
+				type == typeof(ushort);
+		}
+
+		public static bool IntegerWillFit(object value, Type destinationType) {
+			var valueType = value.GetType();
+			return Marshal.SizeOf(valueType) <= Marshal.SizeOf(destinationType);
+		}
+
+		public static bool IsIntegerAndWillFit(object value, Type destinationType) {
+			var valueType = value.GetType();
+			return IsIntegerType(valueType) && IntegerWillFit(value,destinationType);
+		}
+
+		public static bool ValueCompatibleWithType(object value, Type type) {
+			var valueType = value.GetType();
+			if (valueType == type)
+				return true;
+			if (value.GetType().IsSubclassOf(type))
+				return true;
+			if (IsIntegerType(valueType)) {
+				if (!IsIntegerType(type))
+					return false;
+				return IntegerWillFit(value, type);
+			}
+			return false;
+		}
+
 	}
 }

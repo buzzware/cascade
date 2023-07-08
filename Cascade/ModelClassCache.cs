@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -8,8 +9,8 @@ using System.Threading.Tasks;
 namespace Cascade {
 	public class ModelClassCache<Model, IdType> : IModelClassCache 
 		where Model : class {
-		private readonly Dictionary<IdType, Tuple<Model, long>> models = new Dictionary<IdType, Tuple<Model, long>>();
-		private readonly Dictionary<string, Tuple<IEnumerable, long>> collections = new Dictionary<string, Tuple<IEnumerable, long>>();
+		private readonly ConcurrentDictionary<IdType, Tuple<Model, long>> models = new ConcurrentDictionary<IdType, Tuple<Model, long>>();
+		private readonly ConcurrentDictionary<string, Tuple<IEnumerable, long>> collections = new ConcurrentDictionary<string, Tuple<IEnumerable, long>>();
 
 		public CascadeDataLayer Cascade { get; set; }
 
@@ -22,33 +23,39 @@ namespace Cascade {
 				throw new Exception("requestOp.Type != typeof(Model)");
 			switch (requestOp.Verb) {
 				case RequestVerb.Get:
-					var id = (IdType?) CascadeTypeUtils.ConvertTo(typeof(IdType), requestOp.Id);  //  ((IdType)requestOp.Id)!;
+					var id = (IdType?)CascadeTypeUtils.ConvertTo(typeof(IdType), requestOp.Id); //  ((IdType)requestOp.Id)!;
 					if (id == null)
 						throw new Exception("Unable to get right value for Id");
-
-					if (models.ContainsKey(id)) {
+					
+					models.TryGetValue(id, out var modelEntry);
+					
+					if (
+						modelEntry != null && 
+						(requestOp.FreshnessSeconds>=0) && 
+						(requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || ((Cascade.NowMs-modelEntry.Item2) <= requestOp.FreshnessSeconds*1000))
+					) {
 						return new OpResponse(
 							requestOp,
 							Cascade.NowMs,
 							connected: true,
 							exists: true,
-							result: models[id].Item1,
-							arrivedAtMs: models[id].Item2
+							result: modelEntry.Item1,
+							arrivedAtMs: modelEntry.Item2
 						);
-					}
-					else {
-						return new OpResponse(
-							requestOp,
-							Cascade.NowMs,
-							connected: true,
-							exists: false,
-							result: null,
-							arrivedAtMs: null
-						);
+					} else {
+						return OpResponse.None(requestOp,Cascade.NowMs, this.GetType().Name);
 					}
 					break;
 				case RequestVerb.Query:
-					if (collections.ContainsKey(requestOp.Key!)) {
+				case RequestVerb.GetCollection:
+					
+					collections.TryGetValue(requestOp.Key!, out var collEntry);
+					
+					if (
+						collEntry != null && 
+						(requestOp.FreshnessSeconds>=0) && 
+						(requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || ((Cascade.NowMs-collEntry.Item2) <= requestOp.FreshnessSeconds*1000))
+					) {
 						return new OpResponse(
 							requestOp,
 							Cascade.NowMs,
@@ -58,14 +65,7 @@ namespace Cascade {
 							arrivedAtMs: collections[requestOp.Key!].Item2
 						);
 					} else {
-						return new OpResponse(
-							requestOp,
-							Cascade.NowMs,
-							connected: true,
-							exists: false,
-							result: null,
-							arrivedAtMs: null
-						);
+						return OpResponse.None(requestOp,Cascade.NowMs, this.GetType().Name);
 					}
 					break;
 				default:
@@ -99,11 +99,35 @@ namespace Cascade {
 		}
 
 		public async Task Remove(IdType id) {
-			models.Remove(id);
+			models.TryRemove(id, out var value);
 		}
 		
-		public async Task Clear() {
-			models.Clear();
+		public async Task ClearAll(bool exceptHeld = true) {
+			if (exceptHeld) {
+				// models
+				var heldModelIds = (await Cascade.ListHeldIds<Model>()).ToArray();
+				var idsToRemove = models.Where(kv => {
+						//var id = CascadeTypeUtils.GetCascadeId(kv.Value.Item1);
+						var id = kv.Key;
+						var contains = heldModelIds.Contains(id);
+						return !contains;
+					})
+					.Select(kv => kv.Key)
+					.ToArray();
+				foreach (var id in idsToRemove.Reverse())
+					models.TryRemove(id, out var v);
+				
+				// collections
+				var heldCollectionNames = (await Cascade.ListHeldCollections(typeof(Model))).ToArray();
+				var namesToRemove = collections.Where(kv => !heldCollectionNames.Contains(kv.Key))
+					.Select(kv => kv.Key)
+					.ToArray();
+				foreach (var name in namesToRemove)
+					collections.TryRemove(name, out var v);
+			} else {
+				models.Clear();
+				collections.Clear();
+			}
 		}
 	}
 }
