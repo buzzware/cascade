@@ -10,6 +10,8 @@ The main methods used by an application built with Cascade :
 2. ```var redThings = await cascade.Query<Product>("red_products",new JsonObject { ["colour"] = "red" });```
 3. ```var updated = await cascade.Update(product, new JsonObject { ["colour"] = "red" });```
 4. ```await cascade.Destroy(product);```
+5. ```var promoted = await cascade.Execute("PROMOTE",new JsonObject { ["product_id"] = 25 })```
+5. ```await cascade.Populate(product,new string[] { nameof(Product.Manufacturer),nameof(Product.Category) })```
 
 Using Cascade in an application means : 
 
@@ -31,3 +33,8 @@ Using Cascade in an application means :
 9. Supports almost any API server(s) through your own implementation of abstract interfaces
 10. Insulation of application logic from server irregularities and changes 
 
+### Features
+
+1. "freshness" option to determine whether to get data from either a cache or the server
+2. "fallback freshness" option to silently fallback to a cached data when unable to reach the server
+3. "hold" option to mark retrieved records for downloading and preservation offline even when caches are cleared  
