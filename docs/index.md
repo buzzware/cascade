@@ -1,9 +1,6 @@
-# Cascade Data Layer
-## Data management framework for C# client (mobile) applications
-
 ### Usage
  
-The main methods provided by Cascade for applications are :
+As a quick introduction, the main methods provided by Cascade for applications are :
 
 1. ```var product = await cascade.Create<Product>(new Product() { colour = "Red" });```
 1. ```var product = await cascade.Get<Product>(25, populate: new string[] { nameof(Product.Manufacturer) });```
@@ -13,13 +10,13 @@ The main methods provided by Cascade for applications are :
 5. ```var promoted = await cascade.Execute("PROMOTE",new JsonObject { ["product_id"] = 25 })```
 5. ```await cascade.Populate(product,new string[] { nameof(Product.Manufacturer),nameof(Product.Category) })```
 
-Using Cascade in an application means :
+Application Requirements :
 
 1. Using the SuperModel base class and its attributes for all application models
 2. Implementing an origin class for your server(s) API
 3. Constructing an instance of CascadeDataLayer with the desired cache layer(s) and origin
 4. Using the CascadeDataLayer for application server interactions
-
+5. As for any application that needs to create records offline, you should probably use GUID ids
 
 ### Features
 
