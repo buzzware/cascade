@@ -75,12 +75,12 @@ namespace Cascade.Test {
 			
 			Assert.That(parent1.Children.Count(), Is.EqualTo(2));						// doesn't get automatically updated
 			await cascade.Populate(parent1,new []{"Children"}, freshnessSeconds:0);		// populate should update it
-			Assert.That(parent1.Children, Has.Length.EqualTo(3));
+			Assert.That(parent1.Children.Count(), Is.EqualTo(3));
 			Assert.That(parent1.Children, Has.Member(child5));	// populate did update the collection correctly
 			
 			// getting the parent again should have 3 children
 			parent1 = await cascade.Get<Parent>(1, populate: new []{"Children"});
-			Assert.That(parent1.Children, Has.Length.EqualTo(3));
+			Assert.That(parent1.Children.Count(), Is.EqualTo(3));
 			Assert.That(parent1.Children, Has.Member(child5));
 			
 			

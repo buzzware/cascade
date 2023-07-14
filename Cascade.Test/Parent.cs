@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using Cascade;
-using SQLite;
+//using SQLite;
 
 namespace Cascade.Test {
 	public class Parent : SuperModel {
 		
 		[Cascade.CascadeId]
-		[SQLite.PrimaryKey, SQLite.AutoIncrement]
+		// [SQLite.PrimaryKey, SQLite.AutoIncrement]
 		public long id { get; set; }
 		
 		[Cascade.HasMany(foreignIdProperty: "parentId")]
-		[SQLite.Ignore]
+		// [SQLite.Ignore]
 		public IEnumerable<Child>? Children { get; set; }
 		
 		public string? colour { get; set; }

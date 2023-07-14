@@ -1,5 +1,5 @@
 using Cascade;
-using SQLite;
+// using SQLite;
 
 namespace Cascade.Test {
 	
@@ -14,7 +14,7 @@ namespace Cascade.Test {
 		}
 		
 		[CascadeId]
-		[PrimaryKey]
+		// [PrimaryKey]
 		public int id {
 			get => GetProperty(ref _id); 
 			set => SetProperty(ref _id, value);
