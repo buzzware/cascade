@@ -5,8 +5,4 @@
     <LangVersion>9</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="StandardExceptionsDotNet.sln" />
-  </ItemGroup>
-
 </Project>
