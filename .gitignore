@@ -5,5 +5,4 @@ packages
 *.userprefs
 *.DotSettings
 .vs
-api_docs_built
 
