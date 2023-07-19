@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
 //using Serilog;
 
-namespace FreeXam.XPlatform.Lib {
+namespace Cascade {
 
 // Best method for creating objects from types 
 //
