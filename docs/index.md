@@ -23,3 +23,6 @@ Application Requirements :
 1. "freshness" option to determine whether to get data from either a cache or the server
 2. "fallback freshness" option to silently fallback to a cached data when unable to reach the server
 3. "hold" option to mark retrieved records for downloading and preservation offline even when caches are cleared  
+
+> For details see [Cascade API Reference](https://buzzware.github.io/cascade/api_reference)
+> 
