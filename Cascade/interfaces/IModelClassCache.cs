@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 
@@ -8,6 +9,6 @@ namespace Cascade {
 		Task StoreCollection(string key, IEnumerable ids, long aArrivedAt);
 		Task<OpResponse> Fetch(RequestOp requestOp);
 		Task Remove(object id);
-		Task ClearAll(bool exceptHeld);
+		Task ClearAll(bool exceptHeld, DateTime? olderThan = null);
 	}
 }

@@ -110,9 +110,11 @@ namespace Cascade.Test {
 			origin.NowMs += 10*60000;
 			
 			// try to get same thing again with overdue freshness - should return from cache anyway
-			var offlineThing = await cascade.Get<Thing>(cacheThing.id, freshnessSeconds: 5*60);
+			var offlineThing = await cascade.Get<Thing>(cacheThing.id, freshnessSeconds: 5*60, fallbackFreshnessSeconds: RequestOp.FRESHNESS_ANY);
 			Assert.That(offlineThing,Is.SameAs(cacheThing));
-			Assert.That(cascade.ConnectionOnline,Is.False);
+			Assert.That(cascade.ConnectionOnline,Is.True);	// no longer auto-offline
+
+			cascade.ConnectionOnline = false;
 			
 			// try again with freshness=0 - should still return from cache
 			offlineThing = await cascade.Get<Thing>(cacheThing.id, freshnessSeconds: 0);

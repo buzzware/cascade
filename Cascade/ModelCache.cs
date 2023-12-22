@@ -22,9 +22,9 @@ namespace Cascade {
 			}
 		}
 
-		public async Task ClearAll(bool exceptHeld=true) {
+		public async Task ClearAll(bool exceptHeld = true, DateTime? olderThan = null) {
 			foreach (var pair in classCache) {
-				await pair.Value.ClearAll(exceptHeld: exceptHeld);
+				await pair.Value.ClearAll(exceptHeld: exceptHeld, olderThan: olderThan);
 			}
 		}
 		

@@ -88,7 +88,7 @@ namespace Cascade {
 			}
 		}
 		
-		public T DeserializeType<T>(string source) {
+		public T DeserializeType<T>(string? source) {
 			try {
 				return JsonSerializer.Deserialize<T>(source, new JsonSerializerOptions() {
 					TypeInfoResolver = new DefaultJsonTypeInfoResolver {
@@ -122,7 +122,7 @@ namespace Cascade {
 			}
 		}
 		
-		public JsonElement DeserializeElement(string source) {
+		public JsonElement DeserializeElement(string? source) {
 			try {
 				return JsonSerializer.Deserialize<JsonElement>(source);
 			} catch (Exception e) {
@@ -146,19 +146,19 @@ namespace Cascade {
 		// public Dictionary<string,object> DeserializeDictionaryArray(string source) {
 		// 	
 		// }
-		public string Serialize(object model) {
+		public string? Serialize(object model) {
 			return JsonSerializer.Serialize(SerializeToNode(model));
 		}
 
+		bool isAssociation(Type modelType, object model, string propertyName) {
+			var propertyInfo = modelType.GetProperty(propertyName)!;
+			if (propertyInfo.PropertyType.IsPrimitive)
+				return false;
+			return CascadeDataLayer.AssociationAttributes.Any(t => propertyInfo.GetCustomAttributes(t,false).Any());
+		}
+		
 		public JsonNode SerializeToNode(object model, int maxDepth = 1) {
-
-			bool isAssociation(Type modelType, object model, string propertyName) {
-				var propertyInfo = modelType.GetProperty(propertyName)!;
-				if (propertyInfo.PropertyType.IsPrimitive)
-					return false;
-				return CascadeDataLayer.AssociationAttributes.Any(t => propertyInfo.GetCustomAttributes(t,false).Any());
-			}
-
+			
 			//var modelType = model.GetType();
 			var node = JsonSerializer.SerializeToNode(model, options: new JsonSerializerOptions {
 				//MaxDepth = maxDepth,
@@ -186,6 +186,35 @@ namespace Cascade {
 			return node;
 		}
 
+		public JsonElement SerializeToElement(object model, int maxDepth = 1) {
+			
+			//var modelType = model.GetType();
+			var element = JsonSerializer.SerializeToElement(model, options: new JsonSerializerOptions {
+				//MaxDepth = maxDepth,
+				//Converters = { new LambdaIgnoreConverter(name => ) }
+				TypeInfoResolver = new DefaultJsonTypeInfoResolver
+				{
+					Modifiers = { IgnoreProperties }
+				},
+				// AllowTrailingCommas = false,
+				// DefaultBufferSize = 0,
+				// Encoder = null,
+				// DictionaryKeyPolicy = null,
+				//DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+				// NumberHandling = JsonNumberHandling.Strict,
+				// IgnoreReadOnlyProperties = false,
+				// IgnoreReadOnlyFields = false,
+				// IncludeFields = false,
+				// PropertyNamingPolicy = null,
+				// PropertyNameCaseInsensitive = false,
+				// ReadCommentHandling = JsonCommentHandling.Disallow,
+				// UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement,
+				// WriteIndented = false,
+				// ReferenceHandler = null
+			});
+			return element;
+		}
+		
 		private void IgnoreProperties(JsonTypeInfo typeInfo) {
 			if (!typeInfo.Type.IsSubclassOf(typeof(SuperModel))) // != typeof(MyPoco))
 				return;

@@ -154,19 +154,19 @@ namespace Cascade.Test {
 			};
 			RequestOp requestOpChild2 = RequestOp.CreateOp(child2,cascade.NowMs);
 
-			var filepathParent = await cascade.EnqueueOperation(requestOpParent);
+			var filepathParent = await cascade.AddPendingChange(requestOpParent);
 			Assert.That(Path.GetFileName(filepathParent),Is.EqualTo("000000000001000.json"));
 			Assert.That(Directory.GetParent(filepathParent)!.Name, Is.EqualTo("PendingChanges"));
 			var parentOp = cascade.DeserializeRequestOp(File.ReadAllText(filepathParent));
 			Assert.That(parentOp.Id,Is.EqualTo(3));
 			
-			var filepathChild1 = await cascade.EnqueueOperation(requestOpChild1);
+			var filepathChild1 = await cascade.AddPendingChange(requestOpChild1);
 			Assert.That(Path.GetFileName(filepathChild1),Is.EqualTo("000000000001001.json"));
 			//Assert.That(Directory.GetParent(filepathChild1)!.Name, Is.EqualTo("Child"));
 			var childOp1 = cascade.DeserializeRequestOp(File.ReadAllText(filepathChild1));
 			Assert.That(childOp1.Id,Is.EqualTo("c1"));
 			
-			var filepathChild2 = await cascade.EnqueueOperation(requestOpChild2);
+			var filepathChild2 = await cascade.AddPendingChange(requestOpChild2);
 			Assert.That(Path.GetFileName(filepathChild2),Is.EqualTo("000000000001002.json"));
 			origin.NowMs += 111;
 			var child3 = new Child() {
@@ -176,11 +176,11 @@ namespace Cascade.Test {
 				weight = 99
 			};
 			RequestOp requestOpChild3 = RequestOp.CreateOp(child3,cascade.NowMs);
-			var filepathChild3 = await cascade.EnqueueOperation(requestOpChild3);
+			var filepathChild3 = await cascade.AddPendingChange(requestOpChild3);
 			Assert.That(Path.GetFileName(filepathChild3),Is.EqualTo("000000000001111.json"));
 			
 			RequestOp updateOpChild3 = RequestOp.UpdateOp(child3,ImmutableDictionary<string, object>.Empty.Add("age",18),cascade.NowMs);
-			var filepathChild3Update = await cascade.EnqueueOperation(updateOpChild3);
+			var filepathChild3Update = await cascade.AddPendingChange(updateOpChild3);
 			Assert.That(Path.GetFileName(filepathChild3Update),Is.EqualTo("000000000001112.json"));
 			var updateOpLoaded = cascade.DeserializeRequestOp(File.ReadAllText(filepathChild3Update));
 			Assert.That(updateOpLoaded.Id,Is.EqualTo("c3"));

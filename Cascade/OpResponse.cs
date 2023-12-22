@@ -55,9 +55,6 @@ namespace Cascade {
 
 		public string? SourceName;
 		
-		public bool PresentAndFresh() => 
-			 Connected && Exists && (RequestOp.FreshnessSeconds>0) && ((TimeMs-ArrivedAtMs) <= RequestOp.FreshnessSeconds*1000);
-
 		public bool ResultIsEmpty() {
 			if (Result == null)
 				return true;
@@ -111,7 +108,7 @@ namespace Cascade {
 				if (CascadeTypeUtils.IsId(first))
 					return results;
 				else
-					return results.Select(CascadeTypeUtils.GetCascadeId).ToImmutableArray();
+					return results.Select(i => i!=null ? CascadeTypeUtils.GetCascadeId(i) : null).ToImmutableArray();
 			}
 		}
 
@@ -167,6 +164,19 @@ namespace Cascade {
 				requestOp,
 				timeMs,
 				connected: true,
+				exists: false,
+				result: null,
+				arrivedAtMs: null
+			);
+			opResponse.SourceName = sourceName;
+			return opResponse;
+		}
+		
+		public static OpResponse ConnectionFailure(RequestOp requestOp,long timeMs,string sourceName = null) {
+			var opResponse = new OpResponse(
+				requestOp,
+				timeMs,
+				connected: false,
 				exists: false,
 				result: null,
 				arrivedAtMs: null

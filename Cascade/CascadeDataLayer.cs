@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Easy.Common.Extensions;
+using Guards.Extensions;
 using Serilog;
 using Serilog.Events;
 using StandardExceptions;
@@ -22,6 +24,14 @@ namespace Cascade {
 	/// </summary>
 	public class CascadeDataLayer : INotifyPropertyChanged {
 		public const int FRESHNESS_ANY = Int32.MaxValue;
+		
+		private readonly ICascadeOrigin Origin;
+		private readonly IEnumerable<ICascadeCache> CacheLayers;
+		public readonly CascadeConfig Config;
+		private readonly ICascadePlatform cascadePlatform;
+		private readonly object lockObject;
+		private readonly ErrorControl errorControl;
+		private readonly CascadeJsonSerialization serialization;
 
 		public static ImmutableArray<Type> AssociationAttributes = ImmutableArray.Create<Type>(
 			typeof(BelongsToAttribute),
@@ -29,17 +39,50 @@ namespace Cascade {
 			typeof(HasOneAttribute)
 		);
 
-		private readonly IEnumerable<ICascadeCache> CacheLayers;
-		private readonly ICascadePlatform cascadePlatform;
-		public readonly CascadeConfig Config;
-		private readonly ErrorControl errorControl;
-		private readonly object lockObject;
-
-		private readonly ICascadeOrigin Origin;
-		private readonly CascadeJsonSerialization serialization;
-
+		/// <summary>
+		/// Use this timestamp to keep in sync with the framework. Especially useful for testing
+		/// as time can then be controlled by your origin implementation. 
+		/// Milliseconds since 1970
+		/// </summary>
+		public long NowMs => Origin.NowMs;
+		
+		/// <summary>
+		/// Used for watching properties on this (normally ConnectionOnline)
+		/// </summary>
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		/// <summary>
+		/// This property determines whether the framework acts in online (true) or offline (false) mode.
+		/// It can be set to offline at any time, but should not be set to online unless the changes pending list is empty.
+		/// <see cref="ReconnectOnline">ReconnectOnline() uploads changes and sets ConnectionOnline=true for you.</see>  
+		/// </summary>
+		public bool ConnectionOnline {
+			get => _connectionOnline;
+			set {
+				if (value != _connectionOnline) 
+					cascadePlatform.InvokeOnMainThreadNow(() => {
+						_connectionOnline = value;
+						OnPropertyChanged(nameof(ConnectionOnline));
+					});	
+			}
+		}
 		private bool _connectionOnline = true;
 
+		// Showing Pending Counter on the Home Screen
+		// To trigger a PropertyChanged event on this or any other property, use RaisePropertyChanged
+		public int PendingCount
+		{
+			get
+			{
+	      // Get Count from the ChangesPendingList but only when Disconnected (Offline)
+	      if (!ConnectionOnline)
+	      {
+	          return GetChangesPendingList().Count();
+	      }
+	      return 0;
+			}
+		}
+		
 		/// <summary>
 		/// CascadeDataLayer main constructor
 		/// </summary>
@@ -68,116 +111,32 @@ namespace Cascade {
 			this.errorControl = errorControl;
 			this.serialization = serialization;
 		}
-
-		/// <summary>
-		/// Use this timestamp to keep in sync with the framework. Especially useful for testing
-		/// as time can then be controlled by your origin implementation. 
-		/// Milliseconds since 1970
-		/// </summary>
-		public long NowMs => Origin.NowMs;
-
 		
-		/// <summary>
-		/// This property determines whether the framework acts in online (true) or offline (false) mode.
-		/// It can be set to offline at any time, but should not be set to online unless the changes pending list is empty.
-		/// <see cref="ReconnectOnline">ReconnectOnline() uploads changes and sets ConnectionOnline=true for you.</see>  
-		/// </summary>
-		public bool ConnectionOnline {
-			get => _connectionOnline;
-			set {
-				if (value != _connectionOnline) 
-					cascadePlatform.InvokeOnMainThreadNow(() => {
-						_connectionOnline = value;
-						OnPropertyChanged(nameof(ConnectionOnline));
-					});	
-			}
-		}
-
-		/// <summary>
-		/// Used for watching properties on this (normally ConnectionOnline)
-		/// </summary>
-		public event PropertyChangedEventHandler PropertyChanged;
-
 		protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
+		/// <summary>
+		/// Raises this object's PropertyChanged event.
+		/// </summary>
+		/// <param name="propertyName">Name of the property used to notify listeners. This
+		/// value is optional and can be provided automatically when invoked from compilers
+		/// that support <see cref="CallerMemberNameAttribute"/>.</param>
+		public void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			OnPropertyChanged(propertyName);
+		}
+		
 		protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
 			if (EqualityComparer<T>.Default.Equals(field, value)) return false;
 			field = value;
 			OnPropertyChanged(propertyName);
 			return true;
 		}
-
-
-		/// <summary>
-		/// Get data from cache/origin of model type M and return result or null
-		/// </summary>
-		/// <param name="id">id of model to get</param>
-		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
-		/// <param name="freshnessSeconds">freshness for the main object</param>
-		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
-		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
-		/// <typeparam name="M">model type - subclass of SuperModel</typeparam>
-		/// <returns>model of type M or null</returns>
-		public async Task<M?> Get<M>(
-			int id,
-			IEnumerable<string>? populate = null,
-			int? freshnessSeconds = null,
-			int? populateFreshnessSeconds = null,
-			bool? hold = null
-		) where M : class {
-			return (await this.GetResponse<M>(id, populate, freshnessSeconds, populateFreshnessSeconds, hold)).Result as M;
-		}
-
-		/// <summary>
-		/// Get data from cache/origin of model type M and return result or null
-		/// </summary>
-		/// <param name="id">id of model to get</param>
-		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
-		/// <param name="freshnessSeconds">freshness for the main object</param>
-		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
-		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
-		/// <typeparam name="M">model type - subclass of SuperModel</typeparam>
-		/// <returns>model of type M or null</returns>
-		public async Task<M?> Get<M>(
-			string id,
-			IEnumerable<string>? populate = null,
-			int? freshnessSeconds = null,
-			int? populateFreshnessSeconds = null,
-			bool? hold = null
-		) where M : class {
-			return (await this.GetResponse<M>(
-				id,
-				populate,
-				freshnessSeconds,
-				populateFreshnessSeconds,
-				hold
-			)).Result as M;
-		}
-
-		/// <summary>
-		/// Get data from cache/origin of model type M and return result or null
-		/// </summary>
-		/// <param name="id">id of model to get</param>
-		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
-		/// <param name="freshnessSeconds">freshness for the main object</param>
-		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
-		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
-		/// <typeparam name="M">model type - subclass of SuperModel</typeparam>
-		/// <returns>model of type M or null</returns>
-		public async Task<M?> Get<M>(
-			long id, 
-			IEnumerable<string>? populate = null, 
-			int? freshnessSeconds = null, 
-			int? populateFreshnessSeconds = null, 
-			bool? hold = null
-		) where M : class {
-			return (await this.GetResponse<M>(id, populate, freshnessSeconds, populateFreshnessSeconds, hold)).Result as M;
-		}
+		
 		
 		/// <summary>
-		/// Get a model instance of given model type M and int id with a full detail OpResponse object
+		/// Get a model instance of given model type and id with a full detail OpResponse object
 		/// </summary>
 		/// <param name="id">id of model to get</param>
 		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
@@ -185,76 +144,47 @@ namespace Cascade {
 		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
 		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
 		/// <returns>OpResponse</returns>
-		public Task<OpResponse> GetResponse<M>(
-			int id,
+		public Task<OpResponse> GetResponse(
+			Type modelType,
+			object id,
 			IEnumerable<string>? populate = null,
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
 			bool? hold = null
-		) where M : class {
-			var req = RequestOp.GetOp<M>(
+		) {
+			var req = RequestOp.GetOp(
+				modelType,
 				id,
 				NowMs,
 				populate,
 				freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
+				fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold
 			);
 			return ProcessRequest(req);
 		}
 
 		/// <summary>
-		/// Get a model instance of given model type M and long id with a full detail OpResponse object
+		/// Get data from cache/origin of model type M and return result or null
 		/// </summary>
 		/// <param name="id">id of model to get</param>
 		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
 		/// <param name="freshnessSeconds">freshness for the main object</param>
 		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
 		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
-		/// <returns>OpResponse</returns>
-		public Task<OpResponse> GetResponse<M>(
-			long id,
+		/// <typeparam name="M">model type - subclass of SuperModel</typeparam>
+		/// <returns>model of type M or null</returns>
+		public async Task<M?> Get<M>(
+			object id,
 			IEnumerable<string>? populate = null,
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
 			bool? hold = null
 		) where M : class {
-			var req = RequestOp.GetOp<M>(
-				id,
-				NowMs,
-				populate,
-				freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
-				hold
-			);
-			return ProcessRequest(req);
-		}
-
-		/// <summary>
-		/// Get a model instance of given model type M and string id with a full detail OpResponse object
-		/// </summary>
-		/// <param name="id">id of model to get</param>
-		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
-		/// <param name="freshnessSeconds">freshness for the main object</param>
-		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
-		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
-		/// <returns>OpResponse</returns>
-		public Task<OpResponse> GetResponse<M>(
-			string id,
-			IEnumerable<string>? populate = null,
-			int? freshnessSeconds = null,
-			int? populateFreshnessSeconds = null,
-			bool? hold = null
-		) where M : class {
-			var req = RequestOp.GetOp<M>(
-				id,
-				NowMs,
-				populate: populate,
-				freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
-				hold 
-			);
-			return ProcessRequest(req);
+			return (await this.GetResponse(typeof(M),id, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold)).Result as M;
 		}
 		
 		/// <summary>
@@ -345,12 +275,7 @@ namespace Cascade {
 		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
 		/// <typeparam name="Model">the type of the collection</typeparam>
 		/// <returns>Enumerable of models of type M</returns>
-		public async Task<IEnumerable<M>> GetWhereCollection<M>(
-			string propertyName, 
-			string propertyValue, 
-			int? freshnessSeconds = null, 
-			int? populateFreshnessSeconds = null
-		) where M : class {
+		public async Task<IEnumerable<M>> GetWhereCollection<M>(string propertyName, string propertyValue, int? freshnessSeconds = null, int? populateFreshnessSeconds = null) where M : class {
 			var response = await this.GetWhereCollectionResponse<M>(propertyName, propertyValue, freshnessSeconds, populateFreshnessSeconds);
 			var results = response.Results.Cast<M>().ToImmutableArray();
 			return results;
@@ -364,12 +289,7 @@ namespace Cascade {
 		/// <param name="propertyValue">Value of foreign key</param>
 		/// <param name="collection">enumerable of ids for the collection</param>
 		/// <returns>void</returns>
-		public async Task SetCacheWhereCollection(
-			Type modelType, 
-			string propertyName, 
-			string propertyValue, 
-			IEnumerable<object> collection
-		) {
+		public async Task SetCacheWhereCollection(Type modelType, string propertyName, string propertyValue, IEnumerable<object> collection) {
 			IEnumerable<object>? ids;
 			var enumerable = collection as object[] ?? collection.ToArray();
 			if (!enumerable.Any()) {
@@ -407,6 +327,39 @@ namespace Cascade {
 		}
 
 		/// <summary>
+		/// Do a search on the origin with the given model and criteria and cache the resulting collection under the collectionKey and return full detail OpResponse.
+		/// Models are cached and returned, as are populated association models.
+		/// </summary>
+		/// <param name="collectionKey"></param>
+		/// <param name="criteria"></param>
+		/// <param name="populate"></param>
+		/// <param name="freshnessSeconds"></param>
+		/// <param name="populateFreshnessSeconds"></param>
+		/// <param name="hold"></param>
+		/// <typeparam name="M"></typeparam>
+		/// <returns>OpResponse</returns>
+		public Task<OpResponse> QueryResponse<M>(string collectionName,
+			object criteria,
+			IEnumerable<string>? populate = null,
+			int? freshnessSeconds = null,
+			int? populateFreshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null
+		) {
+			var req = RequestOp.QueryOp<M>(
+				collectionName,
+				criteria,
+				NowMs,
+				populate: populate,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				populateFreshnessSeconds: populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+				hold ?? false
+			);
+			return ProcessRequest(req);
+		}
+
+		/// <summary>
 		/// Do a search on the origin with the given model and criteria and cache the resulting collection under the collectionKey.
 		/// Models are cached and returned, as are populated association models.
 		/// </summary>
@@ -418,14 +371,16 @@ namespace Cascade {
 		/// <param name="hold"></param>
 		/// <typeparam name="M"></typeparam>
 		/// <returns>IEnumerable<M></returns>
-		public async Task<IEnumerable<M>> Query<M>(string? collectionKey,
+		public async Task<IEnumerable<M>> Query<M>(
+			string? collectionKey,
 			object? criteria = null,
 			IEnumerable<string>? populate = null,
 			int? freshnessSeconds = null,
-			int? populateFreshnessSeconds = null, 
+			int? populateFreshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
 			bool? hold = null
 		) {
-			var response = await QueryResponse<M>(collectionKey, criteria, populate, freshnessSeconds, populateFreshnessSeconds);
+			var response = await QueryResponse<M>(collectionKey, criteria, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold);
 			var results = response.Results.Cast<M>().ToImmutableArray();
 			//return Array.ConvertAll<object,M>(response.Results) ?? Array.Empty<M>();
 			return results;
@@ -443,49 +398,17 @@ namespace Cascade {
 		/// <param name="hold"></param>
 		/// <typeparam name="M"></typeparam>
 		/// <returns></returns>
-		public async Task<M> QueryOne<M>(
-			object criteria,
-			string? collectionKey = null,
+		public async Task<M?> QueryOne<M>(
+			string? collectionKey,
+			object criteria = null,
 			IEnumerable<string>? populate = null,
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
 			bool? hold = null
 		) {
-			return (await this.Query<M>(collectionKey, criteria, populate, freshnessSeconds, populateFreshnessSeconds, hold)).FirstOrDefault();
+			return (await this.Query<M>(collectionKey, criteria, populate, freshnessSeconds: freshnessSeconds, populateFreshnessSeconds: populateFreshnessSeconds, fallbackFreshnessSeconds: fallbackFreshnessSeconds, hold: hold)).FirstOrDefault();
 		}
-
-		/// <summary>
-		/// Do a search on the origin with the given model and criteria and cache the resulting collection under the collectionKey and return full detail OpResponse.
-		/// Models are cached and returned, as are populated association models.
-		/// </summary>
-		/// <param name="collectionKey"></param>
-		/// <param name="criteria"></param>
-		/// <param name="populate"></param>
-		/// <param name="freshnessSeconds"></param>
-		/// <param name="populateFreshnessSeconds"></param>
-		/// <param name="hold"></param>
-		/// <typeparam name="M"></typeparam>
-		/// <returns>OpResponse</returns>
-		public Task<OpResponse> QueryResponse<M>(
-			string collectionName,
-			object criteria,
-			IEnumerable<string>? populate = null,
-			int? freshnessSeconds = null,
-			int? populateFreshnessSeconds = null,
-			bool? hold = null
-		) {
-			var req = RequestOp.QueryOp<M>(
-				collectionName,
-				criteria,
-				NowMs,
-				populate: populate,
-				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				populateFreshnessSeconds: populateFreshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				hold ?? false
-			);
-			return ProcessRequest(req);
-		}
-
 
 		/// <summary>
 		/// Populates (sets the given association property(s) on the given model each according to their definition attribute (BelongsTo/HasMany/HasOne)) with
@@ -515,40 +438,7 @@ namespace Cascade {
 				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, hold);
 			}
 		}
-		
-		/// <summary>
-		/// Populates (sets the given association property(s) on the given model each according to their definition attribute (BelongsTo/HasMany/HasOne)) with
-		/// the resulting model(s) from their internal query(s). 
-		/// </summary>
-		/// <param name="model">model to act on</param>
-		/// <param name="property">nameof(Model.someProperty)</param>
-		/// <param name="freshnessSeconds"></param>
-		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
-		/// <param name="hold"></param>
-		public async Task Populate(SuperModel model, IEnumerable<string> associations, int? freshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
-			foreach (var association in associations) {
-				await Populate(model, association, freshnessSeconds, skipIfSet, hold);
-			}
-		}
-		
-		/// <summary>
-		/// Populates (sets the given association property(s) on the given models each according to their definition attribute (BelongsTo/HasMany/HasOne)) with
-		/// the resulting model(s) from their internal query(s). This is useful for setting association(s) on a list of models.
-		/// In future, this could be optimised for when many are associated with the same. 
-		/// </summary>
-		/// <param name="model">model to act on</param>
-		/// <param name="property">nameof(Model.someProperty)</param>
-		/// <param name="freshnessSeconds"></param>
-		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
-		/// <param name="hold"></param>
-		public async Task Populate(IEnumerable<SuperModel> models, IEnumerable<string> associations, int? freshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
-			foreach (var model in models) {
-				foreach (var association in associations) {
-					await Populate((SuperModel)model, association, freshnessSeconds, skipIfSet, hold);
-				}
-			}
-		}
-		
+
 		// this is needed eg. when you add models to a HasMany association
 		
 		/// <summary>
@@ -571,7 +461,7 @@ namespace Cascade {
 
 				object modelId = CascadeTypeUtils.GetCascadeId(model);
 				await SetCacheWhereCollection(foreignType, hasMany.ForeignIdProperty, modelId.ToString(), models);
-				SetModelCollectionProperty(model, propertyInfo, models);
+				await SetModelCollectionProperty(model, propertyInfo, models);
 			}
 			else {
 				throw new ArgumentException($"{property} is not a [HasMany] property");
@@ -595,8 +485,8 @@ namespace Cascade {
 				if (foreignType == null)
 					throw new ArgumentException("Unable to get foreign model type. Property should be of type a ChildModel");
 
-				// !!! this should update the caches with a collection
-				SetModelProperty(model, propertyInfo, value);
+				//object modelId = CascadeTypeUtils.GetCascadeId(model);
+				await SetModelProperty(model, propertyInfo, value);
 			}
 			else {
 				throw new ArgumentException($"{property} is not a [HasMany] property");
@@ -642,23 +532,38 @@ namespace Cascade {
 		}
 
 		/// <summary>
-		/// Create and return a model of the given type. An instance is used to pass in the values, and a newly created
-		/// instance is returned from the origin.
-		/// Note: the populate option will be removed from all write methods. Instead Create should be called followed by
-		/// any call(s) to Populate() as required. 
+		/// Populates (sets the given association property(s) on the given model each according to their definition attribute (BelongsTo/HasMany/HasOne)) with
+		/// the resulting model(s) from their internal query(s). 
 		/// </summary>
-		/// <param name="model"></param>
-		/// <param name="populate"></param>
+		/// <param name="model">model to act on</param>
+		/// <param name="property">nameof(Model.someProperty)</param>
+		/// <param name="freshnessSeconds"></param>
+		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
 		/// <param name="hold"></param>
-		/// <typeparam name="M"></typeparam>
-		/// <returns>model of type M</returns>
-		public async Task<M> Create<M>(M model, IEnumerable<string>? populate = null, bool hold = false) {
-			var response = await CreateResponse<M>(model,populate,hold: hold);
-			if (response.Result is not M result)
-				throw new AssumptionException($"Should be of type {typeof(M).Name}");
-			return result;
+		public async Task Populate(SuperModel model, IEnumerable<string> associations, int? freshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+			foreach (var association in associations) {
+				await Populate(model, association, freshnessSeconds, skipIfSet, hold);
+			}
 		}
-		
+
+		/// <summary>
+		/// Populates (sets the given association property(s) on the given models each according to their definition attribute (BelongsTo/HasMany/HasOne)) with
+		/// the resulting model(s) from their internal query(s). This is useful for setting association(s) on a list of models.
+		/// In future, this could be optimised for when many are associated with the same. 
+		/// </summary>
+		/// <param name="models">models to act on</param>
+		/// <param name="property">nameof(Model.someProperty)</param>
+		/// <param name="freshnessSeconds"></param>
+		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
+		/// <param name="hold"></param>
+		public async Task Populate(IEnumerable<SuperModel> models, IEnumerable<string> associations, int? freshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+			foreach (var model in models) {
+				foreach (var association in associations) {
+					await Populate((SuperModel)model, association, freshnessSeconds, skipIfSet, hold);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Create and return a model of the given type. An instance is used to pass in the values, and a newly created
 		/// instance is returned from the origin.
@@ -666,22 +571,20 @@ namespace Cascade {
 		/// any call(s) to Populate() as required. 
 		/// </summary>
 		/// <param name="model"></param>
-		/// <param name="populate"></param>
 		/// <param name="hold"></param>
 		/// <typeparam name="M"></typeparam>
 		/// <returns>OpResponse with full detail of operation, including Result of type M</returns>
-		public Task<OpResponse> CreateResponse<M>(M model, IEnumerable<string>? populate = null, bool hold = false) {
+		public Task<OpResponse> CreateResponse<M>(M model, bool hold = false) {
 			var req = RequestOp.CreateOp(
 				model!,
 				NowMs,
-				populate,
 				hold: hold
 			);
 			return ProcessRequest(req);
 		}
 
-		public async Task<M> Replace<M>(M model) {
-			var response = await ReplaceResponse<M>(model);
+		public async Task<M> Create<M>(M model, bool hold = false) {
+			var response = await CreateResponse<M>(model,hold: hold);
 			if (response.Result is not M result)
 				throw new AssumptionException($"Should be of type {typeof(M).Name}");
 			return result;
@@ -695,14 +598,13 @@ namespace Cascade {
 			return ProcessRequest(req);
 		}
 
-		// may return null if the record no longer exists
-		public async Task<M?> Update<M>(M model, IDictionary<string, object> changes) where M : class {
-			var response = await UpdateResponse<M>(model, changes);
-			if (response.Result != null && response.Result is not M)
+		public async Task<M> Replace<M>(M model) {
+			var response = await ReplaceResponse<M>(model);
+			if (response.Result is not M result)
 				throw new AssumptionException($"Should be of type {typeof(M).Name}");
-			return response.Result as M;
+			return result;
 		}
-		
+
 		public Task<OpResponse> UpdateResponse<M>(M model, IDictionary<string, object> changes) {
 			var req = RequestOp.UpdateOp(
 				model!,
@@ -711,7 +613,15 @@ namespace Cascade {
 			);
 			return ProcessRequest(req);
 		}
-		
+
+		// may return null if the record no longer exists
+		public async Task<M?> Update<M>(M model, IDictionary<string, object> changes) where M : class {
+			var response = await UpdateResponse<M>(model, changes);
+			if (response.Result != null && response.Result is not M)
+				throw new AssumptionException($"Should be of type {typeof(M).Name}");
+			return response.Result as M;
+		}
+
 		public async Task Destroy<M>(M model) {
 			var response = await DestroyResponse<M>(model);
 		}
@@ -744,7 +654,10 @@ namespace Cascade {
 			);
 			return ProcessRequest(req);
 		}
-		
+
+		// =================== PRIVATE METHODS =========================
+
+
 		public static object ConvertType(object aSource, Type singularType) {
 			throw new NotImplementedException();
 		}
@@ -766,11 +679,8 @@ namespace Cascade {
 				null,
 				value: null,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				criteria: new Dictionary<string, object>() { [attribute.ForeignIdProperty] = modelId },
-				key: key,
-				hold: hold
-			);
-			var opResponse = await InnerProcessWithOfflineFallback(requestOp);
+				hold: hold, criteria: new Dictionary<string, object>() { [attribute.ForeignIdProperty] = modelId }, key: key);
+			var opResponse = await InnerProcessWithFallback(requestOp);
 			await StoreInPreviousCaches(opResponse);
 			await SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
 		}
@@ -802,11 +712,8 @@ namespace Cascade {
 				null,
 				value: null,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				criteria: new Dictionary<string, object>() { [attribute.ForeignIdProperty] = modelId },
-				key: key,
-				hold: hold
-			);
-			var opResponse = await InnerProcessWithOfflineFallback(requestOp);
+				hold: hold, criteria: new Dictionary<string, object>() { [attribute.ForeignIdProperty] = modelId }, key: key);
+			var opResponse = await InnerProcessWithFallback(requestOp);
 			await StoreInPreviousCaches(opResponse);
 			await SetModelProperty(model, propertyInfo, opResponse.FirstResult);
 		}
@@ -846,7 +753,13 @@ namespace Cascade {
 			var populate = requestOp.Populate?.ToArray() ?? new string[] { };
 
 			if (requestOp.Verb == RequestVerb.Query && opResponse.IsIdResults) {
-				var modelResponses = await GetModelsForIds(requestOp.Type, requestOp.FreshnessSeconds ?? Config.DefaultFreshnessSeconds, opResponse.ResultIds);
+				var modelResponses = await GetModelsForIds(
+					requestOp.Type,
+					opResponse.ResultIds,
+					requestOp.FreshnessSeconds ?? Config.DefaultFreshnessSeconds,
+					fallbackFreshnessSeconds: requestOp.FallbackFreshnessSeconds,
+					hold: requestOp.Hold
+				);
 				IEnumerable<SuperModel> models = modelResponses.Select(r => (SuperModel)r.Result).ToImmutableArray();
 				if (populate.Any()) {
 					await Populate(models, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold);
@@ -866,7 +779,8 @@ namespace Cascade {
 
 		private async Task<OpResponse> ProcessRequest(RequestOp requestOp) {
 			if (Log.Logger.IsEnabled(LogEventLevel.Debug))
-				Log.Debug("ProcessRequest: " + requestOp.ToSummaryString());
+				Log.Debug("ProcessRequest RequestOp: {@Verb} {@Id} {@Type} {@Key} {@Freshness} {@Criteria}", 
+					requestOp.Verb, requestOp.Id, requestOp.Type, requestOp.Key, requestOp.FreshnessSeconds, requestOp.Criteria);
 
 			// if (HavePendingChanges && shouldAttemptUploadPendingChanges) {
 			// 	try {        
@@ -880,42 +794,42 @@ namespace Cascade {
 			// 	}
 			// }
 
-			OpResponse opResponse = await InnerProcessWithOfflineFallback(requestOp);
+			OpResponse opResponse = await InnerProcessWithFallback(requestOp);
 			
 			await StoreInPreviousCaches(opResponse); // just store ResultIds
 			
 			if (Log.Logger.IsEnabled(LogEventLevel.Debug))
-				Log.Debug("ProcessRequest: Response " + opResponse.ToSummaryString());
+				Log.Debug("ProcessRequest OpResponse: Connected: {@Connected} Exists: {@Exists} Result: {@Result}", opResponse.Connected,opResponse.Exists,opResponse.Result);
 			return opResponse;
 		}
 
-		private async Task<OpResponse> InnerProcessWithOfflineFallback(RequestOp req) {
+		private async Task<OpResponse> InnerProcessWithFallback(RequestOp req) {
 			OpResponse? result = null;
-			bool loop = false;
-			do {
-				try {
-					loop = false;
+			// bool loop = false;
+			// do {
+			// 	try {
+			// 		loop = false;
 					result = await InnerProcess(req, this.ConnectionOnline);
-				}
-				catch (Exception e) {
-					if (
-						e is NoNetworkException ||
-						e is System.Net.Sockets.SocketException || 
-						e is System.Net.WebException
-					) {
-						if (this.ConnectionOnline) {
-							this.ConnectionOnline = false;
-							loop = true;
-						}
-						else {
-							Log.Warning("Should not get OfflineException when ConnectionMode != Online");
-						}
-					} else {
-						throw e;
-					}
-				}
-			} while (loop);
-
+			// 	}
+			// 	catch (Exception e) {
+			// 		if (
+			// 			e is NoNetworkException ||
+			// 			e is System.Net.Sockets.SocketException || 
+			// 			e is System.Net.WebException
+			// 		) {
+			// 			if (this.ConnectionOnline) {
+			// 				this.ConnectionOnline = false;
+			// 				loop = true;
+			// 			}
+			// 			else {
+			// 				Log.Warning("Should not get OfflineException when ConnectionMode != Online");
+			// 			}
+			// 		} else {
+			// 			throw e;
+			// 		}
+			// 	}
+			// } while (loop);
+			//
 			return result!;
 		}
 
@@ -934,7 +848,7 @@ namespace Cascade {
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				hold: hold
 			);
-			var opResponse = await InnerProcessWithOfflineFallback(requestOp);
+			var opResponse = await InnerProcessWithFallback(requestOp);
 			await StoreInPreviousCaches(opResponse);
 			await SetModelProperty(model, propertyInfo, opResponse.Result);
 		}
@@ -948,7 +862,7 @@ namespace Cascade {
 			if (connectionOnline || requestOp.FreshnessSeconds < 0)
 				cacheReq = requestOp;
 			else
-				cacheReq = requestOp.CloneWith(freshnessSeconds: FRESHNESS_ANY);
+				cacheReq = requestOp.CloneWith(freshnessSeconds: RequestOp.FRESHNESS_ANY);
 			
 			// try each cache layer
 			foreach (var layer in CacheLayers) {
@@ -969,18 +883,19 @@ namespace Cascade {
 
 		private async Task<OpResponse> ProcessGetOrQuery(RequestOp requestOp, bool connectionOnline) {
 			OpResponse? opResponse = null;
+			OpResponse? cacheResponse = null;
 
-			if (!connectionOnline || requestOp.FreshnessSeconds > 0) {
-				RequestOp cacheReq;
-				if (connectionOnline || requestOp.FreshnessSeconds < 0)
-					cacheReq = requestOp;
-				else
-					cacheReq = requestOp.CloneWith(freshnessSeconds: FRESHNESS_ANY);
+			if (requestOp.FreshnessSeconds >= 0) {
+				// RequestOp cacheReq;
+				// if (connectionOnline || requestOp.FreshnessSeconds < 0)
+				// 	cacheReq = requestOp;
+				// else
+				// 	cacheReq = requestOp.CloneWith(freshnessSeconds: RequestOp.FRESHNESS_ANY);
 
 				var layers = CacheLayers.ToArray();
 				for (var i = 0; i < layers.Length; i++) {
 					var layer = layers[i];
-					var res = await layer.Fetch(cacheReq);
+					var res = await layer.Fetch(requestOp);
 					if (res.Connected && res.Exists) {
 						res.LayerIndex = i;
 						var arrivedAt = res.ArrivedAtMs == null ? "" : CascadeUtils.fromUnixMilliseconds((long)res.ArrivedAtMs).ToLocalTime().ToLongTimeString();
@@ -989,40 +904,69 @@ namespace Cascade {
 						else if (requestOp.Verb == RequestVerb.Query)
 							Log.Debug($"Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Key} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
 						// layerFound = layer;
-						opResponse = res;
+						cacheResponse = res;
 						break;
 					}
 				}
 			}
 
-			// if still not found, try origin
-			if (opResponse == null) {
-				if (connectionOnline) {
-					opResponse = await Origin.ProcessRequest(requestOp, connectionOnline);
-					opResponse.LayerIndex = -1;
-				} else {
+			if (
+				(cacheResponse?.Exists == true) && // in cache
+				(
+					!connectionOnline ||		// offline
+					(requestOp.FreshnessSeconds == RequestOp.FRESHNESS_ANY) ||	// freshness not required 
+					((requestOp.FreshnessSeconds>0) && ((NowMs - cacheResponse.ArrivedAtMs) <= requestOp.FreshnessSeconds*1000))
+				)
+			) {
+				opResponse = cacheResponse;	// in cache and offline or meets freshness
+			} else {
+				if (!connectionOnline)		// mustn't be in cache and we're offline, so not much we can do
 					throw new DataNotAvailableOffline();
+				OpResponse originResponse;
+				try {
+					originResponse = await Origin.ProcessRequest(requestOp, connectionOnline);
+				} catch (Exception e) {
+					if (e is NoNetworkException)
+						originResponse = OpResponse.ConnectionFailure(requestOp,NowMs,Origin.GetType().Name);
+					else
+						throw;
+				}
+				originResponse.LayerIndex = -1;
+				if (originResponse.Connected) {
+					opResponse = originResponse;
+				} else {
+					if ( // online but connection failure and meets fallback freshness
+					    cacheResponse?.Exists==true &&
+					    requestOp.FallbackFreshnessSeconds != null &&
+					    (requestOp.FallbackFreshnessSeconds == RequestOp.FRESHNESS_ANY || ((NowMs - cacheResponse.ArrivedAtMs) <= requestOp.FallbackFreshnessSeconds * 1000))
+					) {
+						Debug.WriteLine("Cascade fallback to cached value");
+						opResponse = cacheResponse;
+					} else {
+						throw new DataNotAvailableOffline();
+					}
 				}
 			}
-
-			if (requestOp.Hold && !(opResponse?.ResultIsEmpty() ?? false)) {
+			
+			if (requestOp.Hold && opResponse.LayerIndex!=0 /* We don't want to slow down the first cache layer (probably memory) by setting Hold */ && !(opResponse?.ResultIsEmpty() ?? false)) {
 				if (requestOp.Verb == RequestVerb.Get) {
 					Hold(requestOp.Type, requestOp.Id);
 				} else if (requestOp.Verb == RequestVerb.Query) {
-					Type? type = null;
-					foreach (var r in opResponse.Results) {
-						if (type == null)
-							type = r.GetType();
-						Hold(requestOp.Type, CascadeTypeUtils.GetCascadeId(r));
-					}
-					if (type!=null)
+					var isIdResults = opResponse.IsIdResults;
+					var type = requestOp.Type ?? (isIdResults ? null : opResponse.FirstResult?.GetType());
+					if (type != null) {
+						foreach (var r in opResponse.Results) {
+							var id = isIdResults ? r : CascadeTypeUtils.GetCascadeId(r);
+							if (id != null)
+								Hold(type, id);
+						}
 						HoldCollection(type,requestOp.Key);
+					}
 				}
-			}	
-			
+			}
 			return opResponse!;
 		}
-
+		
 		private void SetResultsImmutable(OpResponse opResponse) {
 			if (opResponse.ResultIsEmpty())
 				return;
@@ -1040,7 +984,7 @@ namespace Cascade {
 			} else {
 				var result = OfflineUtils.CreateOffline((SuperModel)req.Value, () => Origin.NewGuid());
 				var reqWithId = req.CloneWith(id: CascadeTypeUtils.GetCascadeId(result), value: result);
-				await EnqueueOperation(reqWithId);
+				await AddPendingChange(reqWithId);
 				opResponse = new OpResponse(
 					req,
 					NowMs,
@@ -1062,7 +1006,7 @@ namespace Cascade {
 				opResponse.LayerIndex = -1;
 			} else {
 				var result = req.Value; 
-				await EnqueueOperation(req);
+				await AddPendingChange(req);
 				opResponse = new OpResponse(
 					req,
 					NowMs,
@@ -1084,7 +1028,7 @@ namespace Cascade {
 				opResponse.LayerIndex = -1;
 			} else {
 				var result = ((SuperModel)req.Extra).Clone((IDictionary<string, object>)req.Value); 
-				await EnqueueOperation(req);
+				await AddPendingChange(req);
 				opResponse = new OpResponse(
 					req,
 					NowMs,
@@ -1105,7 +1049,7 @@ namespace Cascade {
 				opResponse = await Origin.ProcessRequest(req, connectionOnline);
 				opResponse.LayerIndex = -1;
 			} else {
-				await EnqueueOperation(req);
+				await AddPendingChange(req);
 				opResponse = new OpResponse(
 					req,
 					NowMs,
@@ -1123,14 +1067,20 @@ namespace Cascade {
 
 		private async Task<OpResponse> ProcessExecute(RequestOp req, bool connectionOnline) {
 			if (!connectionOnline) {
-				await EnqueueOperation(req);
+				await AddPendingChange(req);
 			}
 			OpResponse opResponse = await Origin.ProcessRequest(req,connectionOnline);
 			opResponse.LayerIndex = connectionOnline ? -1 : -2;
 			return opResponse!;
 		}
 
-		private async Task<IEnumerable<OpResponse>> GetModelsForIds(Type type, int freshnessSeconds, IEnumerable iids) {
+		public async Task<IEnumerable<OpResponse>> GetModelsForIds(
+			Type type,
+			IEnumerable iids,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null
+		) {
 			const int MaxParallelRequests = 10;
 			var ids = iids.Cast<object>().ToImmutableArray();
 			Log.Debug("BEGIN GetModelsForIds");
@@ -1145,7 +1095,9 @@ namespace Cascade {
 							type,
 							RequestVerb.Get,
 							id,
-							freshnessSeconds: freshnessSeconds
+							freshnessSeconds: freshnessSeconds,
+							fallbackFreshnessSeconds: freshnessSeconds,
+							hold: hold
 						)
 					);
 				}).ToImmutableArray();
@@ -1220,13 +1172,17 @@ namespace Cascade {
 			await SetModelProperty(target, propertyInfo, newValue);
 		}
 
-		public async Task EnsureAuthenticated() {
-			await Origin.EnsureAuthenticated();
+		public async Task EnsureAuthenticated(Type? type = null) {
+			await Origin.EnsureAuthenticated(type);
 		}
-
-		public async Task ClearLayers() {
+		
+		public async Task ClearLayer(int index, bool exceptHeld=true) {
+			await CacheLayers.ToArray()[index].ClearAll(exceptHeld);
+		}
+		
+		public async Task ClearLayers(bool exceptHeld = true, DateTime? olderThan = null) {
 			foreach (var layer in CacheLayers) {
-				await layer.ClearAll();
+				await layer.ClearAll(exceptHeld,olderThan);
 			}
 		}
 
@@ -1240,7 +1196,7 @@ namespace Cascade {
 			return filePath;
 		}
 
-		public string SerializeRequestOp(RequestOp op) {
+		public string? SerializeRequestOp(RequestOp op) {
 			var dic = new Dictionary<string, object>();
 			dic[nameof(op.Verb)] = op.Verb.ToString();
 			dic[nameof(op.Type)] = op.Type.FullName;
@@ -1256,7 +1212,7 @@ namespace Cascade {
 			return str;
 		}
 
-		public RequestOp DeserializeRequestOp(string s) {
+		public RequestOp DeserializeRequestOp(string? s) {
 			Log.Debug("DeserializeRequestOp: "+s);
 			var el = serialization.DeserializeElement(s);
 			var typeName = el.GetProperty(nameof(RequestOp.Type)).GetString();
@@ -1296,21 +1252,24 @@ namespace Cascade {
 				extra: null
 			);
 		}
-
-		public async Task<string> EnqueueOperation(RequestOp op) {
+		
+		public async Task<string> AddPendingChange(RequestOp op) {
 			var typeStr = op.Type.Name;
 			var folder = Config.PendingChangesPath; //Path.Combine(Config.PendingChangesPath, typeStr);
 			if (!Directory.Exists(folder))
 				Directory.CreateDirectory(folder);
 			//var filePath = FindNumericFileDoesntExist(folder, op.TimeMs, "D15", $"__{typeStr}__{op.IdAsString}.json");
-			var filePath = FindNumericFileDoesntExist(folder, op.TimeMs, "D15", ".json");
 			var content = SerializeRequestOp(op);
-			using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
-				using (var writer = new StreamWriter(stream)) {
-					await writer.WriteAsync(content); //.ConfigureAwait(false);
+			string? filePath=null;
+			await CascadeUtils.EnsureFileOperation(async () => {
+				filePath = FindNumericFileDoesntExist(folder, op.TimeMs, "D15", ".json");
+				using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
+					using (var writer = new StreamWriter(stream)) {
+						await writer.WriteAsync(content); //.ConfigureAwait(false);
+					}
 				}
-			}
-			return filePath;
+			});
+			return filePath!;
 		}
 
 		public IEnumerable<string> GetChangesPendingList() {
@@ -1319,29 +1278,38 @@ namespace Cascade {
 			var items = Directory.GetFiles(Config.PendingChangesPath);
 			return items.Select(Path.GetFileName).ToImmutableArray().Sort();
 		}
-
+		
 		private async Task RemoveChangePending(string filename) {
 			var filepath = Path.Combine(Config.PendingChangesPath, filename);
-			if (File.Exists(filepath))
-				File.Delete(filepath);
+			CascadeUtils.EnsureFileOperationSync(() => {
+				if (File.Exists(filepath))
+					File.Delete(filepath);
+			});
 		}
-
+		
 		public async Task<IEnumerable<Tuple<string,RequestOp>>> GetChangesPending() {
 			var changes = new List<Tuple<string,RequestOp>>();
 			var list = GetChangesPendingList();
 			foreach (var filename in list) {
-				var content = await CascadeUtils.LoadFileAsString(Path.Combine(Config.PendingChangesPath, filename));
+				var content = CascadeUtils.LoadFileAsString(Path.Combine(Config.PendingChangesPath, filename));
 				changes.Add(new Tuple<string, RequestOp>(filename,DeserializeRequestOp(content)));
 			}
 			return changes;
 		}
 
-		public async Task ClearChangesPending() {
-			if (Directory.Exists(Config.PendingChangesPath))
-				Directory.Delete(Config.PendingChangesPath, true);
+		public bool HasChangesPending() {
+			return GetChangesPendingList().Any();
 		}
-
-		public async Task ReconnectOnline(Action<string>? progressMessage = null,Action<int>? progressCount = null) {
+		
+		public async Task ClearChangesPending() {
+			CascadeUtils.EnsureFileOperationSync(() => {
+				if (Directory.Exists(Config.PendingChangesPath))
+					Directory.Delete(Config.PendingChangesPath, true);
+			});
+			RaisePropertyChanged(nameof(PendingCount));
+		}
+		
+		public async Task UploadChangesPending(Action<string>? progressMessage = null,Action<int>? progressCount = null) {
 			progressMessage?.Invoke("Load Changes");
 			var changes = (await GetChangesPending()).ToImmutableArray();
 			progressCount?.Invoke(changes.Length);
@@ -1352,65 +1320,178 @@ namespace Cascade {
 				await RemoveChangePending(pair.Item1);
 				progressCount?.Invoke(changes.Length - index - 1);
 			}
-			ConnectionOnline = true;
-			progressMessage?.Invoke("Changes Uploaded.\nConnection Online");
+			// Update Home Screen Pending Count after Uploading Changes
+			RaisePropertyChanged(nameof(PendingCount));
+			progressMessage?.Invoke("Changes Uploaded.");
+		}
+		
+		public IEnumerable<Type> ListModelTypes() {
+			return Origin.ListModelTypes();
 		}
 
+		#region Meta
+		// The "meta" feature offers key/value persistent storage 
+
+		public string MetaResolvePath(string path) {
+			if (path != null && path.Contains(".."))
+				throw new ArgumentException("Path cannot contain ..");
+			path = path!.TrimStart(new[] { '/', '\\' });
+			path = Path.Combine(Config.MetaPath, path);
+			return path;
+		}
+		
+		// Sets the key to a value
+		public void MetaSet(
+			string path,	// forward-slash relative path to a document (the key)
+			string value	// a string or null (the value)
+		) {
+			path = MetaResolvePath(path);
+			var folder = Path.GetDirectoryName(path)!;
+			CascadeUtils.EnsureFileOperationSync(() => {
+				if (!Directory.Exists(folder) && value!=null)
+					Directory.CreateDirectory(folder);
+				if (value == null) {
+					if (File.Exists(path)) {
+						Log.Debug($"MetaSet file {path}");
+						File.Delete(path);
+					}
+				} else {
+					File.WriteAllText(path, value);	
+				}
+			});
+		}
+
+		// Gets the value of a key
+		public string? MetaGet(
+			string path
+		) {
+			path = MetaResolvePath(path);
+			return CascadeUtils.EnsureFileOperationSync(() => {
+				if (!File.Exists(path))
+					return null;
+				return File.ReadAllText(path);
+			});
+		}
+
+		public bool MetaExists(
+			string path
+		) {
+			path = MetaResolvePath(path);
+			return File.Exists(path);
+		}
+
+		public IEnumerable<string> MetaList(string path, bool recursive = false, bool sort = true) {
+			path = MetaResolvePath(path);
+			if (!Directory.Exists(path))
+				return ImmutableArray<string>.Empty;
+			if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+				path += Path.DirectorySeparatorChar;
+			
+			var items = Directory.GetFiles(path,"*.*",recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+			var result = items.Select(p => p.Substring(path.Length)).ToImmutableArray();
+			if (sort)
+				result = result.Sort();
+			return result;
+		}
+		
+		public void MetaClearPath(string path, DateTime? olderThan=null, bool recursive = false) {
+			if (String.IsNullOrWhiteSpace(path))
+				throw new ArgumentException("path cannot be empty");
+			var folderPath = MetaResolvePath(path);
+			CascadeUtils.EnsureFileOperationSync(() => {
+				if (Directory.Exists(folderPath)) {
+					if (olderThan == null && recursive) {
+						Log.Debug($"MetaClearPath folder {folderPath}");
+						Directory.Delete(folderPath, true);
+					}
+					else {
+						var files = Directory.GetFiles(folderPath, "*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+						foreach (var file in files) {
+							var fileTime = File.GetLastWriteTimeUtc(file);
+							if (olderThan == null) {
+								Log.Debug($"MetaClearPath file {file}");
+								File.Delete(file);
+							}
+							else {
+								if (fileTime.IsLessThanOrEqual(olderThan.Value)) {
+									Log.Debug($"MetaClearPath file {file}");
+									File.Delete(file);
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+
+		public void MetaClearAll() {
+			var path = MetaResolvePath("");
+			CascadeUtils.EnsureFileOperationSync(() => {
+				if (Directory.Exists(path)) {
+					Log.Debug($"MetaClearAll folder {path}");
+					Directory.Delete(path, true);
+				}
+			});
+		}
+
+		#endregion
+		
+		#region Holding
+
+		public const string HOLD = "Hold";
+		
 		private string HoldModelPath(Type modelType) {
-			return Path.Combine(Config.HoldPath, "Model", modelType.FullName);
+			return Path.Combine(HOLD,"Model", modelType.FullName);
 		}
-
-		private string HoldModelFilePath(Type modelType,object id) {
+		
+		private string HoldModelPath(Type modelType,object id) {
 			if (id is null or "" or 0)
 				throw new ArgumentException("Id Cannot be null or empty string or 0");
-			return Path.Combine(Config.HoldPath, "Model", modelType.FullName, id.ToString());
+			return Path.Combine(HOLD,"Model", modelType.FullName, id.ToString());
 		}
 
 		public void Hold<Model>(object id) {
 			Hold(typeof(Model), id);
 		}
 
+		public void Hold(object model) {
+			Hold(model.GetType(), CascadeTypeUtils.GetCascadeId(model));
+		}
+		
 		public void Hold(Type modelType, object id) {
-			var filePath = HoldModelFilePath(modelType,id);
-			if (File.Exists(filePath))
-				return;
-			var folder = Path.GetDirectoryName(filePath)!;
-			if (!Directory.Exists(folder))
-				Directory.CreateDirectory(folder);
-			File.WriteAllText(filePath, string.Empty);
+			Log.Debug($"CascadeDataLayer Hold {modelType.FullName} id {id}");
+			var path = HoldModelPath(modelType,id);
+			// if (MetaExists(path))
+			// 	return;
+			MetaSet(path, String.Empty);
 		}
 
-		public void Hold<Model>(IEnumerable<Model> models) {
-			
-			
-			
-		}
-
+		// public void Hold<Model>(IEnumerable<Model> models) {
+		// 	
+		// 	
+		// 	
+		// }
+		
 		public bool IsHeld<Model>(object id) {
-			return File.Exists(HoldModelFilePath(typeof(Model),id));
+			return MetaExists(HoldModelPath(typeof(Model), id));
 		}
 
 		public void Unhold<Model>(object id) {
-			var filePath = HoldModelFilePath(typeof(Model),id);
-			if (File.Exists(filePath))
-				File.Delete(filePath);
+			Log.Debug($"CascadeDataLayer Unhold {nameof(Model)} id {id}");
+			MetaSet(HoldModelPath(typeof(Model),id),null);
 		}
-
-		public Task<IEnumerable<object>> ListHeldIds<Model>() {
+		
+		public IEnumerable<object> ListHeldIds<Model>() {
 			return ListHeldIds(typeof(Model)); // var modelPath = HoldModelPath<Model>();
 		}
-
-		public async Task<IEnumerable<object>> ListHeldIds(Type modelType) {
-			var modelPath = HoldModelPath(modelType);
-			if (!Directory.Exists(modelPath))
-				return ImmutableArray<string>.Empty;
-
-			var items = Directory.GetFiles(modelPath);
-
+		
+		public IEnumerable<object> ListHeldIds(Type modelType) {
+			var path = HoldModelPath(modelType);
 			var idType = CascadeTypeUtils.GetCascadeIdType(modelType);
 
+			var items = MetaList(path);
+			
 			return items
-				.Select(Path.GetFileName)
 				.Select<string, object>(name =>
 				{
 					if (idType == typeof(string))
@@ -1423,55 +1504,56 @@ namespace Cascade {
 		}
 
 		private string HoldCollectionPath(Type modelType) {
-			return Path.Combine(Config.HoldPath, "Collection", modelType.FullName);
+			return Path.Combine(HOLD, "Collection", modelType.FullName);
 		}
-
-		private string HoldCollectionFilePath(Type modelType,string key) {
+		
+		private string HoldCollectionPath(Type modelType,string key) {
 			if (key is null or "")
 				throw new ArgumentException("name Cannot be null or empty string");
-			return Path.Combine(Config.HoldPath, "Collection", modelType.FullName, key);
+			return Path.Combine(HOLD, "Collection", modelType.FullName, key);
 		}
-
+		
 		public void HoldCollection<Model>(string name) {
 			HoldCollection(typeof(Model),name);
 		}
 
 		public void HoldCollection(Type modelType, string name) {
-			var filePath = HoldCollectionFilePath(modelType,name);
-			if (File.Exists(filePath))
-				return;
-			var folder = Path.GetDirectoryName(filePath)!;
-			if (!Directory.Exists(folder))
-				Directory.CreateDirectory(folder);
-			File.WriteAllText(filePath, string.Empty);
+			Log.Debug($"CascadeDataLayer HoldCollection {modelType.FullName} collection {name}");
+			var path = HoldCollectionPath(modelType,name);
+			// if (MetaExists(path))
+			// 	return;
+			MetaSet(path, String.Empty);
 		}
-
-		public void UnholdCollection<Model>(string name) {
-			var filePath = HoldCollectionFilePath(typeof(Model),name);
-			if (File.Exists(filePath))
-				File.Delete(filePath);
-		}
-
-		public bool IsCollectionHeld<Model>(string name) {
-			return File.Exists(HoldCollectionFilePath(typeof(Model),name));
-		}
-
-		public async Task<IEnumerable<object>> ListHeldCollections(Type modelType) {
-			var modelPath = HoldCollectionPath(modelType);
-			if (!Directory.Exists(modelPath))
-				return ImmutableArray<string>.Empty;
 		
-			var items = Directory.GetFiles(modelPath);
-			
-			return items
-				.Select(Path.GetFileName)
-				.ToImmutableArray()
-				.Sort();
+		public void UnholdCollection<Model>(string name) {
+			Log.Debug($"CascadeDataLayer UnholdCollection {nameof(Model)} collection {name}");
+			var path = HoldCollectionPath(typeof(Model),name);
+			if (MetaExists(path))
+				MetaSet(path, null);
+		}
+		
+		public bool IsCollectionHeld<Model>(string name) {
+			return MetaExists(HoldCollectionPath(typeof(Model),name));
+		}
+		
+		public IEnumerable<object> ListHeldCollections(Type modelType) {
+			return MetaList(HoldCollectionPath(modelType));
 		}
 
-		public async Task UnholdAll() {
-			if (Directory.Exists(Config.HoldPath))
-				Directory.Delete(Config.HoldPath, true);
+		public void UnholdAll(Type modelType, DateTime? olderThan=null) {
+			MetaClearPath(HoldCollectionPath(modelType),olderThan);
+			MetaClearPath(HoldModelPath(modelType),olderThan);
 		}
+		
+		public void UnholdAll(DateTime? olderThan=null) {
+			MetaClearPath(HOLD, olderThan, true);
+		}
+		
+		public void UnholdAll() {
+			MetaClearAll();
+		}
+		
+		#endregion
+
 	}
 }	

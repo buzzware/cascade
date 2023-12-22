@@ -13,19 +13,19 @@ using Guards.Extensions;
 using Serilog;
 
 namespace Cascade {
-
-
-    public class FileSystemClassCache<Model, IdType> : IModelClassCache
+    
+    public class ConcurrentFileSystemClassCache<Model, IdType> : IModelClassCache
         where Model : class {
         private const string ValueKey = "Value";
         private readonly string _fileDir;
         private readonly string _modelsDirectory = typeof(Model).Name+"/Models";
         private readonly string _collectionsDirectory = typeof(Model).Name+"/Collections";
         private readonly CascadeJsonSerialization Serialization;
+        private ConcurrentDictionary<string,bool> writingFlags = new ConcurrentDictionary<string,bool>();
 
         public CascadeDataLayer? Cascade { get; set; }
 
-        public FileSystemClassCache(string fileDir, CascadeJsonSerialization? serialization = null) {
+        public ConcurrentFileSystemClassCache(string fileDir, CascadeJsonSerialization? serialization = null) {
             _fileDir = fileDir;
             Directory.CreateDirectory(GetModelFilePath());
             Directory.CreateDirectory(GetCollectionFilePath());
@@ -40,30 +40,56 @@ namespace Cascade {
           return key==null ? Path.Combine(_fileDir, _collectionsDirectory) : Path.Combine(_fileDir, _collectionsDirectory, key.ToString() + ".json");
         }
 
-        protected async Task SerializeToPathAsync(string aPath, object aObject, long timeMs) {
-            await Task.Run(async () => {
-                var wrapper = ImmutableDictionary<string, object>.Empty.Add(ValueKey, aObject);
-                var content = Serialization.Serialize(wrapper);
-                if (!Directory.Exists(Path.GetDirectoryName(aPath)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(aPath)!);
 
-                using (var stream = new FileStream(aPath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
-                    using (var writer = new StreamWriter(stream)) {
-                        await writer.WriteAsync(content).ConfigureAwait(false);
+        protected Task SerializeToPathAsync(string aPath, object aObject, long timeMs) {
+            return Task.Run(() => {
+                return CascadeUtils.EnsureFileOperation(async () => {
+                    var wrapper = ImmutableDictionary<string, object>.Empty.Add(ValueKey, aObject);
+                    var content = Serialization.Serialize(wrapper);
+                    if (!Directory.Exists(Path.GetDirectoryName(aPath)))
+                        Directory.CreateDirectory(Path.GetDirectoryName(aPath)!);
+
+                    using (var stream = new FileStream(aPath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
+                        using (var writer = new StreamWriter(stream)) {
+                            await writer.WriteAsync(content).ConfigureAwait(false);
+                            File.SetLastWriteTimeUtc(aPath, CascadeUtils.fromUnixMilliseconds(timeMs));
+                        }
                     }
-
-                File.SetLastWriteTimeUtc(aPath, CascadeUtils.fromUnixMilliseconds(timeMs));
+                });
             });
         }
+
+        
 
         protected async Task<T?> DeserializeFromPathAsync<T>(string aPath) {
             return await Task.Run(() => {
-                var content = CascadeUtils.LoadFileAsString(aPath);
-                var wrapper = Serialization.DeserializeType<IDictionary<string, object>>(content)!;
-                var value = Serialization.DeserializeType<T>((JsonElement)wrapper[ValueKey]);
-                return value;
+                return CascadeUtils.EnsureFileOperationSync(() => {
+                    var content = CascadeUtils.LoadFileAsString(aPath);
+                    if (String.IsNullOrWhiteSpace(content))
+                        return default(T);
+                    var wrapper = Serialization.DeserializeType<IDictionary<string, object>>(content)!;
+                    var value = Serialization.DeserializeType<T>((JsonElement)wrapper[ValueKey]);
+                    return value;
+                });
             });
         }
+                    
+            
+            
+            
+        //     return await Task.Run(async () => {
+        //         var attempts = 0;
+        //         do {
+        //             try {
+        //                 attempts++;
+        //             } catch (IOException e) {
+        //                 Log.Debug("Failed reading attempt {Attempts} {Path}", attempts, aPath);
+        //                 if (attempts >= MAX_WRITE_ATTEMPTS)
+        //                     throw;
+        //             }
+        //         } while (true) ;
+        //     });
+        // }
 
         public async Task<OpResponse> Fetch(RequestOp requestOp) {
             if (requestOp.Type != typeof(Model))
@@ -81,11 +107,7 @@ namespace Cascade {
                     string modelFilePath = GetModelFilePath(id);
                     exists = File.Exists(modelFilePath);
                     arrivedAtMs = exists ? CascadeUtils.toUnixMilliseconds(File.GetLastWriteTimeUtc(modelFilePath)) : -1;
-                    if (
-                        exists && 
-                        requestOp.FreshnessSeconds>=0 && 
-                        (requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || ((Cascade.NowMs-arrivedAtMs) <= requestOp.FreshnessSeconds*1000))
-                    ) {
+                    if (exists) {
                         var loaded = await DeserializeFromPathAsync<Model>(modelFilePath);
                         return new OpResponse(
                             requestOp,
@@ -103,12 +125,7 @@ namespace Cascade {
                     string collectionFilePath = GetCollectionFilePath(requestOp.Key!);
                     exists = File.Exists(collectionFilePath);
                     arrivedAtMs = exists ? CascadeUtils.toUnixMilliseconds(File.GetLastWriteTimeUtc(collectionFilePath)) : -1;
-                    
-                    if (
-                        exists && 
-                        requestOp.FreshnessSeconds>=0 && 
-                        (requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || ((Cascade.NowMs-arrivedAtMs) <= requestOp.FreshnessSeconds*1000))
-                    ) {
+                    if (exists) {
                         var loaded = await DeserializeFromPathAsync<IEnumerable<IdType>>(collectionFilePath);
                         return new OpResponse(
                             requestOp,
@@ -182,7 +199,7 @@ namespace Cascade {
                         if (Cascade!.IsHeld<Model>(id))
                             continue;
                     }
-                    Log.Debug($"FileSystemClassCache Clear {typeof(Model).FullName} id {id}");
+                    Log.Debug($"ConcurrentFileSystemClassCache Clear {typeof(Model).FullName} id {id}");
                     File.Delete(file);
                 }
 
@@ -198,19 +215,19 @@ namespace Cascade {
                         if (Cascade!.IsCollectionHeld<Model>(collectionName))
                             continue;
                     }
-                    Log.Debug($"FileSystemClassCache Clear {typeof(Model).FullName} collection {collectionName}");
+                    Log.Debug($"ConcurrentFileSystemClassCache Clear {typeof(Model).FullName} collection {collectionName}");
                     File.Delete(file);
                 }
             } else {
                 // Delete all files in the models directory
                 foreach (var file in Directory.GetFiles(GetModelFilePath())) {
-                    Log.Debug($"FileSystemClassCache Clear {typeof(Model).FullName} id {Path.GetFileNameWithoutExtension(file)}");
+                    Log.Debug($"ConcurrentFileSystemClassCache Clear {typeof(Model).FullName} id {Path.GetFileNameWithoutExtension(file)}");
                     File.Delete(file);
                 }
                 
                 // Delete all files in the collections directory
                 foreach (var file in Directory.GetFiles(GetCollectionFilePath())) {
-                    Log.Debug($"FileSystemClassCache Clear {typeof(Model).FullName} collection {Path.GetFileNameWithoutExtension(file)}");
+                    Log.Debug($"ConcurrentFileSystemClassCache Clear {typeof(Model).FullName} collection {Path.GetFileNameWithoutExtension(file)}");
                     File.Delete(file);
                 }
             }

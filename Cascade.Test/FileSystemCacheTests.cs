@@ -138,7 +138,7 @@ namespace Cascade.Test {
 			Assert.That((await modelCache.Fetch(RequestOp.GetCollectionOp<Thing>(coll1Name))).Exists,Is.True);
 			Assert.That((await modelCache.Fetch(RequestOp.GetCollectionOp<Thing>(coll2Name))).Exists,Is.True);
 			
-			await modelCache.ClearAll(exceptHeld:true);
+			await modelCache.ClearAll(exceptHeld: true);
 
 			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0))).Exists,Is.True);
 			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0))).Exists,Is.False);

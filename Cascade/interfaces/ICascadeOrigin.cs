@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cascade {
@@ -7,8 +8,9 @@ namespace Cascade {
 		
 		CascadeDataLayer Cascade { get; set; }
 		long NowMs { get; }
-		Task EnsureAuthenticated();
+		Task EnsureAuthenticated(Type? type=null);
 		Type LookupModelType(string typeName);
 		string NewGuid();
+		IEnumerable<Type> ListModelTypes();
 	}
 }

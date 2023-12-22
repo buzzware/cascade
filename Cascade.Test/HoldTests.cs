@@ -70,7 +70,7 @@ namespace Cascade.Test {
 			Assert.That(cascade.IsHeld<Thing>(thing1.id), Is.True);
 			Assert.That(cascade.IsHeld<Thing>(thing2.id), Is.False);
 
-			var held = await cascade.ListHeldIds<Thing>();
+			var held = cascade.ListHeldIds<Thing>();
 			Assert.That(held,Is.EquivalentTo(new int[] {thing1.id}));
 			
 			cascade.Unhold<Thing>(thing1.id);
@@ -78,7 +78,7 @@ namespace Cascade.Test {
 			
 			cascade.Unhold<Thing>(thing2.id);	// shouldn't crash
 			
-			held = await cascade.ListHeldIds<Thing>();
+			held = cascade.ListHeldIds<Thing>();
 			Assert.That(held,Is.EquivalentTo(new int[] {}));
 		}
 
@@ -93,7 +93,7 @@ namespace Cascade.Test {
 			Assert.That(cascade.IsCollectionHeld<Thing>(coll1Name), Is.True);
 			Assert.That(cascade.IsCollectionHeld<Thing>(coll2Name), Is.False);
 
-			var held = await cascade.ListHeldCollections(typeof(Thing));
+			var held = cascade.ListHeldCollections(typeof(Thing));
 			Assert.That(held,Is.EquivalentTo(new string[] {coll1Name}));
 			
 			cascade.UnholdCollection<Thing>(coll1Name);
@@ -101,7 +101,7 @@ namespace Cascade.Test {
 			
 			cascade.UnholdCollection<Thing>(coll2Name);	// shouldn't crash
 			
-			held = await cascade.ListHeldCollections(typeof(Thing));
+			held = cascade.ListHeldCollections(typeof(Thing));
 			Assert.That(held,Is.EquivalentTo(new string[] {}));
 			
 		}

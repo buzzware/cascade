@@ -18,12 +18,16 @@ namespace Cascade {
 	
 	public class RequestOp {
 		public const int FRESHNESS_DEFAULT = 5*60;
+		public const int FRESHNESS_ANY = int.MaxValue;
+		public const int FRESHNESS_FRESHEST = 0;
+		public const int FRESHNESS_INSIST = -1;
 
 		public static RequestOp GetOp<Model>(object id,
 			long timeMs = -1,
 			IEnumerable<string>? populate = null,
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null, 
+			int? fallbackFreshnessSeconds = null, 
 			bool? hold = null
 		) {
 			return new RequestOp(
@@ -34,6 +38,30 @@ namespace Cascade {
 				populate: populate,
 				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
 				populateFreshnessSeconds: populateFreshnessSeconds ?? FRESHNESS_DEFAULT,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
+				hold: hold
+			);
+		}
+
+		public static RequestOp GetOp(
+			Type modelType,
+			object id,
+			long timeMs = -1,
+			IEnumerable<string>? populate = null,
+			int? freshnessSeconds = null,
+			int? populateFreshnessSeconds = null, 
+			int? fallbackFreshnessSeconds = null, 
+			bool? hold = null
+		) {
+			return new RequestOp(
+				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
+				modelType,
+				RequestVerb.Get,
+				id,
+				populate: populate,
+				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
+				populateFreshnessSeconds: populateFreshnessSeconds ?? FRESHNESS_DEFAULT,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
 				hold: hold
 			);
 		}
@@ -51,6 +79,7 @@ namespace Cascade {
 				populate: null,
 				freshnessSeconds: null,
 				populateFreshnessSeconds: null,
+				fallbackFreshnessSeconds: null,
 				criteria: null,
 				key: collectionName
 			);
@@ -60,10 +89,10 @@ namespace Cascade {
 			object criteria,
 			long timeMs,
 			IEnumerable<string>? populate = null,
-			int? freshnessSeconds = null, 
+			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
-			bool? hold = null
-		) {
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null) {
 			return new RequestOp(
 				timeMs,
 				typeof(Model),
@@ -72,6 +101,7 @@ namespace Cascade {
 				populate: populate,
 				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
 				populateFreshnessSeconds: populateFreshnessSeconds ?? FRESHNESS_DEFAULT,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
 				hold: hold,
 				criteria: criteria, 
 				key: collectionName
@@ -81,7 +111,6 @@ namespace Cascade {
 		public static RequestOp CreateOp(
 			object model,
 			long timeMs,
-			IEnumerable<string>? populate = null, 
 			bool hold = false
 		) {
 			return new RequestOp(
@@ -90,7 +119,6 @@ namespace Cascade {
 				RequestVerb.Create,
 				CascadeTypeUtils.GetCascadeId(model),
 				value: model,
-				populate: populate,
 				hold: hold
 			);
 		}
@@ -146,6 +174,7 @@ namespace Cascade {
 			IEnumerable<string>? populate = null,
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
 			bool? hold = null,
 			object? criteria = null,
 			string? key = null,
@@ -159,6 +188,7 @@ namespace Cascade {
 			Populate = populate;
 			FreshnessSeconds = freshnessSeconds ?? FRESHNESS_DEFAULT;
 			PopulateFreshnessSeconds = populateFreshnessSeconds ?? FRESHNESS_DEFAULT;
+			FallbackFreshnessSeconds = fallbackFreshnessSeconds ?? FRESHNESS_ANY;
 			Hold = hold ?? false;
 			Criteria = criteria;
 			Key = key;
@@ -174,6 +204,7 @@ namespace Cascade {
 			IEnumerable<string>? populate = null,
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
 			bool? hold = null,
 			object? criteria = null,
 			string? key = null,
@@ -188,6 +219,7 @@ namespace Cascade {
 				populate: populate ?? this.Populate,
 				freshnessSeconds: freshnessSeconds ?? this.FreshnessSeconds,
 				populateFreshnessSeconds: populateFreshnessSeconds ?? this.PopulateFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? this.FallbackFreshnessSeconds,
 				hold: hold ?? this.Hold,
 				criteria: criteria ?? this.Criteria,
 				key: key ?? this.Key,
@@ -252,6 +284,7 @@ namespace Cascade {
 		
 		public readonly int? FreshnessSeconds = FRESHNESS_DEFAULT;
 		public readonly int? PopulateFreshnessSeconds = FRESHNESS_DEFAULT;
+		public readonly int? FallbackFreshnessSeconds = FRESHNESS_ANY;
 		public readonly bool Hold;
 		
 		public readonly IDictionary<string, string> Params;	// app specific paramters for the request

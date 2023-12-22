@@ -9,6 +9,6 @@ namespace Cascade {
 		Task Store(Type type, object id, object model, long arrivedAt);
 		Task StoreCollection(Type type, string key, IEnumerable? ids, long arrivedAt);
 		CascadeDataLayer Cascade { get; set; }
-		Task ClearAll(bool exceptHeld=true);
+		Task ClearAll(bool exceptHeld = true, DateTime? olderThan = null);
 	}
 }

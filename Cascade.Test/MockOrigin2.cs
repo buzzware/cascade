@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using StandardExceptions;
 
 namespace Cascade.Test {
 	public class MockOrigin2 : MockOrigin, ICascadeOrigin {
@@ -29,7 +30,7 @@ namespace Cascade.Test {
 			
 			var co = classOrigins[request.Type];
 			if (ActLikeOffline)
-				throw new SocketException();
+				throw new NoNetworkException();
 			
 			switch (request.Verb) {
 				case RequestVerb.Query:

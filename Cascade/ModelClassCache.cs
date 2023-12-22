@@ -102,10 +102,10 @@ namespace Cascade {
 			models.TryRemove(id, out var value);
 		}
 		
-		public async Task ClearAll(bool exceptHeld = true) {
-			if (exceptHeld) {
+		public async Task ClearAll(bool exceptHeld, DateTime? olderThan = null) {
+			if (exceptHeld || olderThan!=null) {
 				// models
-				var heldModelIds = (await Cascade.ListHeldIds<Model>()).ToArray();
+				var heldModelIds = Cascade.ListHeldIds<Model>().ToArray();
 				var idsToRemove = models.Where(kv => {
 						//var id = CascadeTypeUtils.GetCascadeId(kv.Value.Item1);
 						var id = kv.Key;
@@ -118,7 +118,7 @@ namespace Cascade {
 					models.TryRemove(id, out var v);
 				
 				// collections
-				var heldCollectionNames = (await Cascade.ListHeldCollections(typeof(Model))).ToArray();
+				var heldCollectionNames = Cascade.ListHeldCollections(typeof(Model)).ToArray();
 				var namesToRemove = collections.Where(kv => !heldCollectionNames.Contains(kv.Key))
 					.Select(kv => kv.Key)
 					.ToArray();

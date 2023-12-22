@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Cascade {
@@ -14,7 +15,7 @@ namespace Cascade {
 
 	public class SuperModel : INotifyPropertyChanged {
 		
-		protected readonly SuperModel? _proxyFor;
+		protected SuperModel? _proxyFor;
 		protected readonly ConcurrentDictionary<string, bool> _propertySet = new ConcurrentDictionary<string, bool>();
 
 		public SuperModel(SuperModel? proxyFor = null)
@@ -30,6 +31,50 @@ namespace Cascade {
 		private bool ___mutable = true;
 		
 		public SuperModel? __ProxyFor => _proxyFor;
+
+		public void __SetProxyFor(
+			SuperModel? value, 
+			bool keepChanges,		// try to maintain property changes even though we are changing the proxied instance (assume is for the same id)   
+			bool raiseIncoming	// raise PropertyChanged events for properties where the new proxied instance has different values
+		) {
+			if (value == _proxyFor)
+				return;
+			if (_proxyFor!=null)
+				_proxyFor.PropertyChanged -= OnProxyForOnPropertyChanged;
+			if (value!=null)
+				value.PropertyChanged += OnProxyForOnPropertyChanged;
+
+			
+			Dictionary<string, object>? changes = null;
+			if (raiseIncoming) {
+				changes = new Dictionary<string, object>();
+				var selectedProperties = FastReflection.getProperties(this.GetType())
+					.Where(n=>n.Key[0]!='_')
+					.ToArray();
+				foreach (var prop in selectedProperties) {
+					var wasProxyChange = _propertySet.TryGetValue(prop.Key, out var setValue) && setValue; 
+					var oldValue = FastReflection.invokeGetter(this, prop.Key);
+					var newActualValue = FastReflection.invokeGetter(value, prop.Key);
+					var newValue = wasProxyChange && keepChanges ? oldValue : newActualValue;
+					var sameValue = Nullable.Equals(newValue, oldValue);
+					if (keepChanges && wasProxyChange && Nullable.Equals(newActualValue,oldValue))
+						_propertySet.TryRemove(prop.Key, out var outValue);
+					if (!sameValue)
+						changes[prop.Key] = newValue;
+				}
+			}
+			
+			if (!keepChanges)
+				_propertySet.Clear();
+			
+			_proxyFor = value;
+			
+			if (raiseIncoming) {
+				if (changes != null) foreach (var prop in changes) {
+					RaisePropertyChanged(prop.Key);
+				}
+			}
+		}
 		
 		public IDictionary<string, object> __GetChanges() {
 			var result = new Dictionary<string, object>();

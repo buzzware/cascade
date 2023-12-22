@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cascade.Test {
@@ -13,7 +14,7 @@ namespace Cascade.Test {
 		public CascadeDataLayer Cascade { get; set; } 
 		
 		public long NowMs { get; set; }
-		public async Task EnsureAuthenticated() {
+		public async Task EnsureAuthenticated(Type? type) {
 		}
 
 		public virtual Type LookupModelType(string typeName) {
@@ -29,6 +30,10 @@ namespace Cascade.Test {
 
 		public string NewGuid() {
 			return Guid.NewGuid().ToString();
+		}
+
+		public IEnumerable<Type> ListModelTypes() {
+			return new[] { typeof(Thing), typeof(Parent), typeof(Child) };
 		}
 
 		public long IncNowMs(long incMs=1000) {

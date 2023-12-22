@@ -9,6 +9,7 @@ using Serilog;
 namespace Cascade {
 	public abstract class CascadePaginator<Model> where Model : class {
 		private HashSet<int> queriedPages = new HashSet<int>();
+		private bool? Hold;
 		public CascadeDataLayer Cascade { get; }
 		public object Criteria { get; }
 		public string CollectionPrefix { get; }
@@ -24,7 +25,8 @@ namespace Cascade {
 			int perPage,
 			IEnumerable<string>? populate = null, 
 			int? freshnessSeconds = null,
-			int? populateFreshnessSeconds = null
+			int? populateFreshnessSeconds = null,
+			bool? hold = null
 		) {
 			Cascade = cascade;
 			Criteria = criteria;
@@ -33,6 +35,7 @@ namespace Cascade {
 			Populate = populate;
 			FreshnessSeconds = freshnessSeconds;
 			PopulateFreshnessSeconds = populateFreshnessSeconds;
+			Hold = hold;
 		}
 
 		public int? FreshnessSeconds { get; protected set; }
@@ -57,7 +60,8 @@ namespace Cascade {
 						criteriaWithPagination, 
 						populate: this.Populate, 
 						freshnessSeconds: this.FreshnessSeconds,
-						populateFreshnessSeconds: this.PopulateFreshnessSeconds
+						populateFreshnessSeconds: this.PopulateFreshnessSeconds,
+						hold: this.Hold
 					);
 				}
 				catch (DataNotAvailableOffline e) {
