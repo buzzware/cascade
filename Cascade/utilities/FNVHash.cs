@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cascade.utilities {
+namespace Cascade {
 	
 	public class FNVHash {
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -9,8 +10,8 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Easy.Common.Extensions;
-using TypeConverter;
-using TypeConverter.Converters;
+//using TypeConverter;
+//using TypeConverter.Converters;
 
 namespace Cascade {
 	
@@ -118,32 +119,65 @@ namespace Cascade {
 			//return result;
 		}
 
-		private static void registerBothWays<X, Y>(ConverterRegistry r, Type converter) {
-			r.RegisterConverter<X,Y>(converter);
-			r.RegisterConverter<Y,X>(converter);
-		}
-		
-		
-		private static ConverterRegistry buildConverter() {
-			ConverterRegistry r = new ConverterRegistry();
-			// registerBothWays<string,int>(r,typeof(StringToIntegerConverter));
-			// registerBothWays<string,bool>(r,typeof(StringToBoolConverter));
-			return r;
-		} 
-		
-		
-		private static ConverterRegistry? _converter;
+		// private static void registerBothWays<X, Y>(ConverterRegistry r, Type converter) {
+		// 	r.RegisterConverter<X,Y>(converter);
+		// 	r.RegisterConverter<Y,X>(converter);
+		// }
+		//
+		//
+		// private static ConverterRegistry buildConverter() {
+		// 	ConverterRegistry r = new ConverterRegistry();
+		// 	// registerBothWays<string,int>(r,typeof(StringToIntegerConverter));
+		// 	// registerBothWays<string,bool>(r,typeof(StringToBoolConverter));
+		// 	return r;
+		// } 
+		//
+		//
+		// private static ConverterRegistry? _converter;
 
-		public static object? ConvertTo(Type type, object? value, object? defaultValue = null) {
-			if (value == null)
-				return null;
-			if (_converter == null) _converter = buildConverter();
-			var sourceType = value == null ? null : value.GetType();
-			var tryConvert = _converter.TryConvert(sourceType,type,value,defaultValue);
-			//var tryConvert = _converter.Convert(value.GetType(),value);
-			return tryConvert;
-		}
+		// public static object? ConvertTo(Type type, object? value, object? defaultValue = null) {
+		// 	if (value == null)
+		// 		return null;
+		// 	if (_converter == null) _converter = buildConverter();
+		// 	var sourceType = value == null ? null : value.GetType();
+		// 	var tryConvert = _converter.TryConvert(sourceType,type,value,defaultValue);
+		// 	//var tryConvert = _converter.Convert(value.GetType(),value);
+		// 	return tryConvert;
+		// }
 
+		
+		public static object? ConvertTo(Type type, object? value, object? defaultValue = null)
+		{
+			if (value == null || value == DBNull.Value)
+			{
+				return defaultValue;
+			}
+
+			try
+			{
+				// If the value is already of the target type, return it directly.
+				if (type.IsInstanceOfType(value))
+				{
+					return value;
+				}
+
+				// Use TypeConverter for general type conversion.
+				System.ComponentModel.TypeConverter converter = TypeDescriptor.GetConverter(type);
+				if (converter != null && converter.CanConvertFrom(value.GetType()))
+				{
+					return converter.ConvertFrom(value);
+				}
+
+				// Fallback to Convert.ChangeType for basic types.
+				return Convert.ChangeType(value, type);
+			}
+			catch (Exception)
+			{
+				// In case of any conversion error, return the default value.
+				return defaultValue;
+			}
+		}		
+		
 		public static Type GetCascadeIdType(Type cascadeModelType) {
 			return CascadeIdPropertyRequired(cascadeModelType).PropertyType;
 		}

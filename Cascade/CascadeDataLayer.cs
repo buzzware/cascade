@@ -11,7 +11,6 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Easy.Common.Extensions;
-using Guards.Extensions;
 using Serilog;
 using Serilog.Events;
 using StandardExceptions;
@@ -1486,7 +1485,7 @@ namespace Cascade {
 								File.Delete(file);
 							}
 							else {
-								if (fileTime.IsLessThanOrEqual(olderThan.Value)) {
+								if (fileTime <= olderThan.Value) {
 									Log.Debug($"MetaClearPath file {file}");
 									File.Delete(file);
 								}
