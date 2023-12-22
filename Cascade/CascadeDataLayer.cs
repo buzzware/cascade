@@ -957,17 +957,18 @@ namespace Cascade {
 			OpResponse? opResponse = null;
 			OpResponse? cacheResponse = null;
 
-			if (requestOp.FreshnessSeconds >= 0) {
-				// RequestOp cacheReq;
-				// if (connectionOnline || requestOp.FreshnessSeconds < 0)
-				// 	cacheReq = requestOp;
+			// if offline or freshness not zero then
+			if (requestOp.FreshnessSeconds > RequestOp.FRESHNESS_INSIST) {
+				RequestOp cacheReq;
+				//if (!connectionOnline && (requestOp.FreshnessSeconds != RequestOp.FRESHNESS_INSIST))		// if offline && !insisting on fresh
+					cacheReq = requestOp.CloneWith(freshnessSeconds: FRESHNESS_ANY);											// check cache for any record
 				// else
-				// 	cacheReq = requestOp.CloneWith(freshnessSeconds: RequestOp.FRESHNESS_ANY);
+				// 	cacheReq = requestOp;																																	// otherwise as specified
 
 				var layers = CacheLayers.ToArray();
 				for (var i = 0; i < layers.Length; i++) {
 					var layer = layers[i];
-					var res = await layer.Fetch(requestOp);
+					var res = await layer.Fetch(cacheReq);
 					if (res.Connected && res.Exists) {
 						res.LayerIndex = i;
 						var arrivedAt = res.ArrivedAtMs == null ? "" : CascadeUtils.fromUnixMilliseconds((long)res.ArrivedAtMs).ToLocalTime().ToLongTimeString();

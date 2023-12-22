@@ -10,7 +10,7 @@
 
     <OutputType>Library</OutputType>
 
-    <TargetFrameworks>net48;net7.0</TargetFrameworks>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
