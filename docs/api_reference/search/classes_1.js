@@ -6,5 +6,6 @@ var searchData=
   ['cascadejsonserialization_3',['CascadeJsonSerialization',['../class_cascade_1_1_cascade_json_serialization.html',1,'Cascade']]],
   ['cascadepaginator_4',['CascadePaginator',['../class_cascade_1_1_cascade_paginator.html',1,'Cascade']]],
   ['cascadequeryoptions_5',['CascadeQueryOptions',['../class_cascade_query_options.html',1,'']]],
-  ['classinfo_6',['ClassInfo',['../class_cascade_1_1_class_info.html',1,'Cascade']]]
+  ['classinfo_6',['ClassInfo',['../class_cascade_1_1_class_info.html',1,'Cascade']]],
+  ['concurrentfilesystemclasscache_7',['ConcurrentFileSystemClassCache',['../class_cascade_1_1_concurrent_file_system_class_cache.html',1,'Cascade']]]
 ];

@@ -101,24 +101,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a286dd5087d2052289c40776364528c4b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a286dd5087d2052289c40776364528c4b">CascadeDataLayer</a> (<a class="el" href="interface_cascade_1_1_i_cascade_origin.html">ICascadeOrigin</a> origin, IEnumerable&lt; <a class="el" href="interface_cascade_1_1_i_cascade_cache.html">ICascadeCache</a> &gt; cacheLayers, <a class="el" href="class_cascade_1_1_cascade_config.html">CascadeConfig</a> config, <a class="el" href="interface_cascade_1_1_i_cascade_platform.html">ICascadePlatform</a> cascadePlatform, ErrorControl errorControl, <a class="el" href="class_cascade_1_1_cascade_json_serialization.html">CascadeJsonSerialization</a> serialization)</td></tr>
 <tr class="memdesc:a286dd5087d2052289c40776364528c4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">CascadeDataLayer main constructor.  <br /></td></tr>
 <tr class="separator:a286dd5087d2052289c40776364528c4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19ca3448eaa95d7aec9f0de2370a221b"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a19ca3448eaa95d7aec9f0de2370a221b">Get&lt; M &gt;</a> (int id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="memdesc:a19ca3448eaa95d7aec9f0de2370a221b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data from cache/origin of model type M and return result or null.  <br /></td></tr>
-<tr class="separator:a19ca3448eaa95d7aec9f0de2370a221b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb035f39da5e20094ba3ae57362e2723"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#afb035f39da5e20094ba3ae57362e2723">Get&lt; M &gt;</a> (string id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="memdesc:afb035f39da5e20094ba3ae57362e2723"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data from cache/origin of model type M and return result or null.  <br /></td></tr>
-<tr class="separator:afb035f39da5e20094ba3ae57362e2723"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae837c6624c35c6c1abef9ed35284c075"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#ae837c6624c35c6c1abef9ed35284c075">Get&lt; M &gt;</a> (long id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="memdesc:ae837c6624c35c6c1abef9ed35284c075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data from cache/origin of model type M and return result or null.  <br /></td></tr>
-<tr class="separator:ae837c6624c35c6c1abef9ed35284c075"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81c75583105d777fe0f19071c0256d87"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a81c75583105d777fe0f19071c0256d87">GetResponse&lt; M &gt;</a> (int id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="memdesc:a81c75583105d777fe0f19071c0256d87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a model instance of given model type M and int id with a full detail OpResponse object.  <br /></td></tr>
-<tr class="separator:a81c75583105d777fe0f19071c0256d87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49a89356426b7923ef7bd32a19e0668c"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a49a89356426b7923ef7bd32a19e0668c">GetResponse&lt; M &gt;</a> (long id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="memdesc:a49a89356426b7923ef7bd32a19e0668c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a model instance of given model type M and long id with a full detail OpResponse object.  <br /></td></tr>
-<tr class="separator:a49a89356426b7923ef7bd32a19e0668c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25f0ffab2f94910a0a232ef495d2aad0"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a25f0ffab2f94910a0a232ef495d2aad0">GetResponse&lt; M &gt;</a> (string id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="memdesc:a25f0ffab2f94910a0a232ef495d2aad0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a model instance of given model type M and string id with a full detail OpResponse object.  <br /></td></tr>
-<tr class="separator:a25f0ffab2f94910a0a232ef495d2aad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd236599f0638c11ea5eac9f3eb3c937"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#afd236599f0638c11ea5eac9f3eb3c937">RaisePropertyChanged</a> ([CallerMemberName] string propertyName=null)</td></tr>
+<tr class="memdesc:afd236599f0638c11ea5eac9f3eb3c937"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raises this object's PropertyChanged event.  <br /></td></tr>
+<tr class="separator:afd236599f0638c11ea5eac9f3eb3c937"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6c200802820ab379fdb514a77317586"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#ae6c200802820ab379fdb514a77317586">Get&lt; M &gt;</a> (int id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="memdesc:ae6c200802820ab379fdb514a77317586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data from cache/origin of model type M and return result or null.  <br /></td></tr>
+<tr class="separator:ae6c200802820ab379fdb514a77317586"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1619ad3c304cb1d6394ea724047fed3"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#af1619ad3c304cb1d6394ea724047fed3">Get&lt; M &gt;</a> (string id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="memdesc:af1619ad3c304cb1d6394ea724047fed3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data from cache/origin of model type M and return result or null.  <br /></td></tr>
+<tr class="separator:af1619ad3c304cb1d6394ea724047fed3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a257e5772c3a8af3b824e446019bc647f"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a257e5772c3a8af3b824e446019bc647f">Get&lt; M &gt;</a> (long id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="memdesc:a257e5772c3a8af3b824e446019bc647f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data from cache/origin of model type M and return result or null.  <br /></td></tr>
+<tr class="separator:a257e5772c3a8af3b824e446019bc647f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6973ff64840bc098b1e542d52912387"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#ad6973ff64840bc098b1e542d52912387">GetResponse</a> (Type modelType, object id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="memdesc:ad6973ff64840bc098b1e542d52912387"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a model instance of given model type and id with a full detail OpResponse object.  <br /></td></tr>
+<tr class="separator:ad6973ff64840bc098b1e542d52912387"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af44b3ac04388f87bc595463ca92f2da5"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; object &gt;?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#af44b3ac04388f87bc595463ca92f2da5">GetCollection&lt; M &gt;</a> (string collectionName)</td></tr>
 <tr class="memdesc:af44b3ac04388f87bc595463ca92f2da5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a collection literally ie an enumerable of ids.  <br /></td></tr>
 <tr class="separator:af44b3ac04388f87bc595463ca92f2da5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -143,15 +140,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a68782c62b5d30a35aebd73434426b5c8"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a68782c62b5d30a35aebd73434426b5c8">SetCacheRecord</a> (object id, object model)</td></tr>
 <tr class="memdesc:a68782c62b5d30a35aebd73434426b5c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the cached model in all caches.  <br /></td></tr>
 <tr class="separator:a68782c62b5d30a35aebd73434426b5c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22b15621911ff98f4e4f3b8243db6c4c"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; M &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a22b15621911ff98f4e4f3b8243db6c4c">Query&lt; M &gt;</a> (string? collectionKey, object? criteria=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="memdesc:a22b15621911ff98f4e4f3b8243db6c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do a search on the origin with the given model and criteria and cache the resulting collection under the collectionKey. Models are cached and returned, as are populated association models.  <br /></td></tr>
-<tr class="separator:a22b15621911ff98f4e4f3b8243db6c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ba2d14ee52d432720ac17f5254dbd67"><td class="memItemLeft" align="right" valign="top">async Task&lt; M &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a6ba2d14ee52d432720ac17f5254dbd67">QueryOne&lt; M &gt;</a> (object criteria, string? collectionKey=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="memdesc:a6ba2d14ee52d432720ac17f5254dbd67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do a search on the origin with the given model and criteria for a single record, and cache the resulting collection under the collectionKey. Models are cached and returned, as are populated association models.  <br /></td></tr>
-<tr class="separator:a6ba2d14ee52d432720ac17f5254dbd67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9ac1214e625867b701f043cab4aa7af"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#aa9ac1214e625867b701f043cab4aa7af">QueryResponse&lt; M &gt;</a> (string collectionName, object criteria, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="memdesc:aa9ac1214e625867b701f043cab4aa7af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do a search on the origin with the given model and criteria and cache the resulting collection under the collectionKey and return full detail OpResponse. Models are cached and returned, as are populated association models.  <br /></td></tr>
-<tr class="separator:aa9ac1214e625867b701f043cab4aa7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24c3a19777bf5dab57f0a892ed12275d"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; M &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a24c3a19777bf5dab57f0a892ed12275d">Query&lt; M &gt;</a> (string? collectionKey, object? criteria=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="memdesc:a24c3a19777bf5dab57f0a892ed12275d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do a search on the origin with the given model and criteria and cache the resulting collection under the collectionKey. Models are cached and returned, as are populated association models.  <br /></td></tr>
+<tr class="separator:a24c3a19777bf5dab57f0a892ed12275d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c401abeb68ffef2d5fcfd3af1cc1c39"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a6c401abeb68ffef2d5fcfd3af1cc1c39">QueryOne&lt; M &gt;</a> (string? collectionKey, object criteria=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="memdesc:a6c401abeb68ffef2d5fcfd3af1cc1c39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do a search on the origin with the given model and criteria for a single record, and cache the resulting collection under the collectionKey. Models are cached and returned, as are populated association models.  <br /></td></tr>
+<tr class="separator:a6c401abeb68ffef2d5fcfd3af1cc1c39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56849fee1f48483d2cee64d8e3562743"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a56849fee1f48483d2cee64d8e3562743">QueryResponse&lt; M &gt;</a> (string collectionName, object criteria, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="memdesc:a56849fee1f48483d2cee64d8e3562743"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do a search on the origin with the given model and criteria and cache the resulting collection under the collectionKey and return full detail OpResponse. Models are cached and returned, as are populated association models.  <br /></td></tr>
+<tr class="separator:a56849fee1f48483d2cee64d8e3562743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a528222caa0d460edc99bd5fc73de83b2"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a528222caa0d460edc99bd5fc73de83b2">Populate</a> (<a class="el" href="class_cascade_1_1_super_model.html">SuperModel</a> model, string property, int? freshnessSeconds=null, bool skipIfSet=false, bool? hold=null)</td></tr>
 <tr class="memdesc:a528222caa0d460edc99bd5fc73de83b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates (sets the given association property(s) on the given model each according to their definition attribute (BelongsTo/HasMany/HasOne)) with the resulting model(s) from their internal query(s).  <br /></td></tr>
 <tr class="separator:a528222caa0d460edc99bd5fc73de83b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,7 +159,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a873c9d2869bfd6958ba71f41ba8c147b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates (sets the given association property(s) on the given models each according to their definition attribute (BelongsTo/HasMany/HasOne)) with the resulting model(s) from their internal query(s). This is useful for setting association(s) on a list of models. In future, this could be optimised for when many are associated with the same.  <br /></td></tr>
 <tr class="separator:a873c9d2869bfd6958ba71f41ba8c147b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37bdccbca9f8530429c0a5cc881d71ee"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a37bdccbca9f8530429c0a5cc881d71ee">UpdateHasMany</a> (<a class="el" href="class_cascade_1_1_super_model.html">SuperModel</a> model, string property, IEnumerable&lt; object &gt; models)</td></tr>
-<tr class="memdesc:a37bdccbca9f8530429c0a5cc881d71ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the value of the given HasMany property with the given IEnumerable of models and updates the caches appropriately.  <br /></td></tr>
+<tr class="memdesc:a37bdccbca9f8530429c0a5cc881d71ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the value of the given HasMany property with the given IEnumerable of models and updates the caches appropriately. This is needed eg. when you add models to a HasMany association.  <br /></td></tr>
 <tr class="separator:a37bdccbca9f8530429c0a5cc881d71ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcb435c157b71f4a477986bcfecc1af2"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#abcb435c157b71f4a477986bcfecc1af2">UpdateHasOne</a> (<a class="el" href="class_cascade_1_1_super_model.html">SuperModel</a> model, string property, object value)</td></tr>
 <tr class="memdesc:abcb435c157b71f4a477986bcfecc1af2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the value of the given HasOne property with the given model. Note: This should update the caches with a collection of one, but currently does not.  <br /></td></tr>
@@ -173,12 +170,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7567f2069d581687bf6f458388e45498"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a7567f2069d581687bf6f458388e45498">SetAssociation</a> (IEnumerable targets, string propertyName, object value)</td></tr>
 <tr class="memdesc:a7567f2069d581687bf6f458388e45498"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this when you only want to set an association property to a value you already have. Consider using UpdateHasMany/UpdateHasOne/UpdateBelongsTo instead. Note that this method does not update the caches, but the more specific methods do.  <br /></td></tr>
 <tr class="separator:a7567f2069d581687bf6f458388e45498"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a2af543e529397ebf29452e8b8843e7"><td class="memItemLeft" align="right" valign="top">async Task&lt; M &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a9a2af543e529397ebf29452e8b8843e7">Create&lt; M &gt;</a> (M model, IEnumerable&lt; string &gt;? populate=null, bool hold=false)</td></tr>
-<tr class="memdesc:a9a2af543e529397ebf29452e8b8843e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create and return a model of the given type. An instance is used to pass in the values, and a newly created instance is returned from the origin. Note: the populate option will be removed from all write methods. Instead Create should be called followed by any call(s) to Populate() as required.  <br /></td></tr>
-<tr class="separator:a9a2af543e529397ebf29452e8b8843e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ec9d6aec89c16b8aac460b123c50b15"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a1ec9d6aec89c16b8aac460b123c50b15">CreateResponse&lt; M &gt;</a> (M model, IEnumerable&lt; string &gt;? populate=null, bool hold=false)</td></tr>
-<tr class="memdesc:a1ec9d6aec89c16b8aac460b123c50b15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create and return a model of the given type. An instance is used to pass in the values, and a newly created instance is returned from the origin. Note: the populate option will be removed from all write methods. Instead Create should be called followed by any call(s) to Populate() as required.  <br /></td></tr>
-<tr class="separator:a1ec9d6aec89c16b8aac460b123c50b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9091db1d8610d6d497598090729f01cb"><td class="memItemLeft" align="right" valign="top">async Task&lt; M &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a9091db1d8610d6d497598090729f01cb">Create&lt; M &gt;</a> (M model, bool hold=false)</td></tr>
+<tr class="memdesc:a9091db1d8610d6d497598090729f01cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create and return a model of the given type. An instance is used to pass in the values, and a newly created instance is returned from the origin. Note: the populate option will be removed from all write methods. Instead Create should be called followed by any call(s) to Populate() as required.  <br /></td></tr>
+<tr class="separator:a9091db1d8610d6d497598090729f01cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a34a7dc90960bdba40a374b59e6d0ba"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#a4a34a7dc90960bdba40a374b59e6d0ba">CreateResponse&lt; M &gt;</a> (M model, bool hold=false)</td></tr>
+<tr class="memdesc:a4a34a7dc90960bdba40a374b59e6d0ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create and return a model of the given type. An instance is used to pass in the values, and a newly created instance is returned from the origin. Note: the populate option will be removed from all write methods. Instead Create should be called followed by any call(s) to Populate() as required.  <br /></td></tr>
+<tr class="separator:a4a34a7dc90960bdba40a374b59e6d0ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2d933bea7d6f529f40d85ce87a484be"><td class="memItemLeft" align="right" valign="top"><a id="ae2d933bea7d6f529f40d85ce87a484be" name="ae2d933bea7d6f529f40d85ce87a484be"></a>
 async Task&lt; M &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Replace&lt; M &gt;</b> (M model)</td></tr>
 <tr class="separator:ae2d933bea7d6f529f40d85ce87a484be"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,54 +199,87 @@ async Task&lt; ReturnType &gt;&#160;</td><td class="memItemRight" valign="bottom
 <tr class="memitem:a161b95dd417701ca42428a84a175e670"><td class="memItemLeft" align="right" valign="top"><a id="a161b95dd417701ca42428a84a175e670" name="a161b95dd417701ca42428a84a175e670"></a>
 Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ExecuteResponse&lt; ModelType, ReturnType &gt;</b> (string action, IDictionary&lt; string, object &gt; parameters)</td></tr>
 <tr class="separator:a161b95dd417701ca42428a84a175e670"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae574d03df6b433d557b5bbee027871ca"><td class="memItemLeft" align="right" valign="top"><a id="ae574d03df6b433d557b5bbee027871ca" name="ae574d03df6b433d557b5bbee027871ca"></a>
-async Task&#160;</td><td class="memItemRight" valign="bottom"><b>EnsureAuthenticated</b> ()</td></tr>
-<tr class="separator:ae574d03df6b433d557b5bbee027871ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6af871f6b7e4aa70ec896b2fb487fcfc"><td class="memItemLeft" align="right" valign="top"><a id="a6af871f6b7e4aa70ec896b2fb487fcfc" name="a6af871f6b7e4aa70ec896b2fb487fcfc"></a>
-async Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearLayers</b> ()</td></tr>
-<tr class="separator:a6af871f6b7e4aa70ec896b2fb487fcfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a123dc0cfb222c455717cd7c70c678470"><td class="memItemLeft" align="right" valign="top"><a id="a123dc0cfb222c455717cd7c70c678470" name="a123dc0cfb222c455717cd7c70c678470"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>SerializeRequestOp</b> (<a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a> op)</td></tr>
-<tr class="separator:a123dc0cfb222c455717cd7c70c678470"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32b90cdd713ada052fc0e0a1885589c0"><td class="memItemLeft" align="right" valign="top"><a id="a32b90cdd713ada052fc0e0a1885589c0" name="a32b90cdd713ada052fc0e0a1885589c0"></a>
-<a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>DeserializeRequestOp</b> (string s)</td></tr>
-<tr class="separator:a32b90cdd713ada052fc0e0a1885589c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1faa7007060f3521140d43cf92bf8b8b"><td class="memItemLeft" align="right" valign="top"><a id="a1faa7007060f3521140d43cf92bf8b8b" name="a1faa7007060f3521140d43cf92bf8b8b"></a>
-async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>EnqueueOperation</b> (<a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a> op)</td></tr>
-<tr class="separator:a1faa7007060f3521140d43cf92bf8b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bfce97b012b94152662e0e8e3044a81"><td class="memItemLeft" align="right" valign="top"><a id="a4bfce97b012b94152662e0e8e3044a81" name="a4bfce97b012b94152662e0e8e3044a81"></a>
+async Task&lt; IEnumerable&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetModelsForIds</b> (Type type, IEnumerable iids, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="separator:a4bfce97b012b94152662e0e8e3044a81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00ab8205c6a03461ca60bae10b488d50"><td class="memItemLeft" align="right" valign="top"><a id="a00ab8205c6a03461ca60bae10b488d50" name="a00ab8205c6a03461ca60bae10b488d50"></a>
+async Task&#160;</td><td class="memItemRight" valign="bottom"><b>EnsureAuthenticated</b> (Type? type=null)</td></tr>
+<tr class="separator:a00ab8205c6a03461ca60bae10b488d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a069f5c7a0e6921003bb459e76a9cdc2a"><td class="memItemLeft" align="right" valign="top"><a id="a069f5c7a0e6921003bb459e76a9cdc2a" name="a069f5c7a0e6921003bb459e76a9cdc2a"></a>
+async Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearLayer</b> (int index, bool exceptHeld=true)</td></tr>
+<tr class="separator:a069f5c7a0e6921003bb459e76a9cdc2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c7f849c1b98f90659013adb7e67657a"><td class="memItemLeft" align="right" valign="top"><a id="a5c7f849c1b98f90659013adb7e67657a" name="a5c7f849c1b98f90659013adb7e67657a"></a>
+async Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearLayers</b> (bool exceptHeld=true, DateTime? olderThan=null)</td></tr>
+<tr class="separator:a5c7f849c1b98f90659013adb7e67657a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c2c18f061219faf397314fdc1f1123"><td class="memItemLeft" align="right" valign="top"><a id="a52c2c18f061219faf397314fdc1f1123" name="a52c2c18f061219faf397314fdc1f1123"></a>
+string?&#160;</td><td class="memItemRight" valign="bottom"><b>SerializeRequestOp</b> (<a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a> op)</td></tr>
+<tr class="separator:a52c2c18f061219faf397314fdc1f1123"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8407cf659f0c9df4040bb368da0eadcb"><td class="memItemLeft" align="right" valign="top"><a id="a8407cf659f0c9df4040bb368da0eadcb" name="a8407cf659f0c9df4040bb368da0eadcb"></a>
+<a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>DeserializeRequestOp</b> (string? s)</td></tr>
+<tr class="separator:a8407cf659f0c9df4040bb368da0eadcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a203eaeb06b9fd1182c9c09f7978d0bf9"><td class="memItemLeft" align="right" valign="top"><a id="a203eaeb06b9fd1182c9c09f7978d0bf9" name="a203eaeb06b9fd1182c9c09f7978d0bf9"></a>
+async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>AddPendingChange</b> (<a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a> op)</td></tr>
+<tr class="separator:a203eaeb06b9fd1182c9c09f7978d0bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69c8eba39f0ba7058b693896f42ef4a9"><td class="memItemLeft" align="right" valign="top"><a id="a69c8eba39f0ba7058b693896f42ef4a9" name="a69c8eba39f0ba7058b693896f42ef4a9"></a>
 IEnumerable&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetChangesPendingList</b> ()</td></tr>
 <tr class="separator:a69c8eba39f0ba7058b693896f42ef4a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a904aba38d4147a230245aa7bcd521a5f"><td class="memItemLeft" align="right" valign="top"><a id="a904aba38d4147a230245aa7bcd521a5f" name="a904aba38d4147a230245aa7bcd521a5f"></a>
 async Task&lt; IEnumerable&lt; Tuple&lt; string, <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a> &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetChangesPending</b> ()</td></tr>
 <tr class="separator:a904aba38d4147a230245aa7bcd521a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f054a9bede3c20dc2fe506c294f1aab"><td class="memItemLeft" align="right" valign="top"><a id="a3f054a9bede3c20dc2fe506c294f1aab" name="a3f054a9bede3c20dc2fe506c294f1aab"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>HasChangesPending</b> ()</td></tr>
+<tr class="separator:a3f054a9bede3c20dc2fe506c294f1aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb9ff1a52b337a843a17fc9c71d21aea"><td class="memItemLeft" align="right" valign="top"><a id="adb9ff1a52b337a843a17fc9c71d21aea" name="adb9ff1a52b337a843a17fc9c71d21aea"></a>
 async Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearChangesPending</b> ()</td></tr>
 <tr class="separator:adb9ff1a52b337a843a17fc9c71d21aea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8e5333e7c857bdc4e906a6e8a86ba4b"><td class="memItemLeft" align="right" valign="top"><a id="ad8e5333e7c857bdc4e906a6e8a86ba4b" name="ad8e5333e7c857bdc4e906a6e8a86ba4b"></a>
-async Task&#160;</td><td class="memItemRight" valign="bottom"><b>ReconnectOnline</b> (Action&lt; string &gt;? progressMessage=null, Action&lt; int &gt;? progressCount=null)</td></tr>
-<tr class="separator:ad8e5333e7c857bdc4e906a6e8a86ba4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a625b4631059ad713757f1e8e75d3c5cb"><td class="memItemLeft" align="right" valign="top"><a id="a625b4631059ad713757f1e8e75d3c5cb" name="a625b4631059ad713757f1e8e75d3c5cb"></a>
+async Task&#160;</td><td class="memItemRight" valign="bottom"><b>UploadChangesPending</b> (Action&lt; string &gt;? progressMessage=null, Action&lt; int &gt;? progressCount=null)</td></tr>
+<tr class="separator:a625b4631059ad713757f1e8e75d3c5cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63ec4d31a6577ba5ed5a9555c25e2aa1"><td class="memItemLeft" align="right" valign="top"><a id="a63ec4d31a6577ba5ed5a9555c25e2aa1" name="a63ec4d31a6577ba5ed5a9555c25e2aa1"></a>
+IEnumerable&lt; Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ListModelTypes</b> ()</td></tr>
+<tr class="separator:a63ec4d31a6577ba5ed5a9555c25e2aa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ac0fb9adad952e0528d361322005c2d"><td class="memItemLeft" align="right" valign="top"><a id="a6ac0fb9adad952e0528d361322005c2d" name="a6ac0fb9adad952e0528d361322005c2d"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>MetaResolvePath</b> (string path)</td></tr>
+<tr class="separator:a6ac0fb9adad952e0528d361322005c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9aaf2bbec2a2a95e3e55355d0f54564"><td class="memItemLeft" align="right" valign="top"><a id="af9aaf2bbec2a2a95e3e55355d0f54564" name="af9aaf2bbec2a2a95e3e55355d0f54564"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>MetaSet</b> (string path, string value)</td></tr>
+<tr class="separator:af9aaf2bbec2a2a95e3e55355d0f54564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa42f2b5bc73ca8eedea3a3a0a4e15914"><td class="memItemLeft" align="right" valign="top"><a id="aa42f2b5bc73ca8eedea3a3a0a4e15914" name="aa42f2b5bc73ca8eedea3a3a0a4e15914"></a>
+string?&#160;</td><td class="memItemRight" valign="bottom"><b>MetaGet</b> (string path)</td></tr>
+<tr class="separator:aa42f2b5bc73ca8eedea3a3a0a4e15914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55f1f024ac9b81c8a5784d7f8510d02e"><td class="memItemLeft" align="right" valign="top"><a id="a55f1f024ac9b81c8a5784d7f8510d02e" name="a55f1f024ac9b81c8a5784d7f8510d02e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>MetaExists</b> (string path)</td></tr>
+<tr class="separator:a55f1f024ac9b81c8a5784d7f8510d02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12a66c646d8f535a5092259f1787aef4"><td class="memItemLeft" align="right" valign="top"><a id="a12a66c646d8f535a5092259f1787aef4" name="a12a66c646d8f535a5092259f1787aef4"></a>
+IEnumerable&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>MetaList</b> (string path, bool recursive=false, bool sort=true)</td></tr>
+<tr class="separator:a12a66c646d8f535a5092259f1787aef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1f7e3866060c16008cbec162c9197ec"><td class="memItemLeft" align="right" valign="top"><a id="ab1f7e3866060c16008cbec162c9197ec" name="ab1f7e3866060c16008cbec162c9197ec"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>MetaClearPath</b> (string path, DateTime? olderThan=null, bool recursive=false)</td></tr>
+<tr class="separator:ab1f7e3866060c16008cbec162c9197ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1d0cc044bc9ee31ac510982b15eea58"><td class="memItemLeft" align="right" valign="top"><a id="af1d0cc044bc9ee31ac510982b15eea58" name="af1d0cc044bc9ee31ac510982b15eea58"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>MetaClearAll</b> ()</td></tr>
+<tr class="separator:af1d0cc044bc9ee31ac510982b15eea58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a4db748d504c88233f9b4d858710709"><td class="memItemLeft" align="right" valign="top"><a id="a0a4db748d504c88233f9b4d858710709" name="a0a4db748d504c88233f9b4d858710709"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Hold&lt; Model &gt;</b> (object id)</td></tr>
 <tr class="separator:a0a4db748d504c88233f9b4d858710709"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bce101cfb01755a6254e9ae4b95c2c2"><td class="memItemLeft" align="right" valign="top"><a id="a3bce101cfb01755a6254e9ae4b95c2c2" name="a3bce101cfb01755a6254e9ae4b95c2c2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Hold</b> (object model)</td></tr>
+<tr class="separator:a3bce101cfb01755a6254e9ae4b95c2c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a840c615269c5c47776b83ceb5d118f91"><td class="memItemLeft" align="right" valign="top"><a id="a840c615269c5c47776b83ceb5d118f91" name="a840c615269c5c47776b83ceb5d118f91"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Hold</b> (Type modelType, object id)</td></tr>
 <tr class="separator:a840c615269c5c47776b83ceb5d118f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbd6231edc9dca96286f454bb69cedb7"><td class="memItemLeft" align="right" valign="top"><a id="acbd6231edc9dca96286f454bb69cedb7" name="acbd6231edc9dca96286f454bb69cedb7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Hold&lt; Model &gt;</b> (IEnumerable&lt; Model &gt; models)</td></tr>
-<tr class="separator:acbd6231edc9dca96286f454bb69cedb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a559124dd16c375b270baf805917bf5d8"><td class="memItemLeft" align="right" valign="top"><a id="a559124dd16c375b270baf805917bf5d8" name="a559124dd16c375b270baf805917bf5d8"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsHeld&lt; Model &gt;</b> (object id)</td></tr>
 <tr class="separator:a559124dd16c375b270baf805917bf5d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adaf9e718bf950725b8cd3603c53870de"><td class="memItemLeft" align="right" valign="top"><a id="adaf9e718bf950725b8cd3603c53870de" name="adaf9e718bf950725b8cd3603c53870de"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Unhold&lt; Model &gt;</b> (object id)</td></tr>
 <tr class="separator:adaf9e718bf950725b8cd3603c53870de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade4ebe904a22fb3373332614c970d3a1"><td class="memItemLeft" align="right" valign="top"><a id="ade4ebe904a22fb3373332614c970d3a1" name="ade4ebe904a22fb3373332614c970d3a1"></a>
-Task&lt; IEnumerable&lt; object &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ListHeldIds&lt; Model &gt;</b> ()</td></tr>
-<tr class="separator:ade4ebe904a22fb3373332614c970d3a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2eb77b2010c1cb8d39d3c0f5c735c220"><td class="memItemLeft" align="right" valign="top"><a id="a2eb77b2010c1cb8d39d3c0f5c735c220" name="a2eb77b2010c1cb8d39d3c0f5c735c220"></a>
-async Task&lt; IEnumerable&lt; object &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ListHeldIds</b> (Type modelType)</td></tr>
-<tr class="separator:a2eb77b2010c1cb8d39d3c0f5c735c220"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb940a65edbf1ddc1d5bc0a75f2ae603"><td class="memItemLeft" align="right" valign="top"><a id="aeb940a65edbf1ddc1d5bc0a75f2ae603" name="aeb940a65edbf1ddc1d5bc0a75f2ae603"></a>
+IEnumerable&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ListHeldIds&lt; Model &gt;</b> ()</td></tr>
+<tr class="separator:aeb940a65edbf1ddc1d5bc0a75f2ae603"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26ae29d5ad9ca6dd74c39b2a2e04b330"><td class="memItemLeft" align="right" valign="top"><a id="a26ae29d5ad9ca6dd74c39b2a2e04b330" name="a26ae29d5ad9ca6dd74c39b2a2e04b330"></a>
+IEnumerable&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ListHeldIds</b> (Type modelType)</td></tr>
+<tr class="separator:a26ae29d5ad9ca6dd74c39b2a2e04b330"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a599401faaeb0d487aebd5109ecfcaac3"><td class="memItemLeft" align="right" valign="top"><a id="a599401faaeb0d487aebd5109ecfcaac3" name="a599401faaeb0d487aebd5109ecfcaac3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>HoldCollection&lt; Model &gt;</b> (string name)</td></tr>
 <tr class="separator:a599401faaeb0d487aebd5109ecfcaac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -262,12 +292,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>UnholdCollection&lt; 
 <tr class="memitem:a51370896935151f35640ebc8564526cc"><td class="memItemLeft" align="right" valign="top"><a id="a51370896935151f35640ebc8564526cc" name="a51370896935151f35640ebc8564526cc"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsCollectionHeld&lt; Model &gt;</b> (string name)</td></tr>
 <tr class="separator:a51370896935151f35640ebc8564526cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac1ca0f1d1096efbaae4b31ee2f7dc2e"><td class="memItemLeft" align="right" valign="top"><a id="aac1ca0f1d1096efbaae4b31ee2f7dc2e" name="aac1ca0f1d1096efbaae4b31ee2f7dc2e"></a>
-async Task&lt; IEnumerable&lt; object &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ListHeldCollections</b> (Type modelType)</td></tr>
-<tr class="separator:aac1ca0f1d1096efbaae4b31ee2f7dc2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67d1e3b9c5a21d2d2004c1f1c7319297"><td class="memItemLeft" align="right" valign="top"><a id="a67d1e3b9c5a21d2d2004c1f1c7319297" name="a67d1e3b9c5a21d2d2004c1f1c7319297"></a>
-async Task&#160;</td><td class="memItemRight" valign="bottom"><b>UnholdAll</b> ()</td></tr>
-<tr class="separator:a67d1e3b9c5a21d2d2004c1f1c7319297"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a541f781522875cf2dcc0e9e67a952349"><td class="memItemLeft" align="right" valign="top"><a id="a541f781522875cf2dcc0e9e67a952349" name="a541f781522875cf2dcc0e9e67a952349"></a>
+IEnumerable&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ListHeldCollections</b> (Type modelType)</td></tr>
+<tr class="separator:a541f781522875cf2dcc0e9e67a952349"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe6000ddd1c582a46c358fc602b4376f"><td class="memItemLeft" align="right" valign="top"><a id="abe6000ddd1c582a46c358fc602b4376f" name="abe6000ddd1c582a46c358fc602b4376f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>UnholdAll</b> (Type modelType, DateTime? olderThan=null)</td></tr>
+<tr class="separator:abe6000ddd1c582a46c358fc602b4376f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07676c2b39f03a7f07f411670e5b1f1c"><td class="memItemLeft" align="right" valign="top"><a id="a07676c2b39f03a7f07f411670e5b1f1c" name="a07676c2b39f03a7f07f411670e5b1f1c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>UnholdAll</b> (DateTime? olderThan=null)</td></tr>
+<tr class="separator:a07676c2b39f03a7f07f411670e5b1f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac344e98f471284fe9046536fcb576efa"><td class="memItemLeft" align="right" valign="top"><a id="ac344e98f471284fe9046536fcb576efa" name="ac344e98f471284fe9046536fcb576efa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>UnholdAll</b> ()</td></tr>
+<tr class="separator:ac344e98f471284fe9046536fcb576efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -288,6 +324,9 @@ const int&#160;</td><td class="memItemRight" valign="bottom"><b>FRESHNESS_ANY</b
 <tr class="separator:ab1a6e791b15912eab24b9cac8be45e97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf3c5d56a07bc3372f442ecdee4c5799"><td class="memItemLeft" align="right" valign="top">static ImmutableArray&lt; Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_cascade_data_layer.html#aaf3c5d56a07bc3372f442ecdee4c5799">AssociationAttributes</a></td></tr>
 <tr class="separator:aaf3c5d56a07bc3372f442ecdee4c5799"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbf205346082eaa3277aa277926eab4c"><td class="memItemLeft" align="right" valign="top"><a id="adbf205346082eaa3277aa277926eab4c" name="adbf205346082eaa3277aa277926eab4c"></a>
+const string&#160;</td><td class="memItemRight" valign="bottom"><b>HOLD</b> = &quot;Hold&quot;</td></tr>
+<tr class="separator:adbf205346082eaa3277aa277926eab4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -312,6 +351,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>ConnectionOnline</b><
 <tr class="memdesc:aaf7deac242242fdf06df21b046c982cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">This property determines whether the framework acts in online (true) or offline (false) mode. It can be set to offline at any time, but should not be set to online unless the changes pending list is empty. <a class="el" href="">ReconnectOnline() uploads changes and sets ConnectionOnline=true for you.</a> <br  />
  <br /></td></tr>
 <tr class="separator:aaf7deac242242fdf06df21b046c982cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a629c03e5f597e4867d531e600cf95d4c"><td class="memItemLeft" align="right" valign="top"><a id="a629c03e5f597e4867d531e600cf95d4c" name="a629c03e5f597e4867d531e600cf95d4c"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>PendingCount</b><code> [get]</code></td></tr>
+<tr class="separator:a629c03e5f597e4867d531e600cf95d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="events" name="events"></a>
 Events</h2></td></tr>
@@ -437,8 +479,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a9a2af543e529397ebf29452e8b8843e7" name="a9a2af543e529397ebf29452e8b8843e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a2af543e529397ebf29452e8b8843e7">&#9670;&#160;</a></span>Create&lt; M &gt;()</h2>
+<a id="a9091db1d8610d6d497598090729f01cb" name="a9091db1d8610d6d497598090729f01cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9091db1d8610d6d497598090729f01cb">&#9670;&#160;</a></span>Create&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -455,12 +497,6 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">IEnumerable&lt; string &gt;?&#160;</td>
-          <td class="paramname"><em>populate</em> = <code>null</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>hold</em> = <code>false</code>&#160;</td>
         </tr>
@@ -481,7 +517,6 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">model</td><td></td></tr>
-    <tr><td class="paramname">populate</td><td></td></tr>
     <tr><td class="paramname">hold</td><td></td></tr>
   </table>
   </dd>
@@ -496,8 +531,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a1ec9d6aec89c16b8aac460b123c50b15" name="a1ec9d6aec89c16b8aac460b123c50b15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ec9d6aec89c16b8aac460b123c50b15">&#9670;&#160;</a></span>CreateResponse&lt; M &gt;()</h2>
+<a id="a4a34a7dc90960bdba40a374b59e6d0ba" name="a4a34a7dc90960bdba40a374b59e6d0ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a34a7dc90960bdba40a374b59e6d0ba">&#9670;&#160;</a></span>CreateResponse&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -514,12 +549,6 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">IEnumerable&lt; string &gt;?&#160;</td>
-          <td class="paramname"><em>populate</em> = <code>null</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>hold</em> = <code>false</code>&#160;</td>
         </tr>
@@ -540,7 +569,6 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">model</td><td></td></tr>
-    <tr><td class="paramname">populate</td><td></td></tr>
     <tr><td class="paramname">hold</td><td></td></tr>
   </table>
   </dd>
@@ -555,8 +583,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a19ca3448eaa95d7aec9f0de2370a221b" name="a19ca3448eaa95d7aec9f0de2370a221b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19ca3448eaa95d7aec9f0de2370a221b">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[1/3]</span></h2>
+<a id="ae6c200802820ab379fdb514a77317586" name="ae6c200802820ab379fdb514a77317586"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6c200802820ab379fdb514a77317586">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -591,6 +619,12 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int?&#160;</td>
+          <td class="paramname"><em>fallbackFreshnessSeconds</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">bool?&#160;</td>
           <td class="paramname"><em>hold</em> = <code>null</code>&#160;</td>
         </tr>
@@ -636,8 +670,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="ae837c6624c35c6c1abef9ed35284c075" name="ae837c6624c35c6c1abef9ed35284c075"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae837c6624c35c6c1abef9ed35284c075">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[2/3]</span></h2>
+<a id="a257e5772c3a8af3b824e446019bc647f" name="a257e5772c3a8af3b824e446019bc647f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a257e5772c3a8af3b824e446019bc647f">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -672,6 +706,12 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int?&#160;</td>
+          <td class="paramname"><em>fallbackFreshnessSeconds</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">bool?&#160;</td>
           <td class="paramname"><em>hold</em> = <code>null</code>&#160;</td>
         </tr>
@@ -717,8 +757,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="afb035f39da5e20094ba3ae57362e2723" name="afb035f39da5e20094ba3ae57362e2723"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb035f39da5e20094ba3ae57362e2723">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[3/3]</span></h2>
+<a id="af1619ad3c304cb1d6394ea724047fed3" name="af1619ad3c304cb1d6394ea724047fed3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1619ad3c304cb1d6394ea724047fed3">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -749,6 +789,12 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td></td>
           <td class="paramtype">int?&#160;</td>
           <td class="paramname"><em>populateFreshnessSeconds</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int?&#160;</td>
+          <td class="paramname"><em>fallbackFreshnessSeconds</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -888,8 +934,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a81c75583105d777fe0f19071c0256d87" name="a81c75583105d777fe0f19071c0256d87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81c75583105d777fe0f19071c0256d87">&#9670;&#160;</a></span>GetResponse&lt; M &gt;() <span class="overload">[1/3]</span></h2>
+<a id="ad6973ff64840bc098b1e542d52912387" name="ad6973ff64840bc098b1e542d52912387"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6973ff64840bc098b1e542d52912387">&#9670;&#160;</a></span>GetResponse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -898,9 +944,15 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt; Cascade.CascadeDataLayer.GetResponse&lt; M &gt; </td>
+          <td class="memname">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt; Cascade.CascadeDataLayer.GetResponse </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">Type&#160;</td>
+          <td class="paramname"><em>modelType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">object&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
@@ -924,77 +976,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool?&#160;</td>
-          <td class="paramname"><em>hold</em> = <code>null</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get a model instance of given model type M and int id with a full detail OpResponse object. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">id</td><td>id of model to get</td></tr>
-    <tr><td class="paramname">populate</td><td>Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</td></tr>
-    <tr><td class="paramname">freshnessSeconds</td><td>freshness for the main object</td></tr>
-    <tr><td class="paramname">populateFreshnessSeconds</td><td>freshness for any populated associations</td></tr>
-    <tr><td class="paramname">hold</td><td>whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>OpResponse</dd></dl>
-<div class="typeconstraint">
-<dl><dt><b>Type Constraints</b></dt><dd>
-<table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em>M</em></td><td>&#160;:</td><td valign="top"><em>class</em></td><td>&#160;</td></tr>
-</table>
-</dd>
-</dl>
-</div>
-
-</div>
-</div>
-<a id="a49a89356426b7923ef7bd32a19e0668c" name="a49a89356426b7923ef7bd32a19e0668c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49a89356426b7923ef7bd32a19e0668c">&#9670;&#160;</a></span>GetResponse&lt; M &gt;() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt; Cascade.CascadeDataLayer.GetResponse&lt; M &gt; </td>
-          <td>(</td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">IEnumerable&lt; string &gt;?&#160;</td>
-          <td class="paramname"><em>populate</em> = <code>null</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">int?&#160;</td>
-          <td class="paramname"><em>freshnessSeconds</em> = <code>null</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int?&#160;</td>
-          <td class="paramname"><em>populateFreshnessSeconds</em> = <code>null</code>, </td>
+          <td class="paramname"><em>fallbackFreshnessSeconds</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1015,7 +998,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 </table>
 </div><div class="memdoc">
 
-<p>Get a model instance of given model type M and long id with a full detail OpResponse object. </p>
+<p>Get a model instance of given model type and id with a full detail OpResponse object. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>id of model to get</td></tr>
@@ -1027,89 +1010,6 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>OpResponse</dd></dl>
-<div class="typeconstraint">
-<dl><dt><b>Type Constraints</b></dt><dd>
-<table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em>M</em></td><td>&#160;:</td><td valign="top"><em>class</em></td><td>&#160;</td></tr>
-</table>
-</dd>
-</dl>
-</div>
-
-</div>
-</div>
-<a id="a25f0ffab2f94910a0a232ef495d2aad0" name="a25f0ffab2f94910a0a232ef495d2aad0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25f0ffab2f94910a0a232ef495d2aad0">&#9670;&#160;</a></span>GetResponse&lt; M &gt;() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> &gt; Cascade.CascadeDataLayer.GetResponse&lt; M &gt; </td>
-          <td>(</td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">IEnumerable&lt; string &gt;?&#160;</td>
-          <td class="paramname"><em>populate</em> = <code>null</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int?&#160;</td>
-          <td class="paramname"><em>freshnessSeconds</em> = <code>null</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int?&#160;</td>
-          <td class="paramname"><em>populateFreshnessSeconds</em> = <code>null</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool?&#160;</td>
-          <td class="paramname"><em>hold</em> = <code>null</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get a model instance of given model type M and string id with a full detail OpResponse object. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">id</td><td>id of model to get</td></tr>
-    <tr><td class="paramname">populate</td><td>Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</td></tr>
-    <tr><td class="paramname">freshnessSeconds</td><td>freshness for the main object</td></tr>
-    <tr><td class="paramname">populateFreshnessSeconds</td><td>freshness for any populated associations</td></tr>
-    <tr><td class="paramname">hold</td><td>whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>OpResponse</dd></dl>
-<div class="typeconstraint">
-<dl><dt><b>Type Constraints</b></dt><dd>
-<table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em>M</em></td><td>&#160;:</td><td valign="top"><em>class</em></td><td>&#160;</td></tr>
-</table>
-</dd>
-</dl>
-</div>
 
 </div>
 </div>
@@ -1308,7 +1208,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 <p>Populates (sets the given association property(s) on the given models each according to their definition attribute (BelongsTo/HasMany/HasOne)) with the resulting model(s) from their internal query(s). This is useful for setting association(s) on a list of models. In future, this could be optimised for when many are associated with the same. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">model</td><td>model to act on</td></tr>
+    <tr><td class="paramname">models</td><td>models to act on</td></tr>
     <tr><td class="paramname">property</td><td>nameof(Model.someProperty)</td></tr>
     <tr><td class="paramname">freshnessSeconds</td><td></td></tr>
     <tr><td class="paramname">skipIfSet</td><td>If true and the property is already set, don't do anything (for performance reasons)</td></tr>
@@ -1451,8 +1351,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a22b15621911ff98f4e4f3b8243db6c4c" name="a22b15621911ff98f4e4f3b8243db6c4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22b15621911ff98f4e4f3b8243db6c4c">&#9670;&#160;</a></span>Query&lt; M &gt;()</h2>
+<a id="a24c3a19777bf5dab57f0a892ed12275d" name="a24c3a19777bf5dab57f0a892ed12275d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24c3a19777bf5dab57f0a892ed12275d">&#9670;&#160;</a></span>Query&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1489,6 +1389,12 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td></td>
           <td class="paramtype">int?&#160;</td>
           <td class="paramname"><em>populateFreshnessSeconds</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int?&#160;</td>
+          <td class="paramname"><em>fallbackFreshnessSeconds</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1531,8 +1437,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a6ba2d14ee52d432720ac17f5254dbd67" name="a6ba2d14ee52d432720ac17f5254dbd67"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ba2d14ee52d432720ac17f5254dbd67">&#9670;&#160;</a></span>QueryOne&lt; M &gt;()</h2>
+<a id="a6c401abeb68ffef2d5fcfd3af1cc1c39" name="a6c401abeb68ffef2d5fcfd3af1cc1c39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c401abeb68ffef2d5fcfd3af1cc1c39">&#9670;&#160;</a></span>QueryOne&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1541,16 +1447,16 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">async Task&lt; M &gt; Cascade.CascadeDataLayer.QueryOne&lt; M &gt; </td>
+          <td class="memname">async Task&lt; M?&gt; Cascade.CascadeDataLayer.QueryOne&lt; M &gt; </td>
           <td>(</td>
-          <td class="paramtype">object&#160;</td>
-          <td class="paramname"><em>criteria</em>, </td>
+          <td class="paramtype">string?&#160;</td>
+          <td class="paramname"><em>collectionKey</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">string?&#160;</td>
-          <td class="paramname"><em>collectionKey</em> = <code>null</code>, </td>
+          <td class="paramtype">object&#160;</td>
+          <td class="paramname"><em>criteria</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1569,6 +1475,12 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td></td>
           <td class="paramtype">int?&#160;</td>
           <td class="paramname"><em>populateFreshnessSeconds</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int?&#160;</td>
+          <td class="paramname"><em>fallbackFreshnessSeconds</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1611,8 +1523,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="aa9ac1214e625867b701f043cab4aa7af" name="aa9ac1214e625867b701f043cab4aa7af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9ac1214e625867b701f043cab4aa7af">&#9670;&#160;</a></span>QueryResponse&lt; M &gt;()</h2>
+<a id="a56849fee1f48483d2cee64d8e3562743" name="a56849fee1f48483d2cee64d8e3562743"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56849fee1f48483d2cee64d8e3562743">&#9670;&#160;</a></span>QueryResponse&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1653,6 +1565,12 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int?&#160;</td>
+          <td class="paramname"><em>fallbackFreshnessSeconds</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">bool?&#160;</td>
           <td class="paramname"><em>hold</em> = <code>null</code>&#160;</td>
         </tr>
@@ -1688,6 +1606,40 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>OpResponse</dd></dl>
+
+</div>
+</div>
+<a id="afd236599f0638c11ea5eac9f3eb3c937" name="afd236599f0638c11ea5eac9f3eb3c937"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd236599f0638c11ea5eac9f3eb3c937">&#9670;&#160;</a></span>RaisePropertyChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Cascade.CascadeDataLayer.RaisePropertyChanged </td>
+          <td>(</td>
+          <td class="paramtype">[CallerMemberName] string&#160;</td>
+          <td class="paramname"><em>propertyName</em> = <code>null</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Raises this object's PropertyChanged event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">propertyName</td><td>Name of the property used to notify listeners. This value is optional and can be provided automatically when invoked from compilers that support CallerMemberNameAttribute.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -2043,7 +1995,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 </table>
 </div><div class="memdoc">
 
-<p>Replaces the value of the given HasMany property with the given IEnumerable of models and updates the caches appropriately. </p>
+<p>Replaces the value of the given HasMany property with the given IEnumerable of models and updates the caches appropriately. This is needed eg. when you add models to a HasMany association. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">model</td><td></td></tr>

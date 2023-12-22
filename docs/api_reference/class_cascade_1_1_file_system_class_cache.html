@@ -105,8 +105,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a26fa5b05b1b40f304401d220a689cdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17e60cde9504bd17a350d9a05a52842e"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_file_system_class_cache.html#a17e60cde9504bd17a350d9a05a52842e">Remove</a> (object id)</td></tr>
 <tr class="separator:a17e60cde9504bd17a350d9a05a52842e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf8a7288d2d276afa6eac970d4a8f65d"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_file_system_class_cache.html#abf8a7288d2d276afa6eac970d4a8f65d">ClearAll</a> (bool exceptHeld=true)</td></tr>
-<tr class="separator:abf8a7288d2d276afa6eac970d4a8f65d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acce38b04bd6c4fa9ee04a1ad45dda359"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_file_system_class_cache.html#acce38b04bd6c4fa9ee04a1ad45dda359">ClearAll</a> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
+<tr class="separator:acce38b04bd6c4fa9ee04a1ad45dda359"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a888b90e54aa48c3f7a0fe6d2b00cab"><td class="memItemLeft" align="right" valign="top"><a id="a5a888b90e54aa48c3f7a0fe6d2b00cab" name="a5a888b90e54aa48c3f7a0fe6d2b00cab"></a>
 Task&#160;</td><td class="memItemRight" valign="bottom"><b>Store</b> (object id, object model, long arrivedAt)</td></tr>
 <tr class="separator:a5a888b90e54aa48c3f7a0fe6d2b00cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,9 +119,9 @@ Task&lt; <a class="el" href="class_cascade_1_1_op_response.html">OpResponse</a> 
 <tr class="memitem:a7883593309e7cb53fcec2aeb59bd590f"><td class="memItemLeft" align="right" valign="top"><a id="a7883593309e7cb53fcec2aeb59bd590f" name="a7883593309e7cb53fcec2aeb59bd590f"></a>
 Task&#160;</td><td class="memItemRight" valign="bottom"><b>Remove</b> (object id)</td></tr>
 <tr class="separator:a7883593309e7cb53fcec2aeb59bd590f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9995e262c9055c14b95bca4df029ef45"><td class="memItemLeft" align="right" valign="top"><a id="a9995e262c9055c14b95bca4df029ef45" name="a9995e262c9055c14b95bca4df029ef45"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearAll</b> (bool exceptHeld)</td></tr>
-<tr class="separator:a9995e262c9055c14b95bca4df029ef45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae189ef06a598c2a8e457b1f74ddeafc6"><td class="memItemLeft" align="right" valign="top"><a id="ae189ef06a598c2a8e457b1f74ddeafc6" name="ae189ef06a598c2a8e457b1f74ddeafc6"></a>
+Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearAll</b> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
+<tr class="separator:ae189ef06a598c2a8e457b1f74ddeafc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -142,8 +142,8 @@ Properties</h2></td></tr>
 <tr class="separator:adfa7f8882eee9cac9dcd381e96157233 inherit properties_interface_cascade_1_1_i_model_class_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="abf8a7288d2d276afa6eac970d4a8f65d" name="abf8a7288d2d276afa6eac970d4a8f65d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf8a7288d2d276afa6eac970d4a8f65d">&#9670;&#160;</a></span>ClearAll()</h2>
+<a id="acce38b04bd6c4fa9ee04a1ad45dda359" name="acce38b04bd6c4fa9ee04a1ad45dda359"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acce38b04bd6c4fa9ee04a1ad45dda359">&#9670;&#160;</a></span>ClearAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -155,8 +155,18 @@ Properties</h2></td></tr>
           <td class="memname">async Task <a class="el" href="class_cascade_1_1_file_system_class_cache.html">Cascade.FileSystemClassCache</a>&lt; Model, IdType &gt;.ClearAll </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>exceptHeld</em> = <code>true</code></td><td>)</td>
+          <td class="paramname"><em>exceptHeld</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">DateTime?&#160;</td>
+          <td class="paramname"><em>olderThan</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>

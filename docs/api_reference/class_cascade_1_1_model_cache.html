@@ -93,8 +93,8 @@ Inheritance diagram for Cascade.ModelCache:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae7983fc49ec3f43d0a5e10ce54a4aef6"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_model_cache.html#ae7983fc49ec3f43d0a5e10ce54a4aef6">ClearAll</a> (bool exceptHeld=true)</td></tr>
-<tr class="separator:ae7983fc49ec3f43d0a5e10ce54a4aef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2243a498aae3b3b511f0d786c9d7391a"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_cascade_1_1_model_cache.html#a2243a498aae3b3b511f0d786c9d7391a">ClearAll</a> (bool exceptHeld=true, DateTime? olderThan=null)</td></tr>
+<tr class="separator:a2243a498aae3b3b511f0d786c9d7391a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90f5280a5a6a896b8150a5930b8351d7"><td class="memItemLeft" align="right" valign="top"><a id="a90f5280a5a6a896b8150a5930b8351d7" name="a90f5280a5a6a896b8150a5930b8351d7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ModelCache</b> (IDictionary&lt; Type, <a class="el" href="interface_cascade_1_1_i_model_class_cache.html">IModelClassCache</a> &gt; aClassCache)</td></tr>
 <tr class="separator:a90f5280a5a6a896b8150a5930b8351d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,9 +120,9 @@ Task&#160;</td><td class="memItemRight" valign="bottom"><b>Store</b> (Type type,
 <tr class="memitem:aef35519b8f53ffec45c9278be57e31b3 inherit pub_methods_interface_cascade_1_1_i_cascade_cache"><td class="memItemLeft" align="right" valign="top">
 Task&#160;</td><td class="memItemRight" valign="bottom"><b>StoreCollection</b> (Type type, string key, IEnumerable? ids, long arrivedAt)</td></tr>
 <tr class="separator:aef35519b8f53ffec45c9278be57e31b3 inherit pub_methods_interface_cascade_1_1_i_cascade_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7500cbc5f39bcba455edee02bfd6c04d inherit pub_methods_interface_cascade_1_1_i_cascade_cache"><td class="memItemLeft" align="right" valign="top">
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearAll</b> (bool exceptHeld=true)</td></tr>
-<tr class="separator:a7500cbc5f39bcba455edee02bfd6c04d inherit pub_methods_interface_cascade_1_1_i_cascade_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5bd6a2d7386a91d595ddc17ef3aaefc inherit pub_methods_interface_cascade_1_1_i_cascade_cache"><td class="memItemLeft" align="right" valign="top">
+Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearAll</b> (bool exceptHeld=true, DateTime? olderThan=null)</td></tr>
+<tr class="separator:ad5bd6a2d7386a91d595ddc17ef3aaefc inherit pub_methods_interface_cascade_1_1_i_cascade_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -134,8 +134,8 @@ Properties</h2></td></tr>
 <tr class="separator:a19080ef92b05ecee66011f7de94f5732 inherit properties_interface_cascade_1_1_i_cascade_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae7983fc49ec3f43d0a5e10ce54a4aef6" name="ae7983fc49ec3f43d0a5e10ce54a4aef6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7983fc49ec3f43d0a5e10ce54a4aef6">&#9670;&#160;</a></span>ClearAll()</h2>
+<a id="a2243a498aae3b3b511f0d786c9d7391a" name="a2243a498aae3b3b511f0d786c9d7391a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2243a498aae3b3b511f0d786c9d7391a">&#9670;&#160;</a></span>ClearAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -147,8 +147,18 @@ Properties</h2></td></tr>
           <td class="memname">async Task Cascade.ModelCache.ClearAll </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>exceptHeld</em> = <code>true</code></td><td>)</td>
+          <td class="paramname"><em>exceptHeld</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">DateTime?&#160;</td>
+          <td class="paramname"><em>olderThan</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>

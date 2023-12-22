@@ -9,5 +9,6 @@ var searchData=
   ['ilist_6',['IList',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706aad7cce600f0e290b37b99b9d8c11529b',1,'Easy::Common::Extensions']]],
   ['imodelclasscache_7',['IModelClassCache',['../interface_cascade_1_1_i_model_class_cache.html',1,'Cascade']]],
   ['imodelclassorigin_8',['IModelClassOrigin',['../interface_cascade_1_1_i_model_class_origin.html',1,'Cascade']]],
-  ['invalid_9',['Invalid',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a4bbb8f967da6d1a610596d7257179c2b',1,'Easy::Common::Extensions']]]
+  ['invalid_9',['Invalid',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a4bbb8f967da6d1a610596d7257179c2b',1,'Easy::Common::Extensions']]],
+  ['isexternalinit_10',['IsExternalInit',['../class_system_1_1_runtime_1_1_compiler_services_1_1_is_external_init.html',1,'System::Runtime::CompilerServices']]]
 ];

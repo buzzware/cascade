@@ -87,30 +87,33 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8bd5f26aa07c6f4ad645d9dbeb012898"><td class="memItemLeft" align="right" valign="top"><a id="a8bd5f26aa07c6f4ad645d9dbeb012898" name="a8bd5f26aa07c6f4ad645d9dbeb012898"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>RequestOp</b> (long timeMs, Type type, RequestVerb verb, object? id, object? value=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null, object? criteria=null, string? key=null, object? extra=null)</td></tr>
-<tr class="separator:a8bd5f26aa07c6f4ad645d9dbeb012898"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d5f4dd36579944b1d5bd503f3e27d36"><td class="memItemLeft" align="right" valign="top"><a id="a5d5f4dd36579944b1d5bd503f3e27d36" name="a5d5f4dd36579944b1d5bd503f3e27d36"></a>
-<a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CloneWith</b> (long? timeMs=null, Type? type=null, RequestVerb? verb=null, object? id=null, object? value=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null, object? criteria=null, string? key=null, object? extra=null)</td></tr>
-<tr class="separator:a5d5f4dd36579944b1d5bd503f3e27d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a949cdbbd1b6fdcb7e47dde41b28a20aa"><td class="memItemLeft" align="right" valign="top"><a id="a949cdbbd1b6fdcb7e47dde41b28a20aa" name="a949cdbbd1b6fdcb7e47dde41b28a20aa"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>RequestOp</b> (long timeMs, Type type, RequestVerb verb, object? id, object? value=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, object? criteria=null, string? key=null, object? extra=null)</td></tr>
+<tr class="separator:a949cdbbd1b6fdcb7e47dde41b28a20aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73522bf42afc60b97f33bb7e7939c29a"><td class="memItemLeft" align="right" valign="top"><a id="a73522bf42afc60b97f33bb7e7939c29a" name="a73522bf42afc60b97f33bb7e7939c29a"></a>
+<a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CloneWith</b> (long? timeMs=null, Type? type=null, RequestVerb? verb=null, object? id=null, object? value=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, object? criteria=null, string? key=null, object? extra=null)</td></tr>
+<tr class="separator:a73522bf42afc60b97f33bb7e7939c29a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a194da9c1568fef25d8ed2d1cfb946235"><td class="memItemLeft" align="right" valign="top"><a id="a194da9c1568fef25d8ed2d1cfb946235" name="a194da9c1568fef25d8ed2d1cfb946235"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>ToSummaryString</b> ()</td></tr>
 <tr class="separator:a194da9c1568fef25d8ed2d1cfb946235"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac6edcd58b505b4ca579229bd62ec26fc"><td class="memItemLeft" align="right" valign="top"><a id="ac6edcd58b505b4ca579229bd62ec26fc" name="ac6edcd58b505b4ca579229bd62ec26fc"></a>
-static <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetOp&lt; Model &gt;</b> (object id, long timeMs=-1, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="separator:ac6edcd58b505b4ca579229bd62ec26fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc0b00c88e7b0f611d753343640ebd87"><td class="memItemLeft" align="right" valign="top"><a id="acc0b00c88e7b0f611d753343640ebd87" name="acc0b00c88e7b0f611d753343640ebd87"></a>
+static <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetOp&lt; Model &gt;</b> (object id, long timeMs=-1, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="separator:acc0b00c88e7b0f611d753343640ebd87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acffb085972e067c51720dc3b79d12fb1"><td class="memItemLeft" align="right" valign="top"><a id="acffb085972e067c51720dc3b79d12fb1" name="acffb085972e067c51720dc3b79d12fb1"></a>
+static <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetOp</b> (Type modelType, object id, long timeMs=-1, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="separator:acffb085972e067c51720dc3b79d12fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98c3d767cdacb88b1c9657a894ff3ba7"><td class="memItemLeft" align="right" valign="top"><a id="a98c3d767cdacb88b1c9657a894ff3ba7" name="a98c3d767cdacb88b1c9657a894ff3ba7"></a>
 static <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetCollectionOp&lt; Model &gt;</b> (string collectionName, long timeMs=-1)</td></tr>
 <tr class="separator:a98c3d767cdacb88b1c9657a894ff3ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8b95a77d30a76ffe3f099fa002f903f"><td class="memItemLeft" align="right" valign="top"><a id="ae8b95a77d30a76ffe3f099fa002f903f" name="ae8b95a77d30a76ffe3f099fa002f903f"></a>
-static <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>QueryOp&lt; Model &gt;</b> (string collectionName, object criteria, long timeMs, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, bool? hold=null)</td></tr>
-<tr class="separator:ae8b95a77d30a76ffe3f099fa002f903f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59b62b7538a3b8a79d19199294ce2b46"><td class="memItemLeft" align="right" valign="top"><a id="a59b62b7538a3b8a79d19199294ce2b46" name="a59b62b7538a3b8a79d19199294ce2b46"></a>
-static <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateOp</b> (object model, long timeMs, IEnumerable&lt; string &gt;? populate=null, bool hold=false)</td></tr>
-<tr class="separator:a59b62b7538a3b8a79d19199294ce2b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab20319fcee9bde796c6dfda652210bb1"><td class="memItemLeft" align="right" valign="top"><a id="ab20319fcee9bde796c6dfda652210bb1" name="ab20319fcee9bde796c6dfda652210bb1"></a>
+static <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>QueryOp&lt; Model &gt;</b> (string collectionName, object criteria, long timeMs, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)</td></tr>
+<tr class="separator:ab20319fcee9bde796c6dfda652210bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14440bd336e9c5bdfdd297cafb063374"><td class="memItemLeft" align="right" valign="top"><a id="a14440bd336e9c5bdfdd297cafb063374" name="a14440bd336e9c5bdfdd297cafb063374"></a>
+static <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>CreateOp</b> (object model, long timeMs, bool hold=false)</td></tr>
+<tr class="separator:a14440bd336e9c5bdfdd297cafb063374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f2bd1a450ff97626f31c8c20d8a802a"><td class="memItemLeft" align="right" valign="top"><a id="a4f2bd1a450ff97626f31c8c20d8a802a" name="a4f2bd1a450ff97626f31c8c20d8a802a"></a>
 static <a class="el" href="class_cascade_1_1_request_op.html">RequestOp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>DestroyOp&lt; Model &gt;</b> (Model model, long timeMs)</td></tr>
 <tr class="separator:a4f2bd1a450ff97626f31c8c20d8a802a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,6 +168,9 @@ readonly? int&#160;</td><td class="memItemRight" valign="bottom"><b>FreshnessSec
 <tr class="memitem:a84c84d0f30e497ef9787233d4aa941cf"><td class="memItemLeft" align="right" valign="top"><a id="a84c84d0f30e497ef9787233d4aa941cf" name="a84c84d0f30e497ef9787233d4aa941cf"></a>
 readonly? int&#160;</td><td class="memItemRight" valign="bottom"><b>PopulateFreshnessSeconds</b> = FRESHNESS_DEFAULT</td></tr>
 <tr class="separator:a84c84d0f30e497ef9787233d4aa941cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f34cc7b076658cdd0798f712b6a0ff5"><td class="memItemLeft" align="right" valign="top"><a id="a1f34cc7b076658cdd0798f712b6a0ff5" name="a1f34cc7b076658cdd0798f712b6a0ff5"></a>
+readonly? int&#160;</td><td class="memItemRight" valign="bottom"><b>FallbackFreshnessSeconds</b> = FRESHNESS_ANY</td></tr>
+<tr class="separator:a1f34cc7b076658cdd0798f712b6a0ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5b2d84b2791605c2e2d28a8b48463cd"><td class="memItemLeft" align="right" valign="top"><a id="ad5b2d84b2791605c2e2d28a8b48463cd" name="ad5b2d84b2791605c2e2d28a8b48463cd"></a>
 readonly bool&#160;</td><td class="memItemRight" valign="bottom"><b>Hold</b></td></tr>
 <tr class="separator:ad5b2d84b2791605c2e2d28a8b48463cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,6 +183,15 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:ad552f5b1abbb8b7d3d8b9f1c68d070d1"><td class="memItemLeft" align="right" valign="top"><a id="ad552f5b1abbb8b7d3d8b9f1c68d070d1" name="ad552f5b1abbb8b7d3d8b9f1c68d070d1"></a>
 const int&#160;</td><td class="memItemRight" valign="bottom"><b>FRESHNESS_DEFAULT</b> = 5*60</td></tr>
 <tr class="separator:ad552f5b1abbb8b7d3d8b9f1c68d070d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46e17ee9a1228661204189c4fe89966b"><td class="memItemLeft" align="right" valign="top"><a id="a46e17ee9a1228661204189c4fe89966b" name="a46e17ee9a1228661204189c4fe89966b"></a>
+const int&#160;</td><td class="memItemRight" valign="bottom"><b>FRESHNESS_ANY</b> = int.MaxValue</td></tr>
+<tr class="separator:a46e17ee9a1228661204189c4fe89966b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a469152e8bc5739e04e23d1f6537998e1"><td class="memItemLeft" align="right" valign="top"><a id="a469152e8bc5739e04e23d1f6537998e1" name="a469152e8bc5739e04e23d1f6537998e1"></a>
+const int&#160;</td><td class="memItemRight" valign="bottom"><b>FRESHNESS_FRESHEST</b> = 0</td></tr>
+<tr class="separator:a469152e8bc5739e04e23d1f6537998e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a0ce36fc3ff20e83326755cc283bf7d"><td class="memItemLeft" align="right" valign="top"><a id="a1a0ce36fc3ff20e83326755cc283bf7d" name="a1a0ce36fc3ff20e83326755cc283bf7d"></a>
+const int&#160;</td><td class="memItemRight" valign="bottom"><b>FRESHNESS_INSIST</b> = -1</td></tr>
+<tr class="separator:a1a0ce36fc3ff20e83326755cc283bf7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
