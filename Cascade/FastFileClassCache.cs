@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
@@ -120,7 +119,7 @@ namespace Cascade {
 		}
 
 		protected async Task SerializeToPathAsync(string aPath, object aObject, long timeMs) {
-			var wrapper = ImmutableDictionary<string, object>.Empty.Add(ValueKey, aObject);
+			var wrapper = new Dictionary<string, object> { { ValueKey, aObject } };
 			var content = Serialization.Serialize(wrapper);
             
 			StoreString(aPath, timeMs, content);

@@ -1,12 +1,7 @@
 using System.Collections;
-using System.Collections.Concurrent;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Serilog;
@@ -41,7 +36,7 @@ namespace Cascade {
 
         protected async Task SerializeToPathAsync(string aPath, object aObject, long timeMs) {
             await Task.Run(async () => {
-                var wrapper = ImmutableDictionary<string, object>.Empty.Add(ValueKey, aObject);
+                var wrapper = new Dictionary<string, object> { { ValueKey, aObject } };
                 var content = Serialization.Serialize(wrapper);
                 if (!Directory.Exists(Path.GetDirectoryName(aPath)))
                     Directory.CreateDirectory(Path.GetDirectoryName(aPath)!);
