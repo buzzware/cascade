@@ -1,7 +1,8 @@
-using Cascade;
+
+
 // using SQLite;
 
-namespace Cascade.Test {
+namespace Cascade.Testing {
 	
 	public class Thing : SuperModel {
 

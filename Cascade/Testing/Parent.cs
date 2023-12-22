@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Cascade;
+
 //using SQLite;
 
-namespace Cascade.Test {
+namespace Cascade.Testing {
 	public class Parent : SuperModel {
 		
 		[Cascade.CascadeId]

@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using StandardExceptions;
 
-namespace Cascade.Test {
+namespace Cascade.Testing {
 	public class MockCascadePlatform : ICascadePlatform {
 		public async Task InvokeOnMainThread(Action action, Func<Exception, Exception>? exceptionHandler = null) {
 			try {

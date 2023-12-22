@@ -1,9 +1,10 @@
 ﻿// ReSharper disable ParameterHidesMember
 
-using Cascade;
+
+
 // using SQLite;
 
-namespace Cascade.Test {
+namespace Cascade.Testing {
 	public class Child : SuperModel {
 		
 		[Cascade.CascadeId]

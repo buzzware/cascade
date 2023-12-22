@@ -1,5 +1,4 @@
-using System.Threading.Tasks;
-using Cascade.Test;
+using Cascade.Testing;
 using NUnit.Framework;
 
 namespace Cascade.Test {

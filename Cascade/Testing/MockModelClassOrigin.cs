@@ -1,13 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Cascade.Test {
+namespace Cascade.Testing {
 	public class MockModelClassOrigin<M> : IModelClassOrigin where M : SuperModel {
 
 		public ICascadeOrigin Origin { get; set; }

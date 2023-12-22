@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
-using System.Security;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
-using Cascade.Test;
+using Cascade.Testing;
 using NUnit.Framework;
 using Serilog;
 using StandardExceptions;
@@ -71,7 +64,7 @@ namespace Cascade.Test {
 			var op = RequestOp.CreateOp(thing, cascade.NowMs);
 			var sz = cascade.SerializeRequestOp(op);
 			Log.Debug(sz);
-			const string expected = "{\"Verb\":\"Create\",\"Type\":\"Cascade.Test.Thing\",\"Id\":3,\"TimeMs\":1000,\"Value\":{\"id\":3,\"name\":null,\"colour\":\"brown\"}}";
+			const string expected = "{\"Verb\":\"Create\",\"Type\":\"Cascade.Testing.Thing\",\"Id\":3,\"TimeMs\":1000,\"Value\":{\"id\":3,\"name\":null,\"colour\":\"brown\"}}";
 			Assert.That(sz,Is.EqualTo(expected));
 
 			var op2 = cascade.DeserializeRequestOp(sz);
@@ -96,7 +89,7 @@ namespace Cascade.Test {
 			var op = RequestOp.UpdateOp(thing, changes, cascade.NowMs);
 			var sz = cascade.SerializeRequestOp(op);
 			Log.Debug(sz);
-			const string expected = "{\"Verb\":\"Update\",\"Type\":\"Cascade.Test.Thing\",\"Id\":5,\"TimeMs\":1000,\"Value\":{\"colour\":\"blue\",\"name\":\"Winston\"},\"Extra\":{\"id\":5,\"name\":\"Boris\",\"colour\":\"brown\"}}";
+			const string expected = "{\"Verb\":\"Update\",\"Type\":\"Cascade.Testing.Thing\",\"Id\":5,\"TimeMs\":1000,\"Value\":{\"colour\":\"blue\",\"name\":\"Winston\"},\"Extra\":{\"id\":5,\"name\":\"Boris\",\"colour\":\"brown\"}}";
 			Assert.That(sz,Is.EqualTo(expected));
 
 			var op2 = cascade.DeserializeRequestOp(sz);
@@ -122,7 +115,7 @@ namespace Cascade.Test {
 			var op = RequestOp.DestroyOp(thing, cascade.NowMs);
 			var sz = cascade.SerializeRequestOp(op);
 			Log.Debug(sz);
-			const string expected = "{\"Verb\":\"Destroy\",\"Type\":\"Cascade.Test.Thing\",\"Id\":5,\"TimeMs\":1000,\"Value\":{\"id\":5,\"name\":\"Boris\",\"colour\":\"brown\"}}";
+			const string expected = "{\"Verb\":\"Destroy\",\"Type\":\"Cascade.Testing.Thing\",\"Id\":5,\"TimeMs\":1000,\"Value\":{\"id\":5,\"name\":\"Boris\",\"colour\":\"brown\"}}";
 			Assert.That(sz,Is.EqualTo(expected));
 
 			var op2 = cascade.DeserializeRequestOp(sz);

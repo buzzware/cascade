@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+using Cascade.Testing;
 using NUnit.Framework;
 using Serilog;
 using StandardExceptions;
@@ -34,7 +31,7 @@ namespace Cascade.Test {
 			//thingModelCache = new FileSystemClassCache<Cascade.Test.Thing, int>(tempDir);
 			thingMemoryCache = new ModelClassCache<Thing, int>();
 			modelCache = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
-				{ typeof(Cascade.Test.Thing), thingMemoryCache }
+				{ typeof(Thing), thingMemoryCache }
 			});
 
 			//fileSystemCache = new FileSystemCache(tempDir);

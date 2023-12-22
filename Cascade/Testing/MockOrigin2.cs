@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
 using StandardExceptions;
 
-namespace Cascade.Test {
+namespace Cascade.Testing {
 	public class MockOrigin2 : MockOrigin, ICascadeOrigin {
 
 		public int RequestCount { get; protected set; }

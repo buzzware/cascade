@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Cascade.Test;
+using Cascade.Testing;
 using NUnit.Framework;
 using Serilog;
 

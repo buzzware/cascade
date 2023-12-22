@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cascade.Test {
+namespace Cascade.Testing {
+	
 	public class MockOrigin : ICascadeOrigin {
 		private Func<MockOrigin,RequestOp,Task<OpResponse>>? HandleRequest;
 
