@@ -11,6 +11,8 @@ namespace Cascade {
 	public class CascadeJsonSerialization {
 		private readonly bool ignoreUnderscoreProperties;
 		private readonly bool ignoreAssociations;
+		private JsonSerializerOptions dictionaryNormalizedOptions;
+		private JsonSerializerOptions jsonSerializerOptions;
 
 		public CascadeJsonSerialization(
 			Boolean ignoreUnderscoreProperties = true,
@@ -18,18 +20,54 @@ namespace Cascade {
 		) {
 			this.ignoreUnderscoreProperties = ignoreUnderscoreProperties;
 			this.ignoreAssociations = ignoreAssociations;
+			this.dictionaryNormalizedOptions = new JsonSerializerOptions() {
+				TypeInfoResolver = new DefaultJsonTypeInfoResolver {
+					Modifiers = { IgnoreProperties }
+				},
+				Converters = {
+					new DictionaryJsonConverter()
+				}
+			};
+			jsonSerializerOptions = new JsonSerializerOptions() {
+				//MaxDepth = maxDepth,
+				//Converters = { new LambdaIgnoreConverter(name => ) }
+				TypeInfoResolver = new DefaultJsonTypeInfoResolver
+				{
+					Modifiers = { IgnoreProperties }
+				},
+				// AllowTrailingCommas = false,
+				// DefaultBufferSize = 0,
+				// Encoder = null,
+				// DictionaryKeyPolicy = null,
+				//DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+				// NumberHandling = JsonNumberHandling.Strict,
+				// IgnoreReadOnlyProperties = false,
+				// IgnoreReadOnlyFields = false,
+				// IncludeFields = false,
+				// PropertyNamingPolicy = null,
+				// PropertyNameCaseInsensitive = false,
+				// ReadCommentHandling = JsonCommentHandling.Disallow,
+				// UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement,
+				// WriteIndented = false,
+				// ReferenceHandler = null
+			};
 		}
 
+		private void IgnoreProperties(JsonTypeInfo typeInfo) {
+			if (!typeInfo.Type.IsSubclassOf(typeof(SuperModel)))
+				return;
+
+			foreach (JsonPropertyInfo propertyInfo in typeInfo.Properties) {
+				propertyInfo.ShouldSerialize = (obj, value) => !(
+					ignoreUnderscoreProperties && propertyInfo.Name.StartsWith("_") ||
+					ignoreAssociations && !propertyInfo.PropertyType.IsPrimitive && propertyInfo.AttributeProvider != null && CascadeDataLayer.AssociationAttributes.Any(t => propertyInfo.AttributeProvider.GetCustomAttributes(t,false).Any())
+				);
+			}
+		}
+		
 		public object DeserializeDictionaryOfNormalTypes(string source) {
 			try {
-				return JsonSerializer.Deserialize<Dictionary<string,object>>(source, new JsonSerializerOptions() {
-					TypeInfoResolver = new DefaultJsonTypeInfoResolver {
-						Modifiers = { IgnoreProperties }
-					},
-					Converters = {
-						new DictionaryJsonConverter()
-					}
-				})!;
+				return JsonSerializer.Deserialize<Dictionary<string,object>>(source, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as Dictionary: "+e.Message);
 				Log.Debug(source);
@@ -39,14 +77,7 @@ namespace Cascade {
 
 		public object DeserializeDictionaryOfNormalTypes(JsonElement source) {
 			try {
-				return JsonSerializer.Deserialize<Dictionary<string,object>>(source, new JsonSerializerOptions() {
-					TypeInfoResolver = new DefaultJsonTypeInfoResolver {
-						Modifiers = { IgnoreProperties }
-					},
-					Converters = {
-						new DictionaryJsonConverter()
-					}
-				})!;
+				return JsonSerializer.Deserialize<Dictionary<string,object>>(source, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as Dictionary: "+e.Message);
 				//Log.Debug(source);
@@ -56,14 +87,7 @@ namespace Cascade {
 		
 		public object DeserializeType(Type type, string source) {
 			try {
-				return JsonSerializer.Deserialize(source, type, new JsonSerializerOptions() {
-					TypeInfoResolver = new DefaultJsonTypeInfoResolver {
-						Modifiers = { IgnoreProperties }
-					},
-					// Converters = {
-					// 	new DictionaryJsonConverter()
-					// }
-				})!;
+				return JsonSerializer.Deserialize(source, type, jsonSerializerOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as ${type.Name}: "+e.Message);
 				Log.Debug(source);
@@ -73,14 +97,7 @@ namespace Cascade {
 		
 		public object DeserializeType(Type type, JsonElement source) {
 			try {
-				return JsonSerializer.Deserialize(source, type, new JsonSerializerOptions() {
-					TypeInfoResolver = new DefaultJsonTypeInfoResolver {
-						Modifiers = { IgnoreProperties }
-					},
-					// Converters = {
-					// 	new DictionaryJsonConverter()
-					// }
-				})!;
+				return JsonSerializer.Deserialize(source, type, jsonSerializerOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as ${type.Name}: "+e.Message);
 				//Log.Debug(source);
@@ -90,14 +107,7 @@ namespace Cascade {
 		
 		public T DeserializeType<T>(string? source) {
 			try {
-				return JsonSerializer.Deserialize<T>(source, new JsonSerializerOptions() {
-					TypeInfoResolver = new DefaultJsonTypeInfoResolver {
-						Modifiers = { IgnoreProperties }
-					},
-					// Converters = {
-					// 	new DictionaryJsonConverter()
-					// }
-				})!;
+				return JsonSerializer.Deserialize<T>(source, jsonSerializerOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as ${typeof(T).Name}: "+e.Message);
 				Log.Debug(source);
@@ -107,14 +117,7 @@ namespace Cascade {
 
 		public T DeserializeType<T>(JsonElement element) {
 			try {
-				return JsonSerializer.Deserialize<T>(element, new JsonSerializerOptions() {
-					TypeInfoResolver = new DefaultJsonTypeInfoResolver {
-						Modifiers = { IgnoreProperties }
-					},
-					// Converters = {
-					// 	new DictionaryJsonConverter()
-					// }
-				})!;
+				return JsonSerializer.Deserialize<T>(element, jsonSerializerOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as ${typeof(T).Name}: "+e.Message);
 				Log.Debug(element.ToString());
@@ -138,93 +141,40 @@ namespace Cascade {
 			});
 		}
 		
-		
-		// public Dictionary<string,object> DeserializeDictionary(string source) {
-		// 	
-		// }
-		//
-		// public Dictionary<string,object> DeserializeDictionaryArray(string source) {
-		// 	
-		// }
 		public string? Serialize(object model) {
-			return JsonSerializer.Serialize(SerializeToNode(model));
+			try {
+				return JsonSerializer.Serialize(SerializeToNode(model));
+			} catch (Exception e) {
+				Log.Warning($"Failed Serialize model: "+e.Message);
+				throw;
+			}
+		}
+		
+		public JsonNode SerializeToNode(object model) {
+			try {
+				var node = JsonSerializer.SerializeToNode(model, jsonSerializerOptions);
+				return node;
+			} catch (Exception e) {
+				Log.Warning($"Failed SerializeToNode: "+e.Message);
+				throw;
+			}
 		}
 
+		public JsonElement SerializeToElement(object model) {
+			try {
+				var element = JsonSerializer.SerializeToElement(model, jsonSerializerOptions);
+				return element;
+			} catch (Exception e) {
+				Log.Warning($"Failed SerializeToElement model: "+e.Message);
+				throw;
+			}
+		}
+		
 		bool isAssociation(Type modelType, object model, string propertyName) {
 			var propertyInfo = modelType.GetProperty(propertyName)!;
 			if (propertyInfo.PropertyType.IsPrimitive)
 				return false;
 			return CascadeDataLayer.AssociationAttributes.Any(t => propertyInfo.GetCustomAttributes(t,false).Any());
-		}
-		
-		public JsonNode SerializeToNode(object model, int maxDepth = 1) {
-			
-			//var modelType = model.GetType();
-			var node = JsonSerializer.SerializeToNode(model, options: new JsonSerializerOptions {
-				//MaxDepth = maxDepth,
-				//Converters = { new LambdaIgnoreConverter(name => ) }
-				TypeInfoResolver = new DefaultJsonTypeInfoResolver
-				{
-					Modifiers = { IgnoreProperties }
-				},
-				// AllowTrailingCommas = false,
-				// DefaultBufferSize = 0,
-				// Encoder = null,
-				// DictionaryKeyPolicy = null,
-				//DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-				// NumberHandling = JsonNumberHandling.Strict,
-				// IgnoreReadOnlyProperties = false,
-				// IgnoreReadOnlyFields = false,
-				// IncludeFields = false,
-				// PropertyNamingPolicy = null,
-				// PropertyNameCaseInsensitive = false,
-				// ReadCommentHandling = JsonCommentHandling.Disallow,
-				// UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement,
-				// WriteIndented = false,
-				// ReferenceHandler = null
-			});
-			return node;
-		}
-
-		public JsonElement SerializeToElement(object model, int maxDepth = 1) {
-			
-			//var modelType = model.GetType();
-			var element = JsonSerializer.SerializeToElement(model, options: new JsonSerializerOptions {
-				//MaxDepth = maxDepth,
-				//Converters = { new LambdaIgnoreConverter(name => ) }
-				TypeInfoResolver = new DefaultJsonTypeInfoResolver
-				{
-					Modifiers = { IgnoreProperties }
-				},
-				// AllowTrailingCommas = false,
-				// DefaultBufferSize = 0,
-				// Encoder = null,
-				// DictionaryKeyPolicy = null,
-				//DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-				// NumberHandling = JsonNumberHandling.Strict,
-				// IgnoreReadOnlyProperties = false,
-				// IgnoreReadOnlyFields = false,
-				// IncludeFields = false,
-				// PropertyNamingPolicy = null,
-				// PropertyNameCaseInsensitive = false,
-				// ReadCommentHandling = JsonCommentHandling.Disallow,
-				// UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement,
-				// WriteIndented = false,
-				// ReferenceHandler = null
-			});
-			return element;
-		}
-		
-		private void IgnoreProperties(JsonTypeInfo typeInfo) {
-			if (!typeInfo.Type.IsSubclassOf(typeof(SuperModel))) // != typeof(MyPoco))
-				return;
-
-			foreach (JsonPropertyInfo propertyInfo in typeInfo.Properties) {
-				propertyInfo.ShouldSerialize = (obj, value) => !(
-					ignoreUnderscoreProperties && propertyInfo.Name.StartsWith("_") ||
-					ignoreAssociations && !propertyInfo.PropertyType.IsPrimitive && propertyInfo.AttributeProvider != null && CascadeDataLayer.AssociationAttributes.Any(t => propertyInfo.AttributeProvider.GetCustomAttributes(t,false).Any())
-				);
-			}
 		}
 	}
 }

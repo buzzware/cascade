@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Cascade.Utilities;
 using Easy.Common.Extensions;
 using Serilog;
 using Serilog.Events;
@@ -64,7 +65,6 @@ namespace Cascade {
 				cache.Cascade = this;
 			Config = config;
 			this.cascadePlatform = cascadePlatform;
-			lockObject = new object();
 			this.errorControl = errorControl;
 			this.serialization = serialization;
 		}
@@ -791,32 +791,24 @@ namespace Cascade {
 
 		private async Task<OpResponse> InnerProcess(RequestOp requestOp, bool connectionOnline) {
 			OpResponse opResponse = await errorControl.FilterGuard(() => {
-				lock (lockObject) {
-					// !!! probably should remove this try/catch - its here for debugging
-					try {
-						switch (requestOp.Verb) {
-							case RequestVerb.Get:
-							case RequestVerb.Query:
-								return ProcessGetOrQuery(requestOp, connectionOnline);
-							case RequestVerb.GetCollection:
-								return ProcessGetCollection(requestOp, connectionOnline);
-							case RequestVerb.Create:
-								return ProcessCreate(requestOp, connectionOnline);
-							case RequestVerb.Replace:
-								return ProcessReplace(requestOp, connectionOnline);
-							case RequestVerb.Update:
-								return ProcessUpdate(requestOp, connectionOnline);
-							case RequestVerb.Destroy:
-								return ProcessDestroy(requestOp, connectionOnline);
-							case RequestVerb.Execute:
-								return ProcessExecute(requestOp, connectionOnline);
-							default:
-								throw new ArgumentException("Unsupported verb");
-						}
-					} catch (Exception e) {
-						Log.Error(e,"error");
-						throw;
-					}
+				switch (requestOp.Verb) {
+					case RequestVerb.Get:
+					case RequestVerb.Query:
+						return ProcessGetOrQuery(requestOp, connectionOnline);
+					case RequestVerb.GetCollection:
+						return ProcessGetCollection(requestOp, connectionOnline);
+					case RequestVerb.Create:
+						return ProcessCreate(requestOp, connectionOnline);
+					case RequestVerb.Replace:
+						return ProcessReplace(requestOp, connectionOnline);
+					case RequestVerb.Update:
+						return ProcessUpdate(requestOp, connectionOnline);
+					case RequestVerb.Destroy:
+						return ProcessDestroy(requestOp, connectionOnline);
+					case RequestVerb.Execute:
+						return ProcessExecute(requestOp, connectionOnline);
+					default:
+						throw new ArgumentException("Unsupported verb");
 				}
 			});
 			
@@ -870,7 +862,9 @@ namespace Cascade {
 			await StoreInPreviousCaches(opResponse); // just store ResultIds
 			
 			if (Log.Logger.IsEnabled(LogEventLevel.Debug))
-				Log.Debug("ProcessRequest OpResponse: Connected: {@Connected} Exists: {@Exists} Result: {@Result}", opResponse.Connected,opResponse.Exists,opResponse.Result);
+				Log.Debug("ProcessRequest OpResponse: Connected: {@Connected} Exists: {@Exists}", opResponse.Connected,opResponse.Exists);
+			if (Log.Logger.IsEnabled(LogEventLevel.Verbose))
+				Log.Verbose("ProcessRequest OpResponse: Result: {@Result}",opResponse.Result);
 			return opResponse;
 		}
 
@@ -1153,15 +1147,17 @@ namespace Cascade {
 			int? fallbackFreshnessSeconds = null,
 			bool? hold = null
 		) {
-			const int MaxParallelRequests = 10;
+			const int MaxParallelRequests = 8;
 			var ids = iids.Cast<object>().ToImmutableArray();
 			Log.Debug("BEGIN GetModelsForIds");
+			var profiler = new TimingProfiler("GetModelsForIds "+type.Name);
+			profiler.Start();
 			OpResponse[] allResponses = new OpResponse[ids.Count()];
 			for (var i = 0; i < ids.Count(); i += MaxParallelRequests) {
 				var someIds = ids.Skip(i).Take(MaxParallelRequests).ToImmutableArray();
 
 				var tasks = someIds.Select(id => {
-					return ProcessRequest( // map each id to a get request and process it
+					return Task.Run(() => ProcessRequest( // map each id to a get request and process it
 						new RequestOp(
 							NowMs,
 							type,
@@ -1171,18 +1167,21 @@ namespace Cascade {
 							fallbackFreshnessSeconds: freshnessSeconds,
 							hold: hold
 						)
-					);
+					));
 				}).ToImmutableArray();
 				var someGetResponses = await Task.WhenAll(tasks); // wait on all requests in parallel
 				for (int j = 0; j < someGetResponses.Length; j++) // fill allResponses array from responses
 					allResponses[i + j] = someGetResponses[j];
 			}
-
+			profiler.Stop();
+			Log.Information(profiler.Report());
 			Log.Debug("END GetModelsForIds");
 			return allResponses.ToImmutableArray();
 		}
 
 		private async Task StoreInPreviousCaches(OpResponse opResponse) {
+			if (opResponse.LayerIndex == 0)
+				return;
 			await errorControl.FilterGuard(async () => {
 				ICascadeCache? layerFound = null;
 				var layers = CacheLayers.ToArray();

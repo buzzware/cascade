@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
+using System.Threading.Tasks;
 using Cascade.Testing;
 using NUnit.Framework;
 using Serilog;
