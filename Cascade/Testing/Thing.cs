@@ -1,7 +1,5 @@
 
 
-// using SQLite;
-
 namespace Cascade.Testing {
 	
 	public class Thing : SuperModel {

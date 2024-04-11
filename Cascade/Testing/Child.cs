@@ -2,17 +2,14 @@
 
 
 
-// using SQLite;
 
 namespace Cascade.Testing {
 	public class Child : SuperModel {
 		
 		[Cascade.CascadeId]
-		// [SQLite.PrimaryKey]
 		public string id { get; set; }
 		public int? parentId { get; set; }
 		
-		// [SQLite.Ignore]
 		[Cascade.BelongsTo(idProperty: "parentId")]
 		public Parent? Parent { get; set; }
 		
