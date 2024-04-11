@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Cascade.Testing;
 using NUnit.Framework;
@@ -166,7 +167,8 @@ namespace Cascade.Test {
 			
 			Assert.That(proxy.name, Is.EqualTo("Fred"));
 			Assert.That(proxy.__GetChanges().Count, Is.EqualTo(0));	// should not be considered a change because it matches the proxy change
-			Assert.That(proxyEvents.Count,Is.Zero);
+			Assert.That(proxyEvents.Count,Is.EqualTo(1));
+			Assert.That(proxyEvents.First().Key, Is.EqualTo(nameof(Thing.__HasChanges)));
 		}
 	}
 }

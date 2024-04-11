@@ -289,6 +289,8 @@ namespace Cascade {
 		
 		public readonly IDictionary<string, string> Params;	// app specific paramters for the request
 
+
+		// !!! Be aware that JsonSerializer.Serialize(Criteria) will throw an UnsupportedException in production (not development) if Criteria is an ImmutableDictionary
 		public string ToSummaryString() {
 			var criteria = JsonSerializer.Serialize(Criteria);
 			return $"{Verb} Id:{Id} Type:{Type} Key:{Key} Criteria:{criteria} Freshness: {FreshnessSeconds}";

@@ -119,6 +119,19 @@ namespace Cascade {
 			//return result;
 		}
 
+		// public static object CreateImmutableList(Type type)
+		// {
+		// 	MethodInfo method = typeof(ImmutableList).GetMethod(nameof(ImmutableList.Create)).MakeGenericMethod(type);
+		// 	return method.Invoke(null, new object[] { });
+		// }
+		//
+		// public static object CreateImmutableArray(Type type)
+		// {
+		// 	MethodInfo method = typeof(ImmutableArray).GetMethod(nameof(ImmutableArray.Create)).MakeGenericMethod(type);
+		// 	return method.Invoke(null, new object[] { });
+		// }
+		
+		
 		// private static void registerBothWays<X, Y>(ConverterRegistry r, Type converter) {
 		// 	r.RegisterConverter<X,Y>(converter);
 		// 	r.RegisterConverter<Y,X>(converter);
@@ -216,22 +229,24 @@ namespace Cascade {
 			return CascadeIdPropertyRequired(cascadeModel.GetType());
 		}
 
-		public static IEnumerable DecodeJsonArray(string stringArray) {
-			var elements = JsonSerializer.Deserialize<List<JsonElement>>(stringArray)!;
-			var objects = elements.Select<JsonElement,object>(e => {
-				switch (e.ValueKind) {
-					case JsonValueKind.Number:
-						return e.GetInt64()!;
-						break;
-					case JsonValueKind.String:
-						return e.GetString()!;
-						break;
-					default:
-						throw new NotImplementedException(e.GetRawText());
-				}
-			}).ToImmutableArray();
-			return objects;
-		}
+		
+		// Should use instance of CascadeJsonSerialization
+		// public static IEnumerable DecodeJsonArray(string stringArray) {
+		// 	var elements = JsonSerializer.Deserialize<List<JsonElement>>(stringArray)!;
+		// 	var objects = elements.Select<JsonElement,object>(e => {
+		// 		switch (e.ValueKind) {
+		// 			case JsonValueKind.Number:
+		// 				return e.GetInt64()!;
+		// 				break;
+		// 			case JsonValueKind.String:
+		// 				return e.GetString()!;
+		// 				break;
+		// 			default:
+		// 				throw new NotImplementedException(e.GetRawText());
+		// 		}
+		// 	}).ToImmutableArray();
+		// 	return objects;
+		// }
 
 		public static bool IsFloatingPoint(object? value) {
 			if (value is float) return true;

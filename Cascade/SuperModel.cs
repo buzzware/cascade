@@ -44,6 +44,7 @@ namespace Cascade {
 			if (value!=null)
 				value.PropertyChanged += OnProxyForOnPropertyChanged;
 
+			var hasChangesBefore = __HasChanges;
 			
 			Dictionary<string, object>? changes = null;
 			if (raiseIncoming) {
@@ -73,6 +74,8 @@ namespace Cascade {
 				if (changes != null) foreach (var prop in changes) {
 					RaisePropertyChanged(prop.Key);
 				}
+				if (__HasChanges!=hasChangesBefore)
+					RaisePropertyChanged(nameof(__HasChanges));
 			}
 		}
 		
@@ -84,6 +87,8 @@ namespace Cascade {
 			}
 			return result;
 		}
+
+		public bool __HasChanges => !_propertySet.IsEmpty;
 
 		public void __ApplyChanges(IDictionary<string, object> changes) {
 			foreach (var kv in changes) {
@@ -103,6 +108,7 @@ namespace Cascade {
 
 		public void __ClearChanges() {
 			_propertySet.Clear();
+			RaisePropertyChanged(nameof(__HasChanges));
 		}
 
 		public void __mutateWith(Action<SuperModel> action) {
@@ -149,10 +155,11 @@ namespace Cascade {
 			
 			if (EqualityComparer<T>.Default.Equals(backingStore, value))
 				return false;
-
+			
 			backingStore = value;
 			onChanged?.Invoke();
 			OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+			RaisePropertyChanged(nameof(__HasChanges));
 			return true;
 		}
 

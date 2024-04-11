@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -20,12 +21,13 @@ namespace Cascade {
 		) {
 			this.ignoreUnderscoreProperties = ignoreUnderscoreProperties;
 			this.ignoreAssociations = ignoreAssociations;
-			this.dictionaryNormalizedOptions = new JsonSerializerOptions() {
+			dictionaryNormalizedOptions = new JsonSerializerOptions() {
 				TypeInfoResolver = new DefaultJsonTypeInfoResolver {
 					Modifiers = { IgnoreProperties }
 				},
 				Converters = {
-					new DictionaryJsonConverter()
+					new DictionaryJsonConverter(),
+					new ImmutableDictionaryJsonConverter(),
 				}
 			};
 			jsonSerializerOptions = new JsonSerializerOptions() {
@@ -64,6 +66,16 @@ namespace Cascade {
 				);
 			}
 		}
+
+		public ImmutableDictionary<string,object> DeserializeImmutableDictionary(string source) {
+			try {
+				return JsonSerializer.Deserialize<ImmutableDictionary<string,object>>(source, dictionaryNormalizedOptions)!;
+			} catch (Exception e) {
+				Log.Warning($"Failed Deserializing as ImmutableDictionary: "+e.Message);
+				Log.Debug(source);
+				throw;
+			}
+		}
 		
 		public object DeserializeDictionaryOfNormalTypes(string source) {
 			try {
@@ -87,7 +99,7 @@ namespace Cascade {
 		
 		public object DeserializeType(Type type, string source) {
 			try {
-				return JsonSerializer.Deserialize(source, type, jsonSerializerOptions)!;
+				return JsonSerializer.Deserialize(source, type, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as ${type.Name}: "+e.Message);
 				Log.Debug(source);
@@ -97,7 +109,7 @@ namespace Cascade {
 		
 		public object DeserializeType(Type type, JsonElement source) {
 			try {
-				return JsonSerializer.Deserialize(source, type, jsonSerializerOptions)!;
+				return JsonSerializer.Deserialize(source, type, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as ${type.Name}: "+e.Message);
 				//Log.Debug(source);
@@ -107,7 +119,7 @@ namespace Cascade {
 		
 		public T DeserializeType<T>(string? source) {
 			try {
-				return JsonSerializer.Deserialize<T>(source, jsonSerializerOptions)!;
+				return JsonSerializer.Deserialize<T>(source, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as ${typeof(T).Name}: "+e.Message);
 				Log.Debug(source);
@@ -117,7 +129,7 @@ namespace Cascade {
 
 		public T DeserializeType<T>(JsonElement element) {
 			try {
-				return JsonSerializer.Deserialize<T>(element, jsonSerializerOptions)!;
+				return JsonSerializer.Deserialize<T>(element, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as ${typeof(T).Name}: "+e.Message);
 				Log.Debug(element.ToString());
@@ -125,9 +137,19 @@ namespace Cascade {
 			}
 		}
 		
+		// public T DeserializeType<T>(object? source) {
+		// 	try {
+		// 		return JsonSerializer.Deserialize<T>(source, dictionaryNormalizedOptions)!;
+		// 	} catch (Exception e) {
+		// 		Log.Warning($"Failed Deserializing as ${typeof(T).Name}: "+e.Message);
+		// 		Log.Debug(source);
+		// 		throw;
+		// 	}
+		// }
+		
 		public JsonElement DeserializeElement(string? source) {
 			try {
-				return JsonSerializer.Deserialize<JsonElement>(source);
+				return JsonSerializer.Deserialize<JsonElement>(source,dictionaryNormalizedOptions);
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as JsonElement: "+e.Message);
 				Log.Debug(source);
@@ -143,7 +165,7 @@ namespace Cascade {
 		
 		public string? Serialize(object model) {
 			try {
-				return JsonSerializer.Serialize(SerializeToNode(model));
+				return JsonSerializer.Serialize(SerializeToNode(model), dictionaryNormalizedOptions);
 			} catch (Exception e) {
 				Log.Warning($"Failed Serialize model: "+e.Message);
 				throw;
@@ -152,7 +174,7 @@ namespace Cascade {
 		
 		public JsonNode SerializeToNode(object model) {
 			try {
-				var node = JsonSerializer.SerializeToNode(model, jsonSerializerOptions);
+				var node = JsonSerializer.SerializeToNode(model, dictionaryNormalizedOptions);
 				return node;
 			} catch (Exception e) {
 				Log.Warning($"Failed SerializeToNode: "+e.Message);
@@ -162,7 +184,7 @@ namespace Cascade {
 
 		public JsonElement SerializeToElement(object model) {
 			try {
-				var element = JsonSerializer.SerializeToElement(model, jsonSerializerOptions);
+				var element = JsonSerializer.SerializeToElement(model, dictionaryNormalizedOptions);
 				return element;
 			} catch (Exception e) {
 				Log.Warning($"Failed SerializeToElement model: "+e.Message);

@@ -293,7 +293,25 @@ namespace Cascade {
 			});
 			return result;
 		}
-
+		
+		public async Task<IEnumerable<object>> CollectionPrepend<Model>(string collectionName, object id) where Model : class {
+			var collection = await GetCollection<Model>(collectionName);
+			if (collection == null)
+				return Array.Empty<object>();
+			var newCollection = collection.ToImmutableArray().Insert(0, id);
+			await SetCollection<Model>(collectionName, newCollection);
+			return newCollection;
+		}
+		
+		public async Task<IEnumerable<object>> CollectionAppend<Model>(string collectionName, object id) where Model : class {
+			var collection = await GetCollection<Model>(collectionName);
+			if (collection == null)
+				return Array.Empty<object>();
+			var newCollection = collection.ToImmutableArray().Add(id);
+			await SetCollection<Model>(collectionName, newCollection);
+			return newCollection;
+		}
+		
 		/// <summary>
 		/// A kind of query like that used for populating HasMany/HasOne associations. Not normally used.
 		/// </summary>
@@ -556,6 +574,66 @@ namespace Cascade {
 			}
 		}
 
+		public async Task HasManyAddItem(SuperModel model, string property, SuperModel hasManyItem) {
+			var modelType = model.GetType();
+			var propertyInfo = modelType.GetProperty(property);
+			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute), true).FirstOrDefault() is HasManyAttribute hasMany) {
+				var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+				var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
+				var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
+				foreignType = foreignType != null ? CascadeTypeUtils.DeNullType(foreignType) : null;
+				if (foreignType == null)
+					throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
+
+				var hasManyModels = ((IEnumerable)propertyInfo!.GetValue(model)).Cast<object>().ToList();
+				hasManyModels.Add(hasManyItem);
+				
+				object modelId = CascadeTypeUtils.GetCascadeId(model);
+				await SetCacheWhereCollection(foreignType, hasMany.ForeignIdProperty, modelId.ToString(), hasManyModels.ToImmutableArray());
+				await SetModelCollectionProperty(model, propertyInfo, hasManyModels);
+			} else {
+				throw new ArgumentException($"{property} is not a [HasMany] property");
+			}
+		}
+		
+		protected async Task HasManyReplaceRemoveItem(SuperModel model, string property, SuperModel hasManyItem, bool remove = false, bool ensureItem = false) {
+			var modelType = model.GetType();
+			var propertyInfo = modelType.GetProperty(property);
+			var id = CascadeTypeUtils.GetCascadeId(hasManyItem);
+			
+			var hasManyModels = ((IEnumerable)propertyInfo!.GetValue(model)).Cast<object>().ToList();
+			var modified = false;
+			for (var i = 0; i < hasManyModels.Count; i++) {
+				var existing = hasManyModels[i];
+				var existingId = CascadeTypeUtils.GetCascadeId(existing); 
+				if (EqualityComparer<object>.Default.Equals(existingId,id)) {
+					hasManyModels.RemoveAt(i);
+					if (!remove)
+						hasManyModels.Insert(i, hasManyItem);
+					modified = true;
+					break;
+				}
+			}
+			if (modified)
+				await UpdateHasMany(model, property, hasManyModels);
+			else if (ensureItem) {
+				hasManyModels.Add(hasManyItem);
+				await UpdateHasMany(model, property, hasManyModels);
+			}
+		}
+
+		public async Task HasManyReplaceItem(SuperModel model, string property, SuperModel hasManyItem) {
+			await HasManyReplaceRemoveItem(model, property, hasManyItem, remove: false);
+		}
+		
+		public async Task HasManyRemoveItem(SuperModel model, string property, SuperModel hasManyItem) {
+			await HasManyReplaceRemoveItem(model, property, hasManyItem, remove: true);
+		}
+		
+		public async Task HasManyEnsureItem(SuperModel model, string property, SuperModel hasManyItem) {
+			await HasManyReplaceRemoveItem(model, property, hasManyItem, remove: false, ensureItem: true);
+		}
+		
 		/// <summary>
 		/// Replaces the value of the given HasOne property with the given model.
 		/// Note: This should update the caches with a collection of one, but currently does not
@@ -841,9 +919,14 @@ namespace Cascade {
 		}
 
 		private async Task<OpResponse> ProcessRequest(RequestOp requestOp) {
-			if (Log.Logger.IsEnabled(LogEventLevel.Debug))
-				Log.Debug("ProcessRequest RequestOp: {@Verb} {@Id} {@Type} {@Key} {@Freshness} {@Criteria}", 
-					requestOp.Verb, requestOp.Id, requestOp.Type, requestOp.Key, requestOp.FreshnessSeconds, requestOp.Criteria);
+			if (Log.Logger.IsEnabled(LogEventLevel.Debug)) {
+				Log.Debug("ProcessRequest before criteria");
+				var criteria = serialization.Serialize(requestOp.Criteria);
+				Log.Debug("ProcessRequest RequestOp: {@Verb} {@Id} {@Type} {@Key} {@Freshness} {@Criteria}",
+					requestOp.Verb, requestOp.Id, requestOp.Type, requestOp.Key, requestOp.FreshnessSeconds, criteria);
+				Log.Debug("ProcessRequest after criteria");
+			}
+
 
 			// if (HavePendingChanges && shouldAttemptUploadPendingChanges) {
 			// 	try {        
@@ -1625,6 +1708,5 @@ namespace Cascade {
 		}
 		
 		#endregion
-
 	}
 }	
