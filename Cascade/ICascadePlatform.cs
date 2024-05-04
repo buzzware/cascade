@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using StandardExceptions;
+using Buzzware.StandardExceptions;
 
 namespace Cascade {
 	public interface ICascadePlatform {

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace StandardExceptions {
+namespace Buzzware.StandardExceptions {
 	public class StandardException : Exception {
 
 		public const string DefaultMessage = "An error occurred that could not be identified";

@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
-using StandardExceptions;
+using Buzzware.StandardExceptions;
 
 namespace Cascade {
 	public static class CascadeUtils {

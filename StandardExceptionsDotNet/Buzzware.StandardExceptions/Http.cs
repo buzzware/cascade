@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StandardExceptions {
+namespace Buzzware.StandardExceptions {
 
 	public class HttpException : StandardException {		
 		public new const string DefaultMessage = "A server or network or request error occurred that could not be identified";

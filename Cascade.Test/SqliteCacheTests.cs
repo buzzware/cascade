@@ -7,7 +7,7 @@
 // using Cascade.Test;
 // using Cascade.testing;
 // using NUnit.Framework;
-// using StandardExceptions;
+// using Buzzware.StandardExceptions;
 //
 // namespace Cascade.Test {
 // 	[TestFixture]

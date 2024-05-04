@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using StandardExceptions;
+using Buzzware.StandardExceptions;
 
 namespace Cascade.Testing {
 	public class MockOrigin2 : MockOrigin, ICascadeOrigin {

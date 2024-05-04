@@ -1,5 +1,5 @@
 using System;
-using StandardExceptions;
+using Buzzware.StandardExceptions;
 
 public class OfflineException : NoNetworkException {
 	// public NoNetworkException (string aMessage=DefaultMessage, Exception aInnerException=null, int aStatus = DefaultStatus) : base (aMessage,aInnerException,aStatus) {

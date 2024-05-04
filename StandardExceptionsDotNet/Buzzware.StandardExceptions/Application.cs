@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 
-namespace StandardExceptions {
+namespace Buzzware.StandardExceptions {
 	public class UnsuccessfulException : UnprocessableEntityException {
 		public new const string DefaultMessage = "The requested operation was not successful.";
 		public UnsuccessfulException (string aMessage=DefaultMessage, Exception aInnerException=null, int aStatus = DefaultStatus) : base (aMessage,aInnerException,aStatus) {

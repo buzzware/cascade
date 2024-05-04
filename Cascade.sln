@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.0.0
 MinimumVisualStudioVersion = 10.0.0.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardExceptions", "StandardExceptionsDotNet\StandardExceptions\StandardExceptions.csproj", "{46F5B756-07A7-46B0-AD47-9391A9F01FE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buzzware.StandardExceptions", "StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj", "{46F5B756-07A7-46B0-AD47-9391A9F01FE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cascade", "Cascade\Cascade.csproj", "{7CE75437-B0A8-4E3B-9DE9-2EB1C42E268F}"
 EndProject

@@ -14,7 +14,7 @@ using Cascade.Utilities;
 using Easy.Common.Extensions;
 using Serilog;
 using Serilog.Events;
-using StandardExceptions;
+using Buzzware.StandardExceptions;
 
 namespace Cascade {
 	

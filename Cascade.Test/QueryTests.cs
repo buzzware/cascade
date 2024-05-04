@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Cascade.Testing;
 using NUnit.Framework;
-using StandardExceptions;
+using Buzzware.StandardExceptions;
 
 namespace Cascade.Test {
 	[TestFixture]

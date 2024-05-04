@@ -17,7 +17,7 @@ Cascade enables the creation of a data layer within an application that all busi
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StandardExceptionsDotNet\StandardExceptions\StandardExceptions.csproj" />
+    <ProjectReference Include="..\StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

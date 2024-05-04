@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cascade\Cascade.csproj" />
-    <ProjectReference Include="..\StandardExceptionsDotNet\StandardExceptions\StandardExceptions.csproj" />
+    <ProjectReference Include="..\StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj" />
   </ItemGroup>
 
 </Project>
