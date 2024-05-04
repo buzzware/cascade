@@ -5,14 +5,13 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
     <Title>Cascade Data Layer</Title>
     <Authors>Gary McGhee, Buzzware Solutions</Authors>
     <Description>Cascade is a framework for managing model data within a mobile client application.
 Cascade enables the creation of a data layer within an application that all business logic can use to model, request, cache and persist data in a consistent coherent way.  </Description>
     <Copyright>(c) 2024 Buzzware Solutions</Copyright>
     <PackageProjectUrl>https://github.com/buzzware/cascade</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/buzzware/cascade/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/buzzware/cascade</RepositoryUrl>
   </PropertyGroup>
 
@@ -21,6 +20,7 @@ Cascade enables the creation of a data layer within an application that all busi
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Buzzware.StandardExceptions" Version="2.0.0" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.1" />
