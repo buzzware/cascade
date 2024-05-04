@@ -112,7 +112,6 @@ namespace Cascade {
 			}
 		}
 
-		// !!! Be aware that JsonSerializer.Serialize(Result) will throw an UnsupportedException in production (not development) if Criteria is an ImmutableDictionary
 		public string ToSummaryString() {
 			string? result = null;
 

@@ -547,6 +547,22 @@ namespace Cascade {
 		}
 		
 		/// <summary>
+		/// Populates (sets a given association property on the given models according to the definition attribute (BelongsTo/HasMany/HasOne)) with
+		/// the resulting model(s) from their internal query(s). This is useful for setting association(s) on a list of models.
+		/// In future, this could be optimised for when many are associated with the same. 
+		/// </summary>
+		/// <param name="models">models to act on</param>
+		/// <param name="property">nameof(Model.someProperty)</param>
+		/// <param name="freshnessSeconds"></param>
+		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
+		/// <param name="hold"></param>
+		public async Task Populate(IEnumerable<SuperModel> models, string association, int? freshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+			foreach (var model in models) {
+				await Populate((SuperModel)model, association, freshnessSeconds, skipIfSet, hold);
+			}
+		}
+		
+		/// <summary>
 		/// Replaces the value of the given HasMany property with the given IEnumerable of models and updates the caches appropriately.
 		/// This is needed eg. when you add models to a HasMany association
 		/// </summary>
@@ -554,7 +570,7 @@ namespace Cascade {
 		/// <param name="property"></param>
 		/// <param name="models"></param>
 		/// <exception cref="ArgumentException"></exception>
-		public async Task UpdateHasMany(SuperModel model, string property, IEnumerable<object> models) {
+		public async Task HasManyReplace(SuperModel model, string property, IEnumerable<object> models) {
 			var modelType = model.GetType();
 			var propertyInfo = modelType.GetProperty(property);
 			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute), true).FirstOrDefault() is HasManyAttribute hasMany) {
@@ -615,21 +631,24 @@ namespace Cascade {
 				}
 			}
 			if (modified)
-				await UpdateHasMany(model, property, hasManyModels);
+				await HasManyReplace(model, property, hasManyModels);
 			else if (ensureItem) {
 				hasManyModels.Add(hasManyItem);
-				await UpdateHasMany(model, property, hasManyModels);
+				await HasManyReplace(model, property, hasManyModels);
 			}
 		}
 
+		// Replaces an item in the association property and cached collection, matching by id
 		public async Task HasManyReplaceItem(SuperModel model, string property, SuperModel hasManyItem) {
 			await HasManyReplaceRemoveItem(model, property, hasManyItem, remove: false);
 		}
 		
+		// Removes an item in the association property and cached collection, matching by id
 		public async Task HasManyRemoveItem(SuperModel model, string property, SuperModel hasManyItem) {
 			await HasManyReplaceRemoveItem(model, property, hasManyItem, remove: true);
 		}
 		
+		// Ensures that an item occurs in the association property and cached collection, matching by id ie adds or replaces as appropriate to avoid multiple occurrances
 		public async Task HasManyEnsureItem(SuperModel model, string property, SuperModel hasManyItem) {
 			await HasManyReplaceRemoveItem(model, property, hasManyItem, remove: false, ensureItem: true);
 		}
