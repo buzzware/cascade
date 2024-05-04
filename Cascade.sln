@@ -5,11 +5,11 @@ VisualStudioVersion = 12.0.0.0
 MinimumVisualStudioVersion = 10.0.0.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buzzware.StandardExceptions", "StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj", "{46F5B756-07A7-46B0-AD47-9391A9F01FE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cascade", "Cascade\Cascade.csproj", "{7CE75437-B0A8-4E3B-9DE9-2EB1C42E268F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buzzware.Cascade", "Buzzware.Cascade\Buzzware.Cascade.csproj", "{7CE75437-B0A8-4E3B-9DE9-2EB1C42E268F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cascade.Test", "Cascade.Test\Cascade.Test.csproj", "{88F23B28-FD3E-4897-95B8-AE0A4C9D2530}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buzzware.Cascade.Test", "Buzzware.Cascade.Test\Buzzware.Cascade.Test.csproj", "{88F23B28-FD3E-4897-95B8-AE0A4C9D2530}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cascade.RnD", "Cascade.RnD\Cascade.RnD.csproj", "{FCFD78A9-3E8D-4A1F-A4B8-8C6BB6A4C2D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buzzware.Cascade.RnD", "Buzzware.Cascade.RnD\Buzzware.Cascade.RnD.csproj", "{FCFD78A9-3E8D-4A1F-A4B8-8C6BB6A4C2D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
