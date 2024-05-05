@@ -1,12 +1,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Buzzware.Cascade.Test;
 using Buzzware.Cascade.Testing;
 using NUnit.Framework;
 using Serilog;
 
-namespace Buzzware.Cascade.RnD {
+namespace Buzzware.Cascade.Test {
 
     [TestFixture]
 	public class FastFileClassCacheTests {
@@ -15,7 +14,7 @@ namespace Buzzware.Cascade.RnD {
 		[SetUp]
 		public void SetUp() {
             //tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            tempDir = "/Users/gary/repos/civmec/CivtracDispatch/cascade/Buzzware.Buzzware.Cascade.RnD/temp/FastFileClassCacheTests";
+            tempDir = "/Users/gary/repos/cascade/Buzzware.Cascade.Test/temp/FastFileClassCacheTests";
             Log.Debug($"Buzzware.Cascade cache directory {tempDir}");
             if (Directory.Exists(tempDir))
                 Directory.Delete(tempDir,true);
