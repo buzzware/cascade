@@ -891,12 +891,14 @@ namespace Buzzware.Cascade {
 				switch (requestOp.Verb) {
 					case RequestVerb.Get:
 					case RequestVerb.Query:
+					case RequestVerb.BlobGet:
 						return ProcessGetOrQuery(requestOp, connectionOnline);
 					case RequestVerb.GetCollection:
 						return ProcessGetCollection(requestOp, connectionOnline);
 					case RequestVerb.Create:
 						return ProcessCreate(requestOp, connectionOnline);
 					case RequestVerb.Replace:
+					case RequestVerb.BlobPut:
 						return ProcessReplace(requestOp, connectionOnline);
 					case RequestVerb.Update:
 						return ProcessUpdate(requestOp, connectionOnline);
@@ -936,7 +938,7 @@ namespace Buzzware.Cascade {
 			SetResultsImmutable(opResponse);
 			return opResponse;
 		}
-
+		
 		private async Task<OpResponse> ProcessRequest(RequestOp requestOp) {
 			if (Log.Logger.IsEnabled(LogEventLevel.Debug)) {
 				Log.Debug("ProcessRequest before criteria");
@@ -1046,8 +1048,7 @@ namespace Buzzware.Cascade {
 			}
 			return opResponse!;
 		}
-
-
+		
 		private async Task<OpResponse> ProcessGetOrQuery(RequestOp requestOp, bool connectionOnline) {
 			OpResponse? opResponse = null;
 			OpResponse? cacheResponse = null;
@@ -1071,6 +1072,8 @@ namespace Buzzware.Cascade {
 							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
 						else if (requestOp.Verb == RequestVerb.Query)
 							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Key} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+						else if (requestOp.Verb == RequestVerb.BlobGet)
+							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
 						// layerFound = layer;
 						cacheResponse = res;
 						break;
@@ -1136,7 +1139,7 @@ namespace Buzzware.Cascade {
 		}
 		
 		private void SetResultsImmutable(OpResponse opResponse) {
-			if (opResponse.ResultIsEmpty())
+			if (opResponse.ResultIsEmpty() || opResponse.ResultIsBlob())
 				return;
 			foreach (var result in opResponse.Results) {
 				if (result is SuperModel superModel)
@@ -1502,6 +1505,64 @@ namespace Buzzware.Cascade {
 			return Origin.ListModelTypes();
 		}
 
+		#region Blob
+		
+		/// <summary>
+		/// Get a binary blob identified by the given path
+		/// </summary>
+		/// <param name="path">id of blob</param>
+		/// <param name="freshnessSeconds">freshness</param>
+		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <returns>model of type M or null</returns>
+		public async Task<ImmutableArray<byte>?> BlobGet(
+			string path,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null
+		) {
+			return (ImmutableArray<byte>?)(await this.BlobGetResponse(path,freshnessSeconds, fallbackFreshnessSeconds, hold)).Result;
+		}
+
+		
+		/// <summary>
+		/// </summary>
+		/// <param name="path">path of blob to get</param>
+		/// <param name="freshnessSeconds">freshness for the main object</param>
+		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <returns>OpResponse</returns>
+		public Task<OpResponse> BlobGetResponse(
+			string path,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null
+		) {
+			var req = RequestOp.BlobGetOp(
+				path,
+				NowMs,
+				freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+				hold
+			);
+			return ProcessRequest(req);
+		}
+		
+		public async Task BlobPut(
+			string path, 
+			ImmutableArray<byte> data
+		) {
+			var response = await BlobPutResponse(path,data);
+		}		
+		
+		public Task<OpResponse> BlobPutResponse(string path, ImmutableArray<byte> data) {
+			var req = RequestOp.BlobPutOp(path, NowMs, data);
+			return ProcessRequest(req);
+		}
+		
+		public async Task DestroyBlob(string path) {
+			throw new NotImplementedException();
+		}		
+		#endregion
+		
 		#region Meta
 		// The "meta" feature offers key/value persistent storage 
 
@@ -1634,8 +1695,6 @@ namespace Buzzware.Cascade {
 		public void Hold(Type modelType, object id) {
 			Log.Debug($"CascadeDataLayer Hold {modelType.FullName} id {id}");
 			var path = HoldModelPath(modelType,id);
-			// if (MetaExists(path))
-			// 	return;
 			MetaSet(path, String.Empty);
 		}
 
@@ -1727,5 +1786,9 @@ namespace Buzzware.Cascade {
 		}
 		
 		#endregion
+
+		public bool IsHeldBlob(string path) {
+			throw new NotImplementedException();
+		}
 	}
 }	

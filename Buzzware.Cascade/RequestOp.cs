@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text.Json;
 
 namespace Buzzware.Cascade {
@@ -13,7 +14,9 @@ namespace Buzzware.Cascade {
 		Destroy,
 		Query,
 		Execute,
-		GetCollection
+		GetCollection,
+		BlobGet,
+		BlobPut
 	};
 	
 	public class RequestOp {
@@ -63,6 +66,38 @@ namespace Buzzware.Cascade {
 				populateFreshnessSeconds: populateFreshnessSeconds ?? FRESHNESS_DEFAULT,
 				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
 				hold: hold
+			);
+		}
+		
+		public static RequestOp BlobGetOp(
+			string path,
+			long timeMs = -1,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null, 
+			bool? hold = null
+		) {
+			return new RequestOp(
+				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
+				typeof(ImmutableArray<byte>),
+				RequestVerb.BlobGet,
+				path,
+				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
+				hold: hold
+			);
+		}
+		
+		public static RequestOp BlobPutOp(
+			string path,
+			long timeMs,
+			ImmutableArray<byte> data
+		) {
+			return new RequestOp(
+				timeMs,
+				typeof(ImmutableArray<byte>),
+				RequestVerb.BlobPut,
+				path,
+				value: data
 			);
 		}
 		
@@ -295,5 +330,6 @@ namespace Buzzware.Cascade {
 			var criteria = JsonSerializer.Serialize(Criteria);
 			return $"{Verb} Id:{Id} Type:{Type} Key:{Key} Criteria:{criteria} Freshness: {FreshnessSeconds}";
 		}
+
 	}
 }

@@ -1,5 +1,7 @@
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Buzzware.Cascade.Testing;
 using NUnit.Framework;
@@ -9,12 +11,17 @@ namespace Buzzware.Cascade.Test {
 
     [TestFixture]
 	public class FastFileClassCacheTests {
+        private string testSourcePath;
         private string tempDir;
-		
-		[SetUp]
+        private string testClassName;
+        private string testName;
+
+        [SetUp]
 		public void SetUp() {
-            //tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            tempDir = "/Users/gary/repos/cascade/Buzzware.Cascade.Test/temp/FastFileClassCacheTests";
+            testClassName = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+            testName = TestContext.CurrentContext.Test.Name;
+            testSourcePath = CascadeUtils.AboveFolderNamed(TestContext.CurrentContext.TestDirectory,"bin")!;
+            tempDir = testSourcePath+$"/temp/{testClassName}.{testName}";
             Log.Debug($"Buzzware.Cascade cache directory {tempDir}");
             if (Directory.Exists(tempDir))
                 Directory.Delete(tempDir,true);

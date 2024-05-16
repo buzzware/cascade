@@ -41,6 +41,7 @@ namespace Buzzware.Cascade.Testing {
 
 
 		private readonly Dictionary<object, M> models = new Dictionary<object, M>();
+		private readonly Dictionary<string, ImmutableArray<byte>> blobs = new Dictionary<string, ImmutableArray<byte>>();
 
 		public async Task<IEnumerable> Query(object criteria) {
 			JsonElement? crit = criteria as JsonElement?;
@@ -66,6 +67,18 @@ namespace Buzzware.Cascade.Testing {
 			var id2 = CascadeTypeUtils.ConvertTo(idType!, id);
 			models.TryGetValue(id2!, out var result);
 			return result;
+		}
+
+		public async Task<ImmutableArray<byte>?> GetBlob(string path) {
+			blobs.TryGetValue(path, out var result);
+			return result;
+		}
+
+		public async Task PutBlob(string path, ImmutableArray<byte>? data) {
+			if (data == null)
+				blobs.Remove(path);
+			else
+				blobs[path] = data.Value;
 		}
 
 		public async Task<object> Create(object value) {

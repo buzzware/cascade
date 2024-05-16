@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 
 namespace Buzzware.Cascade {
 	public interface IModelClassOrigin {
 		Task<IEnumerable> Query(object criteria);
 		Task<object?> Get(object id);
+		Task<ImmutableArray<byte>?> GetBlob(string path);
+		Task PutBlob(string path, ImmutableArray<byte>? data);
 		Task<object> Create(object value);
 		Task<object> Replace(object value);
 		Task<object> Update(object id, IDictionary<string, object> changes, object? model);
