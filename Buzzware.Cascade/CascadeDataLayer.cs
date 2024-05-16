@@ -1397,6 +1397,8 @@ namespace Buzzware.Cascade {
 		}
 
 		public string? SerializeRequestOp(RequestOp op) {
+			if (op.Verb == RequestVerb.BlobPut)
+				throw new NotImplementedException("Serialisation of Blob values not yet supported");
 			var dic = new Dictionary<string, object>();
 			dic[nameof(op.Verb)] = op.Verb.ToString();
 			dic[nameof(op.Type)] = op.Type.FullName;
@@ -1418,6 +1420,10 @@ namespace Buzzware.Cascade {
 			var typeName = el.GetProperty(nameof(RequestOp.Type)).GetString();
 			var type = Origin.LookupModelType(typeName); // Type.GetType(typeName,true);
 			Enum.TryParse<RequestVerb>(el.GetProperty(nameof(RequestOp.Verb)).GetString(), out var verb);
+			
+			if (verb == RequestVerb.BlobPut)
+				throw new NotImplementedException("Deserialisation of Blob values not yet supported");
+			
 			object id = null;
 			var idProperty = el.GetProperty(nameof(RequestOp.Id));
 			var idType = CascadeTypeUtils.GetCascadeIdType(type);
