@@ -99,8 +99,10 @@ namespace Buzzware.Cascade {
 			}
 		}
 
-		public object? FirstResult => (Result as IEnumerable)?.Cast<object>().FirstOrDefault(); 
+		public object? FirstResult => IsEnumerableResults ? (Result as IEnumerable)?.Cast<object>().FirstOrDefault() : Result;
 
+		public bool IsEnumerableResults => (Result is IEnumerable) && !ResultIsBlob(); 
+		
 		public bool IsModelResults => CascadeTypeUtils.IsModel(FirstResult); 
 
 		public bool IsIdResults => CascadeTypeUtils.IsId(FirstResult);

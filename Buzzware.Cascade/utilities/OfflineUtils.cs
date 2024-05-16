@@ -9,7 +9,7 @@ namespace Buzzware.Cascade {
 			var id = CascadeTypeUtils.GetCascadeId(value);
 			var idType = CascadeTypeUtils.GetCascadeIdType(value.GetType());
 			if (idType == typeof(int)) {
-				if ((long)id == 0) {
+				if ((int)id == 0) {
 					CascadeTypeUtils.SetCascadeId(result, id = RandomUtils.IntNegativeId());
 				}
 			}

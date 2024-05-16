@@ -511,8 +511,11 @@ namespace Buzzware.Cascade {
 			else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute), true).FirstOrDefault() is BelongsToAttribute belongsTo) {
 				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, hold);
 			}
+			else if (propertyInfo?.GetCustomAttributes(typeof(FromBlobAttribute), true).FirstOrDefault() is FromBlobAttribute fromBlob) {
+				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, hold);
+			}
 		}
-
+		
 		/// <summary>
 		/// Populates (sets the given association property(s) on the given model each according to their definition attribute (BelongsTo/HasMany/HasOne)) with
 		/// the resulting model(s) from their internal query(s). 
@@ -1021,7 +1024,28 @@ namespace Buzzware.Cascade {
 			await StoreInPreviousCaches(opResponse);
 			await SetModelProperty(model, propertyInfo, opResponse.Result);
 		}
+		
+		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds, bool? hold) {
+			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var pathProperty = modelType.GetProperty(attribute.PathProperty);
+			var path = pathProperty.GetValue(model) as string;
+			if (path == null)
+				return;
 
+			var requestOp = RequestOp.BlobGetOp(
+				path,
+				NowMs,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				hold: hold
+			); 
+			var opResponse = await InnerProcessWithFallback(requestOp);
+			await StoreInPreviousCaches(opResponse);
+
+			var propertyValue = attribute.Converter.Convert(opResponse.Result as ImmutableArray<byte>?, destinationPropertyType);
+			
+			await SetModelProperty(model, propertyInfo, propertyValue);
+		}
+		
 		private async Task<OpResponse> ProcessGetCollection(RequestOp requestOp, bool connectionOnline) {
 			object? value;
 			ICascadeCache? layerFound = null;
