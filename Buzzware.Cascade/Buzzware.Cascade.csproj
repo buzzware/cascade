@@ -14,11 +14,7 @@ Cascade enables the creation of a data layer within an application that all busi
     <PackageProjectUrl>https://github.com/buzzware/cascade</PackageProjectUrl>
     <RepositoryUrl>https://github.com/buzzware/cascade</RepositoryUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Buzzware.StandardExceptions" Version="2.0.0" />
     <PackageReference Include="Serilog" Version="2.10.0" />
