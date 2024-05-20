@@ -36,7 +36,7 @@ namespace Buzzware.Cascade {
 		public readonly CascadeConfig Config;
 		private readonly ErrorControl errorControl;
 		private readonly object lockObject;
-		private readonly ICascadeOrigin Origin;
+		public readonly ICascadeOrigin Origin;
 		private readonly CascadeJsonSerialization serialization;
 
 		private bool _connectionOnline = true;
@@ -1819,6 +1819,15 @@ namespace Buzzware.Cascade {
 
 		public bool IsHeldBlob(string path) {
 			throw new NotImplementedException();
+		}
+
+		public async Task<object?> SetBlobPropertyConverted(SuperModel model, string property, ImmutableArray<byte> blob) {
+			PropertyInfo propertyInfo = model.GetType().GetProperty(property)!;
+			var attribute = propertyInfo.GetCustomAttribute<FromBlobAttribute>();
+			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var propertyValue = attribute.ConvertToPropertyType(blob, destinationPropertyType);
+			await SetModelProperty(model, propertyInfo, propertyValue);
+			return propertyValue;
 		}
 	}
 }	
