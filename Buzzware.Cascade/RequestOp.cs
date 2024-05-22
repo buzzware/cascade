@@ -16,7 +16,8 @@ namespace Buzzware.Cascade {
 		Execute,
 		GetCollection,
 		BlobGet,
-		BlobPut
+		BlobPut,
+		BlobDestroy
 	};
 	
 	public class RequestOp {
@@ -98,6 +99,18 @@ namespace Buzzware.Cascade {
 				RequestVerb.BlobPut,
 				path,
 				value: data
+			);
+		}
+
+		public static RequestOp BlobDestroyOp(
+			string path, 
+			long timeMs
+		) {
+			return new RequestOp(
+				timeMs,
+				typeof(ImmutableArray<byte>),
+				RequestVerb.BlobDestroy,
+				path
 			);
 		}
 		

@@ -74,7 +74,7 @@ namespace Buzzware.Cascade {
 			if (type is null)
 				throw new Exception("Type cannot be null");
 			if (!classCache.ContainsKey(type))
-				throw new Exception($"ModelCache: No type store for that type. Consider registering a IModelClassCache for the type {type.Name}");
+				Log.Debug($"ModelCache: No type store for that type. Consider registering a IModelClassCache for the type {type.Name}");
 			var store = classCache[type]!;
 			return store.StoreCollection(key,ids,arrivedAt);
 		}

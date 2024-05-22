@@ -346,6 +346,5 @@ namespace Buzzware.Cascade {
 			}
 			return false;
 		}
-
 	}
 }

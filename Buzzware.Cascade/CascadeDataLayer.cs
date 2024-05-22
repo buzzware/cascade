@@ -604,7 +604,7 @@ namespace Buzzware.Cascade {
 				if (foreignType == null)
 					throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
 
-				var hasManyModels = ((IEnumerable)propertyInfo!.GetValue(model)).Cast<object>().ToList();
+				var hasManyModels = ((IEnumerable)(propertyInfo!.GetValue(model) ?? Array.Empty<object>())).Cast<object>().ToList();
 				hasManyModels.Add(hasManyItem);
 				
 				object modelId = CascadeTypeUtils.GetCascadeId(model);
@@ -906,6 +906,7 @@ namespace Buzzware.Cascade {
 					case RequestVerb.Update:
 						return ProcessUpdate(requestOp, connectionOnline);
 					case RequestVerb.Destroy:
+					case RequestVerb.BlobDestroy:
 						return ProcessDestroy(requestOp, connectionOnline);
 					case RequestVerb.Execute:
 						return ProcessExecute(requestOp, connectionOnline);
@@ -970,7 +971,8 @@ namespace Buzzware.Cascade {
 			
 			if (Log.Logger.IsEnabled(LogEventLevel.Debug))
 				Log.Debug("ProcessRequest OpResponse: Connected: {@Connected} Exists: {@Exists}", opResponse.Connected,opResponse.Exists);
-			if (Log.Logger.IsEnabled(LogEventLevel.Verbose))
+			var isBlobVerb = requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobPut;
+			if (Log.Logger.IsEnabled(LogEventLevel.Verbose) && !isBlobVerb)
 				Log.Verbose("ProcessRequest OpResponse: Result: {@Result}",opResponse.Result);
 			return opResponse;
 		}
@@ -1588,9 +1590,14 @@ namespace Buzzware.Cascade {
 			return ProcessRequest(req);
 		}
 		
-		public async Task DestroyBlob(string path) {
-			throw new NotImplementedException();
-		}		
+		public async Task BlobDestroy(string path) {
+			var response = await BlobDestroyResponse(path);
+		}
+		
+		public Task<OpResponse> BlobDestroyResponse(string path) {
+			var req = RequestOp.BlobDestroyOp(path, NowMs);
+			return ProcessRequest(req);
+		}
 		#endregion
 		
 		#region Meta
