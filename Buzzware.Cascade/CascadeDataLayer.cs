@@ -514,6 +514,9 @@ namespace Buzzware.Cascade {
 			else if (propertyInfo?.GetCustomAttributes(typeof(FromBlobAttribute), true).FirstOrDefault() is FromBlobAttribute fromBlob) {
 				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, hold);
 			}
+			else if (propertyInfo?.GetCustomAttributes(typeof(FromPropertyAttribute), true).FirstOrDefault() is FromPropertyAttribute fromProperty) {
+				await processFromProperty(model, modelType, propertyInfo!, fromProperty);
+			}
 		}
 		
 		/// <summary>
@@ -1043,9 +1046,17 @@ namespace Buzzware.Cascade {
 			var opResponse = await InnerProcessWithFallback(requestOp);
 			await StoreInPreviousCaches(opResponse);
 
-			var propertyValue = attribute.Converter.Convert(opResponse.Result as ImmutableArray<byte>?, destinationPropertyType);
+			var propertyValue = attribute.Converter!.Convert(opResponse.Result as ImmutableArray<byte>?, destinationPropertyType);
 			
 			await SetModelProperty(model, propertyInfo, propertyValue);
+		}
+		
+		private async Task processFromProperty(object model, Type modelType, PropertyInfo propertyInfo, FromPropertyAttribute attribute) {
+			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var sourceProperty = modelType.GetProperty(attribute.SourcePropertyName);
+			var sourceValue = sourceProperty!.GetValue(model);
+			var destValue = await attribute.Converter!.Convert(sourceValue, destinationPropertyType, attribute.Arguments);
+			await SetModelProperty(model, propertyInfo, destValue);
 		}
 		
 		private async Task<OpResponse> ProcessGetCollection(RequestOp requestOp, bool connectionOnline) {

@@ -50,6 +50,13 @@ namespace Buzzware.Cascade.RnD {
 			set => SetProperty(ref _Image, value);
 		}
 		private Bitmap? _Image;
+		
+		[FromProperty(nameof(Image),typeof(DotNetThumbnailConverter),100,100)]
+		public Bitmap? Thumbnail {
+			get => GetProperty(ref _Thumbnail); 
+			set => SetProperty(ref _Thumbnail, value);
+		}
+		private Bitmap? _Thumbnail;
 	}
 
 	public class DotNetBitmapConverter : IBlobConverter {
@@ -57,6 +64,36 @@ namespace Buzzware.Cascade.RnD {
 			return blob!=null ? TestUtils.BitmapFromBlob(blob.Value) : null;
 		}
 	}
+	
+	public class DotNetThumbnailConverter : IPropertyConverter {
+		public static readonly int DEFAULT_SIZE = 128;
+
+		public async Task<object?> Convert(object? input, Type destinationType, params object[] args) {
+			if (input == null)
+				return null;
+			if (input is Bitmap bitmap && (destinationType == typeof(Bitmap))) {
+				int width = DEFAULT_SIZE, height = DEFAULT_SIZE;
+				if (args.Length >= 1)
+					width = (args.GetValue(0) as int?) ?? DEFAULT_SIZE;
+				if (args.Length >= 2)
+					height = (args.GetValue(0) as int?) ?? width;
+				//return bitmap.GetThumbnailImage(width,height,)
+				
+				Image thumbnail = bitmap.GetThumbnailImage(width, height, 
+					new Image.GetThumbnailImageAbort(ThumbnailCallback), 
+					IntPtr.Zero);
+				return thumbnail;
+			} else 
+				throw new NotImplementedException();
+		}
+		
+		public bool ThumbnailCallback()
+		{
+			return false;
+		}				
+		
+	}
+	
 
 	// public class Blob : SuperModel {
 	// 	
@@ -172,5 +209,18 @@ namespace Buzzware.Cascade.RnD {
 			var testPhoto3 = await cascade.Get<Photo>(testPhoto1.id, freshnessSeconds: -1, populate: new []{ nameof(Photo.Image) });
 			Assert.That(testPhoto3.Image.Width,Is.EqualTo(10));
 		}
+		
+		[Test]
+		public async Task Simple() {
+			//var bitmap = CreateBitmap(200, 100, Colors.Red);
+			var bitmap = new Bitmap(10, 10);
+			//var image = TestUtils.BlobFromBitmap(bitmap);
+			var diaryPhoto = new Photo() {
+				Image = bitmap
+			};
+			await cascade.Populate(diaryPhoto, nameof(Photo.Thumbnail));
+			Assert.That(diaryPhoto.Thumbnail,Is.Not.Null);
+		}
+		
 	}
 }
