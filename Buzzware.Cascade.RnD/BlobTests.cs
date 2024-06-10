@@ -38,11 +38,11 @@ namespace Buzzware.Cascade.RnD {
 		private string? _ImagePath;
 		
 		//[BlobBelongsTo(nameof(ImagePath))]
-		// public ImmutableArray<byte> Image {
+		// public IReadOnlyList<byte> Image {
 		// 	get => GetProperty(ref _Image); 
 		// 	set => SetProperty(ref _Image, value);
 		// }
-		// private ImmutableArray<byte> _Image;
+		// private IReadOnlyList<byte> _Image;
 		
 		[FromBlob(nameof(ImagePath),typeof(DotNetBitmapConverter))]		// Avalonia-specific populate code would Bitmap.LoadAsync(basepath+ImagePath)
 		public Bitmap? Image {
@@ -60,8 +60,8 @@ namespace Buzzware.Cascade.RnD {
 	}
 
 	public class DotNetBitmapConverter : IBlobConverter {
-		public object? Convert(ImmutableArray<byte>? blob, Type destinationPropertyType) {
-			return blob!=null ? TestUtils.BitmapFromBlob(blob.Value) : null;
+		public object? Convert(IReadOnlyList<byte>? blob, Type destinationPropertyType) {
+			return blob!=null ? TestUtils.BitmapFromBlob(blob) : null;
 		}
 	}
 	
@@ -103,11 +103,11 @@ namespace Buzzware.Cascade.RnD {
 	// 	}
 	// 	private string? _ImagePath;
 	// 	
-	// 	public ImmutableArray<byte> Data {
+	// 	public IReadOnlyList<byte> Data {
 	// 		get => GetProperty(ref _Data); 
 	// 		set => SetProperty(ref _Data, value);
 	// 	}
-	// 	private ImmutableArray<byte> _Data;
+	// 	private IReadOnlyList<byte> _Data;
 	// 	
 	// }
 
@@ -187,7 +187,7 @@ namespace Buzzware.Cascade.RnD {
 			var image = TestUtils.BlobFromBitmap(bitmap1,ImageFormat.Png);
 			await cascade.BlobPut(BLOB1_PATH, image);
 			var blob = (await cascade.BlobGet(BLOB1_PATH))!;
-			var bitmap2 = TestUtils.BitmapFromBlob(blob.Value);
+			var bitmap2 = TestUtils.BitmapFromBlob(blob);
 			Assert.That(bitmap2.Width,Is.EqualTo(bitmap1.Width));
 		}
 		

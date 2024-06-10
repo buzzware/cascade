@@ -1046,7 +1046,7 @@ namespace Buzzware.Cascade {
 			var opResponse = await InnerProcessWithFallback(requestOp);
 			await StoreInPreviousCaches(opResponse);
 
-			var propertyValue = attribute.Converter!.Convert(opResponse.Result as ImmutableArray<byte>?, destinationPropertyType);
+			var propertyValue = attribute.Converter!.Convert(opResponse.Result as IReadOnlyList<byte>, destinationPropertyType);
 			
 			await SetModelProperty(model, propertyInfo, propertyValue);
 		}
@@ -1557,13 +1557,13 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">freshness</param>
 		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
 		/// <returns>model of type M or null</returns>
-		public async Task<ImmutableArray<byte>?> BlobGet(
+		public async Task<IReadOnlyList<byte>?> BlobGet(
 			string path,
 			int? freshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
 			bool? hold = null
 		) {
-			return (ImmutableArray<byte>?)(await this.BlobGetResponse(path,freshnessSeconds, fallbackFreshnessSeconds, hold)).Result;
+			return (IReadOnlyList<byte>?)(await this.BlobGetResponse(path,freshnessSeconds, fallbackFreshnessSeconds, hold)).Result;
 		}
 
 		
@@ -1591,12 +1591,12 @@ namespace Buzzware.Cascade {
 		
 		public async Task BlobPut(
 			string path, 
-			ImmutableArray<byte> data
+			IReadOnlyList<byte> data
 		) {
 			var response = await BlobPutResponse(path,data);
 		}		
 		
-		public Task<OpResponse> BlobPutResponse(string path, ImmutableArray<byte> data) {
+		public Task<OpResponse> BlobPutResponse(string path, IReadOnlyList<byte> data) {
 			var req = RequestOp.BlobPutOp(path, NowMs, data);
 			return ProcessRequest(req);
 		}
@@ -1839,7 +1839,7 @@ namespace Buzzware.Cascade {
 			throw new NotImplementedException();
 		}
 
-		public async Task<object?> SetBlobPropertyConverted(SuperModel model, string property, ImmutableArray<byte> blob) {
+		public async Task<object?> SetFromBlobProperty(SuperModel model, string property, IReadOnlyList<byte> blob) {
 			PropertyInfo propertyInfo = model.GetType().GetProperty(property)!;
 			var attribute = propertyInfo.GetCustomAttribute<FromBlobAttribute>();
 			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);

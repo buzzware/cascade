@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Easy.Common.Extensions;
 
@@ -16,7 +17,7 @@ namespace Buzzware.Cascade {
 			Converter = converter!=null ? (Activator.CreateInstance(converter) as IBlobConverter)! : null;
 		}
 
-		public object? ConvertToPropertyType(ImmutableArray<byte> blob, Type destinationPropertyType) {
+		public object? ConvertToPropertyType(IReadOnlyList<byte> blob, Type destinationPropertyType) {
 			return Converter != null ? Converter.Convert(blob, destinationPropertyType) : blob;
 		}
 	}

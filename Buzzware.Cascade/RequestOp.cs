@@ -79,7 +79,7 @@ namespace Buzzware.Cascade {
 		) {
 			return new RequestOp(
 				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
-				typeof(ImmutableArray<byte>),
+				typeof(IReadOnlyList<byte>),
 				RequestVerb.BlobGet,
 				path,
 				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
@@ -91,11 +91,11 @@ namespace Buzzware.Cascade {
 		public static RequestOp BlobPutOp(
 			string path,
 			long timeMs,
-			ImmutableArray<byte> data
+			IReadOnlyList<byte> data
 		) {
 			return new RequestOp(
 				timeMs,
-				typeof(ImmutableArray<byte>),
+				typeof(IReadOnlyList<byte>),
 				RequestVerb.BlobPut,
 				path,
 				value: data
@@ -108,7 +108,7 @@ namespace Buzzware.Cascade {
 		) {
 			return new RequestOp(
 				timeMs,
-				typeof(ImmutableArray<byte>),
+				typeof(IReadOnlyList<byte>),
 				RequestVerb.BlobDestroy,
 				path
 			);
