@@ -131,6 +131,7 @@ namespace Buzzware.Cascade {
 					break;
 				case RequestVerb.BlobGet:
 				case RequestVerb.BlobPut:
+				case RequestVerb.BlobDestroy:
 					if (blobCache == null)
 						return;
 					await blobCache.Store(opResponse);
