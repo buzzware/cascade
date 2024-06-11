@@ -38,11 +38,11 @@ namespace Buzzware.Cascade.RnD {
 		private string? _ImagePath;
 		
 		//[BlobBelongsTo(nameof(ImagePath))]
-		// public IReadOnlyList<byte> Image {
+		// public byte[] Image {
 		// 	get => GetProperty(ref _Image); 
 		// 	set => SetProperty(ref _Image, value);
 		// }
-		// private IReadOnlyList<byte> _Image;
+		// private byte[] _Image;
 		
 		[FromBlob(nameof(ImagePath),typeof(DotNetBitmapConverter))]		// Avalonia-specific populate code would Bitmap.LoadAsync(basepath+ImagePath)
 		public Bitmap? Image {
@@ -60,7 +60,7 @@ namespace Buzzware.Cascade.RnD {
 	}
 
 	public class DotNetBitmapConverter : IBlobConverter {
-		public object? Convert(IReadOnlyList<byte>? blob, Type destinationPropertyType) {
+		public object? Convert(byte[]? blob, Type destinationPropertyType) {
 			return blob!=null ? TestUtils.BitmapFromBlob(blob) : null;
 		}
 	}
@@ -103,11 +103,11 @@ namespace Buzzware.Cascade.RnD {
 	// 	}
 	// 	private string? _ImagePath;
 	// 	
-	// 	public IReadOnlyList<byte> Data {
+	// 	public byte[] Data {
 	// 		get => GetProperty(ref _Data); 
 	// 		set => SetProperty(ref _Data, value);
 	// 	}
-	// 	private IReadOnlyList<byte> _Data;
+	// 	private byte[] _Data;
 	// 	
 	// }
 

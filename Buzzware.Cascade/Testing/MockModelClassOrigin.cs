@@ -41,7 +41,7 @@ namespace Buzzware.Cascade.Testing {
 
 
 		private readonly Dictionary<object, M> models = new Dictionary<object, M>();
-		private readonly Dictionary<string, IReadOnlyList<byte>> blobs = new Dictionary<string, IReadOnlyList<byte>>();
+		private readonly Dictionary<string, byte[]> blobs = new Dictionary<string, byte[]>();
 
 		public async Task<IEnumerable> Query(object criteria) {
 			JsonElement? crit = criteria as JsonElement?;
@@ -69,12 +69,12 @@ namespace Buzzware.Cascade.Testing {
 			return result;
 		}
 
-		public async Task<IReadOnlyList<byte>?> GetBlob(string path) {
+		public async Task<byte[]?> GetBlob(string path) {
 			blobs.TryGetValue(path, out var result);
 			return result;
 		}
 
-		public async Task PutBlob(string path, IReadOnlyList<byte>? data) {
+		public async Task PutBlob(string path, byte[]? data) {
 			if (data == null)
 				blobs.Remove(path);
 			else

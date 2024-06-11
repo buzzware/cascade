@@ -56,7 +56,7 @@ namespace Buzzware.Cascade {
 		public string? SourceName;
 
 		public bool ResultIsBlob() {
-			return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobPut) && Result is IReadOnlyList<byte>;
+			return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobPut) && Result is byte[];
 		}
 		
 		public bool ResultIsEmpty() {

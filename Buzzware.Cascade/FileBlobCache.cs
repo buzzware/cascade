@@ -110,16 +110,16 @@ namespace Buzzware.Cascade {
 				if (opResponse.ResultIsEmpty()) {
 					File.Delete(modelFilePath);
 				} else {
-					if (!(opResponse.Result is IReadOnlyList<byte>))
-						throw new ArgumentException("Result must be null or IReadOnlyList<byte>");
-					await StoreBlob(modelFilePath, (IReadOnlyList<byte>) opResponse.Result, arrivedAt);
+					if (!(opResponse.Result is byte[]))
+						throw new ArgumentException("Result must be null or byte[]");
+					await StoreBlob(modelFilePath, (byte[]) opResponse.Result, arrivedAt);
 				}
 			} catch (Exception e) {
 				Log.Debug(e.Message);   // sharing violation exception sometimes happens here
 			}
 		}
 
-		private async Task<IReadOnlyList<byte>?> LoadBlob(string path) {
+		private async Task<byte[]?> LoadBlob(string path) {
 			if (!File.Exists(path))
 				return null;
 
@@ -128,16 +128,16 @@ namespace Buzzware.Cascade {
 				result = new byte[stream.Length];
 				await stream.ReadAsync(result, 0, (int)stream.Length);
 			}
-			return result.ToImmutableArray();			
+			return result;			
 		}
 		
-		private async Task StoreBlob(string path, IReadOnlyList<byte> blob, long arrivedAt) {
+		private async Task StoreBlob(string path, byte[] blob, long arrivedAt) {
 			await Task.Run(async () => {
 				if (!Directory.Exists(Path.GetDirectoryName(path)))
 					Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 				
 				using FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, 256*1024, true);
-				await fileStream.WriteAsync(blob.ToArray(), 0, blob.Count).ConfigureAwait(false);
+				await fileStream.WriteAsync(blob.ToArray(), 0, blob.Length).ConfigureAwait(false);
 				
 				File.SetLastWriteTimeUtc(path, CascadeUtils.fromUnixMilliseconds(arrivedAt));
 			});

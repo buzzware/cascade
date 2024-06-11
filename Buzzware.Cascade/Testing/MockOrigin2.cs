@@ -10,7 +10,7 @@ namespace Buzzware.Cascade.Testing {
 		public int RequestCount { get; protected set; }
 
 		private readonly Dictionary<Type,IModelClassOrigin> classOrigins;
-		private readonly Dictionary<string,IReadOnlyList<byte>> blobs;
+		private readonly Dictionary<string,byte[]> blobs;
 		
 
 		public bool ActLikeOffline { get; set; }
@@ -21,7 +21,7 @@ namespace Buzzware.Cascade.Testing {
 		) {
 			NowMs = nowMs;
 			this.classOrigins = classOrigins;
-			blobs = new Dictionary<string, IReadOnlyList<byte>>();
+			blobs = new Dictionary<string, byte[]>();
 			foreach (var pair in classOrigins) {
 				pair.Value.Origin = this;
 			}
@@ -39,7 +39,7 @@ namespace Buzzware.Cascade.Testing {
 			if (request.Verb == RequestVerb.BlobGet) {
 				result = await BlobGet(((string?)request.Id)!);
 			} else if (request.Verb == RequestVerb.BlobPut) {
-				result = await BlobPut(((string?)request.Id)!,(request.Value as IReadOnlyList<byte>));
+				result = await BlobPut(((string?)request.Id)!,(request.Value as byte[]));
 			} else {
 				var co = classOrigins[request.Type];
 				switch (request.Verb) {
@@ -80,7 +80,7 @@ namespace Buzzware.Cascade.Testing {
 			);
 		}
 
-		private async Task<IReadOnlyList<byte>?> BlobPut(string path, IReadOnlyList<byte>? value) {
+		private async Task<byte[]?> BlobPut(string path, byte[]? value) {
 			if (value == null)
 				blobs.Remove(path);
 			else
@@ -88,7 +88,7 @@ namespace Buzzware.Cascade.Testing {
 			return value;
 		}
 
-		private async Task<IReadOnlyList<byte>?> BlobGet(string path) {
+		private async Task<byte[]?> BlobGet(string path) {
 			if (!blobs.TryGetValue(path, out var result))
 				return null;
 			return result;

@@ -17,7 +17,7 @@ namespace Buzzware.Cascade {
 			Converter = converter!=null ? (Activator.CreateInstance(converter) as IBlobConverter)! : null;
 		}
 
-		public object? ConvertToPropertyType(IReadOnlyList<byte> blob, Type destinationPropertyType) {
+		public object? ConvertToPropertyType(byte[] blob, Type destinationPropertyType) {
 			return Converter != null ? Converter.Convert(blob, destinationPropertyType) : blob;
 		}
 	}

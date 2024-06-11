@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 namespace Buzzware.Cascade.Test {
 	public static class TestUtils {
 		
-		public static IReadOnlyList<byte> NewBlob(byte value, int length) {
+		public static byte[] NewBlob(byte value, int length) {
 			byte[] data = new byte[length];
 			for (int i = 0; i < length; i++)
 				data[i] = value;
-			return data.ToImmutableArray();
+			return data;
 		}
 
 		public static void CreateBinaryFile(string path, byte value, int length) {
@@ -23,7 +23,7 @@ namespace Buzzware.Cascade.Test {
 			System.IO.File.WriteAllBytes(path, data);
 		}
 
-		public static async Task<IReadOnlyList<byte>> ReadBinaryFile(string path) {
+		public static async Task<byte[]> ReadBinaryFile(string path) {
 			var builder = ImmutableArray.CreateBuilder<byte>();
 
 			using (FileStream sourceStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true))
@@ -38,10 +38,10 @@ namespace Buzzware.Cascade.Test {
 					}
 				}
 			}
-			return builder.ToImmutable();
+			return builder.ToArray();
 		}
 		
-		public static async Task WriteBinaryFile(string path, IReadOnlyList<byte> content)
+		public static async Task WriteBinaryFile(string path, byte[] content)
 		{
 			using (FileStream destinationStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
 			{
@@ -50,16 +50,16 @@ namespace Buzzware.Cascade.Test {
 			}
 		}
 		
-		public static IReadOnlyList<byte> BlobFromBitmap(Bitmap bitmap, ImageFormat format)
+		public static byte[] BlobFromBitmap(Bitmap bitmap, ImageFormat format)
 		{
 			using(MemoryStream stream = new MemoryStream())
 			{
 				bitmap.Save(stream, format);
-				return stream.ToArray().ToImmutableArray();
+				return stream.ToArray();
 			}
 		}
 
-		public static Bitmap BitmapFromBlob(IReadOnlyList<byte> blob) {
+		public static Bitmap BitmapFromBlob(byte[] blob) {
 			using (var stream = new MemoryStream(blob.ToArray()))
 			{
 				return new Bitmap(stream);
