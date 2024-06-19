@@ -31,13 +31,13 @@ namespace Buzzware.Cascade.Test {
 		}
 		private string? _Comments;
 		
-		public string? ImagePath {
+		public string? imagePath {
 			get => GetProperty(ref _ImagePath); 
 			set => SetProperty(ref _ImagePath, value);
 		}
 		private string? _ImagePath;
 		
-		[FromBlob(nameof(ImagePath),typeof(DotNetBitmapConverter))]
+		[FromBlob(nameof(imagePath),typeof(DotNetBitmapConverter))]
 		public Bitmap? Image {
 			get => GetProperty(ref _Image); 
 			set => SetProperty(ref _Image, value);
@@ -49,8 +49,7 @@ namespace Buzzware.Cascade.Test {
 			set => SetProperty(ref _thumbnailPath, value);
 		}
 		private string? _thumbnailPath;
-	
-		[JsonIgnore]
+		
 		[FromBlob(nameof(thumbnailPath),typeof(DotNetBitmapConverter))]
 		public Bitmap? Thumbnail {
 			get => GetProperty(ref _Thumbnail); 

@@ -270,6 +270,18 @@ namespace Buzzware.Cascade {
 			return false;
 		}
 
+		public static readonly Type[] SimpleTypes = new Type[] {
+	    typeof(Byte), typeof(SByte), typeof(Int16), typeof(UInt16), typeof(Int32), typeof(UInt32), 
+	    typeof(Int64), typeof(UInt64), typeof(Char), typeof(Double), 
+	    typeof(Single), typeof(Boolean), typeof(String)
+		};
+		
+		public static bool IsSimple(Type? type) {
+			if (type == null)
+				return true;
+			return SimpleTypes.Contains(type);
+		}
+
 		public static bool IsEqual(object? a, object? b) {
 			if (a == null && b == null) //both are null
 				return true;

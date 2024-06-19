@@ -1,3 +1,5 @@
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Threading.Tasks;
 using Buzzware.Cascade.Testing;
 using NUnit.Framework;
@@ -31,6 +33,25 @@ namespace Buzzware.Cascade.Test {
 			child.Parent = parent;
 			output = sz.SerializeToNode(child);
 			Assert.That(output.HasKey(nameof(Child.Parent)),Is.False);
+		}
+		
+		[Test]
+		public async Task BinaryProperties() {
+			var thingPhoto = new ThingPhoto() {
+				id = 3,
+				name = "happy snap",
+				Image = new Bitmap(100,100),
+				imagePath = "main",
+				Thumbnail = new Bitmap(10,10),
+				thumbnailPath = "thumbnail"
+			};
+			var output = sz.SerializeToNode(thingPhoto);
+			Assert.That(output[nameof(ThingPhoto.name)]!.GetValue<string>(),Is.EqualTo(thingPhoto.name));
+			Assert.That(output[nameof(ThingPhoto.imagePath)]!.GetValue<string>(),Is.EqualTo(thingPhoto.imagePath));
+			Assert.That(output[nameof(ThingPhoto.thumbnailPath)]!.GetValue<string>(),Is.EqualTo(thingPhoto.thumbnailPath));
+
+			Assert.That(output.HasKey(nameof(ThingPhoto.Image)), Is.False);
+			Assert.That(output.HasKey(nameof(ThingPhoto.Thumbnail)), Is.False);
 		}
 	}
 }

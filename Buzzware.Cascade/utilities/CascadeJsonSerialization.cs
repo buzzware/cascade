@@ -54,7 +54,7 @@ namespace Buzzware.Cascade {
 				// ReferenceHandler = null
 			};
 		}
-
+		
 		private void IgnoreProperties(JsonTypeInfo typeInfo) {
 			if (!typeInfo.Type.IsSubclassOf(typeof(SuperModel)))
 				return;
@@ -62,7 +62,10 @@ namespace Buzzware.Cascade {
 			foreach (JsonPropertyInfo propertyInfo in typeInfo.Properties) {
 				propertyInfo.ShouldSerialize = (obj, value) => !(
 					ignoreUnderscoreProperties && propertyInfo.Name.StartsWith("_") ||
-					ignoreAssociations && !propertyInfo.PropertyType.IsPrimitive && propertyInfo.AttributeProvider != null && CascadeDataLayer.AssociationAttributes.Any(t => propertyInfo.AttributeProvider.GetCustomAttributes(t,false).Any())
+					ignoreAssociations && (propertyInfo.AttributeProvider != null && CascadeDataLayer.AssociationAttributes.Any(t => propertyInfo.AttributeProvider.GetCustomAttributes(t, false).Any())) ||
+					(!CascadeTypeUtils.IsSimple(propertyInfo.PropertyType) && propertyInfo.AttributeProvider == null) || // non-primitive values without attributes
+					(propertyInfo.AttributeProvider?.GetCustomAttributes(typeof(FromBlobAttribute), false).Any() ?? false) ||
+					(propertyInfo.AttributeProvider?.GetCustomAttributes(typeof(FromPropertyAttribute), false).Any() ?? false)
 				);
 			}
 		}

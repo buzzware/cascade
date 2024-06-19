@@ -27,8 +27,14 @@ namespace Buzzware.Cascade.Testing {
 				return typeof(Child);
 			else if (typeName == "System.Byte[]")
 				return typeof(System.Byte[]);
-			else
+			else {
+				foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()) {
+					var type = assembly.GetType(typeName);
+					if (type != null)
+						return type;
+				}
 				throw new TypeLoadException($"Type {typeName} not found in origin");
+			}
 		}
 
 		public string NewGuid() {

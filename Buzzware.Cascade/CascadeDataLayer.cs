@@ -1548,7 +1548,7 @@ namespace Buzzware.Cascade {
 			if (!Directory.Exists(Config.PendingChangesPath))
 				return new string[] {};
 			var items = Directory.GetFiles(Config.PendingChangesPath);
-			return items.Select(Path.GetFileName).ToImmutableArray().Sort();
+			return items.Select(Path.GetFileName).Where(f => !f.Contains("__") && f.EndsWith(".json")).ToImmutableArray().Sort();
 		}
 		
 		private async Task RemoveChangePending(string filename) {
@@ -1559,17 +1559,44 @@ namespace Buzzware.Cascade {
 			});
 		}
 		
-		public async Task<IEnumerable<Tuple<string,RequestOp>>> GetChangesPending() {
+		public async Task<IReadOnlyList<Tuple<string,RequestOp>>> GetChangesPending() {
 			var changes = new List<Tuple<string,RequestOp>>();
 			var list = GetChangesPendingList();
 			foreach (var filename in list) {
 				var content = CascadeUtils.LoadFileAsString(Path.Combine(Config.PendingChangesPath, filename));
 				var requestOp = DeserializeRequestOp(content, out var externals);
+				foreach (var external in externals) {
+					var exfile = Path.Combine(Config.PendingChangesPath,ExternalBinaryPathFromPendingChangePath(filename, external.Value));
+					var blob = await ReadBinaryFile(exfile);
+					var propertyName = external.Key;
+					if (propertyName.Contains("."))
+						throw new StandardException("sub properties not implemented");
+					var property = typeof(RequestOp).GetField(propertyName);	// typically Value which is a field
+					if (property==null)
+						throw new StandardException($"property {propertyName} unknown");
+					property.SetValue(requestOp,blob);
+				}
 				changes.Add(new Tuple<string, RequestOp>(filename,requestOp));
 			}
 			return changes;
 		}
 
+		private async Task<byte[]> ReadBinaryFile(string filePath) {
+			byte[] buffer = new byte[8192];
+			using (MemoryStream ms = new MemoryStream())
+			{
+				using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+				{
+					int read;
+					while ((read = await file.ReadAsync(buffer, 0, buffer.Length)) > 0)
+					{
+						ms.Write(buffer, 0, read);
+					}
+				}
+				return ms.ToArray();
+			}
+		}		
+		
 		public bool HasChangesPending() {
 			return GetChangesPendingList().Any();
 		}

@@ -130,6 +130,25 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(op2.TimeMs, Is.EqualTo(op.TimeMs));
 		}
 
+		public static void AssertRequestOpsMatch(RequestOp op1, RequestOp op2, bool checkValue) {
+			Assert.That(op2.Verb, Is.EqualTo(op1.Verb));
+			Assert.That(op2.Id, Is.EqualTo(op1.Id));
+			Assert.That(op2.Type, Is.EqualTo(op1.Type));
+			Assert.That(op2.TimeMs, Is.EqualTo(op1.TimeMs));
+			if (checkValue)
+				Assert.That(op2.Value!=null, Is.EqualTo(op1.Value!=null));
+			Assert.That(op2.Key, Is.EqualTo(op1.Key));
+
+			Assert.That(op2.Populate, Is.EqualTo(op1.Populate));
+			Assert.That(op2.FreshnessSeconds, Is.EqualTo(op1.FreshnessSeconds));
+			Assert.That(op2.PopulateFreshnessSeconds, Is.EqualTo(op1.PopulateFreshnessSeconds));
+			Assert.That(op2.FallbackFreshnessSeconds, Is.EqualTo(op1.FallbackFreshnessSeconds));
+			Assert.That(op2.Hold, Is.EqualTo(op1.Hold));
+			Assert.That(op2.Criteria, Is.EqualTo(op1.Criteria));
+			Assert.That(op2.Params, Is.EqualTo(op1.Params));
+		}
+		
+		
 		[Test]
 		public async Task BlobPutOpSerialisation() {
 			var image = TestUtils.BlobFromBitmap(new Bitmap(10,10),ImageFormat.Png);
@@ -156,50 +175,91 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(externalContent[nameof(RequestOp.Value)],Is.EqualTo(image));
 
 			var op2 = cascade.DeserializeRequestOp(sz, out var externals);
-				
-			Assert.That(op2.Verb, Is.EqualTo(op.Verb));
-			Assert.That(op2.Id, Is.EqualTo(op.Id));
-			Assert.That(op2.Type, Is.EqualTo(typeof(byte[])));
-			Assert.That(op2.TimeMs, Is.EqualTo(op.TimeMs));
-			Assert.That(op2.Value, Is.EqualTo(null));
 
-			Assert.That(op2.Populate, Is.EqualTo(null));
-			Assert.That(op2.FreshnessSeconds, Is.EqualTo(op.FreshnessSeconds));
-			Assert.That(op2.PopulateFreshnessSeconds, Is.EqualTo(op.PopulateFreshnessSeconds));
-			Assert.That(op2.FallbackFreshnessSeconds, Is.EqualTo(op.FallbackFreshnessSeconds));
-			Assert.That(op2.Hold, Is.EqualTo(op.Hold));
-			Assert.That(op2.Criteria, Is.EqualTo(op.Criteria));
-			Assert.That(op2.Params, Is.EqualTo(op.Params));
-
+			AssertRequestOpsMatch(op, op2, checkValue: false);
+			Assert.That(op2.Value, Is.Null);
 			Assert.That(externals, Has.Count.EqualTo(1));
 			Assert.That(externals["Value"], Is.EqualTo("Value"));
 		}
 
-		// [Test]
-		// public async Task CreateSerialisation() {
-		// 	var op = RequestOp.BlobPutOp("first/second/happy_snap",cascade.NowMs, );
-		// 	var sz = cascade.SerializeRequestOp(op);
-		// 	Log.Debug(sz);
-		//
-		// 	
-		// 	var thing = new ThingPhoto() {
-		// 		id = 3,
-		// 		name = "happy snap"
-		// 	};
-		// 	var op = RequestOp.BlobPutOp("first/second/happy_snap",cascade.NowMs, );
-		// 	var sz = cascade.SerializeRequestOp(op);
-		// 	Log.Debug(sz);
-		// 	const string expected = "{\"Verb\":\"Create\",\"Type\":\"Buzzware.Cascade.Testing.Thing\",\"Id\":3,\"TimeMs\":1000,\"Value\":{\"id\":3,\"name\":null,\"colour\":\"brown\"}}";
-		// 	Assert.That(sz,Is.EqualTo(expected));
-		//
-		// 	var op2 = cascade.DeserializeRequestOp(sz);
-		// 	Assert.That(op2.Verb,Is.EqualTo(RequestVerb.Create));
-		// 	Assert.That(op2.Id,Is.EqualTo(thing.id));
-		// 	Assert.That(op2.Type,Is.EqualTo(typeof(Thing)));
-		// 	Assert.That(op2.TimeMs, Is.EqualTo(op.TimeMs));
-		// 	Assert.That(((Thing)op2.Value).id, Is.EqualTo(thing.id));
-		// 	Assert.That(((Thing)op2.Value).colour, Is.EqualTo(thing.colour));
-		// }
+		
+		[Test]
+		public async Task BlobDestroySerialisation()
+		{
+		    string blobId = "first/second/happy_snap_deleted";
+		    var op = RequestOp.BlobDestroyOp(blobId, cascade.NowMs);
+		    Assert.That(op.Verb, Is.EqualTo(RequestVerb.BlobDestroy));
+		    Assert.That(op.Id, Is.EqualTo(blobId));
+		    Assert.That(op.Type, Is.EqualTo(typeof(byte[]))); // For BlobDestroy operation, Type is commonly null
+		    Assert.That(op.TimeMs, Is.EqualTo(cascade.NowMs));
+		    Assert.That(op.Value, Is.EqualTo(null));
+		    
+		    var sz = cascade.SerializeRequestOp(op, out var externalContent);
+		    Log.Debug(sz);
+		    const string expected = "{\"Verb\":\"BlobDestroy\",\"Type\":\"System.Byte[]\",\"Id\":\"first/second/happy_snap_deleted\",\"TimeMs\":1000,\"Value\":null}";
+		    Assert.That(sz, Is.EqualTo(expected));
+
+		    var op2 = cascade.DeserializeRequestOp(sz, out var externals);
+		    Assert.That(op2.Verb, Is.EqualTo(op.Verb));
+		    Assert.That(op2.Id, Is.EqualTo(op.Id));
+		    Assert.That(op2.TimeMs, Is.EqualTo(op.TimeMs));
+		}
+		
+		[Test]
+		public async Task BlobPendingChangesSerialisation() {
+			cascade.ConnectionOnline = false;
+			
+			if (!Directory.Exists(cascade.Config.PendingChangesPath))
+				Directory.CreateDirectory(cascade.Config.PendingChangesPath);
+			Log.Debug(cascade.Config.PendingChangesPath);
+			
+			var image = new Bitmap(100,100);
+			var imageBlob = TestUtils.BlobFromBitmap(image,ImageFormat.Png);
+			var imagePath = "first/second/happy_snap";
+			var imageOp = RequestOp.BlobPutOp(imagePath,cascade.NowMs, imageBlob);
+			await cascade.AddPendingChange(imageOp);
+
+			var thumbnail = new Bitmap(10,10);
+			var thumbnailBlob = TestUtils.BlobFromBitmap(thumbnail,ImageFormat.Png);
+			var thumbnailPath = "first/second/happy_snap.thumb10";
+			var thumbnailOp = RequestOp.BlobPutOp(thumbnailPath,cascade.NowMs, thumbnailBlob);
+			await cascade.AddPendingChange(thumbnailOp);
+			
+			var thing = new ThingPhoto() {
+				id = 3,
+				name = "happy snap",
+				Image = image,
+				imagePath = imagePath,
+				Thumbnail = thumbnail,
+				thumbnailPath = thumbnailPath
+			};
+			var thingOp = RequestOp.CreateOp(thing,cascade.NowMs);
+			await cascade.AddPendingChange(thingOp);
+			
+			var changes = await cascade.GetChangesPending();
+			
+			Assert.That(changes.Count,Is.EqualTo(3));
+			RequestOp change;
+			string filename;
+			
+			filename = changes[0].Item1;
+			change = changes[0].Item2;
+			Assert.That(filename, Does.Match("^[0-9]+\\.json$"));
+			AssertRequestOpsMatch(imageOp, change, checkValue: false);
+			Assert.That((byte[])change.Value!, Is.EqualTo((byte[])imageOp.Value!).AsCollection);
+			
+			filename = changes[1].Item1;
+			change = changes[1].Item2;
+			Assert.That(filename, Does.Match("^[0-9]+\\.json$"));
+			AssertRequestOpsMatch(thumbnailOp, change, checkValue: false);
+			Assert.That((byte[])change.Value!, Is.EqualTo((byte[])thumbnailOp.Value!).AsCollection);
+			
+			filename = changes[2].Item1;
+			change = changes[2].Item2;
+			Assert.That(filename, Does.Match("^[0-9]+\\.json$"));
+			AssertRequestOpsMatch(thingOp, change, checkValue: false);
+			Assert.That(change.Value,Is.InstanceOf<ThingPhoto>());
+		}
 		
 		[Test]
 		public async Task EnqueueOperation() {

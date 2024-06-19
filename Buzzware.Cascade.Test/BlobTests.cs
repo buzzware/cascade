@@ -195,7 +195,7 @@ namespace Buzzware.Cascade.Test {
 			var testPhoto1 = new ThingPhoto() {
 				id = 1,
 				Comments = "Fred",
-				ImagePath = BLOB1_PATH
+				imagePath = BLOB1_PATH
 			};
 			var testPhoto2 = await cascade.Create(testPhoto1);
 			
