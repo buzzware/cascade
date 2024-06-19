@@ -259,6 +259,12 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(filename, Does.Match("^[0-9]+\\.json$"));
 			AssertRequestOpsMatch(thingOp, change, checkValue: false);
 			Assert.That(change.Value,Is.InstanceOf<ThingPhoto>());
+
+			foreach (var ch in changes) {
+				await cascade.RemoveChangePending(ch.Item1,ch.Item3?.Values);
+			}
+			var items = Directory.GetFiles(cascade.Config.PendingChangesPath);
+			Assert.That(items.Length,Is.Zero);
 		}
 		
 		[Test]
@@ -322,11 +328,6 @@ namespace Buzzware.Cascade.Test {
 				Path.GetFileName(filepathChild3),
 				Path.GetFileName(filepathChild3Update)
 			}));
-		}
-
-		[Test]
-		public void a() {
-			
 		}
 	}
 }

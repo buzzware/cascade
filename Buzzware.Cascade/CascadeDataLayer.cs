@@ -1551,7 +1551,7 @@ namespace Buzzware.Cascade {
 			return items.Select(Path.GetFileName).Where(f => !f.Contains("__") && f.EndsWith(".json")).ToImmutableArray().Sort();
 		}
 		
-		private async Task RemoveChangePending(string filename) {
+		private async Task RemoveChangePendingFile(string filename) {
 			var filepath = Path.Combine(Config.PendingChangesPath, filename);
 			CascadeUtils.EnsureFileOperationSync(() => {
 				if (File.Exists(filepath))
@@ -1559,8 +1559,8 @@ namespace Buzzware.Cascade {
 			});
 		}
 		
-		public async Task<IReadOnlyList<Tuple<string,RequestOp>>> GetChangesPending() {
-			var changes = new List<Tuple<string,RequestOp>>();
+		public async Task<List<Tuple<string, RequestOp, IReadOnlyDictionary<string, string>?>>> GetChangesPending() {
+			var changes = new List<Tuple<string, RequestOp, IReadOnlyDictionary<string, string>?>>();
 			var list = GetChangesPendingList();
 			foreach (var filename in list) {
 				var content = CascadeUtils.LoadFileAsString(Path.Combine(Config.PendingChangesPath, filename));
@@ -1576,7 +1576,7 @@ namespace Buzzware.Cascade {
 						throw new StandardException($"property {propertyName} unknown");
 					property.SetValue(requestOp,blob);
 				}
-				changes.Add(new Tuple<string, RequestOp>(filename,requestOp));
+				changes.Add(new Tuple<string, RequestOp,  IReadOnlyDictionary<string,string>?>(filename,requestOp,externals));
 			}
 			return changes;
 		}
@@ -1614,17 +1614,26 @@ namespace Buzzware.Cascade {
 			var changes = (await GetChangesPending()).ToImmutableArray();
 			progressCount?.Invoke(changes.Length);
 			for (var index = 0; index < changes.Length; index++) {
-				var pair = changes[index];
+				var change = changes[index];
 				progressMessage?.Invoke($"Uploading Changes");
-				await InnerProcess(pair.Item2, true);
-				await RemoveChangePending(pair.Item1);
+				await InnerProcess(change.Item2, true);
+				await RemoveChangePending(change.Item1,change.Item3?.Values);
 				progressCount?.Invoke(changes.Length - index - 1);
 			}
 			// Update Home Screen Pending Count after Uploading Changes
 			RaisePropertyChanged(nameof(PendingCount));
 			progressMessage?.Invoke("Changes Uploaded.");
 		}
-		
+
+		public async Task RemoveChangePending(string main, IEnumerable<string>? externals) {
+			await RemoveChangePendingFile(main);
+			if (externals != null) {
+				foreach (var f in externals) {
+					await RemoveChangePendingFile(ExternalBinaryPathFromPendingChangePath(main,f));
+				}	
+			}
+		}
+
 		public IEnumerable<Type> ListModelTypes() {
 			return Origin.ListModelTypes();
 		}
