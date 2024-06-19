@@ -36,7 +36,7 @@ namespace Buzzware.Cascade {
 		public readonly CascadeConfig Config;
 		private readonly ErrorControl errorControl;
 		private readonly object lockObject;
-		private readonly ICascadeOrigin Origin;
+		public readonly ICascadeOrigin Origin;
 		private readonly CascadeJsonSerialization serialization;
 
 		private bool _connectionOnline = true;
@@ -511,8 +511,14 @@ namespace Buzzware.Cascade {
 			else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute), true).FirstOrDefault() is BelongsToAttribute belongsTo) {
 				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, hold);
 			}
+			else if (propertyInfo?.GetCustomAttributes(typeof(FromBlobAttribute), true).FirstOrDefault() is FromBlobAttribute fromBlob) {
+				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, hold);
+			}
+			else if (propertyInfo?.GetCustomAttributes(typeof(FromPropertyAttribute), true).FirstOrDefault() is FromPropertyAttribute fromProperty) {
+				await processFromProperty(model, modelType, propertyInfo!, fromProperty);
+			}
 		}
-
+		
 		/// <summary>
 		/// Populates (sets the given association property(s) on the given model each according to their definition attribute (BelongsTo/HasMany/HasOne)) with
 		/// the resulting model(s) from their internal query(s). 
@@ -601,7 +607,7 @@ namespace Buzzware.Cascade {
 				if (foreignType == null)
 					throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
 
-				var hasManyModels = ((IEnumerable)propertyInfo!.GetValue(model)).Cast<object>().ToList();
+				var hasManyModels = ((IEnumerable)(propertyInfo!.GetValue(model) ?? Array.Empty<object>())).Cast<object>().ToList();
 				hasManyModels.Add(hasManyItem);
 				
 				object modelId = CascadeTypeUtils.GetCascadeId(model);
@@ -891,16 +897,19 @@ namespace Buzzware.Cascade {
 				switch (requestOp.Verb) {
 					case RequestVerb.Get:
 					case RequestVerb.Query:
+					case RequestVerb.BlobGet:
 						return ProcessGetOrQuery(requestOp, connectionOnline);
 					case RequestVerb.GetCollection:
 						return ProcessGetCollection(requestOp, connectionOnline);
 					case RequestVerb.Create:
 						return ProcessCreate(requestOp, connectionOnline);
 					case RequestVerb.Replace:
+					case RequestVerb.BlobPut:
 						return ProcessReplace(requestOp, connectionOnline);
 					case RequestVerb.Update:
 						return ProcessUpdate(requestOp, connectionOnline);
 					case RequestVerb.Destroy:
+					case RequestVerb.BlobDestroy:
 						return ProcessDestroy(requestOp, connectionOnline);
 					case RequestVerb.Execute:
 						return ProcessExecute(requestOp, connectionOnline);
@@ -936,7 +945,7 @@ namespace Buzzware.Cascade {
 			SetResultsImmutable(opResponse);
 			return opResponse;
 		}
-
+		
 		private async Task<OpResponse> ProcessRequest(RequestOp requestOp) {
 			if (Log.Logger.IsEnabled(LogEventLevel.Debug)) {
 				Log.Debug("ProcessRequest before criteria");
@@ -965,7 +974,8 @@ namespace Buzzware.Cascade {
 			
 			if (Log.Logger.IsEnabled(LogEventLevel.Debug))
 				Log.Debug("ProcessRequest OpResponse: Connected: {@Connected} Exists: {@Exists}", opResponse.Connected,opResponse.Exists);
-			if (Log.Logger.IsEnabled(LogEventLevel.Verbose))
+			var isBlobVerb = requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobPut;
+			if (Log.Logger.IsEnabled(LogEventLevel.Verbose) && !isBlobVerb)
 				Log.Verbose("ProcessRequest OpResponse: Result: {@Result}",opResponse.Result);
 			return opResponse;
 		}
@@ -1019,7 +1029,36 @@ namespace Buzzware.Cascade {
 			await StoreInPreviousCaches(opResponse);
 			await SetModelProperty(model, propertyInfo, opResponse.Result);
 		}
+		
+		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds, bool? hold) {
+			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var pathProperty = modelType.GetProperty(attribute.PathProperty);
+			var path = pathProperty.GetValue(model) as string;
+			if (path == null)
+				return;
 
+			var requestOp = RequestOp.BlobGetOp(
+				path,
+				NowMs,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				hold: hold
+			); 
+			var opResponse = await InnerProcessWithFallback(requestOp);
+			await StoreInPreviousCaches(opResponse);
+
+			var propertyValue = attribute.Converter!.Convert(opResponse.Result as byte[], destinationPropertyType);
+			
+			await SetModelProperty(model, propertyInfo, propertyValue);
+		}
+		
+		private async Task processFromProperty(object model, Type modelType, PropertyInfo propertyInfo, FromPropertyAttribute attribute) {
+			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var sourceProperty = modelType.GetProperty(attribute.SourcePropertyName);
+			var sourceValue = sourceProperty!.GetValue(model);
+			var destValue = await attribute.Converter!.Convert(sourceValue, destinationPropertyType, attribute.Arguments);
+			await SetModelProperty(model, propertyInfo, destValue);
+		}
+		
 		private async Task<OpResponse> ProcessGetCollection(RequestOp requestOp, bool connectionOnline) {
 			object? value;
 			ICascadeCache? layerFound = null;
@@ -1046,8 +1085,7 @@ namespace Buzzware.Cascade {
 			}
 			return opResponse!;
 		}
-
-
+		
 		private async Task<OpResponse> ProcessGetOrQuery(RequestOp requestOp, bool connectionOnline) {
 			OpResponse? opResponse = null;
 			OpResponse? cacheResponse = null;
@@ -1071,6 +1109,8 @@ namespace Buzzware.Cascade {
 							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
 						else if (requestOp.Verb == RequestVerb.Query)
 							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Key} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+						else if (requestOp.Verb == RequestVerb.BlobGet)
+							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
 						// layerFound = layer;
 						cacheResponse = res;
 						break;
@@ -1136,7 +1176,7 @@ namespace Buzzware.Cascade {
 		}
 		
 		private void SetResultsImmutable(OpResponse opResponse) {
-			if (opResponse.ResultIsEmpty())
+			if (opResponse.ResultIsEmpty() || opResponse.ResultIsBlob())
 				return;
 			foreach (var result in opResponse.Results) {
 				if (result is SuperModel superModel)
@@ -1370,6 +1410,8 @@ namespace Buzzware.Cascade {
 		}
 
 		public string? SerializeRequestOp(RequestOp op) {
+			if (op.Verb == RequestVerb.BlobPut)
+				throw new NotImplementedException("Serialisation of Blob values not yet supported");
 			var dic = new Dictionary<string, object>();
 			dic[nameof(op.Verb)] = op.Verb.ToString();
 			dic[nameof(op.Type)] = op.Type.FullName;
@@ -1391,6 +1433,10 @@ namespace Buzzware.Cascade {
 			var typeName = el.GetProperty(nameof(RequestOp.Type)).GetString();
 			var type = Origin.LookupModelType(typeName); // Type.GetType(typeName,true);
 			Enum.TryParse<RequestVerb>(el.GetProperty(nameof(RequestOp.Verb)).GetString(), out var verb);
+			
+			if (verb == RequestVerb.BlobPut)
+				throw new NotImplementedException("Deserialisation of Blob values not yet supported");
+			
 			object id = null;
 			var idProperty = el.GetProperty(nameof(RequestOp.Id));
 			var idType = CascadeTypeUtils.GetCascadeIdType(type);
@@ -1502,6 +1548,69 @@ namespace Buzzware.Cascade {
 			return Origin.ListModelTypes();
 		}
 
+		#region Blob
+		
+		/// <summary>
+		/// Get a binary blob identified by the given path
+		/// </summary>
+		/// <param name="path">id of blob</param>
+		/// <param name="freshnessSeconds">freshness</param>
+		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <returns>model of type M or null</returns>
+		public async Task<byte[]?> BlobGet(
+			string path,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null
+		) {
+			return (byte[]?)(await this.BlobGetResponse(path,freshnessSeconds, fallbackFreshnessSeconds, hold)).Result;
+		}
+
+		
+		/// <summary>
+		/// </summary>
+		/// <param name="path">path of blob to get</param>
+		/// <param name="freshnessSeconds">freshness for the main object</param>
+		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <returns>OpResponse</returns>
+		public Task<OpResponse> BlobGetResponse(
+			string path,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null
+		) {
+			var req = RequestOp.BlobGetOp(
+				path,
+				NowMs,
+				freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+				hold
+			);
+			return ProcessRequest(req);
+		}
+		
+		public async Task BlobPut(
+			string path, 
+			byte[] data
+		) {
+			var response = await BlobPutResponse(path,data);
+		}		
+		
+		public Task<OpResponse> BlobPutResponse(string path, byte[] data) {
+			var req = RequestOp.BlobPutOp(path, NowMs, data);
+			return ProcessRequest(req);
+		}
+		
+		public async Task BlobDestroy(string path) {
+			var response = await BlobDestroyResponse(path);
+		}
+		
+		public Task<OpResponse> BlobDestroyResponse(string path) {
+			var req = RequestOp.BlobDestroyOp(path, NowMs);
+			return ProcessRequest(req);
+		}
+		#endregion
+		
 		#region Meta
 		// The "meta" feature offers key/value persistent storage 
 
@@ -1634,8 +1743,6 @@ namespace Buzzware.Cascade {
 		public void Hold(Type modelType, object id) {
 			Log.Debug($"CascadeDataLayer Hold {modelType.FullName} id {id}");
 			var path = HoldModelPath(modelType,id);
-			// if (MetaExists(path))
-			// 	return;
 			MetaSet(path, String.Empty);
 		}
 
@@ -1727,5 +1834,18 @@ namespace Buzzware.Cascade {
 		}
 		
 		#endregion
+
+		public bool IsHeldBlob(string path) {
+			throw new NotImplementedException();
+		}
+
+		public async Task<object?> SetFromBlobProperty(SuperModel model, string property, byte[] blob) {
+			PropertyInfo propertyInfo = model.GetType().GetProperty(property)!;
+			var attribute = propertyInfo.GetCustomAttribute<FromBlobAttribute>();
+			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var propertyValue = attribute.ConvertToPropertyType(blob, destinationPropertyType);
+			await SetModelProperty(model, propertyInfo, propertyValue);
+			return propertyValue;
+		}
 	}
 }	

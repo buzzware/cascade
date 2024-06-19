@@ -315,5 +315,21 @@ namespace Buzzware.Cascade {
 
 			return relativePath.ToString();
 		}		
+		
+		public static string? UpToFolderNamed(string path, string folderName) {
+			var parts = path.Split('/');
+			var folderIndex = Array.LastIndexOf(parts, folderName);
+			if (folderIndex < 0)
+				return null;
+			var result = string.Join("/", parts.Take(folderIndex + 1));
+			return result;
+		}
+
+		public static string? AboveFolderNamed(string path, string folderName) {
+			var path2 = UpToFolderNamed(path, folderName);
+			if (path2 == null)
+				return null;
+			return Path.GetDirectoryName(path2);
+		}
 	}
 }

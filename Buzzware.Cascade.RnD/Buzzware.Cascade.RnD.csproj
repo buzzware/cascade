@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Buzzware.Cascade.Test\Buzzware.Cascade.Test.csproj" />
     <ProjectReference Include="..\Buzzware.Cascade\Buzzware.Cascade.csproj" />
+    <ProjectReference Include="..\StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj" />
   </ItemGroup>
 
 </Project>

@@ -101,7 +101,7 @@ namespace Buzzware.Cascade {
 			try {
 				return JsonSerializer.Deserialize(source, type, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
-				Log.Warning($"Failed Deserializing as ${type.Name}: "+e.Message);
+				Log.Warning($"Failed Deserializing as {type.Name}: "+e.Message);
 				Log.Debug(source);
 				throw;
 			}
@@ -111,7 +111,7 @@ namespace Buzzware.Cascade {
 			try {
 				return JsonSerializer.Deserialize(source, type, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
-				Log.Warning($"Failed Deserializing as ${type.Name}: "+e.Message);
+				Log.Warning($"Failed Deserializing as {type.Name}: "+e.Message);
 				//Log.Debug(source);
 				throw;
 			}
@@ -121,7 +121,7 @@ namespace Buzzware.Cascade {
 			try {
 				return JsonSerializer.Deserialize<T>(source, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
-				Log.Warning($"Failed Deserializing as ${typeof(T).Name}: "+e.Message);
+				Log.Warning($"Failed Deserializing as {typeof(T).Name}: "+e.Message);
 				Log.Debug(source);
 				throw;
 			}
@@ -131,7 +131,7 @@ namespace Buzzware.Cascade {
 			try {
 				return JsonSerializer.Deserialize<T>(element, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
-				Log.Warning($"Failed Deserializing as ${typeof(T).Name}: "+e.Message);
+				Log.Warning($"Failed Deserializing as {typeof(T).Name}: "+e.Message);
 				Log.Debug(element.ToString());
 				throw;
 			}
@@ -141,7 +141,7 @@ namespace Buzzware.Cascade {
 		// 	try {
 		// 		return JsonSerializer.Deserialize<T>(source, dictionaryNormalizedOptions)!;
 		// 	} catch (Exception e) {
-		// 		Log.Warning($"Failed Deserializing as ${typeof(T).Name}: "+e.Message);
+		// 		Log.Warning($"Failed Deserializing as {typeof(T).Name}: "+e.Message);
 		// 		Log.Debug(source);
 		// 		throw;
 		// 	}

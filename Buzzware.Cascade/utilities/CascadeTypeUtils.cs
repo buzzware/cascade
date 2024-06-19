@@ -27,11 +27,11 @@ namespace Buzzware.Cascade {
 			return result.ToArray();
 		}
 
-		public static bool IsId(object id) {
+		public static bool IsId(object? id) {
 			return (id is String) || (id?.GetType().IsPrimitive ?? false);
 		}
 		
-		public static bool IsModel(object id) {
+		public static bool IsModel(object? id) {
 			if (IsId(id))
 				return false;
 			return id?.GetType()?.IsClass ?? false;
@@ -346,6 +346,5 @@ namespace Buzzware.Cascade {
 			}
 			return false;
 		}
-
 	}
 }

@@ -1,21 +1,27 @@
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
-using Buzzware.Cascade.Test;
 using Buzzware.Cascade.Testing;
 using NUnit.Framework;
 using Serilog;
 
-namespace Buzzware.Cascade.RnD {
+namespace Buzzware.Cascade.Test {
 
     [TestFixture]
 	public class FastFileClassCacheTests {
+        private string testSourcePath;
         private string tempDir;
-		
-		[SetUp]
+        private string testClassName;
+        private string testName;
+
+        [SetUp]
 		public void SetUp() {
-            //tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            tempDir = "/Users/gary/repos/civmec/CivtracDispatch/cascade/Buzzware.Buzzware.Cascade.RnD/temp/FastFileClassCacheTests";
+            testClassName = TestContext.CurrentContext.Test.ClassName.Split('.').Last();
+            testName = TestContext.CurrentContext.Test.Name;
+            testSourcePath = CascadeUtils.AboveFolderNamed(TestContext.CurrentContext.TestDirectory,"bin")!;
+            tempDir = testSourcePath+$"/temp/{testClassName}.{testName}";
             Log.Debug($"Buzzware.Cascade cache directory {tempDir}");
             if (Directory.Exists(tempDir))
                 Directory.Delete(tempDir,true);

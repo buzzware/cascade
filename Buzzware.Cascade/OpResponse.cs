@@ -54,6 +54,10 @@ namespace Buzzware.Cascade {
 		public int LayerIndex;
 
 		public string? SourceName;
+
+		public bool ResultIsBlob() {
+			return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobPut) && Result is byte[];
+		}
 		
 		public bool ResultIsEmpty() {
 			if (Result == null)
@@ -77,7 +81,9 @@ namespace Buzzware.Cascade {
 			get {
 				if (Result == null)
 					return ImmutableArray<object>.Empty;
-				if (CascadeTypeUtils.IsEnumerableType(Result.GetType())) {
+				if (ResultIsBlob()) {
+					ImmutableArray.Create(Result);	// put blob into an array
+				} if (CascadeTypeUtils.IsEnumerableType(Result.GetType())) {
 					//IEnumerable<object> objects = (IEnumerable<object>)Result;
 					return (IEnumerable)CascadeTypeUtils.ImmutableArrayOfType(typeof(object), (IEnumerable) Result);
 				} else {
@@ -93,8 +99,10 @@ namespace Buzzware.Cascade {
 			}
 		}
 
-		public object? FirstResult => (Result as IEnumerable)?.Cast<object>().FirstOrDefault(); 
+		public object? FirstResult => IsEnumerableResults ? (Result as IEnumerable)?.Cast<object>().FirstOrDefault() : Result;
 
+		public bool IsEnumerableResults => (Result is IEnumerable) && !ResultIsBlob(); 
+		
 		public bool IsModelResults => CascadeTypeUtils.IsModel(FirstResult); 
 
 		public bool IsIdResults => CascadeTypeUtils.IsId(FirstResult);
