@@ -25,6 +25,8 @@ namespace Buzzware.Cascade.Testing {
 				return typeof(Parent);
 			else if (typeName == typeof(Child).FullName)
 				return typeof(Child);
+			else if (typeName == "System.Byte[]")
+				return typeof(System.Byte[]);
 			else
 				throw new TypeLoadException($"Type {typeName} not found in origin");
 		}

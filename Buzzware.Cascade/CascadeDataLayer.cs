@@ -1409,7 +1409,10 @@ namespace Buzzware.Cascade {
 			return filePath;
 		}
 
-		public string? SerializeRequestOp(RequestOp op, out Dictionary<string, byte[]> externalContent) {
+		public string? SerializeRequestOp(
+			RequestOp op, 
+			out IReadOnlyDictionary<string, byte[]> externalContent	// filename suffix, content
+		) {
 			// if (op.Verb == RequestVerb.BlobPut)
 			// 	throw new NotImplementedException("Serialisation of Blob values not yet supported");
 			var dic = new Dictionary<string, object>();
@@ -1418,14 +1421,14 @@ namespace Buzzware.Cascade {
 			dic[nameof(op.Id)] = op.Id;
 			dic[nameof(op.TimeMs)] = op.TimeMs;
 
-			var externalFiles = new Dictionary<string, string>();
-			externalContent = new Dictionary<string, byte[]>();
+			var externalFiles = new Dictionary<string, string>();		// property, filename suffix
+			var externalContentWorking = new Dictionary<string, byte[]>();
 			
 			var value = op.Value;
 			switch (value) {
 				case byte[] bytes:
 					externalFiles[nameof(op.Value)] = nameof(op.Value);
-					externalContent[nameof(op.Value)] = bytes;
+					externalContentWorking[nameof(op.Value)] = bytes;
 					value = null;
 					break;
 				default:
@@ -1440,40 +1443,54 @@ namespace Buzzware.Cascade {
 			if (op.Extra!=null)
 				dic[nameof(op.Extra)] = serialization.SerializeToNode(op.Extra);
 			
-			if (externalContent.Count > 0)
+			if (externalContentWorking.Count > 0)
 				dic["externals"] = serialization.SerializeToNode(externalFiles);
 			var str = serialization.Serialize(dic);
+			externalContent = externalContentWorking;
 			return str;
 		}
 
-		public RequestOp DeserializeRequestOp(string? s) {
+		public RequestOp DeserializeRequestOp(string? s, out IReadOnlyDictionary<string, string> externals) {
 			Log.Debug("DeserializeRequestOp: "+s);
 			var el = serialization.DeserializeElement(s);
 			var typeName = el.GetProperty(nameof(RequestOp.Type)).GetString();
 			var type = Origin.LookupModelType(typeName); // Type.GetType(typeName,true);
 			Enum.TryParse<RequestVerb>(el.GetProperty(nameof(RequestOp.Verb)).GetString(), out var verb);
+
+			if (el.HasProperty("externals")) {
+				var dic = serialization.DeserializeDictionaryOfNormalTypes(el.GetProperty("externals")); 
+				externals = dic.ToDictionary(
+					kvp => kvp.Key,
+					kvp => kvp.Value?.ToString() ?? String.Empty
+				);;
+			} else
+				externals = ImmutableDictionary<string, string>.Empty; 
 			
+			//var externals = serialization.DeserializeType<Dictionary<string,string>>(()) "externals"
 			// if (verb == RequestVerb.BlobPut)
 			// 	throw new NotImplementedException("Deserialisation of Blob values not yet supported");
 			
-			object id = null;
+			object? id = null;
 			var idProperty = el.GetProperty(nameof(RequestOp.Id));
-			var idType = CascadeTypeUtils.GetCascadeIdType(type);
-			if (idProperty.ValueKind == JsonValueKind.Number)
-				id = CascadeTypeUtils.ConvertTo(idType, idProperty.GetInt64());
-			else if (idProperty.ValueKind == JsonValueKind.String)
-				id = CascadeTypeUtils.ConvertTo(idType, idProperty.GetString());
-			else if (verb == RequestVerb.Create || verb == RequestVerb.Execute)
-				id = null;
-			else
-				throw new TypeAccessException("Failed to interpret id value in correct type");
-			object value = null,criteria = null;
+			if (verb == RequestVerb.Get || verb == RequestVerb.Update || verb == RequestVerb.Replace || verb == RequestVerb.Destroy || verb == RequestVerb.Create) {
+				var idType = CascadeTypeUtils.GetCascadeIdType(type);
+				if (idProperty.ValueKind == JsonValueKind.Number)
+					id = CascadeTypeUtils.ConvertTo(idType, idProperty.GetInt64());
+				else if (idProperty.ValueKind == JsonValueKind.String)
+					id = CascadeTypeUtils.ConvertTo(idType, idProperty.GetString());
+				else
+					throw new TypeAccessException("Failed to interpret id value in correct type");
+			} else if (verb == RequestVerb.BlobGet || verb == RequestVerb.BlobPut || verb == RequestVerb.BlobDestroy) {
+				id = idProperty.GetString();	// path
+			}
+			
+			object? value = null,criteria = null;
 			if (verb == RequestVerb.Update) {
 				value = serialization.DeserializeDictionaryOfNormalTypes(el.GetProperty(nameof(RequestOp.Value)));
 			} else if (verb == RequestVerb.Execute) {
 				value = el.GetProperty(nameof(RequestOp.Value)).ToString();
 				criteria = serialization.DeserializeDictionaryOfNormalTypes(el.GetProperty(nameof(RequestOp.Criteria)));
-			} else {
+			} else if (type.IsSubclassOf(typeof(SuperModel))) {
 				value = serialization.DeserializeType(type, el.GetProperty(nameof(RequestOp.Value)));
 			}
 			return new RequestOp(
@@ -1547,7 +1564,8 @@ namespace Buzzware.Cascade {
 			var list = GetChangesPendingList();
 			foreach (var filename in list) {
 				var content = CascadeUtils.LoadFileAsString(Path.Combine(Config.PendingChangesPath, filename));
-				changes.Add(new Tuple<string, RequestOp>(filename,DeserializeRequestOp(content)));
+				var requestOp = DeserializeRequestOp(content, out var externals);
+				changes.Add(new Tuple<string, RequestOp>(filename,requestOp));
 			}
 			return changes;
 		}

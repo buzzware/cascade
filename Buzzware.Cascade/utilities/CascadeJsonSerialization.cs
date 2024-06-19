@@ -77,7 +77,7 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
-		public object DeserializeDictionaryOfNormalTypes(string source) {
+		public Dictionary<string,object> DeserializeDictionaryOfNormalTypes(string source) {
 			try {
 				return JsonSerializer.Deserialize<Dictionary<string,object>>(source, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
@@ -87,7 +87,7 @@ namespace Buzzware.Cascade {
 			}
 		}
 
-		public object DeserializeDictionaryOfNormalTypes(JsonElement source) {
+		public Dictionary<string,object> DeserializeDictionaryOfNormalTypes(JsonElement source) {
 			try {
 				return JsonSerializer.Deserialize<Dictionary<string,object>>(source, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
