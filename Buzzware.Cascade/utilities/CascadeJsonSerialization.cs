@@ -163,18 +163,18 @@ namespace Buzzware.Cascade {
 			});
 		}
 		
-		public string? Serialize(object model) {
+		public string? Serialize(object value) {
 			try {
-				return JsonSerializer.Serialize(SerializeToNode(model), dictionaryNormalizedOptions);
+				return JsonSerializer.Serialize(SerializeToNode(value), dictionaryNormalizedOptions);
 			} catch (Exception e) {
 				Log.Warning($"Failed Serialize model: "+e.Message);
 				throw;
 			}
 		}
 		
-		public JsonNode SerializeToNode(object model) {
+		public JsonNode SerializeToNode(object value) {
 			try {
-				var node = JsonSerializer.SerializeToNode(model, dictionaryNormalizedOptions);
+				var node = JsonSerializer.SerializeToNode(value, dictionaryNormalizedOptions);
 				return node;
 			} catch (Exception e) {
 				Log.Warning($"Failed SerializeToNode: "+e.Message);
@@ -182,9 +182,9 @@ namespace Buzzware.Cascade {
 			}
 		}
 
-		public JsonElement SerializeToElement(object model) {
+		public JsonElement SerializeToElement(object value) {
 			try {
-				var element = JsonSerializer.SerializeToElement(model, dictionaryNormalizedOptions);
+				var element = JsonSerializer.SerializeToElement(value, dictionaryNormalizedOptions);
 				return element;
 			} catch (Exception e) {
 				Log.Warning($"Failed SerializeToElement model: "+e.Message);

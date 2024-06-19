@@ -1409,20 +1409,39 @@ namespace Buzzware.Cascade {
 			return filePath;
 		}
 
-		public string? SerializeRequestOp(RequestOp op) {
-			if (op.Verb == RequestVerb.BlobPut)
-				throw new NotImplementedException("Serialisation of Blob values not yet supported");
+		public string? SerializeRequestOp(RequestOp op, out Dictionary<string, byte[]> externalContent) {
+			// if (op.Verb == RequestVerb.BlobPut)
+			// 	throw new NotImplementedException("Serialisation of Blob values not yet supported");
 			var dic = new Dictionary<string, object>();
 			dic[nameof(op.Verb)] = op.Verb.ToString();
 			dic[nameof(op.Type)] = op.Type.FullName;
 			dic[nameof(op.Id)] = op.Id;
 			dic[nameof(op.TimeMs)] = op.TimeMs;
-			dic[nameof(op.Value)] = serialization.SerializeToNode(op.Value);
+
+			var externalFiles = new Dictionary<string, string>();
+			externalContent = new Dictionary<string, byte[]>();
+			
+			var value = op.Value;
+			switch (value) {
+				case byte[] bytes:
+					externalFiles[nameof(op.Value)] = nameof(op.Value);
+					externalContent[nameof(op.Value)] = bytes;
+					value = null;
+					break;
+				default:
+				case null:
+					// do nothing
+					break;
+			}
+			dic[nameof(op.Value)] = serialization.SerializeToNode(value);
+			
 			if (op.Criteria!=null)
 				dic[nameof(op.Criteria)] = serialization.SerializeToNode(op.Criteria);
 			if (op.Extra!=null)
 				dic[nameof(op.Extra)] = serialization.SerializeToNode(op.Extra);
-			dic[nameof(op.Value)] = serialization.SerializeToNode(op.Value);
+			
+			if (externalContent.Count > 0)
+				dic["externals"] = serialization.SerializeToNode(externalFiles);
 			var str = serialization.Serialize(dic);
 			return str;
 		}
@@ -1434,8 +1453,8 @@ namespace Buzzware.Cascade {
 			var type = Origin.LookupModelType(typeName); // Type.GetType(typeName,true);
 			Enum.TryParse<RequestVerb>(el.GetProperty(nameof(RequestOp.Verb)).GetString(), out var verb);
 			
-			if (verb == RequestVerb.BlobPut)
-				throw new NotImplementedException("Deserialisation of Blob values not yet supported");
+			// if (verb == RequestVerb.BlobPut)
+			// 	throw new NotImplementedException("Deserialisation of Blob values not yet supported");
 			
 			object id = null;
 			var idProperty = el.GetProperty(nameof(RequestOp.Id));
@@ -1478,17 +1497,34 @@ namespace Buzzware.Cascade {
 			if (!Directory.Exists(folder))
 				Directory.CreateDirectory(folder);
 			//var filePath = FindNumericFileDoesntExist(folder, op.TimeMs, "D15", $"__{typeStr}__{op.IdAsString}.json");
-			var content = SerializeRequestOp(op);
+			var content = SerializeRequestOp(op, out var externalContent);
 			string? filePath=null;
 			await CascadeUtils.EnsureFileOperation(async () => {
 				filePath = FindNumericFileDoesntExist(folder, op.TimeMs, "D15", ".json");
-				using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
-					using (var writer = new StreamWriter(stream)) {
-						await writer.WriteAsync(content); //.ConfigureAwait(false);
-					}
+				await WriteTextFile(filePath, content);
+				foreach (var kvp in externalContent) {
+					var fullExternalPath = ExternalBinaryPathFromPendingChangePath(filePath, kvp.Key);
+					await WriteBinaryFile(fullExternalPath, kvp.Value);
 				}
 			});
 			return filePath!;
+		}
+
+		private string ExternalBinaryPathFromPendingChangePath(string filePath, string externalPath) {
+			return Path.ChangeExtension(filePath, "__" + externalPath + ".bin");
+		}
+
+		private static async Task WriteBinaryFile(string filePath, byte[] content) {
+			using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true);
+			await stream.WriteAsync(content, 0, content.Length);
+		}
+
+		private static async Task WriteTextFile(string filePath, string? content) {
+			using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
+				using (var writer = new StreamWriter(stream)) {
+					await writer.WriteAsync(content); //.ConfigureAwait(false);
+				}
+			}
 		}
 
 		public IEnumerable<string> GetChangesPendingList() {

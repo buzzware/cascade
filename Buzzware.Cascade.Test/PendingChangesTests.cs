@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using Buzzware.Cascade.Testing;
@@ -65,7 +67,7 @@ namespace Buzzware.Cascade.Test {
 				colour = "brown"
 			};
 			var op = RequestOp.CreateOp(thing, cascade.NowMs);
-			var sz = cascade.SerializeRequestOp(op);
+			var sz = cascade.SerializeRequestOp(op, out var externalContent);
 			Log.Debug(sz);
 			const string expected = "{\"Verb\":\"Create\",\"Type\":\"Buzzware.Cascade.Testing.Thing\",\"Id\":3,\"TimeMs\":1000,\"Value\":{\"id\":3,\"name\":null,\"colour\":\"brown\"}}";
 			Assert.That(sz,Is.EqualTo(expected));
@@ -90,7 +92,7 @@ namespace Buzzware.Cascade.Test {
 			changes["colour"] = "blue";
 			changes["name"] = "Winston";
 			var op = RequestOp.UpdateOp(thing, changes, cascade.NowMs);
-			var sz = cascade.SerializeRequestOp(op);
+			var sz = cascade.SerializeRequestOp(op, out var externalContent);
 			Log.Debug(sz);
 			const string expected = "{\"Verb\":\"Update\",\"Type\":\"Buzzware.Cascade.Testing.Thing\",\"Id\":5,\"TimeMs\":1000,\"Value\":{\"colour\":\"blue\",\"name\":\"Winston\"},\"Extra\":{\"id\":5,\"name\":\"Boris\",\"colour\":\"brown\"}}";
 			Assert.That(sz,Is.EqualTo(expected));
@@ -116,7 +118,7 @@ namespace Buzzware.Cascade.Test {
 			// changes["colour"] = "blue";
 			// changes["name"] = "Winston";
 			var op = RequestOp.DestroyOp(thing, cascade.NowMs);
-			var sz = cascade.SerializeRequestOp(op);
+			var sz = cascade.SerializeRequestOp(op, out var externalContent);
 			Log.Debug(sz);
 			const string expected = "{\"Verb\":\"Destroy\",\"Type\":\"Buzzware.Cascade.Testing.Thing\",\"Id\":5,\"TimeMs\":1000,\"Value\":{\"id\":5,\"name\":\"Boris\",\"colour\":\"brown\"}}";
 			Assert.That(sz,Is.EqualTo(expected));
@@ -128,6 +130,52 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(op2.TimeMs, Is.EqualTo(op.TimeMs));
 		}
 
+		[Test]
+		public async Task BlobPutOpSerialisation() {
+			var image = TestUtils.BlobFromBitmap(new Bitmap(10,10),ImageFormat.Png);
+			var op = RequestOp.BlobPutOp("first/second/happy_snap", cascade.NowMs,image);
+			var sz = cascade.SerializeRequestOp(op,out var externalContent);
+			Log.Debug(sz);
+			const string expected = "{\"Verb\":\"BlobPut\",\"Type\":\"System.Byte[]\",\"Id\":\"first/second/happy_snap\",\"TimeMs\":1000,\"Value\":null,\"externals\":{\"Value\":\"Value\"}}";
+			Assert.That(sz,Is.EqualTo(expected));
+			Assert.That(externalContent.Keys.Count,Is.EqualTo(1));
+			Assert.That(externalContent[nameof(RequestOp.Value)],Is.EqualTo(image));
+
+			// 	var op2 = cascade.DeserializeRequestOp(sz);
+			// 	Assert.That(op2.Verb,Is.EqualTo(RequestVerb.Create));
+			// 	Assert.That(op2.Id,Is.EqualTo(thing.id));
+			// 	Assert.That(op2.Type,Is.EqualTo(typeof(Thing)));
+			// 	Assert.That(op2.TimeMs, Is.EqualTo(op.TimeMs));
+			// 	Assert.That(((Thing)op2.Value).id, Is.EqualTo(thing.id));
+			// 	Assert.That(((Thing)op2.Value).colour, Is.EqualTo(thing.colour));
+		}
+
+		// [Test]
+		// public async Task CreateSerialisation() {
+		// 	var op = RequestOp.BlobPutOp("first/second/happy_snap",cascade.NowMs, );
+		// 	var sz = cascade.SerializeRequestOp(op);
+		// 	Log.Debug(sz);
+		//
+		// 	
+		// 	var thing = new ThingPhoto() {
+		// 		id = 3,
+		// 		name = "happy snap"
+		// 	};
+		// 	var op = RequestOp.BlobPutOp("first/second/happy_snap",cascade.NowMs, );
+		// 	var sz = cascade.SerializeRequestOp(op);
+		// 	Log.Debug(sz);
+		// 	const string expected = "{\"Verb\":\"Create\",\"Type\":\"Buzzware.Cascade.Testing.Thing\",\"Id\":3,\"TimeMs\":1000,\"Value\":{\"id\":3,\"name\":null,\"colour\":\"brown\"}}";
+		// 	Assert.That(sz,Is.EqualTo(expected));
+		//
+		// 	var op2 = cascade.DeserializeRequestOp(sz);
+		// 	Assert.That(op2.Verb,Is.EqualTo(RequestVerb.Create));
+		// 	Assert.That(op2.Id,Is.EqualTo(thing.id));
+		// 	Assert.That(op2.Type,Is.EqualTo(typeof(Thing)));
+		// 	Assert.That(op2.TimeMs, Is.EqualTo(op.TimeMs));
+		// 	Assert.That(((Thing)op2.Value).id, Is.EqualTo(thing.id));
+		// 	Assert.That(((Thing)op2.Value).colour, Is.EqualTo(thing.colour));
+		// }
+		
 		[Test]
 		public async Task EnqueueOperation() {
 			var parent = new Parent() {
