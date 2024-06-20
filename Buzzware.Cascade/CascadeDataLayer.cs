@@ -1530,7 +1530,7 @@ namespace Buzzware.Cascade {
 		}
 
 		public string ExternalBinaryPathFromPendingChangePath(string filePath, string externalPath) {
-			return Path.ChangeExtension(filePath, "__" + externalPath + ".bin");
+			return Path.ChangeExtension(filePath, "__" + externalPath + ".bin").Replace(".__","__");
 		}
 
 		private static async Task WriteBinaryFile(string filePath, byte[] content) {

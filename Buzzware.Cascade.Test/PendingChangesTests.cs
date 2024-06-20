@@ -188,7 +188,7 @@ namespace Buzzware.Cascade.Test {
 			AssertRequestOpsMatch(op, op2, checkValue: false);
 			Assert.That(op2.Value, Is.Null);
 			Assert.That(dzexternals, Has.Count.EqualTo(1));
-			Assert.That(dzexternals["Value"], Is.EqualTo("00000000001000.__Value.bin"));
+			Assert.That(dzexternals["Value"], Is.EqualTo("00000000001000__Value.bin"));
 		}
 
 		
