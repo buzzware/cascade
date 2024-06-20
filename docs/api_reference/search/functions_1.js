@@ -1,9 +1,0 @@
-var searchData=
-[
-  ['get_3c_20m_20_3e_0',['Get&lt; M &gt;',['../class_cascade_1_1_cascade_data_layer.html#ae6c200802820ab379fdb514a77317586',1,'Cascade.CascadeDataLayer.Get&lt; M &gt;(int id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)'],['../class_cascade_1_1_cascade_data_layer.html#af1619ad3c304cb1d6394ea724047fed3',1,'Cascade.CascadeDataLayer.Get&lt; M &gt;(string id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)'],['../class_cascade_1_1_cascade_data_layer.html#a257e5772c3a8af3b824e446019bc647f',1,'Cascade.CascadeDataLayer.Get&lt; M &gt;(long id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)']]],
-  ['getcollection_3c_20m_20_3e_1',['GetCollection&lt; M &gt;',['../class_cascade_1_1_cascade_data_layer.html#af44b3ac04388f87bc595463ca92f2da5',1,'Cascade::CascadeDataLayer']]],
-  ['getcollectionresponse_3c_20m_20_3e_2',['GetCollectionResponse&lt; M &gt;',['../class_cascade_1_1_cascade_data_layer.html#a602774c1443e6c878abb98db51ea2df1',1,'Cascade::CascadeDataLayer']]],
-  ['getresponse_3',['GetResponse',['../class_cascade_1_1_cascade_data_layer.html#ad6973ff64840bc098b1e542d52912387',1,'Cascade::CascadeDataLayer']]],
-  ['getwherecollection_3c_20m_20_3e_4',['GetWhereCollection&lt; M &gt;',['../class_cascade_1_1_cascade_data_layer.html#ad2a5ce93ca07377ed7a8a4a4a35a743e',1,'Cascade::CascadeDataLayer']]],
-  ['getwherecollectionresponse_3c_20model_20_3e_5',['GetWhereCollectionResponse&lt; Model &gt;',['../class_cascade_1_1_cascade_data_layer.html#a5cc4553ef85db4ed57562d9b7e6f0a0e',1,'Cascade::CascadeDataLayer']]]
-];
