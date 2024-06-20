@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Buzzware.Cascade.Testing;
 using NUnit.Framework;
@@ -67,7 +68,8 @@ namespace Buzzware.Cascade.Test {
 				colour = "brown"
 			};
 			var op = RequestOp.CreateOp(thing, cascade.NowMs);
-			var sz = cascade.SerializeRequestOp(op, out var externalContent);
+			var szn = cascade.SerializeRequestOp(op, out var externalContent);
+			var sz = szn.ToJsonString();
 			Log.Debug(sz);
 			const string expected = "{\"Verb\":\"Create\",\"Type\":\"Buzzware.Cascade.Testing.Thing\",\"Id\":3,\"TimeMs\":1000,\"Value\":{\"id\":3,\"name\":null,\"colour\":\"brown\"}}";
 			Assert.That(sz,Is.EqualTo(expected));
@@ -92,7 +94,8 @@ namespace Buzzware.Cascade.Test {
 			changes["colour"] = "blue";
 			changes["name"] = "Winston";
 			var op = RequestOp.UpdateOp(thing, changes, cascade.NowMs);
-			var sz = cascade.SerializeRequestOp(op, out var externalContent);
+			var szn = cascade.SerializeRequestOp(op, out var externalContent);
+			var sz = szn.ToJsonString();
 			Log.Debug(sz);
 			const string expected = "{\"Verb\":\"Update\",\"Type\":\"Buzzware.Cascade.Testing.Thing\",\"Id\":5,\"TimeMs\":1000,\"Value\":{\"colour\":\"blue\",\"name\":\"Winston\"},\"Extra\":{\"id\":5,\"name\":\"Boris\",\"colour\":\"brown\"}}";
 			Assert.That(sz,Is.EqualTo(expected));
@@ -118,7 +121,8 @@ namespace Buzzware.Cascade.Test {
 			// changes["colour"] = "blue";
 			// changes["name"] = "Winston";
 			var op = RequestOp.DestroyOp(thing, cascade.NowMs);
-			var sz = cascade.SerializeRequestOp(op, out var externalContent);
+			var szn = cascade.SerializeRequestOp(op, out var externalContent);
+			var sz = szn.ToJsonString();
 			Log.Debug(sz);
 			const string expected = "{\"Verb\":\"Destroy\",\"Type\":\"Buzzware.Cascade.Testing.Thing\",\"Id\":5,\"TimeMs\":1000,\"Value\":{\"id\":5,\"name\":\"Boris\",\"colour\":\"brown\"}}";
 			Assert.That(sz,Is.EqualTo(expected));
@@ -167,19 +171,24 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(op.Criteria, Is.EqualTo(null));
 			Assert.That(op.Params, Is.EqualTo(null));
 			
-			var sz = cascade.SerializeRequestOp(op,out var externalContent);
+			var szn = cascade.SerializeRequestOp(op,out var externalContent);
+			var sz = szn.ToJsonString();
 			Log.Debug(sz);
-			const string expected = "{\"Verb\":\"BlobPut\",\"Type\":\"System.Byte[]\",\"Id\":\"first/second/happy_snap\",\"TimeMs\":1000,\"Value\":null,\"externals\":{\"Value\":\"Value\"}}";
+			const string expected = "{\"Verb\":\"BlobPut\",\"Type\":\"System.Byte[]\",\"Id\":\"first/second/happy_snap\",\"TimeMs\":1000,\"Value\":null}";
 			Assert.That(sz,Is.EqualTo(expected));
 			Assert.That(externalContent.Count,Is.EqualTo(1));
 			Assert.That(externalContent[nameof(RequestOp.Value)],Is.EqualTo(image));
 
-			var op2 = cascade.DeserializeRequestOp(sz, out var externals);
+			const string mainFilename = "00000000001000.json";
+			var externals = new JsonObject();
+			externals["Value"] = cascade.ExternalBinaryPathFromPendingChangePath(mainFilename, "Value");
+			szn["externals"] = externals;
+			var op2 = cascade.DeserializeRequestOp(szn.ToJsonString(), out var dzexternals);
 
 			AssertRequestOpsMatch(op, op2, checkValue: false);
 			Assert.That(op2.Value, Is.Null);
-			Assert.That(externals, Has.Count.EqualTo(1));
-			Assert.That(externals["Value"], Is.EqualTo("Value"));
+			Assert.That(dzexternals, Has.Count.EqualTo(1));
+			Assert.That(dzexternals["Value"], Is.EqualTo("00000000001000.__Value.bin"));
 		}
 
 		
@@ -194,7 +203,8 @@ namespace Buzzware.Cascade.Test {
 		    Assert.That(op.TimeMs, Is.EqualTo(cascade.NowMs));
 		    Assert.That(op.Value, Is.EqualTo(null));
 		    
-		    var sz = cascade.SerializeRequestOp(op, out var externalContent);
+		    var szn = cascade.SerializeRequestOp(op, out var externalContent);
+		    var sz = szn.ToJsonString();
 		    Log.Debug(sz);
 		    const string expected = "{\"Verb\":\"BlobDestroy\",\"Type\":\"System.Byte[]\",\"Id\":\"first/second/happy_snap_deleted\",\"TimeMs\":1000,\"Value\":null}";
 		    Assert.That(sz, Is.EqualTo(expected));

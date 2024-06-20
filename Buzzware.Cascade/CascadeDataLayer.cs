@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Buzzware.Cascade.Utilities;
 using Easy.Common.Extensions;
@@ -1409,7 +1410,7 @@ namespace Buzzware.Cascade {
 			return filePath;
 		}
 
-		public string? SerializeRequestOp(
+		public JsonNode SerializeRequestOp(
 			RequestOp op, 
 			out IReadOnlyDictionary<string, byte[]> externalContent	// filename suffix, content
 		) {
@@ -1443,11 +1444,9 @@ namespace Buzzware.Cascade {
 			if (op.Extra!=null)
 				dic[nameof(op.Extra)] = serialization.SerializeToNode(op.Extra);
 			
-			if (externalContentWorking.Count > 0)
-				dic["externals"] = serialization.SerializeToNode(externalFiles);
-			var str = serialization.Serialize(dic);
+			var node = serialization.SerializeToNode(dic);
 			externalContent = externalContentWorking;
-			return str;
+			return node;
 		}
 
 		public RequestOp DeserializeRequestOp(string? s, out IReadOnlyDictionary<string, string> externals) {
@@ -1515,19 +1514,22 @@ namespace Buzzware.Cascade {
 				Directory.CreateDirectory(folder);
 			//var filePath = FindNumericFileDoesntExist(folder, op.TimeMs, "D15", $"__{typeStr}__{op.IdAsString}.json");
 			var content = SerializeRequestOp(op, out var externalContent);
-			string? filePath=null;
+			var filePath = FindNumericFileDoesntExist(folder, op.TimeMs, "D15", ".json");
+			var externalsNode = new JsonObject();
+			foreach (var external in externalContent) {
+				externalsNode[external.Key] = ExternalBinaryPathFromPendingChangePath(Path.GetFileName(filePath), external.Key);
+			}
+			content["externals"] = externalsNode;
 			await CascadeUtils.EnsureFileOperation(async () => {
-				filePath = FindNumericFileDoesntExist(folder, op.TimeMs, "D15", ".json");
-				await WriteTextFile(filePath, content);
+				await WriteTextFile(filePath, content.ToJsonString());
 				foreach (var kvp in externalContent) {
-					var fullExternalPath = ExternalBinaryPathFromPendingChangePath(filePath, kvp.Key);
-					await WriteBinaryFile(fullExternalPath, kvp.Value);
+					await WriteBinaryFile(ExternalBinaryPathFromPendingChangePath(filePath, kvp.Key), kvp.Value);
 				}
 			});
 			return filePath!;
 		}
 
-		private string ExternalBinaryPathFromPendingChangePath(string filePath, string externalPath) {
+		public string ExternalBinaryPathFromPendingChangePath(string filePath, string externalPath) {
 			return Path.ChangeExtension(filePath, "__" + externalPath + ".bin");
 		}
 
@@ -1566,7 +1568,7 @@ namespace Buzzware.Cascade {
 				var content = CascadeUtils.LoadFileAsString(Path.Combine(Config.PendingChangesPath, filename));
 				var requestOp = DeserializeRequestOp(content, out var externals);
 				foreach (var external in externals) {
-					var exfile = Path.Combine(Config.PendingChangesPath,ExternalBinaryPathFromPendingChangePath(filename, external.Value));
+					var exfile = Path.Combine(Config.PendingChangesPath,external.Value);
 					var blob = await ReadBinaryFile(exfile);
 					var propertyName = external.Key;
 					if (propertyName.Contains("."))
@@ -1629,7 +1631,7 @@ namespace Buzzware.Cascade {
 			await RemoveChangePendingFile(main);
 			if (externals != null) {
 				foreach (var f in externals) {
-					await RemoveChangePendingFile(ExternalBinaryPathFromPendingChangePath(main,f));
+					await RemoveChangePendingFile(f);
 				}	
 			}
 		}
