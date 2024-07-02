@@ -15,10 +15,12 @@ namespace Buzzware.Cascade.Test {
 		MockOrigin2 origin;
 		MockModelClassOrigin<Thing> thingOrigin;
 		CascadeDataLayer cascade;
-		private ModelCache modelCache;
 
 		private ModelClassCache<Thing, int> thingMemoryCache;
-		//private FileSystemClassCache<Buzzware.Buzzware.Cascade.Test.Thing,Int32> thingModelCache;
+		private ModelCache memoryCache;
+
+		private FileSystemClassCache<Thing,int> thingFileCache;
+		private ModelCache fileCache;
 
 		[SetUp]
 		public void SetUp() {
@@ -32,16 +34,22 @@ namespace Buzzware.Cascade.Test {
 				},
 				1000
 			);
-			//thingModelCache = new FileSystemClassCache<Buzzware.Buzzware.Cascade.Test.Thing, int>(tempDir);
 			thingMemoryCache = new ModelClassCache<Thing, int>();
-			modelCache = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
+			memoryCache = new ModelCache(aClassCache: new Dictionary<Type, IModelClassCache>() {
 				{ typeof(Thing), thingMemoryCache }
 			});
-
-			//fileSystemCache = new FileSystemCache(tempDir);
+			
+			thingFileCache = new FileSystemClassCache<Thing, int>(tempDir);
+			fileCache = new ModelCache(
+				aClassCache: new Dictionary<Type, IModelClassCache>() {
+					{ typeof(Thing), new FileSystemClassCache<Thing, int>(tempDir) }
+				},
+				new FileBlobCache(tempDir)
+			);
+			
 			cascade = new CascadeDataLayer(
 				origin,
-				new ICascadeCache[] { modelCache },
+				new ICascadeCache[] { memoryCache, fileCache },
 				new CascadeConfig() {StoragePath = tempDir},
 				new MockCascadePlatform(),
 				ErrorControl.Instance,
@@ -113,12 +121,12 @@ namespace Buzzware.Cascade.Test {
 				id = 1,
 				colour = "green"
 			};
-			await modelCache.Store(typeof(Thing), thing1.id, thing1, origin.NowMs);
+			await memoryCache.Store(typeof(Thing), thing1.id, thing1, origin.NowMs);
 			var thing2 = new Thing() {
 				id = 2,
 				colour = "red"
 			};
-			await modelCache.Store(typeof(Thing), thing2.id, thing1, origin.NowMs);
+			await memoryCache.Store(typeof(Thing), thing2.id, thing1, origin.NowMs);
 
 			var collAName = "A";
 			//var collAName = CascadeUtils.CollectionKeyFromName(nameof(Thing), "A");
@@ -140,19 +148,62 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(cascade.IsCollectionHeld<Thing>(collAName),Is.True);
 			Assert.That(cascade.IsCollectionHeld<Thing>(collBName),Is.False);
 			
-			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0))).Exists,Is.True);
-			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0))).Exists,Is.True);
 
-			Assert.That((await modelCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName))).Exists,Is.True);
-			Assert.That((await modelCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName))).Exists,Is.True);
 			
-			await modelCache.ClearAll(exceptHeld: true);
+			await memoryCache.ClearAll(exceptHeld: true);
 		
-			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0))).Exists,Is.True);
-			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0))).Exists,Is.False);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0))).Exists,Is.False);
 			
-			Assert.That((await modelCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName))).Exists,Is.True);
-			Assert.That((await modelCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName))).Exists,Is.False);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName))).Exists,Is.False);
+		}
+		
+		[Test]
+		public async Task BlobHoldUnholdIsHeldListHeldIds() {
+
+			const string blobPath1 = "a/b/c";
+			const string blobPath2 = "a/b/d";
+			
+			cascade.HoldBlob(blobPath1);
+			Assert.That(cascade.IsHeldBlob(blobPath1), Is.True);
+
+			var held = cascade.ListHeldBlobPaths();
+			Assert.That(held,Is.EquivalentTo(new string[] {blobPath1}));
+			
+			cascade.UnholdBlob(blobPath1);
+			Assert.That(cascade.IsHeldBlob(blobPath1), Is.False);
+			
+			cascade.UnholdBlob(blobPath2);	// shouldn't crash
+			
+			held = cascade.ListHeldBlobPaths();
+			Assert.That(held,Is.EquivalentTo(new string[] {}));
+		}
+		
+		[Test]
+		public async Task BlobModelCacheClearAllExceptHeld() {
+			const string blobPath1 = "a/b/c";
+			byte[] blob1 = TestUtils.NewBlob(11, 16);
+			await cascade.BlobPut(blobPath1, blob1);
+			cascade.HoldBlob(blobPath1);
+			const string blobPath2 = "a/b/d";
+			byte[] blob2 = TestUtils.NewBlob(22, 16);
+			await cascade.BlobPut(blobPath2, blob2);
+			
+			Assert.That(cascade.IsHeldBlob(blobPath1),Is.True);
+			Assert.That(cascade.IsHeldBlob(blobPath2),Is.False);
+			
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath1, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath2, freshnessSeconds: 0))).Exists,Is.True);
+
+			await fileCache.ClearAll(exceptHeld: true);
+		
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath1, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath2, freshnessSeconds: 0))).Exists,Is.False);
 		}
 	}
 }

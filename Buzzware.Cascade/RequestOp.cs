@@ -91,14 +91,16 @@ namespace Buzzware.Cascade {
 		public static RequestOp BlobPutOp(
 			string path,
 			long timeMs,
-			byte[] data
+			byte[] data, 
+			bool? hold = null
 		) {
 			return new RequestOp(
 				timeMs,
 				typeof(byte[]),
 				RequestVerb.BlobPut,
 				path,
-				value: data
+				value: data,
+				hold: hold
 			);
 		}
 

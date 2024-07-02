@@ -1812,18 +1812,37 @@ namespace Buzzware.Cascade {
 		
 		#region Holding
 
-		public const string HOLD = "Hold";
-		
-		private string HoldModelPath(Type modelType) {
-			return Path.Combine(HOLD,"Model", modelType.FullName);
-		}
-		
-		private string HoldModelPath(Type modelType,object id) {
-			if (id is null or "" or 0)
-				throw new ArgumentException("Id Cannot be null or empty string or 0");
-			return Path.Combine(HOLD,"Model", modelType.FullName, id.ToString());
+		public static string EncodeBlobPath(string path) {
+			return path.Replace("/", "+");
 		}
 
+		public static string DecodeBlobPath(string path) {
+			return path.Replace("+", "/");
+		}
+
+		private string HoldModelPath(string typeFolder, object? id = null) {
+			if (id == null) {
+				return Path.Combine(CascadeConstants.HOLD, "Model", typeFolder);
+			} else {
+				var idString = id.ToString();
+				if (typeFolder == CascadeConstants.BLOB)
+					idString = EncodeBlobPath(idString);
+				return Path.Combine(CascadeConstants.HOLD, "Model", typeFolder, idString);
+			}
+		}
+
+		private string HoldModelPath(Type type) {
+			var folderName = CascadeTypeUtils.IsBlobType(type) ? CascadeConstants.BLOB : type.FullName!;
+			return HoldModelPath(folderName); 
+		}
+		
+		private string HoldModelPath(Type type,object id) {
+			if (id is null or "" or 0)
+				throw new ArgumentException("Id Cannot be null or empty string or 0");
+			var folderName = CascadeTypeUtils.IsBlobType(type) ? CascadeConstants.BLOB : type.FullName!;
+			return HoldModelPath(folderName,id);
+		}
+		
 		public void Hold<Model>(object id) {
 			Hold(typeof(Model), id);
 		}
@@ -1838,12 +1857,6 @@ namespace Buzzware.Cascade {
 			MetaSet(path, String.Empty);
 		}
 
-		// public void Hold<Model>(IEnumerable<Model> models) {
-		// 	
-		// 	
-		// 	
-		// }
-		
 		public bool IsHeld<Model>(object id) {
 			return MetaExists(HoldModelPath(typeof(Model), id));
 		}
@@ -1853,13 +1866,31 @@ namespace Buzzware.Cascade {
 			MetaSet(HoldModelPath(typeof(Model),id),null);
 		}
 		
+		public void HoldBlob(string path) {
+			Log.Debug($"CascadeDataLayer HoldBlob {CascadeConstants.BLOB} path {path}");
+			var metaPath = HoldModelPath(CascadeConstants.BLOB,path);
+			MetaSet(metaPath, String.Empty);
+		}
+
+		public void UnholdBlob(string path) {
+			Log.Debug($"CascadeDataLayer UnholdBlob {CascadeConstants.BLOB} path {path}");
+			MetaSet(HoldModelPath(CascadeConstants.BLOB,path),null);
+		}
+		
+		public bool IsHeldBlob(string path) {
+			return MetaExists(HoldModelPath(CascadeConstants.BLOB, path));
+		}
+		
 		public IEnumerable<object> ListHeldIds<Model>() {
 			return ListHeldIds(typeof(Model)); // var modelPath = HoldModelPath<Model>();
 		}
 		
-		public IEnumerable<object> ListHeldIds(Type modelType) {
-			var path = HoldModelPath(modelType);
-			var idType = CascadeTypeUtils.GetCascadeIdType(modelType);
+		public IEnumerable<object> ListHeldIds(Type type) {
+			if (CascadeTypeUtils.IsBlobType(type))
+				return ListHeldBlobPaths();
+			
+			var path = HoldModelPath(type);
+			var idType = CascadeTypeUtils.GetCascadeIdType(type);
 
 			var items = MetaList(path);
 			
@@ -1875,14 +1906,23 @@ namespace Buzzware.Cascade {
 				.Sort();
 		}
 
+		public IEnumerable<object> ListHeldBlobPaths() {
+			var path = HoldModelPath(CascadeConstants.BLOB);
+			var items = MetaList(path);
+			return items
+				.Select<string, object>(name => DecodeBlobPath(name))
+				.ToImmutableArray()
+				.Sort();
+		}
+		
 		private string HoldCollectionPath(Type modelType) {
-			return Path.Combine(HOLD, "Collection", modelType.FullName);
+			return Path.Combine(CascadeConstants.HOLD, "Collection", modelType.FullName);
 		}
 		
 		private string HoldCollectionPath(Type modelType,string key) {
 			if (key is null or "")
 				throw new ArgumentException("name Cannot be null or empty string");
-			return Path.Combine(HOLD, "Collection", modelType.FullName, key);
+			return Path.Combine(CascadeConstants.HOLD, "Collection", modelType.FullName, key);
 		}
 		
 		public void HoldCollection<Model>(string name) {
@@ -1913,12 +1953,13 @@ namespace Buzzware.Cascade {
 		}
 
 		public void UnholdAll(Type modelType, DateTime? olderThan=null) {
-			MetaClearPath(HoldCollectionPath(modelType),olderThan);
+			if (!CascadeTypeUtils.IsBlobType(modelType))
+				MetaClearPath(HoldCollectionPath(modelType),olderThan);
 			MetaClearPath(HoldModelPath(modelType),olderThan);
 		}
 		
 		public void UnholdAll(DateTime? olderThan=null) {
-			MetaClearPath(HOLD, olderThan, true);
+			MetaClearPath(CascadeConstants.HOLD, olderThan, true);
 		}
 		
 		public void UnholdAll() {
@@ -1926,11 +1967,7 @@ namespace Buzzware.Cascade {
 		}
 		
 		#endregion
-
-		public bool IsHeldBlob(string path) {
-			throw new NotImplementedException();
-		}
-
+		
 		public async Task<object?> SetFromBlobProperty(SuperModel model, string property, byte[] blob) {
 			PropertyInfo propertyInfo = model.GetType().GetProperty(property)!;
 			var attribute = propertyInfo.GetCustomAttribute<FromBlobAttribute>();
