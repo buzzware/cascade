@@ -1160,6 +1160,8 @@ namespace Buzzware.Cascade {
 			if (requestOp.Hold && opResponse.LayerIndex!=0 /* We don't want to slow down the first cache layer (probably memory) by setting Hold */ && !(opResponse?.ResultIsEmpty() ?? false)) {
 				if (requestOp.Verb == RequestVerb.Get) {
 					Hold(requestOp.Type, requestOp.Id);
+				} else if (requestOp.Verb == RequestVerb.BlobGet) {
+					HoldBlob(((string)requestOp.Id)!);
 				} else if (requestOp.Verb == RequestVerb.Query) {
 					var isIdResults = opResponse.IsIdResults;
 					var type = requestOp.Type ?? (isIdResults ? null : opResponse.FirstResult?.GetType());
@@ -1812,12 +1814,14 @@ namespace Buzzware.Cascade {
 		
 		#region Holding
 
+		public const string BLOB_PATH_ALT_SEPARATOR = "_%_";
+		
 		public static string EncodeBlobPath(string path) {
-			return path.Replace("/", "+");
+			return path.Replace("/", BLOB_PATH_ALT_SEPARATOR);
 		}
 
 		public static string DecodeBlobPath(string path) {
-			return path.Replace("+", "/");
+			return path.Replace(BLOB_PATH_ALT_SEPARATOR, "/");
 		}
 
 		public static string HoldModelPath(string typeFolder, object? id = null) {

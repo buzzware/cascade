@@ -189,21 +189,34 @@ namespace Buzzware.Cascade.Test {
 			const string blobPath1 = "a/b/c";
 			byte[] blob1 = TestUtils.NewBlob(11, 16);
 			await cascade.BlobPut(blobPath1, blob1);
-			cascade.HoldBlob(blobPath1);
+			cascade.HoldBlob(blobPath1);	// manual hold
+			
 			const string blobPath2 = "a/b/d";
 			byte[] blob2 = TestUtils.NewBlob(22, 16);
 			await cascade.BlobPut(blobPath2, blob2);
+
+			const string blobPath3 = "a/x";
+			byte[] blob3 = TestUtils.NewBlob(22, 16);
+			await cascade.BlobPut(blobPath3, blob3);
+			await cascade.BlobGet(blobPath3, hold: true);		// hold via BlobGet
 			
 			Assert.That(cascade.IsHeldBlob(blobPath1),Is.True);
 			Assert.That(cascade.IsHeldBlob(blobPath2),Is.False);
+			Assert.That(cascade.IsHeldBlob(blobPath3),Is.True);
 			
 			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath1, freshnessSeconds: 0))).Exists,Is.True);
 			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath2, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath3, freshnessSeconds: 0))).Exists,Is.True);
 
 			await fileCache.ClearAll(exceptHeld: true);
-		
+
+			Assert.That(cascade.IsHeldBlob(blobPath1),Is.True);
+			Assert.That(cascade.IsHeldBlob(blobPath2),Is.False);
+			Assert.That(cascade.IsHeldBlob(blobPath3),Is.True);
+			
 			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath1, freshnessSeconds: 0))).Exists,Is.True);
 			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath2, freshnessSeconds: 0))).Exists,Is.False);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath3, freshnessSeconds: 0))).Exists,Is.True);
 		}
 	}
 }
