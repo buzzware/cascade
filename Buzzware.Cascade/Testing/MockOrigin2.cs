@@ -40,6 +40,9 @@ namespace Buzzware.Cascade.Testing {
 				result = await BlobGet(((string?)request.Id)!);
 			} else if (request.Verb == RequestVerb.BlobPut) {
 				result = await BlobPut(((string?)request.Id)!,(request.Value as byte[]));
+			} else if (request.Verb == RequestVerb.BlobDestroy) {
+				await BlobDestroy(((string?)request.Id)!);
+				result = null;
 			} else {
 				var co = classOrigins[request.Type];
 				switch (request.Verb) {
@@ -78,6 +81,13 @@ namespace Buzzware.Cascade.Testing {
 				NowMs,
 				result
 			);
+		}
+
+		private async Task BlobDestroy(string path) {
+			blobs.Remove(path);
+			// if (blobs.TryGetValue(path, out var result))
+			// 	return null;
+			// return result;
 		}
 
 		private async Task<byte[]?> BlobPut(string path, byte[]? value) {

@@ -217,6 +217,11 @@ namespace Buzzware.Cascade.Test {
 			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath1, freshnessSeconds: 0))).Exists,Is.True);
 			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath2, freshnessSeconds: 0))).Exists,Is.False);
 			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath3, freshnessSeconds: 0))).Exists,Is.True);
+
+			await cascade.BlobDestroy(blobPath3);
+			Assert.That(cascade.IsHeldBlob(blobPath3),Is.True);	// destroying does not unhold it
+			cascade.UnholdBlob(blobPath3);														// unhold unholds it
+			Assert.That(cascade.IsHeldBlob(blobPath3),Is.False);
 		}
 	}
 }
