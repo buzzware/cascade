@@ -53,8 +53,10 @@ namespace Buzzware.Cascade {
 			return (type?.Implements<IEnumerable>() ?? false) && type != typeof(string);
 		}
 
+		public static readonly Type BlobType = typeof(byte[]);
+		
 		public static bool IsBlobType(Type type) {
-			return type == typeof(byte[]);
+			return type == BlobType;
 		}
 		
 		public static bool IsBlob(object? obj) {

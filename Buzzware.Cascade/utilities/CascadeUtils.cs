@@ -38,6 +38,35 @@ namespace Buzzware.Cascade {
 			return epoch.AddMilliseconds(aTimems);
 		}
 		
+		public static async Task<byte[]> ReadBinaryFile(string filePath, int bufferSize = 8192) {
+			byte[] buffer = new byte[bufferSize];
+			using (MemoryStream ms = new MemoryStream())
+			{
+				using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: buffer.Length, useAsync: true))
+				{
+					int read;
+					while ((read = await file.ReadAsync(buffer, 0, buffer.Length)) > 0)
+					{
+						ms.Write(buffer, 0, read);
+					}
+				}
+				return ms.ToArray();
+			}
+		}
+		
+		public static async Task WriteBinaryFile(string path, byte[] content, int bufferSize = 8192) {
+			using FileStream destinationStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: bufferSize, useAsync: true);
+			await destinationStream.WriteAsync(content, 0, content.Length);
+		}
+
+		public static async Task WriteTextFile(string filePath, string? content) {
+			using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
+				using (var writer = new StreamWriter(stream)) {
+					await writer.WriteAsync(content); //.ConfigureAwait(false);
+				}
+			}
+		}
+		
 		public static async Task<string?> LoadFileAsStringAsync(string aPath) {
 			if (!File.Exists(aPath))
 				return null;

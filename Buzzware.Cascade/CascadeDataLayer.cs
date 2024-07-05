@@ -1454,9 +1454,13 @@ namespace Buzzware.Cascade {
 		public RequestOp DeserializeRequestOp(string? s, out IReadOnlyDictionary<string, string> externals) {
 			Log.Debug("DeserializeRequestOp: "+s);
 			var el = serialization.DeserializeElement(s);
-			var typeName = el.GetProperty(nameof(RequestOp.Type)).GetString();
-			var type = Origin.LookupModelType(typeName); // Type.GetType(typeName,true);
 			Enum.TryParse<RequestVerb>(el.GetProperty(nameof(RequestOp.Verb)).GetString(), out var verb);
+			var typeName = el.GetProperty(nameof(RequestOp.Type)).GetString();
+			Type type; // Type.GetType(typeName,true);
+			if (verb == RequestVerb.BlobGet || verb == RequestVerb.BlobPut || verb == RequestVerb.BlobDestroy)
+				type = CascadeTypeUtils.BlobType;
+			else
+				type = Origin.LookupModelType(typeName);
 
 			if (el.HasProperty("externals")) {
 				var dic = serialization.DeserializeDictionaryOfNormalTypes(el.GetProperty("externals")); 
@@ -1523,9 +1527,9 @@ namespace Buzzware.Cascade {
 			}
 			content["externals"] = externalsNode;
 			await CascadeUtils.EnsureFileOperation(async () => {
-				await WriteTextFile(filePath, content.ToJsonString());
+				await CascadeUtils.WriteTextFile(filePath, content.ToJsonString());
 				foreach (var kvp in externalContent) {
-					await WriteBinaryFile(ExternalBinaryPathFromPendingChangePath(filePath, kvp.Key), kvp.Value);
+					await CascadeUtils.WriteBinaryFile(ExternalBinaryPathFromPendingChangePath(filePath, kvp.Key), kvp.Value);
 				}
 			});
 			return filePath!;
@@ -1534,20 +1538,7 @@ namespace Buzzware.Cascade {
 		public string ExternalBinaryPathFromPendingChangePath(string filePath, string externalPath) {
 			return Path.ChangeExtension(filePath, "__" + externalPath + ".bin").Replace(".__","__");
 		}
-
-		private static async Task WriteBinaryFile(string filePath, byte[] content) {
-			using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true);
-			await stream.WriteAsync(content, 0, content.Length);
-		}
-
-		private static async Task WriteTextFile(string filePath, string? content) {
-			using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
-				using (var writer = new StreamWriter(stream)) {
-					await writer.WriteAsync(content); //.ConfigureAwait(false);
-				}
-			}
-		}
-
+		
 		public IEnumerable<string> GetChangesPendingList() {
 			if (!Directory.Exists(Config.PendingChangesPath))
 				return new string[] {};
@@ -1571,7 +1562,7 @@ namespace Buzzware.Cascade {
 				var requestOp = DeserializeRequestOp(content, out var externals);
 				foreach (var external in externals) {
 					var exfile = Path.Combine(Config.PendingChangesPath,external.Value);
-					var blob = await ReadBinaryFile(exfile);
+					var blob = await CascadeUtils.ReadBinaryFile(exfile);
 					var propertyName = external.Key;
 					if (propertyName.Contains("."))
 						throw new StandardException("sub properties not implemented");
@@ -1584,22 +1575,6 @@ namespace Buzzware.Cascade {
 			}
 			return changes;
 		}
-
-		private async Task<byte[]> ReadBinaryFile(string filePath) {
-			byte[] buffer = new byte[8192];
-			using (MemoryStream ms = new MemoryStream())
-			{
-				using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-				{
-					int read;
-					while ((read = await file.ReadAsync(buffer, 0, buffer.Length)) > 0)
-					{
-						ms.Write(buffer, 0, read);
-					}
-				}
-				return ms.ToArray();
-			}
-		}		
 		
 		public bool HasChangesPending() {
 			return GetChangesPendingList().Any();

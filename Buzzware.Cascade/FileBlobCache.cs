@@ -120,25 +120,22 @@ namespace Buzzware.Cascade {
 		}
 
 		private async Task<byte[]?> LoadBlob(string path) {
-			if (!File.Exists(path))
-				return null;
-
-			byte[] result;
-			using (FileStream stream = File.OpenRead(path)) {
-				result = new byte[stream.Length];
-				await stream.ReadAsync(result, 0, (int)stream.Length);
-			}
-			return result;			
+			byte[]? result = null;
+			await CascadeUtils.EnsureFileOperation(async () => {
+				if (File.Exists(path))
+					result = await CascadeUtils.ReadBinaryFile(path, 8192);
+			});
+			return result;
 		}
 		
 		private async Task StoreBlob(string path, byte[] blob, long arrivedAt) {
 			await Task.Run(async () => {
 				if (!Directory.Exists(Path.GetDirectoryName(path)))
 					Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-				
-				using FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, 256*1024, true);
-				await fileStream.WriteAsync(blob.ToArray(), 0, blob.Length).ConfigureAwait(false);
-				
+
+				await CascadeUtils.EnsureFileOperation(async () => {
+					await CascadeUtils.WriteBinaryFile(path, blob, 64*1024);
+				});
 				File.SetLastWriteTimeUtc(path, CascadeUtils.fromUnixMilliseconds(arrivedAt));
 			});
 		}
