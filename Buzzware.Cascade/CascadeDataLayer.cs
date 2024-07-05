@@ -332,7 +332,7 @@ namespace Buzzware.Cascade {
 				value: null,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				populateFreshnessSeconds: populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
-				criteria: new Dictionary<string, object>() { [propertyName] = propertyValue },
+				criteria: new Dictionary<string, object?>() { [propertyName] = propertyValue },
 				key: key
 			);
 			var opResponse = await ProcessRequest(requestOp);
@@ -849,7 +849,7 @@ namespace Buzzware.Cascade {
 				value: null,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				hold: hold, 
-				criteria: new Dictionary<string, object>() { [attribute.ForeignIdProperty] = modelId }, 
+				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
 				key: key
 			);
 			var opResponse = await InnerProcessWithFallback(requestOp);
@@ -885,7 +885,7 @@ namespace Buzzware.Cascade {
 				value: null,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				hold: hold, 
-				criteria: new Dictionary<string, object>() { [attribute.ForeignIdProperty] = modelId }, 
+				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
 				key: key
 			);
 			var opResponse = await InnerProcessWithFallback(requestOp);
@@ -1418,7 +1418,7 @@ namespace Buzzware.Cascade {
 		) {
 			// if (op.Verb == RequestVerb.BlobPut)
 			// 	throw new NotImplementedException("Serialisation of Blob values not yet supported");
-			var dic = new Dictionary<string, object>();
+			var dic = new Dictionary<string, object?>();
 			dic[nameof(op.Verb)] = op.Verb.ToString();
 			dic[nameof(op.Type)] = op.Type.FullName;
 			dic[nameof(op.Id)] = op.Id;

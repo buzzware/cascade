@@ -90,7 +90,7 @@ namespace Buzzware.Cascade.Test {
 				colour = "brown",
 				name = "Boris"
 			};
-			var changes = new Dictionary<string, object>();
+			var changes = new Dictionary<string, object?>();
 			changes["colour"] = "blue";
 			changes["name"] = "Winston";
 			var op = RequestOp.UpdateOp(thing, changes, cascade.NowMs);
@@ -105,7 +105,7 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(op2.Id,Is.EqualTo(thing.id));
 			Assert.That(op2.Type,Is.EqualTo(typeof(Thing)));
 			Assert.That(op2.TimeMs, Is.EqualTo(op.TimeMs));
-			var opChanges = op2.Value as Dictionary<string, object>;
+			var opChanges = op2.Value as Dictionary<string, object?>;
 			Assert.That(opChanges["colour"], Is.EqualTo(changes["colour"]));
 			Assert.That(opChanges["name"], Is.EqualTo(changes["name"]));
 		}
@@ -117,7 +117,7 @@ namespace Buzzware.Cascade.Test {
 				colour = "brown",
 				name = "Boris"
 			};
-			// var changes = new Dictionary<string, object>();
+			// var changes = new Dictionary<string, object?>();
 			// changes["colour"] = "blue";
 			// changes["name"] = "Winston";
 			var op = RequestOp.DestroyOp(thing, cascade.NowMs);

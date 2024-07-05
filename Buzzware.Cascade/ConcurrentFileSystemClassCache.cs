@@ -43,7 +43,7 @@ namespace Buzzware.Cascade {
         protected Task SerializeToPathAsync(string aPath, object aObject, long timeMs) {
             return Task.Run(() => {
                 return CascadeUtils.EnsureFileOperation(async () => {
-                    var wrapper = new Dictionary<string, object> { { ValueKey, aObject } };
+                    var wrapper = new Dictionary<string, object?> { { ValueKey, aObject } };
                     var content = Serialization.Serialize(wrapper);
                     if (!Directory.Exists(Path.GetDirectoryName(aPath)))
                         Directory.CreateDirectory(Path.GetDirectoryName(aPath)!);

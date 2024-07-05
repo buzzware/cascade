@@ -153,7 +153,7 @@ namespace Buzzware.Cascade {
 		// // helper function
 		// public void SetResult(string aResultKey, object aValue) {
 		// 	if (Results==null)
-		// 		Results = new Dictionary<string, object>();
+		// 		Results = new Dictionary<string, object?>();
 		// 	ResultKey = aResultKey;
 		// 	Results[ResultKey] = aValue;
 		// }

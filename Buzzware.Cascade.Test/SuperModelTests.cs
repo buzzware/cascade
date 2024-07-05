@@ -76,7 +76,7 @@ namespace Buzzware.Cascade.Test {
 		public void MaintainChangesForNewProxiedSame() {
 			var actual = new Thing() { id = 3, name = "Rex" };
 			var proxy = new Thing(actual);
-			var proxyEvents = new Dictionary<string, object>();
+			var proxyEvents = new Dictionary<string, object?>();
 			proxy.PropertyChanged += (sender, args) =>
 				proxyEvents[args.PropertyName] = (sender as Thing)!.GetType().GetProperty(args.PropertyName)!.GetValue(sender);
 
@@ -99,7 +99,7 @@ namespace Buzzware.Cascade.Test {
 		public void MaintainChangesForNewProxiedDiffRaise() {
 			var actual = new Thing() { id = 3, name = "Rex" };
 			var proxy = new Thing(actual);
-			var proxyEvents = new Dictionary<string, object>();
+			var proxyEvents = new Dictionary<string, object?>();
 			proxy.PropertyChanged += (sender, args) =>
 				proxyEvents[args.PropertyName] = (sender as Thing)!.GetType().GetProperty(args.PropertyName)!.GetValue(sender);
 
@@ -127,7 +127,7 @@ namespace Buzzware.Cascade.Test {
 		public void ChangesNotMaintainedOrIncomingRaisedWhenFalse() {
 			var actual = new Thing() { id = 3, name = "Rex" };
 			var proxy = new Thing(actual);
-			var proxyEvents = new Dictionary<string, object>();
+			var proxyEvents = new Dictionary<string, object?>();
 			proxy.PropertyChanged += (sender, args) =>
 				proxyEvents[args.PropertyName] = (sender as Thing)!.GetType().GetProperty(args.PropertyName)!.GetValue(sender);
 
@@ -153,7 +153,7 @@ namespace Buzzware.Cascade.Test {
 		public void IncomingChangeThatMatchesEditClearsChange() {
 			var actual = new Thing() { id = 3, name = "Rex" };
 			var proxy = new Thing(actual);
-			var proxyEvents = new Dictionary<string, object>();
+			var proxyEvents = new Dictionary<string, object?>();
 			proxy.PropertyChanged += (sender, args) =>
 				proxyEvents[args.PropertyName] = (sender as Thing)!.GetType().GetProperty(args.PropertyName)!.GetValue(sender);
 

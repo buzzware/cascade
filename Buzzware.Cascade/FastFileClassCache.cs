@@ -119,7 +119,7 @@ namespace Buzzware.Cascade {
 		}
 
 		protected async Task SerializeToPathAsync(string aPath, object aObject, long timeMs) {
-			var wrapper = new Dictionary<string, object> { { ValueKey, aObject } };
+			var wrapper = new Dictionary<string, object?> { { ValueKey, aObject } };
 			var content = Serialization.Serialize(wrapper);
             
 			StoreString(aPath, timeMs, content);

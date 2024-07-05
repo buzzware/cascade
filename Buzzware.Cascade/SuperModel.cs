@@ -46,9 +46,9 @@ namespace Buzzware.Cascade {
 
 			var hasChangesBefore = __HasChanges;
 			
-			Dictionary<string, object>? changes = null;
+			Dictionary<string, object?>? changes = null;
 			if (raiseIncoming) {
-				changes = new Dictionary<string, object>();
+				changes = new Dictionary<string, object?>();
 				var selectedProperties = FastReflection.getProperties(this.GetType())
 					.Where(n=>n.Key[0]!='_')
 					.ToArray();
@@ -80,7 +80,7 @@ namespace Buzzware.Cascade {
 		}
 		
 		public IDictionary<string, object> __GetChanges() {
-			var result = new Dictionary<string, object>();
+			var result = new Dictionary<string, object?>();
 			foreach (var kv in _propertySet) {
 				var prop = this.GetType().GetProperty(kv.Key);
 				result[kv.Key] = prop.GetValue(this);
@@ -130,7 +130,7 @@ namespace Buzzware.Cascade {
 		// public IDictionary<string, object> __GetProxyChanges() {
 		// 	if (__ProxyFor == null)
 		// 		throw new Exception("Cannot __GetProxyChanges when __ProxyFor==null");
-		// 	var result = new Dictionary<string, object>();
+		// 	var result = new Dictionary<string, object?>();
 		// 	foreach (var kv in _propertySet) {
 		// 		var prop = this.GetType().GetProperty(kv.Key);
 		// 		var localValue = prop.GetValue(this);
@@ -219,8 +219,8 @@ namespace Buzzware.Cascade {
 			OnPropertyChanged(new PropertyChangedEventArgs(e.PropertyName));
 		}
 
-		// public Dictionary<string, object> ToDictionary(Func<string,object,Tuple<string,object>> filter = null) {
-		// 	var result = new Dictionary<string, object>();
+		// public Dictionary<string, object?> ToDictionary(Func<string,object,Tuple<string,object>> filter = null) {
+		// 	var result = new Dictionary<string, object?>();
 		// 	foreach (var pi in this.GetType().GetProperties()) {
 		// 		var key = pi.Name;
 		// 		var value = pi.GetValue(this);

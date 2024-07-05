@@ -26,7 +26,7 @@
 // 								Present = true,
 // 								Index = aOp.Index,
 // 								ResultKey = resultKey,
-// 								Results = new Dictionary<string, object>(){
+// 								Results = new Dictionary<string, object?>(){
 // 									{resultKey, thing}
 // 								}
 // 							};
