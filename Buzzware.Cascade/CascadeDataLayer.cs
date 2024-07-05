@@ -1820,7 +1820,7 @@ namespace Buzzware.Cascade {
 			return path.Replace("+", "/");
 		}
 
-		private string HoldModelPath(string typeFolder, object? id = null) {
+		public static string HoldModelPath(string typeFolder, object? id = null) {
 			if (id == null) {
 				return Path.Combine(CascadeConstants.HOLD, "Model", typeFolder);
 			} else {
