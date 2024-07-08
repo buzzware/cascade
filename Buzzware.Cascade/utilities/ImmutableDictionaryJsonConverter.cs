@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Buzzware.Cascade {
@@ -70,12 +71,12 @@ public class ImmutableDictionaryJsonConverter : JsonConverter<ImmutableDictionar
             writer.WriteStartObject();
             foreach (KeyValuePair<string, object?> kvp in value) {
                 writer.WritePropertyName(kvp.Key);
-                WriteValue(writer, kvp.Value);
+                WriteValue(writer, kvp.Value, options);
             }
             writer.WriteEndObject();
         }
 
-        private void WriteValue(Utf8JsonWriter writer, object? value) {
+        private void WriteValue(Utf8JsonWriter writer, object? value, JsonSerializerOptions options) {
             switch (value) {
                 case null:
                     writer.WriteNullValue();
@@ -96,17 +97,22 @@ public class ImmutableDictionaryJsonConverter : JsonConverter<ImmutableDictionar
                     writer.WriteStringValue(strValue);
                     break;
                 case ImmutableDictionary<string, object?> dictionaryValue:
-                    Write(writer, dictionaryValue, null!);
+                    Write(writer, dictionaryValue, options);
                     break;
+                case JsonObject jsonObject:
+                    JsonSerializer.Serialize(writer, value, options);                    
+                    break;                    
                 case IEnumerable listValue:
                     writer.WriteStartArray();
                     foreach (object obj in listValue) {
-                        WriteValue(writer, obj);
+                        WriteValue(writer, obj, options);
                     }
                     writer.WriteEndArray();
                     break;
                 default:
-                    throw new JsonException("Unexpected value type: " + value.GetType());
+                    JsonSerializer.Serialize(writer, value, options);
+                    //throw new JsonException("Unexpected value type: " + value.GetType());
+                    break;
             }
         }
     }

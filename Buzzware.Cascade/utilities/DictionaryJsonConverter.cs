@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -98,16 +97,7 @@ namespace Buzzware.Cascade {
                     break;
                 case JsonObject jsonObject:
                     JsonSerializer.Serialize(writer, value, options);                    
-                    // //Write(writer, jsonObject.ToDictionary(pair => true), null!);
-                    // writer.WriteStartObject();
-                    // //foreach (KeyValuePair<string, object?> kvp in jsonObject) {
-                    // foreach (var kvp in jsonObject) {
-                    //     writer.WritePropertyName(kvp.Key);
-                    //     WriteValue(writer, kvp.Value);
-                    // }
-                    // writer.WriteEndObject();
                     break;                    
-                    
                 case IEnumerable listValue:
                     writer.WriteStartArray();
                     foreach (object obj in listValue) {

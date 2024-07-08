@@ -13,7 +13,7 @@ namespace Buzzware.StandardExceptions {
 		public object Result { get; set; } = null;
 		public object Error { get; set; } = null;
 
-		public new IDictionary<string,object> Data { get; set; }
+		public new IDictionary<string,object?> Data { get; set; }
 		public override string StackTrace => InnerException?.StackTrace;
 
 		public StandardException (string aMessage=DefaultMessage, Exception aInnerException = null, int aStatus = DefaultStatus) : base (aMessage,aInnerException) {

@@ -219,7 +219,7 @@ namespace Buzzware.Cascade {
 			OnPropertyChanged(new PropertyChangedEventArgs(e.PropertyName));
 		}
 
-		// public Dictionary<string, object?> ToDictionary(Func<string,object,Tuple<string,object>> filter = null) {
+		// public Dictionary<string, object?> ToDictionary(Func<string,object,Tuple<string,object?>> filter = null) {
 		// 	var result = new Dictionary<string, object?>();
 		// 	foreach (var pi in this.GetType().GetProperties()) {
 		// 		var key = pi.Name;
@@ -227,7 +227,7 @@ namespace Buzzware.Cascade {
 		// 	}
 		// }
 		
-		public SuperModel Clone(IDictionary<string,object>? changes = null) {
+		public SuperModel Clone(IDictionary<string,object?>? changes = null) {
 			var result = (SuperModel)this.MemberwiseClone();
 			if (changes!=null)
 				result.__mutateWith(result=>result.__ApplyChanges(changes));

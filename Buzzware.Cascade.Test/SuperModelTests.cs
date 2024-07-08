@@ -35,7 +35,7 @@ namespace Buzzware.Cascade.Test {
 		{
 			var actual = new Thing() { id = 3, name = "Rex" };
 			var proxy = new Thing(actual);
-			var proxyEvents = new Dictionary<string,object>();
+			var proxyEvents = new Dictionary<string,object?>();
 			proxy.PropertyChanged += (sender, args) =>
 				proxyEvents[args.PropertyName] = (sender as Thing)!.GetType().GetProperty(args.PropertyName)!.GetValue(sender); 
 				
@@ -53,7 +53,7 @@ namespace Buzzware.Cascade.Test {
 		public void ChangingProxiedForSameDoesntRaiseEvents() {
 			var actual = new Thing() { id = 3, name = "Rex" };
 			var proxy = new Thing(actual);
-			var proxyEvents = new Dictionary<string,object>();
+			var proxyEvents = new Dictionary<string,object?>();
 			proxy.PropertyChanged += (sender, args) =>
 				proxyEvents[args.PropertyName] = (sender as Thing)!.GetType().GetProperty(args.PropertyName)!.GetValue(sender);
 			Assert.That(proxy.__GetChanges().Keys.Count,Is.Zero);

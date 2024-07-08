@@ -1,8 +1,12 @@
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Threading.Tasks;
 using Buzzware.Cascade.Testing;
 using NUnit.Framework;
+using Serilog;
 
 namespace Buzzware.Cascade.Test {
 	[TestFixture]
@@ -52,6 +56,33 @@ namespace Buzzware.Cascade.Test {
 
 			Assert.That(output.HasKey(nameof(ThingPhoto.Image)), Is.False);
 			Assert.That(output.HasKey(nameof(ThingPhoto.Thumbnail)), Is.False);
+		}
+		
+		[Test]
+		public void TestDictionaryModelSerialization() {
+			List<Thing> things = new List<Thing>(new[] {
+				new Thing() {
+					id = 1,
+					name = "xyz"
+				},
+				new Thing() {
+					id = 2,
+					name = "tuv"
+				}
+			});
+			var output = sz.Serialize(
+				ImmutableDictionary<string,object?>.Empty.Add(
+					"Things",
+					things.ToImmutableArray()
+				)
+			);
+
+			Log.Debug(output);
+			var outputDictionary = sz.DeserializeImmutableDictionary(output!);
+			var things2 = ((outputDictionary["Things"] as IList<object>)!).Cast<IReadOnlyDictionary<string,object?>>().ToArray();
+			Assert.That(things2!.Count,Is.EqualTo(2));
+			Assert.That(things2[0]["id"],Is.EqualTo(things[0].id));
+			Assert.That(things2[0]["name"],Is.EqualTo(things[0].name));
 		}
 	}
 }

@@ -30,6 +30,9 @@ namespace Buzzware.Cascade {
 					new ImmutableDictionaryJsonConverter(),
 				}
 			};
+			
+			
+			
 			jsonSerializerOptions = new JsonSerializerOptions() {
 				//MaxDepth = maxDepth,
 				//Converters = { new LambdaIgnoreConverter(name => ) }
@@ -70,9 +73,9 @@ namespace Buzzware.Cascade {
 			}
 		}
 
-		public ImmutableDictionary<string,object> DeserializeImmutableDictionary(string source) {
+		public ImmutableDictionary<string,object?> DeserializeImmutableDictionary(string source) {
 			try {
-				return JsonSerializer.Deserialize<ImmutableDictionary<string,object>>(source, dictionaryNormalizedOptions)!;
+				return JsonSerializer.Deserialize<ImmutableDictionary<string,object?>>(source, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as ImmutableDictionary: "+e.Message);
 				Log.Debug(source);
@@ -80,9 +83,9 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
-		public Dictionary<string,object> DeserializeDictionaryOfNormalTypes(string source) {
+		public Dictionary<string,object?> DeserializeDictionaryOfNormalTypes(string source) {
 			try {
-				return JsonSerializer.Deserialize<Dictionary<string,object>>(source, dictionaryNormalizedOptions)!;
+				return JsonSerializer.Deserialize<Dictionary<string,object?>>(source, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as Dictionary: "+e.Message);
 				Log.Debug(source);
@@ -90,9 +93,9 @@ namespace Buzzware.Cascade {
 			}
 		}
 
-		public Dictionary<string,object> DeserializeDictionaryOfNormalTypes(JsonElement source) {
+		public Dictionary<string,object?> DeserializeDictionaryOfNormalTypes(JsonElement source) {
 			try {
-				return JsonSerializer.Deserialize<Dictionary<string,object>>(source, dictionaryNormalizedOptions)!;
+				return JsonSerializer.Deserialize<Dictionary<string,object?>>(source, dictionaryNormalizedOptions)!;
 			} catch (Exception e) {
 				Log.Warning($"Failed Deserializing as Dictionary: "+e.Message);
 				//Log.Debug(source);
