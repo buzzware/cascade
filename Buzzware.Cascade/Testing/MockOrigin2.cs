@@ -59,7 +59,7 @@ namespace Buzzware.Cascade.Testing {
 						if (request != null)
 							result = await co.Update(
 								request.Id,
-								((IDictionary<string, object>)request.Value)!,
+								((IDictionary<string, object?>)request.Value)!,
 								request.Extra
 							);
 						break;

@@ -134,7 +134,7 @@ namespace Buzzware.Cascade {
 		
 		// 		
 		// public int Index;		
-		// public IDictionary<string, object> Results;		// we store results as object internally
+		// public IDictionary<string, object?> Results;		// we store results as object internally
 		// public string ResultKey;
 		//
 		// public object Error;

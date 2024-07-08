@@ -53,7 +53,7 @@ namespace Buzzware.Cascade {
         protected async Task<T?> DeserializeFromPathAsync<T>(string aPath) {
             return await Task.Run(() => {
                 var content = CascadeUtils.LoadFileAsString(aPath);
-                var wrapper = Serialization.DeserializeType<IDictionary<string, object>>(content)!;
+                var wrapper = Serialization.DeserializeType<IDictionary<string, object?>>(content)!;
                 var value = Serialization.DeserializeType<T>((JsonElement)wrapper[ValueKey]);
                 return value;
             });

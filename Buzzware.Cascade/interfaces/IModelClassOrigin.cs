@@ -9,7 +9,7 @@ namespace Buzzware.Cascade {
 		Task<object?> Get(object id);
 		Task<object> Create(object value);
 		Task<object> Replace(object value);
-		Task<object> Update(object id, IDictionary<string, object> changes, object? model);
+		Task<object> Update(object id, IDictionary<string, object?> changes, object? model);
 		Task Destroy(object model);
 		Task EnsureAuthenticated();
 		Task ClearAuthentication();

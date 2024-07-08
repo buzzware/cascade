@@ -324,7 +324,7 @@ namespace Buzzware.Cascade.Test {
 			var filepathChild3 = await cascade.AddPendingChange(requestOpChild3);
 			Assert.That(Path.GetFileName(filepathChild3),Is.EqualTo("000000000001111.json"));
 			
-			RequestOp updateOpChild3 = RequestOp.UpdateOp(child3,ImmutableDictionary<string, object>.Empty.Add("age",18),cascade.NowMs);
+			RequestOp updateOpChild3 = RequestOp.UpdateOp(child3,ImmutableDictionary<string, object?>.Empty.Add("age",18),cascade.NowMs);
 			var filepathChild3Update = await cascade.AddPendingChange(updateOpChild3);
 			Assert.That(Path.GetFileName(filepathChild3Update),Is.EqualTo("000000000001112.json"));
 			var updateOpLoaded = cascade.DeserializeRequestOp(File.ReadAllText(filepathChild3Update), out var externals);

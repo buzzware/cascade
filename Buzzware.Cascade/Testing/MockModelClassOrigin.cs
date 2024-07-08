@@ -93,7 +93,7 @@ namespace Buzzware.Cascade.Testing {
 			throw new System.NotImplementedException();
 		}
 
-		public Task<object> Update(object id, IDictionary<string, object> changes, object? model) {
+		public Task<object> Update(object id, IDictionary<string, object?> changes, object? model) {
 			throw new System.NotImplementedException();
 		}
 
@@ -111,7 +111,7 @@ namespace Buzzware.Cascade.Testing {
 			throw new System.NotImplementedException();
 		}
 		
-		public Task Execute(string action, IDictionary<string, object> parameters) {
+		public Task Execute(string action, IDictionary<string, object?> parameters) {
 			throw new System.NotImplementedException();
 		}
 
