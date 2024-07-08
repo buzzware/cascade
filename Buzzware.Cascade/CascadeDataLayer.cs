@@ -775,14 +775,14 @@ namespace Buzzware.Cascade {
 		}
 
 		// may return null if the record no longer exists
-		public async Task<M?> Update<M>(M model, IDictionary<string, object> changes) where M : class {
+		public async Task<M?> Update<M>(M model, IDictionary<string, object?> changes) where M : class {
 			var response = await UpdateResponse<M>(model, changes);
 			if (response.Result != null && response.Result is not M)
 				throw new AssumptionException($"Should be of type {typeof(M).Name}");
 			return response.Result as M;
 		}
 		
-		public Task<OpResponse> UpdateResponse<M>(M model, IDictionary<string, object> changes) {
+		public Task<OpResponse> UpdateResponse<M>(M model, IDictionary<string, object?> changes) {
 			var req = RequestOp.UpdateOp(
 				model!,
 				changes,
@@ -805,7 +805,7 @@ namespace Buzzware.Cascade {
 
 		// ModelType : what model type are you executing the action on? Useful when implementing the action on the origin
 		// ReturnType : the type you will be returning - eg. same as ModelType or IEnumerable<ModelType> or anything else
-		public async Task<ReturnType> Execute<ModelType, ReturnType>(string action, IDictionary<string, object> parameters) {
+		public async Task<ReturnType> Execute<ModelType, ReturnType>(string action, IDictionary<string, object?> parameters) {
 			var response = await ExecuteResponse<ModelType, ReturnType>(
 				action,
 				parameters
@@ -815,7 +815,7 @@ namespace Buzzware.Cascade {
 			return (ReturnType)response.Result;
 		}
 
-		public Task<OpResponse> ExecuteResponse<ModelType, ReturnType>(string action, IDictionary<string, object> parameters) {
+		public Task<OpResponse> ExecuteResponse<ModelType, ReturnType>(string action, IDictionary<string, object?> parameters) {
 			var req = RequestOp.ExecuteOp<ModelType, ReturnType>(
 				action,
 				parameters,
@@ -1238,7 +1238,7 @@ namespace Buzzware.Cascade {
 				opResponse = await Origin.ProcessRequest(req, connectionOnline);
 				opResponse.LayerIndex = -1;
 			} else {
-				var result = ((SuperModel)req.Extra).Clone((IDictionary<string, object>)req.Value); 
+				var result = ((SuperModel)req.Extra).Clone((IDictionary<string, object?>)req.Value); 
 				await AddPendingChange(req);
 				opResponse = new OpResponse(
 					req,
@@ -1874,7 +1874,7 @@ namespace Buzzware.Cascade {
 			var items = MetaList(path);
 			
 			return items
-				.Select<string, object>(name =>
+				.Select<string, object?>(name =>
 				{
 					if (idType == typeof(string))
 						return name;
@@ -1889,7 +1889,7 @@ namespace Buzzware.Cascade {
 			var path = HoldModelPath(CascadeConstants.BLOB);
 			var items = MetaList(path);
 			return items
-				.Select<string, object>(name => DecodeBlobPath(name))
+				.Select<string, object?>(name => DecodeBlobPath(name))
 				.ToImmutableArray()
 				.Sort();
 		}

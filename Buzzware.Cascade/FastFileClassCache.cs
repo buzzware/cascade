@@ -133,7 +133,7 @@ namespace Buzzware.Cascade {
 		public T? DeserializeCacheString<T>(string? content) {
 			if (String.IsNullOrWhiteSpace(content))
 				return default(T);
-			var wrapper = Serialization.DeserializeType<IDictionary<string, object>>(content)!;
+			var wrapper = Serialization.DeserializeType<IDictionary<string, object?>>(content)!;
 			var value = Serialization.DeserializeType<T>((JsonElement)wrapper[ValueKey]);
 			return value;
 		}

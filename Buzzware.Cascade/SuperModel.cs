@@ -79,7 +79,7 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
-		public IDictionary<string, object> __GetChanges() {
+		public IDictionary<string, object?> __GetChanges() {
 			var result = new Dictionary<string, object?>();
 			foreach (var kv in _propertySet) {
 				var prop = this.GetType().GetProperty(kv.Key);
@@ -90,7 +90,7 @@ namespace Buzzware.Cascade {
 
 		public bool __HasChanges => !_propertySet.IsEmpty;
 
-		public void __ApplyChanges(IDictionary<string, object> changes) {
+		public void __ApplyChanges(IDictionary<string, object?> changes) {
 			foreach (var kv in changes) {
 				var prop = this.GetType().GetProperty(kv.Key);
 				try {
@@ -127,7 +127,7 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
-		// public IDictionary<string, object> __GetProxyChanges() {
+		// public IDictionary<string, object?> __GetProxyChanges() {
 		// 	if (__ProxyFor == null)
 		// 		throw new Exception("Cannot __GetProxyChanges when __ProxyFor==null");
 		// 	var result = new Dictionary<string, object?>();

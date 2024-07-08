@@ -193,7 +193,7 @@ namespace Buzzware.Cascade {
 			);
 		}
 		
-		public static RequestOp UpdateOp<Model>(Model model, IDictionary<string, object> changes, long timeMs) {
+		public static RequestOp UpdateOp<Model>(Model model, IDictionary<string, object?> changes, long timeMs) {
 			return new RequestOp(
 				timeMs,
 				typeof(Model),
@@ -204,7 +204,7 @@ namespace Buzzware.Cascade {
 			);
 		}
 		
-		public static RequestOp ExecuteOp<OriginClass,ReturnType>(string action, IDictionary<string, object> parameters, long timeMs) {
+		public static RequestOp ExecuteOp<OriginClass,ReturnType>(string action, IDictionary<string, object?> parameters, long timeMs) {
 			return new RequestOp(
 				timeMs,
 				typeof(OriginClass),
