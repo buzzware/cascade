@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+
+<link rel="stylesheet" href="/cascade/presentation/_astro/Presentation.fd29d493.css" /><div class="reveal">
+    <div class="slides">
+        <section id="first" data-markdown data-background-image="images/fortescue-falls.jpeg"><textarea data-template>          # Offline Mobile Architecture with 
+          # Cascade Data Layer
+
+          <br/>
+          <br/>
+          <br/>
+          - Fortescue Falls, Karijini National Park, WA
+        </textarea></section>
+        <section data-markdown id="why"><textarea data-template>          * This is an advanced talk
+          * There is really too much material for 20 mins
+          * I don't have time to talk about every slide
+          * I do intend to leave 10 mins for Q&A
+          * I am documenting Cascade and will put this online   
+        </textarea></section>
+        <section data-markdown id="about-me"><textarea data-template>          # About Me
+
+          * I learnt programming in a Tandy store after school 
+          * Past: C, Delphi, Ruby, ActionScript
+          * Past: Multimedia, Medical, Finance & Insurance
+          * Now: Node.js, Flutter, Xamarin
+          * Now: Energy, Water, Environment, IoT, Data Viz
+        </textarea></section>
+        <section data-markdown><textarea data-template>          * Been thinking, coding, rethinking this framework sporadically for >10 years
+          * Have implemented it into production for a large\
+          engineering company over the past 18 months
+          * Now looking for a new project to reuse it
+        </textarea></section>
+        <section data-markdown id="why"><textarea data-template>          # Why ?
+
+          * to solve the major challenges of mobile data
+          * to avoid solving these problems in app code
+          * to enjoy building quality, useful apps
+        </textarea></section>
+        <section data-markdown id="quote"><textarea data-template>          &gt; "Sometimes the strategic breakthrough will be a new algorithm ... Much more often, strategic breakthrough will come from redoing the representation of the data or tables. This is where the heart of a program lies."\
+          &gt; "The Mythical Man Month"\
+          &gt; by Fred Brooks
+        </textarea></section>
+        <section id="front-end-problems">
+            <section data-markdown><textarea data-template>                ## The Problems of Front End Data
+                <span class="arrow">&#8595;</span>
+            </textarea></section>
+            <section data-markdown><textarea data-template>                * Apps need to startup and operate quickly without 
+                loading everything from the server every time
+                * knowing when to load fresh data from the server
+                * Keeping memory, disk and server data in sync
+                * Relationships between models
+            </textarea></section>
+            <section data-markdown><textarea data-template>                * De/serialising
+                * Avoiding multiple instances of the same record
+                * Queries
+                * Collections & Pagination
+            </textarea></section>
+            <section data-markdown><textarea data-template>                * Collecting changes from forms to submit
+                * Server changes & inconsistencies
+                * Network failure
+                * Full offline operation
+            </textarea></section>
+            <section data-markdown><textarea data-template>              ## Cascade solves all these
+            </textarea></section>
+        </section>
+        <section id="why" data-markdown><textarea data-template>          ## Why call it "Cascade"?
+          Multiple cache/persistent layers, and sequential querying and updating of them
+          ## Why "Data Layer"?
+          * supports app with a clean strongly typed API
+          * isolates from complexity & change
+          * hides caching, persistence, de/serialisation, authentication
+        </textarea></section>
+        <section id="antipattern">
+          <h3>AntiPattern</h3>
+          <img src="/images/antipattern.png">
+          <i>(Don't do this)</i>
+        </section>
+        <section id="is" data-markdown><textarea data-template>          # Cascade is basically a reinvented REST API client
+          ## (with super-powers)
+        </textarea></section>
+        <section data-markdown id="rest"><textarea data-template>          A key insight of ReST was that 90%\
+          of application business logic code\
+          fits into a 2D matrix\
+          ie. doing CRUD on Resources.
+          | Resource | Create   | Read     | Update | Delete |
+          | -------- | -------- | -------- | ------ | ------ |
+          | Customer |   ...    |   ...    |  ...   |  ...   |
+          | Product  |   ...    |   ...    |  ...   |  ...   |
+          | Invoice  |   ...    |   ...    |  ...   |  ...   |
+          | Order    |   ...    |   ...    |  ...   |  ...   |
+        </textarea></section>
+        <section class="align-top" data-markdown><textarea data-template>          ## REST Methods
+          ## Create
+          ## Read
+          ## Update
+          ## Delete
+          ## + Execute (the other 10%)
+          ## = CRUDE :)
+        </textarea></section>
+        <section class="align-top" data-markdown><textarea data-template>          ## Cascade Request Methods
+          ## Create 
+          ## Get,Query
+          ## Update
+          ## Destroy
+          ## Execute
+        </textarea></section>
+        <section id="methods" class="align-top" data-markdown><textarea data-template>          ## Cascade Methods
+          ```csharp
+            async Task<M> Create<M>(M model, ...)
+
+            async Task<M?> Get<M>(object id, ...)
+
+            async Task<IEnumerable<M>> Query<M>(
+              string? collectionKey,
+              object? criteria = null
+            )
+
+            async Task<M?> Update<M>(
+              M model, 
+              IDictionary<string, object> changes
+            )
+
+            async Task Destroy<M>(M model)
+
+            async Task<ReturnType> Execute<ModelType, ReturnType>(
+              string action, 
+              IDictionary<string, object> parameters
+            )
+          ```
+        </textarea></section>
+        <section class="align-top" data-markdown><textarea data-template>          ## Examples of Cascade API
+          ```csharp
+            var createdOrder = await cascade.Create<Order>(order);
+
+            var customer = await cascade.Get<Customer>(25);
+
+            var products = await cascade.Query<Product>(
+              "latest",criteria);
+
+            var updated = await cascade.Update(customer,changes);
+
+            await cascade.Destroy(orderItem);
+
+            var submitted = await cascade.Execute<Invoice,Invoice>(
+              "SUBMIT",parameters);
+          ```
+        </textarea></section>
+        <section data-markdown id="freshness" class="align-top"><textarea data-template>          ## Freshness
+          * Read requests have a "freshnessSeconds" parameter
+          * How fresh you want the data to be eg within 5 minutes?
+          * If a cached value is available and fresh enough, return it,
+          otherwise get it from the server
+          * freshnessSeconds=0 means prefer fresh, except when offline
+          * freshnessSeconds=-1 means fresh or throw exception
+        </textarea></section>
+        <section id="identity-map" class="align-top">
+          <h2>Identity Map Cache</h2>
+          <div class="image-frame">
+            <img src="/images/identity-map-cache.png">
+          </div>
+        </section>
+        <section class="align-top">
+          <h3>Cascade Online Get</h3>
+          <div class="mermaid">
+            <pre>              sequenceDiagram
+              Application->>+Cascade: First Request
+              Cascade->>+MemoryCache: Read (fails)
+              Cascade->>+FileCache: Read (fails)
+              Cascade->>+Origin: Read
+              Origin->>+Server: Read (success)
+              Server->>+Origin: 
+              Origin->>+Cascade: 
+              Cascade->>+FileCache: Write
+              Cascade->>+MemoryCache: Write
+              Cascade->>+Application: 
+              Application->>+Cascade: Second Request
+              Cascade->>+MemoryCache: 
+              MemoryCache->>+Cascade: 
+              Cascade->>+Application: 
+              Application->>+Cascade: Third Request after App Restart
+              Cascade->>+MemoryCache: 
+              Cascade->>+FileCache: 
+              FileCache->>+Cascade: 
+              Cascade->>+MemoryCache: 
+              Cascade->>+Application: 
+              %% comment helps make it be recognised as mermaid
+            </pre>
+          </div>
+        </section>
+        <section id="update" class="align-top">
+          <h3>Cascade Online Update</h3>
+          <div class="mermaid">
+            <pre>              sequenceDiagram
+              participant Application
+              participant Cascade
+              participant MemoryCache
+              participant FileCache
+              participant Origin
+              participant Server
+              Application->>+Cascade: 
+              Cascade->>+Origin: Write
+              Origin->>+Server: Write
+              Server->>+Origin: 
+              Origin->>+Cascade: Whole Updated Record 
+              Cascade->>+FileCache: Write
+              Cascade->>+MemoryCache: Write
+              Cascade->>+Application: 
+              %% comment helps make it be recognised as mermaid
+            </pre>
+          </div>
+        </section>
+        <section id="collections" class="align-top" data-markdown><textarea data-template>          ## Collections
+
+          * are an array of ids
+          * are cached with a name and time
+          * can be converted to models by looking up each id
+          * name may be generated and quite long
+        </textarea></section>
+        <section class="align-top" data-markdown><textarea data-template>          ## Collections
+          ![](/images/collections-models.png)
+        </textarea></section>
+        <section data-markdown id="associations" class="align-top"><textarea data-template>          ## Associations
+          ```csharp
+            public class Parent : SuperModel {	
+              [Cascade.CascadeId]
+              public long id { get; set; }
+              
+              [Cascade.HasMany(foreignIdProperty: "parentId")]
+              public IEnumerable<Child>? Children { get; set; }
+              :
+            }
+
+            public class Child : SuperModel {
+              [Cascade.CascadeId]
+              public string id { get; set; }
+          
+              public int? parentId { get; set; }	
+              [Cascade.BelongsTo(idProperty: "parentId")]
+              public Parent? Parent { get; set; }
+            }
+          ```
+        </textarea></section>
+        <section data-markdown class="align-top"><textarea data-template>          ## Populate
+          ```csharp
+            var cc = AppCommon.Cascade;
+            // get parent and its children on Children property
+            var parent = await cc.Get<Parent>(id,populate:"Children");
+            // set Parent property on all Children to parent
+            await cc.Populate(parent.Children,"Parent");
+          ```          
+          * Means to fill & set association properties
+          * accepts a list of association property names 
+          * Can use populate option of Get() or Query() or call Populate directly
+        </textarea></section>
+        <section data-markdown id="queries" class="align-top"><textarea data-template>          ## Queries
+
+          * require a name
+          * results are cached as a collection
+          * name may include a hash of any parameters
+          * repeating with the same name (within freshness)\
+          can be handled entirely from cache
+          * associations (eg. HasMany) are actually queries\
+           and collections with a generated name
+        </textarea></section>
+        <section id="offline" data-markdown><textarea data-template>            # What about Offline ?
+        </textarea></section>
+        <section data-markdown><textarea data-template>          # All of the previous Cascade features work offline  
+        </textarea></section>
+        <section id="offline-problems">
+            <section data-markdown><textarea data-template>                # The Problems of Offline
+                <span class="arrow">&#8595;</span>
+            </textarea></section>
+            <section data-markdown><textarea data-template>                * Unreliable or no network connection (common in WA heavy and remote industry)
+                * Inconsistent custom server backends, not considering mobile clients
+                * Backends can change and application code needs to be isolated
+            </textarea></section>
+            <section data-markdown><textarea data-template>                * How do you get an id when creating remotely?
+                * Simulating & queueing changes offline
+                * Merging changes from multiple clients
+                * Syncing changes
+                * Taking records & their associated records offline
+            </textarea></section>
+        </section>
+        <section data-background-image="images/one-does-not.png">
+        </section>
+        <section id="offline-strategy-3" class="align-top" data-markdown><textarea data-template>          ## Cascade.ConnectionOnline
+
+          1. boolean flag determines online status
+          2. Easily set true -> false any time eg. exceptions
+          3. false -> true must go through a Reconnect process
+          4. titlebar.Color = ConnectionOnline ? Blue : Orange
+        </textarea></section>
+        <section id="offline-strategy-2" class="align-top" data-markdown><textarea data-template>          ### Offline Reads
+          
+          return from cache (using "fallback" freshness)\
+          or throw an exception
+
+          ### Offline Writes
+          1. queue RequestOp in file-based PendingChanges
+          2. simulate the change result  
+          3. cache & return result as normal
+          4. later, do PendingChanges on the server
+        </textarea></section>
+        <section id="offline-strategy-3" class="align-top" data-markdown><textarea data-template>          ## Simulating the result means
+
+          1. everything else works as normal
+          2. the caches now contain fake records
+          3. We need to reload everything when we get back online
+        </textarea></section>
+        <section id="offline-strategy-4" class="align-top" data-markdown><textarea data-template>          ### *Wait, can we really simulate every result?*
+
+          1. Creates must be able to generate a new id without clashing with other clients
+          2. Any magic side effects the server does won't happen unless you simulate them
+          3. Execute actions must be individually implemented for offline, and may be tricky 
+        </textarea></section>
+        <section data-markdown id="primary-keys" class="align-top"><textarea data-template>          ## Offline Primary Keys
+          * Can't auto-increment offline - clashing
+          * GUIDs are easiest (actually 128 bit number) 
+          * Integers: maybe 64 bit, negative
+          * Allocate ranges per client
+        </textarea></section>
+        <section data-markdown id="merging" class="align-top"><textarea data-template>          ## Merging Data (hardest problem)
+          * Does your business use case require merging? For which models?
+          * Avoid whole record replace - prefer just changed fields 
+          * Maybe solve with SOPs and/or domain knowlege
+          * Maybe implement conflict reject code 
+        </textarea></section>
+        <section data-markdown id="hold" class="align-top"><textarea data-template>          ## Hold 
+          * Boolean flag for every model & collection 
+          * Protects from ClearLayers(hold: false)
+          * Mark items you intend to take offline
+          * Conveniently set on many models, collections & associations using Get, Query, Populate
+        </textarea></section>
+        <section id="offline-states" class="align-top">
+          <h2>Going Offline, Returning Online</h2>
+          <img src="/images/offline-online-states.png">
+        </section>
+        <section data-markdown id="thankyou"><textarea data-template>          ### Thanks for listening :)
+
+          See github.com/buzzware/cascade (MIT License)
+
+          ![](/images/linkedin-qr-code.png)
+
+          Gary McGhee\
+          @gazmcghee\
+          gary@buzzware.com.au
+        </textarea></section>
+        <section class="align-top" data-markdown><textarea data-template>        </textarea></section>
+        <section data-markdown><textarea data-template>          # BONUS SLIDES
+        </textarea></section>
+
+        <section id="one-way-dataflow" class="align-top">
+            <h2>Facebook One Way Dataflow</h2>
+            <p>F8 Conference, 2014 :</p>
+            <div class="custom-row">
+                <img src="/images/flux-mvc.png" class="custom-image">
+                <span class="arrow">&#8594;</span> <!-- This is a right arrow character -->
+                <img src="/images/flux-react.webp" class="custom-image">
+            </div>
+            <h4>"MVC" / 2 Way Binding</h4>
+            <ul>
+              <li>Updates are uncontrolled - come from anywhere</li>
+              <li>Updates can retrigger each other</li>
+            </ul>
+        </section>
+        <section id="one-way-dataflow-2" class="align-top" data-markdown><textarea data-template>          ## Facebook One Way Dataflow
+          ![](/images/flux-react.webp)
+          * All changes through the dispatcher
+          * To change the view, change the state\
+            and the view follows
+          * The view is always a render of the state
+        </textarea></section>
+        <section id="one-way-dataflow-3" class="align-top">
+          <h2>Cascade One Way Dataflow</h2>
+          <div class="image-frame" style="height: 550px">
+            <img src="/images/cascade-one-way.png" style="height: 100%">
+          </div> 
+        </section>
+        <section data-markdown id="supermodel" class="align-top"><textarea data-template>          ## SuperModel base class
+          * __mutable: bool determines mutability (normally false)
+          * __ProxyFor: Model enables a mutable model to proxy an immutable one\
+          and capture changes for submission as an update
+          * Clone: with optional changes
+          * (De)Serializable
+        </textarea></section>
+        <section data-markdown id="immutable-models" class="align-top"><textarea data-template>          ## Why Immutable Models?
+          
+          * One instance per id can be freely passed around without fear of 
+          a property modified by one area of code affecting another. No cloning 
+          to avoid the possibility of unwanted mutation. 
+          * So our memory cache can hold, replace and return models
+          * An instance can't change so you don't need to listen to its properties changing
+        </textarea></section>
+        <section id="normally-immutable-models" class="align-top" data-markdown><textarea data-template>          ## Why only "normally" Immutable?
+          
+          * We need to attach associations to an instance 
+          * For forms in Xamarin, its best to have an editable, bindable model.
+          The Supermodel proxy feature provides that without affecting an actual model.
+          * __mutable is always false on models returned by Cascade. Setting it
+          should be very rare.
+        </textarea></section>
+        <section id="identity-map-2" class="align-top" data-markdown><textarea data-template>          ## Identity Map Cache
+          * Key=id, Value=arrival time, model 
+          * Identity Map pattern ensures one per id
+          * Arrival time determines freshness
+          * Implemented for memory and file storage
+        </textarea></section>
+        <section id="identity-map-3" class="align-top">
+          <h3>Each Type has Models and Collections</h3>
+          <div class="image-frame">
+            <img src="/images/model-cache.png">
+          </div>
+        </section>
+        <section data-markdown id="hard-things"><textarea data-template>          &gt; "There are only two hard things in Computer Science:\
+          &gt; cache invalidation,\
+          &gt; naming things,\
+          &gt; and off-by-one errors."\
+          &gt; -- Phil Karlton
+        </textarea></section>
+        <section data-markdown><textarea data-template>          ## Q. How do you know when to clear the cache?
+          1. Cascade doesn't know - the app knows
+          2. Because the cache **and** the data source are managed internally
+          the app doesn't need to know whether data comes from the cache or server
+          3. The cache can be cleared at any time
+        </textarea></section>
+        <section data-markdown><textarea data-template>          ## Q. How do you know when a cache value is invalid?
+          1. The app request specifies its "freshness" requirement
+          2. Each cache knows how fresh each value is\
+          ie. when it arrived from the origin
+          3. Cascade decides what to do based on the above
+        </textarea></section>
+
+    </div>
+</div>

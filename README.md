@@ -1,9 +1,37 @@
 # Cascade Data Layer 
 ## Data management framework for C# client (mobile) applications
 
+Cascade is a solution to several problems of data management within front end client apps. It provides a clean, consistent, and familiar API that assists the developer in performing data operations with the server, and maintaining data structures consisting of models and collections with the results.
+
+Cascade is designed to work well with existing dotnet UI frameworks, with or without binding. Cascade is also designed to work with virtually any backend server or store, including multiple, by custom implementation of abstract interfaces.
+
+By following the patterns made easy with Cascade methods, an application gets caching, local data persistence and offline-online network resilience almost for free.
+
+An application built on Cascade uses custom model classes subclassing the provided SuperModel class, and calls methods on a CascadeDataLayer class instance for all operations. Serialisation/deserialisation happens mostly automatically using System.Json.Text but the application code only operates with models. Building an application on this layer means isolation from server implementation details and changes. Testing can be easily performed on application code using a mock server implementation.
+
+### Benefits
+
+1. A clean and simple interface, reminiscent of a HTTP client, for application server interactions
+2. True offline support for all operations
+3. You send and receive models, not JSON
+
+5. easy Get/Query of models with their associations via Populate method/parameter
+6. seamless multilayer caching & persistence, including collections and queries
+7. Optional memory caching for speed
+8. Optional file system caching/persistence
+9. Supports almost any API server(s) through your own implementation of abstract interfaces
+10. Insulation of application logic from server irregularities and changes
+
+### Features
+
+1. "freshness" option to determine whether to get data from either a cache or the server
+2. "fallback freshness" option to silently fallback to a cached data when unable to reach the server
+3. "hold" option to mark retrieved records for downloading and preservation offline even when caches are cleared 
+4. Associations (Relations) between models: BelongsTo (Many to One), HasMany (One to Many), HasOne (One To One)
+
 ### Usage
 
-The main methods used by an application built with Cascade :
+#### Examples of main methods
 
 1. ```var product = await cascade.Create<Product>(new Product() { colour = "Red" });```
 1. ```var product = await cascade.Get<Product>(25, populate: new string[] { nameof(Product.Manufacturer) });```
@@ -13,28 +41,11 @@ The main methods used by an application built with Cascade :
 5. ```var promoted = await cascade.Execute("PROMOTE",new JsonObject { ["product_id"] = 25 })```
 5. ```await cascade.Populate(product,new string[] { nameof(Product.Manufacturer),nameof(Product.Category) })```
 
-Using Cascade in an application means : 
+#### Using Cascade imposes the following on your application (for all application models that use Cascade) 
 
-1. Using the SuperModel base class and its attributes for all application models
-2. Implementing an origin class for your server(s) API
-3. Constructing an instance of CascadeDataLayer with the desired cache layer(s) and origin  
-4. Using the CascadeDataLayer for application server interactions
+1. Inherit from the SuperModel base class and use the given GetProperty/SetProperty for its attributes 
+2. Models should be treated as immutable by application code - attempting to set a property throws an exception. All changes are done using Cascade methods (which are propagated through the caches and origin server). 
+2. Implement ICascadeOrigin with an origin class for your server(s)' API
+3. Construct an instance of CascadeDataLayer with the desired cache layer(s) and origin  
+4. Calling the methods of CascadeDataLayer (Get) for all application server interactions on 
 
-### Benefits
-
-1. A clean and simple interface, reminiscent of a HTTP client, for application server interactions
-2. True offline support for all operations
-3. You send and receive models, not JSONElements
-4. Associations between models: BelongsTo, HasMany, HasOne 
-5. easy Get/Query of models with their associations via Populate method/parameter
-6. seamless multilayer caching & persistence, including collections and queries 
-7. Optional memory caching for speed
-8. Optional file system caching/persistence
-9. Supports almost any API server(s) through your own implementation of abstract interfaces
-10. Insulation of application logic from server irregularities and changes 
-
-### Features
-
-1. "freshness" option to determine whether to get data from either a cache or the server
-2. "fallback freshness" option to silently fallback to a cached data when unable to reach the server
-3. "hold" option to mark retrieved records for downloading and preservation offline even when caches are cleared  

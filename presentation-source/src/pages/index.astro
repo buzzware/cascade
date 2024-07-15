@@ -1,0 +1,39 @@
+---
+import Presentation from './Presentation.astro';
+---
+
+<html lang="en">
+	<head>
+		<base href="/cascade/presentation/" target="_blank">
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="node_modules/reveal.js/dist/theme/black.css">
+    <link rel="stylesheet" href="github-dark.css">
+		<!-- <script src="https://cdn.jsdelivr.net/npm/reveal.js-mermaid-plugin@2.0.0/plugin/mermaid/mermaid.js"></script> -->
+		<script>
+			import Reveal from 'reveal.js';
+			import Markdown from 'reveal.js/plugin/markdown/markdown.esm.js';
+			import RevealMermaid from 'reveal.js-mermaid-plugin/plugin/mermaid/mermaid.js'
+      import Highlight from 'reveal.js/plugin/highlight/highlight.esm.js';
+		
+			let deck = new Reveal({
+				// mermaid initialize config
+				mermaid: {
+          theme: 'dark',
+				  flowchart: {
+            //defaultStrokeWidth: 10
+				  }
+				},
+				plugins: [ Markdown,Highlight,RevealMermaid ]
+			})
+			deck.initialize();
+		</script>		
+		<title>Cascade Data Layer Presentation</title>
+	</head>
+	<body>
+		<Presentation />
+	</body>
+</html>

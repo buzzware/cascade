@@ -1,0 +1,60 @@
+classDiagram
+    class CascadeDataLayer {
+        +ICascadeOrigin Origin
+        +IEnumerable<ICascadeCache> CacheLayers
+        +CascadeConfig Config
+        +bool ConnectionOnline
+        +Get()
+        +Query()
+        +Create()
+        +Update()
+        +Destroy()
+        +Execute()
+        +Populate()
+        +BlobGet()
+        +BlobPut()
+        +BlobDestroy()
+        +MetaSet()
+        +MetaGet()
+        +Hold()
+        +Unhold()
+    }
+    
+    class ICascadeOrigin {
+        <<interface>>
+        +ProcessRequest()
+        +EnsureAuthenticated()
+    }
+    
+    class ICascadeCache {
+        <<interface>>
+        +Fetch()
+        +Store()
+        +ClearAll()
+    }
+    
+    class CascadeConfig {
+    }
+    
+    class SuperModel {
+    }
+    
+    class RequestOp {
+        +Type Type
+        +RequestVerb Verb
+        +object Id
+        +object Value
+    }
+    
+    class OpResponse {
+        +bool Connected
+        +bool Exists
+        +object Result
+    }
+
+    CascadeDataLayer --> "1" ICascadeOrigin : Origin
+    CascadeDataLayer --> "*" ICascadeCache : CacheLayers
+    CascadeDataLayer --> "1" CascadeConfig : Config
+    CascadeDataLayer ..> SuperModel : operates on
+    CascadeDataLayer ..> RequestOp : creates
+    CascadeDataLayer ..> OpResponse : processes

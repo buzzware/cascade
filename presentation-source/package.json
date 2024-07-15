@@ -1,0 +1,17 @@
+{
+  "name": "reveal-astro",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^2.10.9",
+    "reveal.js": "^4.5.0",
+    "reveal.js-mermaid-plugin": "^2.0.0"
+  }
+}
