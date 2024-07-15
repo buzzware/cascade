@@ -36,10 +36,11 @@ An application built on Cascade uses custom model classes subclassing the provid
 3. "hold" option to mark retrieved records for downloading and preservation offline even when caches are cleared 
 
 
-[API Reference](https://buzzware.github.io/cascade/)
+[Website](https://buzzware.github.io/cascade)
+
+[API Reference](https://buzzware.github.io/cascade/api_reference)
 
 [Overview Presentation Slides](https://buzzware.github.io/cascade/presentation)
-
 
 
 ### Usage
