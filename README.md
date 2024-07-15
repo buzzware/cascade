@@ -24,10 +24,23 @@ An application built on Cascade uses custom model classes subclassing the provid
 
 ### Features
 
-1. "freshness" option to determine whether to get data from either a cache or the server
+1. Mostly Immutable Models (application code should never need to modify models directly) 
+2. Associations (Relations) between models: BelongsTo (Many to One), HasMany (One to Many), HasOne (One To One)
+3. Pagination including infinite scroll for queries
+3. Multithreaded internally for performance
+4. Threadsafe for use in alternative threads, including bindable UI properties only modified on the main thread
+4. Support for binary blobs eg. images (including caching and offline)
+4. Support for meta-data about models and blobs
+2. "freshness" option to determine whether to get data from either a cache or the server
 2. "fallback freshness" option to silently fallback to a cached data when unable to reach the server
 3. "hold" option to mark retrieved records for downloading and preservation offline even when caches are cleared 
-4. Associations (Relations) between models: BelongsTo (Many to One), HasMany (One to Many), HasOne (One To One)
+
+
+[API Reference](https://buzzware.github.io/cascade/)
+
+[Overview Presentation Slides](https://buzzware.github.io/cascade/presentation)
+
+
 
 ### Usage
 
@@ -41,11 +54,11 @@ An application built on Cascade uses custom model classes subclassing the provid
 5. ```var promoted = await cascade.Execute("PROMOTE",new JsonObject { ["product_id"] = 25 })```
 5. ```await cascade.Populate(product,new string[] { nameof(Product.Manufacturer),nameof(Product.Category) })```
 
-#### Using Cascade imposes the following on your application (for all application models that use Cascade) 
+#### Cascade requires the following from your application (for all models that use Cascade) 
 
 1. Inherit from the SuperModel base class and use the given GetProperty/SetProperty for its attributes 
 2. Models should be treated as immutable by application code - attempting to set a property throws an exception. All changes are done using Cascade methods (which are propagated through the caches and origin server). 
-2. Implement ICascadeOrigin with an origin class for your server(s)' API
-3. Construct an instance of CascadeDataLayer with the desired cache layer(s) and origin  
-4. Calling the methods of CascadeDataLayer (Get) for all application server interactions on 
+3. Implement ICascadeOrigin with an origin class for your server(s)' API
+4. Construct an instance of CascadeDataLayer with the desired cache layer(s) and origin  
+5. Use the methods of CascadeDataLayer (Create/Get/Query/Update/Replace/Destroy) for all operations with those models 
 
