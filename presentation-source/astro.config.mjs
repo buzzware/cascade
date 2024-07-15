@@ -6,10 +6,8 @@ export default defineConfig({
   site: 'https://buzzware.github.io',
   base: '/cascade/presentation',
   trailingSlash: "ignore",
-  outDir: '../docs/presentation'
-  
-  
-  
-  
-  
+  outDir: '../docs/presentation',
+  build: {
+    assets: 'astro'
+  }
 });
