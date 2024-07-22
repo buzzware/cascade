@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cascade: Why Cascade?</title>
+<title>Cascade: Deleting Models</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,25 +70,28 @@ $(function() {
 
 </div><!-- top -->
 <div><div class="header">
-  <div class="headertitle"><div class="title">Why Cascade?</div></div>
+  <div class="headertitle"><div class="title">Deleting Models</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md52"></a> </p>
-<h1><a class="anchor" id="autotoc_md53"></a>
-Benefits</h1>
-<ol type="1">
-<li>A clean and simple interface, reminiscent of a HTTP client, for application server interactions</li>
-<li>True offline support for all operations</li>
-<li>You send and receive models, not JSONElements</li>
-<li>Associations between models: BelongsTo, HasMany, HasOne</li>
-<li>easy Get/Query of models with their associations via Populate method/parameter</li>
-<li>seamless multilayer caching &amp; persistence, including collections and queries</li>
-<li>Optional memory caching for speed</li>
-<li>Optional file system caching/persistence</li>
-<li>Supports almost any API server(s) through your own implementation of abstract interfaces</li>
-<li>Insulation of application logic from server irregularities and changes </li>
-</ol>
-</div></div><!-- contents -->
+<div class="textblock"><p><a class="anchor" id="autotoc_md22"></a> Cascade provides a <code>Destroy</code> method to remove model instances from your origin and any caches.</p>
+<div class="fragment"><div class="line"><span class="keyword">public</span> async Task Destroy&lt;M&gt;(M model) where M : <span class="keyword">class</span></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md23"></a>
+Parameters</h2>
+<ul>
+<li><code>M</code>: The type of model you're deleting.</li>
+<li><code>model</code>: The instance of the model you want to delete.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md24"></a>
+Return Value</h2>
+<p>The method returns a <code>Task</code>, as it's an asynchronous operation with no return value.</p>
+<h1><a class="anchor" id="autotoc_md25"></a>
+Basic Usage</h1>
+<p>Here's a simple example of how to use the <code>Destroy</code> method to delete a Docket:</p>
+<div class="fragment"><div class="line"><span class="keyword">public</span> async Task DeleteDocket(Docket docket)</div>
+<div class="line">{</div>
+<div class="line">    await AppCommon.Cascade.Destroy(docket);</div>
+<div class="line">}</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
