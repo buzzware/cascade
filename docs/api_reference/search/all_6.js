@@ -1,4 +1,29 @@
 var searchData=
 [
-  ['why_20cascade_3f_0',['Why Cascade?',['../md_api__docs_2why.html',1,'']]]
+  ['genericblockingcollection_0',['GenericBlockingCollection',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a7c75d52c835c5f269fe525ce0ce2dfc1',1,'Easy::Common::Extensions']]],
+  ['genericcollection_1',['GenericCollection',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a0dc166715553d8afd6a7b0cff910d952',1,'Easy::Common::Extensions']]],
+  ['genericconcurrentbag_2',['GenericConcurrentBag',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a09f12d3799a12de48cdad45cf6b45704',1,'Easy::Common::Extensions']]],
+  ['genericconcurrentdictionary_3',['GenericConcurrentDictionary',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a8f4cb8d3cbb36821733fe7fb175f10ef',1,'Easy::Common::Extensions']]],
+  ['genericcustom_4',['GenericCustom',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706ac921bce82c8ebc50cfb501f3a4e625f4',1,'Easy::Common::Extensions']]],
+  ['genericdictionary_5',['GenericDictionary',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a4cdef9bd5ce42558a0d17bb42bbb2c12',1,'Easy::Common::Extensions']]],
+  ['generichashset_6',['GenericHashSet',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a387ffc720e18157a95225403f6622699',1,'Easy::Common::Extensions']]],
+  ['genericicollection_7',['GenericICollection',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a5030afa59b6cb5e49b32e2b9b23393de',1,'Easy::Common::Extensions']]],
+  ['genericicollectionkeyvalue_8',['GenericICollectionKeyValue',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a74c77498fd2c6f310e62fd59f8b33b34',1,'Easy::Common::Extensions']]],
+  ['genericidictionary_9',['GenericIDictionary',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a52af0ea7ca004faea57d3960ee09fe48',1,'Easy::Common::Extensions']]],
+  ['genericienumerable_10',['GenericIEnumerable',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a4669d3dc96106b31f67a9071c77f953f',1,'Easy::Common::Extensions']]],
+  ['genericienumerablekeyvalue_11',['GenericIEnumerableKeyValue',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a83fc31b77dd065dd58659d6da2de8217',1,'Easy::Common::Extensions']]],
+  ['genericilist_12',['GenericIList',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706aa7eb7eda4a129ba8f2dfc6aba5272f07',1,'Easy::Common::Extensions']]],
+  ['genericlinkedlist_13',['GenericLinkedList',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706ae08183bd1c4d2fb699b9c8a63a3ecc9d',1,'Easy::Common::Extensions']]],
+  ['genericlist_14',['GenericList',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a5d4658b52f0612aa6f15c57ea15ab9e5',1,'Easy::Common::Extensions']]],
+  ['genericqueue_15',['GenericQueue',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a0e53cfc5a4d709ca4253884f679825bf',1,'Easy::Common::Extensions']]],
+  ['genericsorteddictionary_16',['GenericSortedDictionary',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706af502047efdaebc0e311247f5df025c2f',1,'Easy::Common::Extensions']]],
+  ['genericsortedlist_17',['GenericSortedList',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706ab7147ae0f0f3e8735032968c51ae2e4f',1,'Easy::Common::Extensions']]],
+  ['genericstack_18',['GenericStack',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a1f309528b5998261f4e10313abedcee5',1,'Easy::Common::Extensions']]],
+  ['get_3c_20m_20_3e_19',['Get&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae389dcc533802ff815c607847561e2ba',1,'Buzzware.Cascade.CascadeDataLayer.Get&lt; M &gt;(int id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)'],['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a21da49fc5966a156daaee311029575a2',1,'Buzzware.Cascade.CascadeDataLayer.Get&lt; M &gt;(string id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)'],['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ac607cb8a0fe9a8181c40a8518babad4b',1,'Buzzware.Cascade.CascadeDataLayer.Get&lt; M &gt;(long id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null)']]],
+  ['getcollection_3c_20m_20_3e_20',['GetCollection&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a9aa399d4fdd4aa9a6645c3ab798ca041',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['getcollectionresponse_3c_20m_20_3e_21',['GetCollectionResponse&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a91a048f6f8cdd16d96d43267906b9c12',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['getresponse_22',['GetResponse',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#adba8a7e1e8793d0d33e7695ebb6d2931',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['getting_20models_23',['Getting Models',['../md_api__docs_2using__cascade_2simple__overview_2getting__models.html',1,'']]],
+  ['getwherecollection_3c_20m_20_3e_24',['GetWhereCollection&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a95830e42c8f6ee31b127b3145833eeeb',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['getwherecollectionresponse_3c_20model_20_3e_25',['GetWhereCollectionResponse&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#adf2a1ff25db855f847b77ccb02cdcd28',1,'Buzzware::Cascade::CascadeDataLayer']]]
 ];

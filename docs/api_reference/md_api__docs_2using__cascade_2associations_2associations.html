@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -47,6 +51,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2associations_2associations.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,12 +89,11 @@ $(function() {
 </div>
 </div>
 
-</div><!-- top -->
 <div><div class="header">
   <div class="headertitle"><div class="title">Associations</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md4"></a> </p><blockquote class="doxtable">
+<div class="textblock"><p><a class="anchor" id="autotoc_md5"></a> </p><blockquote class="doxtable">
 <p>&zwj;“The programmer, like the poet, works only slightly removed from pure thought-stuff. He builds his castles in the air, from air, creating by exertion of the imagination. Few media of creation are so flexible, so easy to polish and rework, so readily capable of realizing grand conceptual structures.” </p>
 </blockquote>
 <p>― Frederick P. Brooks, "The Mythical Man Month", 1975</p>
@@ -81,7 +101,7 @@ $(function() {
 <p>Cascade defines methods and attributes for maintaining model or IEnumerable&lt;model&gt; reference properties, known as "associations".</p>
 <p>In database Entity Relationship Diagrams, relationships between records are normally one-to-one, one-to-many or many-to-one. These three kinds of relationships are all implemented by a foreign key id referencing the id of another table. A one-to-many is the other side of a many-to-one. A fourth kind of relationship - many-to-many is really an intermediate table with two many-to-one relationships. Therefore, all of these kinds of relationships are implemented by : 1) foreign keys referencing other models by their primary key and type, and the ability to retrieve the referenced model 2) the ability to retrieve all models of a foreign type that reference a local model by its id and type</p>
 <p>Cascade provides the following attributes for declaring associations on Cascade models. The name associations and the naming of each association type comes from <a href="https://edgeguides.rubyonrails.org/association_basics.html">Ruby On Rails</a></p>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 BelongsTo</h1>
 <p>A DocketItem "belongs to" a single Docket, and the DocketItem has : 1) a foreign key property of the same type as the Docket id to reference the Docket. 2) a foreign association reference property of the Docket Type, and the BelongsTo attribute specifying the idProperty as the foreign key property by name.</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>DocketItem : SuperModel {</div>
@@ -106,7 +126,7 @@ BelongsTo</h1>
 <div class="line">    }</div>
 <div class="line">    <span class="keyword">private</span> Docket _Docket;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
 HasMany</h1>
 <p>A Docket "has many" DocketItems, and the Docket has: 1) a collection property of ImmutableArray&lt;DocketItem&gt; type to hold the associated DocketItems. 2) a HasMany attribute on the collection property specifying the foreignIdProperty as the foreign key property on the DocketItem by name.</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>Docket : SuperModel</div>
@@ -129,7 +149,7 @@ HasMany</h1>
 <div class="line">}</div>
 </div><!-- fragment --><p>In this example, the <code>Docket</code> class has a collection of <code>DocketItem</code> objects. The <code>HasMany</code> attribute is applied to the <code>Items</code> property, indicating that a <code>Docket</code> can have multiple <code>DocketItem</code> instances associated with it. The <code>foreignIdProperty</code> parameter in the <code>HasMany</code> attribute specifies that the <code>docketId</code> property in the <code>DocketItem</code> class is used as the foreign key to establish this relationship.</p>
 <p>The <code>ImmutableArray&lt;DocketItem&gt;</code> type is used for the collection to ensure thread-safety and to prevent accidental modifications of the collection itself. The actual management of this collection (adding, removing items) is handled by Cascade based on the relationship defined by the <code>HasMany</code> attribute.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 HasOne</h1>
 <p>A DocketItem "has one" DocketReceiptItem, and the DocketItem has: 1) a reference property of DocketReceiptItem type to hold the associated DocketReceiptItem. 2) a HasOne attribute on the reference property specifying the foreignIdProperty as the foreign key property on the DocketReceiptItem by name.</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>DocketItem : SuperModel</div>
@@ -153,9 +173,12 @@ HasOne</h1>
 </div><!-- fragment --><p>In this example, the <code>DocketItem</code> class has a reference to a single <code>DocketReceiptItem</code> object. The <code>HasOne</code> attribute is applied to the <code>DocketReceiptItem</code> property, indicating that a <code>DocketItem</code> can have one associated <code>DocketReceiptItem</code> instance. The <code>foreignIdProperty</code> parameter in the <code>HasOne</code> attribute specifies that the <code>docketItemId</code> property in the <code>DocketReceiptItem</code> class is used as the foreign key to establish this relationship. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
+  </ul>
+</div>
 </body>
 </html>
