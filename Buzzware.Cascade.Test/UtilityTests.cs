@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Buzzware.Cascade.Testing;
 using NUnit.Framework;
 
 namespace Buzzware.Cascade.Test {
@@ -43,6 +45,20 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(CascadeTypeUtils.ValueCompatibleWithType(1L, typeof(string)), Is.False);
 			Assert.That(CascadeTypeUtils.ValueCompatibleWithType("1", typeof(string)), Is.True);
 			Assert.That(CascadeTypeUtils.ValueCompatibleWithType("1", typeof(int)), Is.False);
+		}
+
+		[Test]
+		public void IsEnumerableType() {
+			var children = new List<Child>() {
+				new Child() {id = "1", age = 1},
+				new Child() {id = "2", age = 2},
+				new Child() {id = "3", age = 3}
+			};
+			var parent = new Parent();
+			var nullableChildrenType = typeof(Parent).GetProperty(nameof(Parent.Children))!.PropertyType;
+			var nonNullableTargetType = CascadeTypeUtils.DeNullType(nullableChildrenType);
+			var isEnumerable = CascadeTypeUtils.IsEnumerableType(nonNullableTargetType);
+			Assert.That(isEnumerable,Is.True);
 		}
 	}
 }
