@@ -3,9 +3,8 @@ using System.IO;
 namespace Buzzware.Cascade {
 	public class CascadeConfig {
 		public int DefaultFreshnessSeconds = 5 * 60;
-		public int DefaultStalenessSeconds = -1;
 		public int DefaultPopulateFreshnessSeconds = 12 * 3600;
-		public int? DefaultFallbackFreshnessSeconds = null;
+		public int DefaultFallbackFreshnessSeconds = RequestOp.FALLBACK_NEVER;
 		public string StoragePath;
 
 		public string PendingChangesPath => Path.Combine(StoragePath, "PendingChanges");
