@@ -87,13 +87,6 @@ var NAVTREE =
       [ "Key Differences", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md51", null ],
       [ "Model IDs", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md52", null ]
     ] ],
-    [ "Namespaces", "namespaces.html", [
-      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
-      [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ]
-      ] ]
-    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -110,8 +103,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706aa7eb7eda4a129ba8f2dfc6aba5272f07"
+"annotated.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
