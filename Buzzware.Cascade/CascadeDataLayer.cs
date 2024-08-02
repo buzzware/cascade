@@ -494,7 +494,7 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds"></param>
 		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
 		/// <param name="hold"></param>
-		public async Task Populate(SuperModel model, string property, int? freshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+		public async Task Populate(SuperModel model, string property, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
 			var modelType = model.GetType();
 			var propertyInfo = modelType.GetProperty(property);
 
@@ -504,16 +504,16 @@ namespace Buzzware.Cascade {
 			}
 
 			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute), true).FirstOrDefault() is HasManyAttribute hasMany) {
-				await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds, hold);
+				await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds, fallbackFreshnessSeconds, hold);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(HasOneAttribute), true).FirstOrDefault() is HasOneAttribute hasOne) {
-				await processHasOne(model, modelType, propertyInfo!, hasOne, freshnessSeconds, hold);
+				await processHasOne(model, modelType, propertyInfo!, hasOne, freshnessSeconds, fallbackFreshnessSeconds, hold);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute), true).FirstOrDefault() is BelongsToAttribute belongsTo) {
-				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, hold);
+				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, fallbackFreshnessSeconds, hold);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(FromBlobAttribute), true).FirstOrDefault() is FromBlobAttribute fromBlob) {
-				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, hold);
+				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(FromPropertyAttribute), true).FirstOrDefault() is FromPropertyAttribute fromProperty) {
 				await processFromProperty(model, modelType, propertyInfo!, fromProperty);
@@ -529,9 +529,9 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds"></param>
 		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
 		/// <param name="hold"></param>
-		public async Task Populate(SuperModel model, IEnumerable<string> associations, int? freshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+		public async Task Populate(SuperModel model, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
 			foreach (var association in associations) {
-				await Populate(model, association, freshnessSeconds, skipIfSet, hold);
+				await Populate(model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold);
 			}
 		}
 
@@ -545,10 +545,10 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds"></param>
 		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
 		/// <param name="hold"></param>
-		public async Task Populate(IEnumerable<SuperModel> models, IEnumerable<string> associations, int? freshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+		public async Task Populate(IEnumerable<SuperModel> models, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
 			foreach (var model in models) {
 				foreach (var association in associations) {
-					await Populate((SuperModel)model, association, freshnessSeconds, skipIfSet, hold);
+					await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold);
 				}
 			}
 		}
@@ -563,9 +563,9 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds"></param>
 		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
 		/// <param name="hold"></param>
-		public async Task Populate(IEnumerable<SuperModel> models, string association, int? freshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+		public async Task Populate(IEnumerable<SuperModel> models, string association, int? freshnessSeconds = null,int? fallbackFreshnessSeconds = null,  bool skipIfSet = false, bool? hold = null) {
 			foreach (var model in models) {
-				await Populate((SuperModel)model, association, freshnessSeconds, skipIfSet, hold);
+				await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold);
 			}
 		}
 		
@@ -831,7 +831,7 @@ namespace Buzzware.Cascade {
 			throw new NotImplementedException();
 		}
 
-		private async Task processHasMany(SuperModel model, Type modelType, PropertyInfo propertyInfo, HasManyAttribute attribute, int? freshnessSeconds = null, bool? hold = null) {
+		private async Task processHasMany(SuperModel model, Type modelType, PropertyInfo propertyInfo, HasManyAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null) {
 			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
 			var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
@@ -848,6 +848,7 @@ namespace Buzzware.Cascade {
 				null,
 				value: null,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,  
 				hold: hold, 
 				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
 				key: key
@@ -857,7 +858,7 @@ namespace Buzzware.Cascade {
 			await SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
 		}
 
-		private async Task processHasOne(SuperModel model, Type modelType, PropertyInfo propertyInfo, HasOneAttribute attribute, int? freshnessSeconds = null, bool? hold = null) {
+		private async Task processHasOne(SuperModel model, Type modelType, PropertyInfo propertyInfo, HasOneAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null) {
 			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
 			if (isEnumerable)
@@ -884,6 +885,7 @@ namespace Buzzware.Cascade {
 				null,
 				value: null,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold: hold, 
 				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
 				key: key
@@ -1011,7 +1013,7 @@ namespace Buzzware.Cascade {
 			return result!;
 		}
 
-		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null, bool? hold = null) {
+		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null,  int? fallbackFreshnessSeconds = null, bool? hold = null) {
 			var foreignModelType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var idProperty = modelType.GetProperty(attribute.IdProperty);
 			var id = idProperty.GetValue(model);
@@ -1024,6 +1026,7 @@ namespace Buzzware.Cascade {
 				RequestVerb.Get,
 				id,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold: hold
 			);
 			var opResponse = await InnerProcessWithFallback(requestOp);
@@ -1031,7 +1034,7 @@ namespace Buzzware.Cascade {
 			await SetModelProperty(model, propertyInfo, opResponse.Result);
 		}
 		
-		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds, bool? hold) {
+		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null) {
 			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var pathProperty = modelType.GetProperty(attribute.PathProperty);
 			var path = pathProperty.GetValue(model) as string;
@@ -1042,6 +1045,7 @@ namespace Buzzware.Cascade {
 				path,
 				NowMs,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold: hold
 			); 
 			var opResponse = await InnerProcessWithFallback(requestOp);
@@ -1309,7 +1313,7 @@ namespace Buzzware.Cascade {
 							RequestVerb.Get,
 							id,
 							freshnessSeconds: freshnessSeconds,
-							fallbackFreshnessSeconds: freshnessSeconds,
+							fallbackFreshnessSeconds: fallbackFreshnessSeconds,
 							hold: hold
 						)
 					));

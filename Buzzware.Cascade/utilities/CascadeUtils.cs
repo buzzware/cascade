@@ -295,6 +295,13 @@ namespace Buzzware.Cascade {
 			return exception is NoNetworkException || IsNonStandardNetworkFailureException(exception);
 		}
 		
+		public static string CombinePaths(List<string> pathSegments, char separator = '/')
+		{
+			string combinedPath = Path.Combine(pathSegments.ToArray());
+			combinedPath = combinedPath.Replace(Path.DirectorySeparatorChar, separator);
+			return combinedPath;
+		}
+		
 		public static string GetRelativePath(string basePath, string absolutePath) {
 			string[] baseDirs = basePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 			string[] absDirs = absolutePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
