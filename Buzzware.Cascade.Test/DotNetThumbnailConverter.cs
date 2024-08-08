@@ -3,6 +3,10 @@ using System.Drawing;
 using System.Threading.Tasks;
 
 namespace Buzzware.Cascade.Test {
+	
+	/// <summary>
+	/// Converts a bitmap in the given source property to a scaled thumbnail of the given dimensions and sets the local property 
+	/// </summary>
 	public class DotNetThumbnailConverter : IPropertyConverter {
 		public static readonly int DEFAULT_SIZE = 128;
 
