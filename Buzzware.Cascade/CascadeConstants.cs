@@ -1,10 +1,19 @@
 namespace Buzzware.Cascade {
 
-	public static class CascadeConstants {
+  /// <summary>
+  /// Provides constant values used throughout the Cascade library.
+  /// </summary>
+  public static class CascadeConstants {
 
-		public const string HOLD = "Hold";
+    /// <summary>
+    /// A constant for the "Hold" feature
+    /// </summary>
+    public const string HOLD = "Hold";
 
-		public const string BLOB = "Blob";
+    /// <summary>
+    /// A constant for the "Blob" feature
+    /// </summary>
+    public const string BLOB = "Blob";
 
-	}
+  }
 }
