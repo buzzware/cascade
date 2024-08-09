@@ -8,189 +8,215 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace Buzzware.Cascade {
-	public class OpResponse {
-		
-		[ImmutableObject(true)]
-		public OpResponse(
-			RequestOp requestOp,
-			long timeMs,
-			bool connected,
-			bool exists,
-			long? arrivedAtMs,
-			object? result
-		) {
-			RequestOp = requestOp;
-			TimeMs = timeMs;
-			Connected = connected;
-			Exists = exists;
-			ArrivedAtMs = arrivedAtMs;
-			Result = result;
-		}
 
-		public OpResponse withChanges(
-			RequestOp? requestOp = null,
-			long? timeMs = null,
-			bool? connected = null,
-			bool? exists = null,
-			long? arrivedAtMs = null,
-			object? result = null
-		) {
-			return new OpResponse(
-				requestOp: requestOp ?? this.RequestOp,
-				timeMs: timeMs ?? this.TimeMs,
-				connected: connected ?? this.Connected,
-				exists: exists ?? this.Exists,
-				arrivedAtMs: arrivedAtMs ?? this.ArrivedAtMs,
-				result: result ?? this.Result
-			);
-		}
-		
-		public readonly RequestOp RequestOp;
-		public readonly long TimeMs;
-		public readonly bool Connected;	// layer available ?
-		public readonly bool Exists;		// present in cache? Result can be null if known to not exist on origin
-		public readonly object? Result;								// for create, read, update
-		public long? ArrivedAtMs;
-		public int LayerIndex;
+  /// <summary>
+  /// Represents the response of an operation request in the Cascade library.
+  /// This class encapsulates information about the operation's result, 
+  /// its connection status, elapsed time, and more.
+  /// </summary>
+  public class OpResponse {
+    
+    /// <summary>
+    /// Constructs an instance of OpResponse with the given parameters.
+    /// </summary>
+    /// <param name="requestOp">The original request operation.</param>
+    /// <param name="timeMs">The time in milliseconds when the operation took place.</param>
+    /// <param name="connected">Indicates if the current layer is connected.</param>
+    /// <param name="exists">Indicates if the item is present in the cache.</param>
+    /// <param name="arrivedAtMs">The time in milliseconds when the response arrived.</param>
+    /// <param name="result">The result of the operation, can be null.</param>
+    [ImmutableObject(true)]
+    public OpResponse(
+      RequestOp requestOp,
+      long timeMs,
+      bool connected,
+      bool exists,
+      long? arrivedAtMs,
+      object? result
+    ) {
+      RequestOp = requestOp;
+      TimeMs = timeMs;
+      Connected = connected;
+      Exists = exists;
+      ArrivedAtMs = arrivedAtMs;
+      Result = result;
+    }
 
-		public string? SourceName;
+    /// <summary>
+    /// Creates a new OpResponse with updated fields if given, otherwise base fields remain the same.
+    /// </summary>
+    /// <param name="requestOp">Updated request operation.</param>
+    /// <param name="timeMs">Updated time in milliseconds.</param>
+    /// <param name="connected">Updated connection status.</param>
+    /// <param name="exists">Updated existence status.</param>
+    /// <param name="arrivedAtMs">Updated arrival time in milliseconds.</param>
+    /// <param name="result">Updated operation result.</param>
+    /// <returns>The new OpResponse instance with specified changes.</returns>
+    public OpResponse withChanges(
+      RequestOp? requestOp = null,
+      long? timeMs = null,
+      bool? connected = null,
+      bool? exists = null,
+      long? arrivedAtMs = null,
+      object? result = null
+    ) {
+      return new OpResponse(
+        requestOp: requestOp ?? this.RequestOp,
+        timeMs: timeMs ?? this.TimeMs,
+        connected: connected ?? this.Connected,
+        exists: exists ?? this.Exists,
+        arrivedAtMs: arrivedAtMs ?? this.ArrivedAtMs,
+        result: result ?? this.Result
+      );
+    }
+    
+    public readonly RequestOp RequestOp;
+    public readonly long TimeMs;
+    public readonly bool Connected; // Indicates if the current layer is connected
+    public readonly bool Exists; // Indicates if the item exists in the cache or at origin
+    public readonly object? Result; // Contains result for create, read, update operations
+    public long? ArrivedAtMs;
+    public int LayerIndex;
+    public string? SourceName;
 
-		public bool ResultIsBlob() {
-			return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobPut) && Result is byte[];
-		}
-		
-		public bool ResultIsEmpty() {
-			if (Result == null)
-				return true;
-			IEnumerable<object>? inumerableObj = Result as IEnumerable<object>;
-			if (inumerableObj != null)
-				return !inumerableObj.GetEnumerator().MoveNext();
-			IEnumerable? inumerable = Result as IEnumerable;
-			if (inumerable != null)
-				return !inumerable.GetEnumerator().MoveNext();
-			object[]? objects = Result as object[];
-			if (objects != null)
-				return objects.Length == 0;
-			ICollection? icollection = Result as ICollection;
-			if (icollection != null)
-				return !icollection.GetEnumerator().MoveNext();
-			return false;				// there is something there that we can't identify
-		}
+    /// <summary>
+    /// Determines if the operation result is a binary large object (blob).
+    /// </summary>
+    /// <returns>True if the result is a blob.</returns>
+    public bool ResultIsBlob() {
+      return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobPut) && Result is byte[];
+    }
 
-		public IEnumerable Results {
-			get {
-				if (Result == null)
-					return ImmutableArray<object>.Empty;
-				if (ResultIsBlob()) {
-					ImmutableArray.Create(Result);	// put blob into an array
-				} if (CascadeTypeUtils.IsEnumerableType(Result.GetType())) {
-					//IEnumerable<object> objects = (IEnumerable<object>)Result;
-					return (IEnumerable)CascadeTypeUtils.ImmutableArrayOfType(typeof(object), (IEnumerable) Result);
-				} else {
-					return ImmutableArray.Create(Result);
-				}
+    /// <summary>
+    /// Determines if the operation result is considered empty.
+    /// </summary>
+    /// <returns>True if the result is empty or null.</returns>
+    public bool ResultIsEmpty() {
+      if (Result == null)
+        return true;
+      IEnumerable<object>? inumerableObj = Result as IEnumerable<object>;
+      if (inumerableObj != null)
+        return !inumerableObj.GetEnumerator().MoveNext();
+      IEnumerable? inumerable = Result as IEnumerable;
+      if (inumerable != null)
+        return !inumerable.GetEnumerator().MoveNext();
+      object[]? objects = Result as object[];
+      if (objects != null)
+        return objects.Length == 0;
+      ICollection? icollection = Result as ICollection;
+      if (icollection != null)
+        return !icollection.GetEnumerator().MoveNext();
+      return false; // There is something present that cannot be identified
+    }
 
-				//return ImmutableArray.CreateRange<object>((IEnumerable) Result);
+    /// <summary>
+    /// Provides an IEnumerable interface for the results.
+    /// </summary>
+    public IEnumerable Results {
+      get {
+        if (Result == null)
+          return ImmutableArray<object>.Empty;
+        if (ResultIsBlob()) {
+          ImmutableArray.Create(Result); // put blob into an array
+        } if (CascadeTypeUtils.IsEnumerableType(Result.GetType())) {
+          // Convert the result to an immutable array of type object
+          return (IEnumerable)CascadeTypeUtils.ImmutableArrayOfType(typeof(object), (IEnumerable) Result);
+        } else {
+          return ImmutableArray.Create(Result);
+        }
+      }
+    }
 
-				// if (Result is IEnumerable<object>)
-				// 	return ((IEnumerable<object>)Result).ToImmutableArray();
-				// else
-				// 	return ImmutableArray.CreateRange<object>((IEnumerable) Result);
-			}
-		}
+    /// <summary>
+    /// Returns the first item in the results if they are enumerable, otherwise the result itself.
+    /// </summary>
+    public object? FirstResult => IsEnumerableResults ? (Result as IEnumerable)?.Cast<object>().FirstOrDefault() : Result;
 
-		public object? FirstResult => IsEnumerableResults ? (Result as IEnumerable)?.Cast<object>().FirstOrDefault() : Result;
+    /// <summary>
+    /// Indicates if the results are a collection that is not a blob.
+    /// </summary>
+    public bool IsEnumerableResults => (Result is IEnumerable) && !ResultIsBlob(); 
 
-		public bool IsEnumerableResults => (Result is IEnumerable) && !ResultIsBlob(); 
-		
-		public bool IsModelResults => CascadeTypeUtils.IsModel(FirstResult); 
+    /// <summary>
+    /// Indicates if the results are a model type.
+    /// </summary>
+    public bool IsModelResults => CascadeTypeUtils.IsModel(FirstResult);
 
-		public bool IsIdResults => CascadeTypeUtils.IsId(FirstResult);
+    /// <summary>
+    /// Indicates if the results are ids
+    /// </summary>
+    public bool IsIdResults => CascadeTypeUtils.IsId(FirstResult);
 
-		public IEnumerable ResultIds {
-			get {
-				var results = Results.Cast<object>();
-				if (!results.Any())
-					return results;
-				var first = results.FirstOrDefault();
-				if (CascadeTypeUtils.IsId(first))
-					return results;
-				else
-					return results.Select(i => i!=null ? CascadeTypeUtils.GetCascadeId(i) : null).ToImmutableArray();
-			}
-		}
+    /// <summary>
+    /// Provides an IEnumerable interface for the ids found in the results.
+    /// </summary>
+    public IEnumerable ResultIds {
+      get {
+        var results = Results.Cast<object>();
+        if (!results.Any())
+          return results;
+        var first = results.FirstOrDefault();
+        if (CascadeTypeUtils.IsId(first))
+          return results;
+        else
+          return results.Select(i => i!=null ? CascadeTypeUtils.GetCascadeId(i) : null).ToImmutableArray();
+      }
+    }
 
-		public string ToSummaryString() {
-			string? result = null;
+    /// <summary>
+    /// Produces a summary string of the result including connection and existence status.
+    /// </summary>
+    /// <returns>A string summarizing the result, connection, and existence.</returns>
+    public string ToSummaryString() {
+      string? result = null;
 
-			try {
-				result = Result==null ? null : JsonSerializer.Serialize(Result);
-			}
-			catch (Exception e) {
-				// swallow errors
-			}
-			return $"{result} Connected:{Connected} Exists:{Exists}";
-		}
-		
-		// 		
-		// public int Index;		
-		// public IDictionary<string, object?> Results;		// we store results as object internally
-		// public string ResultKey;
-		//
-		// public object Error;
-		// public bool FromOrigin;	// was this data from the Origin store ? 
+      try {
+        result = Result==null ? null : JsonSerializer.Serialize(Result);
+      }
+      catch (Exception e) {
+        // swallow errors
+      }
+      return $"{result} Connected:{Connected} Exists:{Exists}";
+    }
+    
+    /// <summary>
+    /// Constructs an OpResponse indicating that the operation resulted in no response.
+    /// </summary>
+    /// <param name="requestOp">The original request operation.</param>
+    /// <param name="timeMs">Time when the operation took place.</param>
+    /// <param name="sourceName">The name of the source that provided this response.</param>
+    /// <returns>A new OpResponse indicating no response was received.</returns>
+    public static OpResponse None(RequestOp requestOp,long timeMs,string? sourceName = null) {
+      var opResponse = new OpResponse(
+        requestOp,
+        timeMs,
+        connected: true,
+        exists: false,
+        result: null,
+        arrivedAtMs: null
+      );
+      opResponse.SourceName = sourceName;
+      return opResponse;
+    }
 
-
-		// public object ResultObject {
-		// 	get {
-		// 		if (Results != null && ResultKey != null && Results.ContainsKey(ResultKey))
-		// 			return Results[ResultKey];
-		// 		else
-		// 			return null;
-		// 	}
-		// }
-		//
-		// // helper function
-		// public void SetResult(string aResultKey, object aValue) {
-		// 	if (Results==null)
-		// 		Results = new Dictionary<string, object?>();
-		// 	ResultKey = aResultKey;
-		// 	Results[ResultKey] = aValue;
-		// }
-
-		// generic type M is only used for vanity properties/methods
-//		public M Result {
-//			get {
-//				if (Results != null && ResultKey != null && Results.ContainsKey(ResultKey))
-//					return Results[ResultKey] as M;
-//				else
-//					return default(M);
-//			}
-//		}		
-		public static OpResponse None(RequestOp requestOp,long timeMs,string? sourceName = null) {
-			var opResponse = new OpResponse(
-				requestOp,
-				timeMs,
-				connected: true,
-				exists: false,
-				result: null,
-				arrivedAtMs: null
-			);
-			opResponse.SourceName = sourceName;
-			return opResponse;
-		}
-		
-		public static OpResponse ConnectionFailure(RequestOp requestOp,long timeMs,string sourceName = null) {
-			var opResponse = new OpResponse(
-				requestOp,
-				timeMs,
-				connected: false,
-				exists: false,
-				result: null,
-				arrivedAtMs: null
-			);
-			opResponse.SourceName = sourceName;
-			return opResponse;
-		}
-	}
+    /// <summary>
+    /// Constructs an OpResponse indicating a connection failure.
+    /// </summary>
+    /// <param name="requestOp">The original request operation.</param>
+    /// <param name="timeMs">Time when the operation attempt took place.</param>
+    /// <param name="sourceName">The name of the source that would have provided this response.</param>
+    /// <returns>A new OpResponse indicating a connection failure.</returns>
+    public static OpResponse ConnectionFailure(RequestOp requestOp,long timeMs,string sourceName = null) {
+      var opResponse = new OpResponse(
+        requestOp,
+        timeMs,
+        connected: false,
+        exists: false,
+        result: null,
+        arrivedAtMs: null
+      );
+      opResponse.SourceName = sourceName;
+      return opResponse;
+    }
+  }
 }
