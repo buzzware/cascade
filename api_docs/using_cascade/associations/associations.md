@@ -107,3 +107,33 @@ public class DocketItem : SuperModel
 
 In this example, the `DocketItem` class has a reference to a single `DocketReceiptItem` object. The `HasOne` attribute is applied to the `DocketReceiptItem` property, indicating that a `DocketItem` can have one associated `DocketReceiptItem` instance. The `foreignIdProperty` parameter in the `HasOne` attribute specifies that the `docketItemId` property in the `DocketReceiptItem` class is used as the foreign key to establish this relationship.
 
+## FromBlob
+
+A ThingPhoto has properties : 
+1) imagePath - a normal string data property which is a relative storage path as used by BlobGet/BlobPut.
+2) Image - an association property with the FromBlob attribute referencing imagePath and specifying DotNetBitmapConverter.
+
+Populating the Image property will internally call BlobGet with imagePath, then the result will be converted to a Bitmap by 
+DotNetBitmapConverter and used to set Image.
+
+```csharp
+public class ThingPhoto : SuperModel
+{
+
+    public string? imagePath {
+      get => GetProperty(ref _ImagePath); 
+      set => SetProperty(ref _ImagePath, value);
+    }
+    private string? _ImagePath;
+    
+    /// <summary>
+    /// Bitmap of the image
+    /// </summary>
+    [FromBlob(nameof(imagePath),typeof(DotNetBitmapConverter))]
+    public Bitmap? Image {
+      get => GetProperty(ref _Image); 
+      set => SetProperty(ref _Image, value);
+    }
+    private Bitmap? _Image;
+}
+```
