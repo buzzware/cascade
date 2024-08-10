@@ -8,6 +8,8 @@ namespace Buzzware.Cascade {
   /// <summary>
   /// Attribute marking a property as the destination and type for conversion from a blob of a given path.
   /// The converter is also specified.
+  ///
+  /// https://buzzware.github.io/cascade/api_reference/md_api__docs_2using__cascade_2associations_2associations.html 
   /// </summary>
   public class FromBlobAttribute : Attribute {
 		

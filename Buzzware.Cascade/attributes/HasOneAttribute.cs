@@ -6,6 +6,8 @@ namespace Buzzware.Cascade {
   /// This attribute class is used within the Cascade library to indicate a 'has-one' relationship between entities.
   /// When applied to a property, it signifies that the property represents a single related entity 
   /// and specifies the property name that holds the foreign key to the related entity.
+  ///
+  /// https://buzzware.github.io/cascade/api_reference/md_api__docs_2using__cascade_2associations_2associations.html 
   /// </summary>
   public class HasOneAttribute : Attribute {
     

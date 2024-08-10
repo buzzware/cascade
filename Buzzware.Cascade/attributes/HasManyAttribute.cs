@@ -6,6 +6,8 @@ namespace Buzzware.Cascade {
   /// Represents an attribute that specifies a one-to-many relationship.
   /// Used to mark a property intended to store a collection of child entities related to the local parent
   /// by a foreign key, identified by the specified property.
+  ///
+  /// https://buzzware.github.io/cascade/api_reference/md_api__docs_2using__cascade_2associations_2associations.html 
   /// </summary>
 	public class HasManyAttribute : Attribute {
     

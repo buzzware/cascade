@@ -6,6 +6,8 @@ namespace Buzzware.Cascade {
 
   /// <summary>
   /// Interface that defines a converter to convert a property value from one type to another.
+  ///
+  /// https://buzzware.github.io/cascade/api_reference/md_api__docs_2using__cascade_2associations_2associations.html 
   /// </summary>
   public interface IPropertyConverter {
     

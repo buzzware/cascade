@@ -4,7 +4,9 @@ namespace Buzzware.Cascade {
 
   /// <summary>
   /// Attribute to denote that a property is a reference to another record (of specified id) of another type.
-  /// The id is read from the property specified by IdProperty, and the type is taken from the local property. 
+  /// The id is read from the property specified by IdProperty, and the type is taken from the local property.
+  ///
+  /// https://buzzware.github.io/cascade/api_reference/md_api__docs_2using__cascade_2associations_2associations.html 
   /// </summary>
   public class BelongsToAttribute : Attribute {
   
