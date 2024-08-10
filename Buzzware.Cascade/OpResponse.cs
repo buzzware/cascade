@@ -180,7 +180,7 @@ namespace Buzzware.Cascade {
     }
     
     /// <summary>
-    /// Constructs an OpResponse indicating that the operation resulted in no response.
+    /// Constructs an OpResponse indicating that there was no value found
     /// </summary>
     /// <param name="requestOp">The original request operation.</param>
     /// <param name="timeMs">Time when the operation took place.</param>

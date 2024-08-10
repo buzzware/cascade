@@ -19,7 +19,7 @@ When defining properties in your model, the `GetProperty<T>()` and `SetProperty(
 
 ### ID Property
 
-Cascade-managed models require a property with the `[CascadeId]` attribute. 
+Cascade-managed models require a property with the `[CascadeId]` attribute. Theoretically, any value type could work, but only string, int and long have been tested.
 
 ```csharp
 public class Docket : SuperModel
