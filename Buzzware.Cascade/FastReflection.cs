@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-//using Serilog;
+// This file is for future use. The idea is to cache and speed up reflection calls which can be costly in performance 
 
 namespace Buzzware.Cascade {
 
