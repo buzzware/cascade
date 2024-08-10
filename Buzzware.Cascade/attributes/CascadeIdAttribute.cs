@@ -1,6 +1,11 @@
 using System;
 
 namespace Buzzware.Cascade {
-	public class CascadeIdAttribute : Attribute {
-	}
+
+  /// <summary>
+  /// Attribute used to mark the primary key property of a Cascade managed model.
+  /// </summary>
+  public class CascadeIdAttribute : Attribute {
+  }
+
 }
