@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_from_pr
   <div class="headertitle"><div class="title">Buzzware.Cascade.FromPropertyAttribute Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Attribute to specify the source property and optional converter and arguments for property mapping, allowing customization of how a property gets populated.  
+ <a href="class_buzzware_1_1_cascade_1_1_from_property_attribute.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.FromPropertyAttribute:</div>
 <div class="dyncontent">
@@ -106,22 +109,86 @@ Inheritance diagram for Buzzware.Cascade.FromPropertyAttribute:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8f8f933f528428aa2f4457d235abef5c"><td class="memItemLeft" align="right" valign="top"><a id="a8f8f933f528428aa2f4457d235abef5c" name="a8f8f933f528428aa2f4457d235abef5c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FromPropertyAttribute</b> (string sourcePropertyName, Type converterClass, params object[] args)</td></tr>
+<tr class="memitem:a8f8f933f528428aa2f4457d235abef5c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_from_property_attribute.html#a8f8f933f528428aa2f4457d235abef5c">FromPropertyAttribute</a> (string sourcePropertyName, Type converterClass, params object[] args)</td></tr>
+<tr class="memdesc:a8f8f933f528428aa2f4457d235abef5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">FromPropertyAttribute Constructor. Validates and sets the converter class, source property name, and arguments. Throws an exception if the converter class does not implement IPropertyConverter.  <br /></td></tr>
 <tr class="separator:a8f8f933f528428aa2f4457d235abef5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a6466303475773f524055563a168c6aae"><td class="memItemLeft" align="right" valign="top"><a id="a6466303475773f524055563a168c6aae" name="a6466303475773f524055563a168c6aae"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>SourcePropertyName</b><code> [get]</code></td></tr>
+<tr class="memdesc:a6466303475773f524055563a168c6aae"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the source property from which to copy or convert a value. <br /></td></tr>
 <tr class="separator:a6466303475773f524055563a168c6aae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90c4704c8b67be8b50a6331ecf195be9"><td class="memItemLeft" align="right" valign="top"><a id="a90c4704c8b67be8b50a6331ecf195be9" name="a90c4704c8b67be8b50a6331ecf195be9"></a>
 <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_property_converter.html">IPropertyConverter</a>?&#160;</td><td class="memItemRight" valign="bottom"><b>Converter</b><code> [get]</code></td></tr>
+<tr class="memdesc:a90c4704c8b67be8b50a6331ecf195be9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The converter used to transform the property value from the source to the target type. It may be null if no conversion is required. <br /></td></tr>
 <tr class="separator:a90c4704c8b67be8b50a6331ecf195be9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebc21dca4e7ca7215e492598d9ecf1cd"><td class="memItemLeft" align="right" valign="top"><a id="aebc21dca4e7ca7215e492598d9ecf1cd" name="aebc21dca4e7ca7215e492598d9ecf1cd"></a>
 object[]&#160;</td><td class="memItemRight" valign="bottom"><b>Arguments</b><code> [get]</code></td></tr>
+<tr class="memdesc:aebc21dca4e7ca7215e492598d9ecf1cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional arguments that may influence the conversion process. <br /></td></tr>
 <tr class="separator:aebc21dca4e7ca7215e492598d9ecf1cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Attribute to specify the source property and optional converter and arguments for property mapping, allowing customization of how a property gets populated. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a8f8f933f528428aa2f4457d235abef5c" name="a8f8f933f528428aa2f4457d235abef5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f8f933f528428aa2f4457d235abef5c">&#9670;&#160;</a></span>FromPropertyAttribute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Buzzware.Cascade.FromPropertyAttribute.FromPropertyAttribute </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>sourcePropertyName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Type&#160;</td>
+          <td class="paramname"><em>converterClass</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">params object[]&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>FromPropertyAttribute Constructor. Validates and sets the converter class, source property name, and arguments. Throws an exception if the converter class does not implement IPropertyConverter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sourcePropertyName</td><td>Name of the property to be used as the source for conversion.</td></tr>
+    <tr><td class="paramname">converterClass</td><td>Type of the converter class that must implement IPropertyConverter.</td></tr>
+    <tr><td class="paramname">args</td><td>Additional arguments required by the converter.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">ArgumentException</td><td>Thrown when converterClass does not implement IPropertyConverter.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/attributes/FromPropertyAttribute.cs</li>
 </ul>

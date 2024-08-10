@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['none_0',['None',['../class_buzzware_1_1_cascade_1_1_op_response.html#a5aa410fe5a1c0a37b072b69e1aa3f1ba',1,'Buzzware::Cascade::OpResponse']]]
+];

@@ -11,13 +11,12 @@ var hierarchy =
     [ "Buzzware.Cascade.CascadeConfig", "class_buzzware_1_1_cascade_1_1_cascade_config.html", null ],
     [ "Buzzware.Cascade.CascadeJsonSerialization", "class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html", null ],
     [ "Buzzware.Cascade.CascadePaginator< Model >", "class_buzzware_1_1_cascade_1_1_cascade_paginator.html", null ],
-    [ "CascadeQueryOptions", "class_cascade_query_options.html", null ],
+    [ "Buzzware.Cascade.CascadeQueryOptions", "class_buzzware_1_1_cascade_1_1_cascade_query_options.html", null ],
     [ "Buzzware.Cascade.ClassInfo", "class_buzzware_1_1_cascade_1_1_class_info.html", null ],
     [ "Exception", null, [
       [ "Buzzware.Cascade.MutationAttemptException", "class_buzzware_1_1_cascade_1_1_mutation_attempt_exception.html", null ]
     ] ],
     [ "Buzzware.Cascade.FNVHash", "class_buzzware_1_1_cascade_1_1_f_n_v_hash.html", null ],
-    [ "Buzzware.Cascade.ForeignKeyCriteria", "class_buzzware_1_1_cascade_1_1_foreign_key_criteria.html", null ],
     [ "Buzzware.Cascade.IBlobCache", "interface_buzzware_1_1_cascade_1_1_i_blob_cache.html", [
       [ "Buzzware.Cascade.FileBlobCache", "class_buzzware_1_1_cascade_1_1_file_blob_cache.html", null ]
     ] ],

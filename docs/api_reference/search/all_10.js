@@ -1,16 +1,12 @@
 var searchData=
 [
-  ['compilerservices_0',['CompilerServices',['../namespace_system_1_1_runtime_1_1_compiler_services.html',1,'System::Runtime']]],
-  ['runtime_1',['Runtime',['../namespace_system_1_1_runtime.html',1,'System']]],
-  ['sequencetype_2',['SequenceType',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706',1,'Easy::Common::Extensions']]],
-  ['setassociation_3',['SetAssociation',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a78a58eec92b8d1dbec812a05f6a7af27',1,'Buzzware.Cascade.CascadeDataLayer.SetAssociation(object target, string propertyName, object value)'],['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a52d1116a66cb75c7ef29c121e4b5dab1',1,'Buzzware.Cascade.CascadeDataLayer.SetAssociation(IEnumerable targets, string propertyName, object value)']]],
-  ['setcacherecord_4',['SetCacheRecord',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#aa2d0f29fc202668d4956c9b22973ad9c',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['setcachewherecollection_5',['SetCacheWhereCollection',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a963713e180c14771a795b1b456f81ae6',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['setcollection_3c_20model_20_3e_6',['SetCollection&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#aa603c100c5df4df70a97e8afb0ded7fb',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['simple_20querying_20with_20cascade_7',['Simple Querying with Cascade',['../md_api__docs_2using__cascade_2simple__overview_2queries.html',1,'']]],
-  ['sortedlist_8',['SortedList',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a33a04d438160a83ab3442a81bd800e01',1,'Easy::Common::Extensions']]],
-  ['stack_9',['Stack',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a2187e1021a911b3807cc1bea2eb1a9ca',1,'Easy::Common::Extensions']]],
-  ['string_10',['String',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a27118326006d3829667a400ad23d5d98',1,'Easy::Common::Extensions']]],
-  ['supermodel_11',['SuperModel',['../class_buzzware_1_1_cascade_1_1_super_model.html',1,'Buzzware::Cascade']]],
-  ['system_12',['System',['../namespace_system.html',1,'']]]
+  ['raisepropertychanged_0',['RaisePropertyChanged',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a922d65ac1748978f669b434e76d6abab',1,'Buzzware.Cascade.CascadeDataLayer.RaisePropertyChanged()'],['../class_buzzware_1_1_cascade_1_1_super_model.html#a102dbf98aad140c822c4a646f1e8f293',1,'Buzzware.Cascade.SuperModel.RaisePropertyChanged()']]],
+  ['remove_1',['Remove',['../class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#a3f14f0f7379ae598adb8bbdb92ddc60e',1,'Buzzware.Cascade.FastFileClassCache.Remove()'],['../class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a60d457573d8f7bc546113c7744a79800',1,'Buzzware.Cascade.FileSystemClassCache.Remove()'],['../class_buzzware_1_1_cascade_1_1_model_class_cache.html#aba32327dc909c9290db9fc29e27bccde',1,'Buzzware.Cascade.ModelClassCache.Remove(object id)'],['../class_buzzware_1_1_cascade_1_1_model_class_cache.html#a5a07873f9d31f58541364adccdbc1aca',1,'Buzzware.Cascade.ModelClassCache.Remove(IdType id)']]],
+  ['replaceop_3c_20model_20_3e_2',['ReplaceOp&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_request_op.html#a4f7ac4261d6e272dc46a4188e6745b7b',1,'Buzzware::Cascade::RequestOp']]],
+  ['requestop_3',['RequestOp',['../class_buzzware_1_1_cascade_1_1_request_op.html',1,'Buzzware.Cascade.RequestOp'],['../class_buzzware_1_1_cascade_1_1_request_op.html#a0600174cb8c8e88fb1d2bd3d7badeb81',1,'Buzzware.Cascade.RequestOp.RequestOp()']]],
+  ['requestverb_4',['RequestVerb',['../namespace_buzzware_1_1_cascade.html#a4789189aff5514ed7b15f4aa029bdc44',1,'Buzzware::Cascade']]],
+  ['resultids_5',['ResultIds',['../class_buzzware_1_1_cascade_1_1_op_response.html#ab2b09cf20895c93e6ca0c4283652daf4',1,'Buzzware::Cascade::OpResponse']]],
+  ['resultisblob_6',['ResultIsBlob',['../class_buzzware_1_1_cascade_1_1_op_response.html#afef4b7ffe5eb4d0d3cd4cbfe397c3707',1,'Buzzware::Cascade::OpResponse']]],
+  ['resultisempty_7',['ResultIsEmpty',['../class_buzzware_1_1_cascade_1_1_op_response.html#a6a1b0b08506ebf18fd1b34d913a21c95',1,'Buzzware::Cascade::OpResponse']]],
+  ['results_8',['Results',['../class_buzzware_1_1_cascade_1_1_op_response.html#a9dd24d0386856805eaa48b9163fe6858',1,'Buzzware::Cascade::OpResponse']]]
 ];

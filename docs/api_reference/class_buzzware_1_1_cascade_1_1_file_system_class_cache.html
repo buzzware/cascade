@@ -98,6 +98,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_file_sy
   <div class="headertitle"><div class="title">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A simple file system-based cache for storing and retrieving instances of a model class with specified ID type. Implements IModelClassCache to fetch, store, and remove model instances and collections using JSON serialization.  
+ <a href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;:</div>
 <div class="dyncontent">
@@ -110,53 +113,109 @@ Inheritance diagram for Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType 
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac58c1865d0901f2b35dbbec7354be25d"><td class="memItemLeft" align="right" valign="top"><a id="ac58c1865d0901f2b35dbbec7354be25d" name="ac58c1865d0901f2b35dbbec7354be25d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FileSystemClassCache</b> (string fileDir, <a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html">CascadeJsonSerialization</a>? serialization=null)</td></tr>
+<tr class="memitem:ac58c1865d0901f2b35dbbec7354be25d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#ac58c1865d0901f2b35dbbec7354be25d">FileSystemClassCache</a> (string fileDir, <a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html">CascadeJsonSerialization</a>? serialization=null)</td></tr>
+<tr class="memdesc:ac58c1865d0901f2b35dbbec7354be25d"><td class="mdescLeft">&#160;</td><td class="mdescRight">FileSystemClassCache Constructor Initializes directories for models and collections, and initializes the JSON serialization mechanism.  <br /></td></tr>
 <tr class="separator:ac58c1865d0901f2b35dbbec7354be25d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7c08c33db1568a33afc85177255977c"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#ac7c08c33db1568a33afc85177255977c">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memdesc:ac7c08c33db1568a33afc85177255977c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetches a model or collection from the file system based on the specified request operation.  <br /></td></tr>
 <tr class="separator:ac7c08c33db1568a33afc85177255977c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58205a26c3b87b993b0d0d914ee63913"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a58205a26c3b87b993b0d0d914ee63913">Store</a> (object id, object model, long arrivedAt)</td></tr>
+<tr class="memdesc:a58205a26c3b87b993b0d0d914ee63913"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a model instance asynchronously to the file system based on its id.  <br /></td></tr>
 <tr class="separator:a58205a26c3b87b993b0d0d914ee63913"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61b9fafbad3a5bd62142ceccdfcf874b"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a61b9fafbad3a5bd62142ceccdfcf874b">StoreCollection</a> (string key, IEnumerable ids, long arrivedAt)</td></tr>
+<tr class="memdesc:a61b9fafbad3a5bd62142ceccdfcf874b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a collection of model ids to the file system under a specific key.  <br /></td></tr>
 <tr class="separator:a61b9fafbad3a5bd62142ceccdfcf874b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60d457573d8f7bc546113c7744a79800"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a60d457573d8f7bc546113c7744a79800">Remove</a> (object id)</td></tr>
+<tr class="memdesc:a60d457573d8f7bc546113c7744a79800"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a model instance from the file system based on its identifier.  <br /></td></tr>
 <tr class="separator:a60d457573d8f7bc546113c7744a79800"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc6714622446e2748f48b797a5021e5d"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#acc6714622446e2748f48b797a5021e5d">ClearAll</a> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
+<tr class="memdesc:acc6714622446e2748f48b797a5021e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all stored models and collections from the file system. Optionally exempts held or recently modified files.  <br /></td></tr>
 <tr class="separator:acc6714622446e2748f48b797a5021e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d50b2e739cb638e44b82867f9b893af"><td class="memItemLeft" align="right" valign="top"><a id="a1d50b2e739cb638e44b82867f9b893af" name="a1d50b2e739cb638e44b82867f9b893af"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>Store</b> (object id, object model, long arrivedAt)</td></tr>
+<tr class="memitem:a1d50b2e739cb638e44b82867f9b893af"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1d50b2e739cb638e44b82867f9b893af">Store</a> (object id, object model, long arrivedAt)</td></tr>
 <tr class="separator:a1d50b2e739cb638e44b82867f9b893af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memItemLeft" align="right" valign="top"><a id="a6c206b5f3ec36b5f5dfea4fe0731b91b" name="a6c206b5f3ec36b5f5dfea4fe0731b91b"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>StoreCollection</b> (string key, IEnumerable ids, long aArrivedAt)</td></tr>
+<tr class="memitem:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6c206b5f3ec36b5f5dfea4fe0731b91b">StoreCollection</a> (string key, IEnumerable ids, long aArrivedAt)</td></tr>
 <tr class="separator:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6eb25cd59d345166cd01bd519d46a9db"><td class="memItemLeft" align="right" valign="top"><a id="a6eb25cd59d345166cd01bd519d46a9db" name="a6eb25cd59d345166cd01bd519d46a9db"></a>
-Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Fetch</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memitem:a6eb25cd59d345166cd01bd519d46a9db"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6eb25cd59d345166cd01bd519d46a9db">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
 <tr class="separator:a6eb25cd59d345166cd01bd519d46a9db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1683c928a268210e36de6e2787f66c28"><td class="memItemLeft" align="right" valign="top"><a id="a1683c928a268210e36de6e2787f66c28" name="a1683c928a268210e36de6e2787f66c28"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>Remove</b> (object id)</td></tr>
+<tr class="memitem:a1683c928a268210e36de6e2787f66c28"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1683c928a268210e36de6e2787f66c28">Remove</a> (object id)</td></tr>
 <tr class="separator:a1683c928a268210e36de6e2787f66c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a521bcf06b596a14448dbb537f6749063"><td class="memItemLeft" align="right" valign="top"><a id="a521bcf06b596a14448dbb537f6749063" name="a521bcf06b596a14448dbb537f6749063"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearAll</b> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
+<tr class="memitem:a521bcf06b596a14448dbb537f6749063"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a521bcf06b596a14448dbb537f6749063">ClearAll</a> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
 <tr class="separator:a521bcf06b596a14448dbb537f6749063"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a67808fec041aa2941cdcd616da3b3a93"><td class="memItemLeft" align="right" valign="top"><a id="a67808fec041aa2941cdcd616da3b3a93" name="a67808fec041aa2941cdcd616da3b3a93"></a>
-async Task&#160;</td><td class="memItemRight" valign="bottom"><b>SerializeToPathAsync</b> (string aPath, object aObject, long timeMs)</td></tr>
+<tr class="memitem:a67808fec041aa2941cdcd616da3b3a93"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a67808fec041aa2941cdcd616da3b3a93">SerializeToPathAsync</a> (string aPath, object aObject, long timeMs)</td></tr>
+<tr class="memdesc:a67808fec041aa2941cdcd616da3b3a93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes an object to a specified file path asynchronously and sets the file's last write time.  <br /></td></tr>
 <tr class="separator:a67808fec041aa2941cdcd616da3b3a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a428598a9afb36c2ea81901446efd75e0"><td class="memItemLeft" align="right" valign="top"><a id="a428598a9afb36c2ea81901446efd75e0" name="a428598a9afb36c2ea81901446efd75e0"></a>
-async Task&lt; T?&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>DeserializeFromPathAsync&lt; T &gt;</b> (string aPath)</td></tr>
+<tr class="memitem:a428598a9afb36c2ea81901446efd75e0"><td class="memItemLeft" align="right" valign="top">async Task&lt; T?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a428598a9afb36c2ea81901446efd75e0">DeserializeFromPathAsync&lt; T &gt;</a> (string aPath)</td></tr>
+<tr class="memdesc:a428598a9afb36c2ea81901446efd75e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deserializes and returns an object from the given file path.  <br /></td></tr>
 <tr class="separator:a428598a9afb36c2ea81901446efd75e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a91a3ce8b9b1dc6d11b338d918bca5e71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a91a3ce8b9b1dc6d11b338d918bca5e71">Cascade</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a91a3ce8b9b1dc6d11b338d918bca5e71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to cascade data layer.  <br /></td></tr>
 <tr class="separator:a91a3ce8b9b1dc6d11b338d918bca5e71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a></td></tr>
-<tr class="memitem:a204545d6dc8ea3363bdca69f1418916d inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td class="memItemLeft" align="right" valign="top">
-<a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cascade</b><code> [get, set]</code></td></tr>
+<tr class="memitem:a204545d6dc8ea3363bdca69f1418916d inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a204545d6dc8ea3363bdca69f1418916d">Cascade</a><code> [get, set]</code></td></tr>
 <tr class="separator:a204545d6dc8ea3363bdca69f1418916d inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A simple file system-based cache for storing and retrieving instances of a model class with specified ID type. Implements IModelClassCache to fetch, store, and remove model instances and collections using JSON serialization. </p>
+<div class="typeconstraint">
+<dl><dt><b>Type Constraints</b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>Model</em></td><td>&#160;:</td><td valign="top"><em>class</em></td><td>&#160;</td></tr>
+</table>
+</dd>
+</dl>
+</div>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ac58c1865d0901f2b35dbbec7354be25d" name="ac58c1865d0901f2b35dbbec7354be25d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac58c1865d0901f2b35dbbec7354be25d">&#9670;&#160;</a></span>FileSystemClassCache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html">Buzzware.Cascade.FileSystemClassCache</a>&lt; Model, IdType &gt;.<a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html">FileSystemClassCache</a> </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>fileDir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html">CascadeJsonSerialization</a>?&#160;</td>
+          <td class="paramname"><em>serialization</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>FileSystemClassCache Constructor Initializes directories for models and collections, and initializes the JSON serialization mechanism. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileDir</td><td>The base directory for storing model and collection files.</td></tr>
+    <tr><td class="paramname">serialization</td><td>Optional JSON serialization object; uses default if not specified.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="acc6714622446e2748f48b797a5021e5d" name="acc6714622446e2748f48b797a5021e5d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc6714622446e2748f48b797a5021e5d">&#9670;&#160;</a></span>ClearAll()</h2>
@@ -192,7 +251,57 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Clears all stored models and collections from the file system. Optionally exempts held or recently modified files. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">exceptHeld</td><td>If true, retains files marked as held in cache.</td></tr>
+    <tr><td class="paramname">olderThan</td><td>Optional DateTime to retain files modified after a certain date.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
+
+</div>
+</div>
+<a id="a428598a9afb36c2ea81901446efd75e0" name="a428598a9afb36c2ea81901446efd75e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a428598a9afb36c2ea81901446efd75e0">&#9670;&#160;</a></span>DeserializeFromPathAsync&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task&lt; T?&gt; <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html">Buzzware.Cascade.FileSystemClassCache</a>&lt; Model, IdType &gt;.DeserializeFromPathAsync&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>aPath</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Deserializes and returns an object from the given file path. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of the object to deserialize.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aPath</td><td>The path of the file from which to deserialize the object.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The deserialized object of type T, or null if deserialization fails.</dd></dl>
 
 </div>
 </div>
@@ -219,6 +328,15 @@ Properties</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Fetches a model or collection from the file system based on the specified request operation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">requestOp</td><td>The operation that specifies what to fetch.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Operation response containing the fetched object or a failed status if not found.</dd></dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 
@@ -248,7 +366,67 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Removes a model instance from the file system based on its identifier. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The identifier of the model instance to remove.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
+
+</div>
+</div>
+<a id="a67808fec041aa2941cdcd616da3b3a93" name="a67808fec041aa2941cdcd616da3b3a93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67808fec041aa2941cdcd616da3b3a93">&#9670;&#160;</a></span>SerializeToPathAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html">Buzzware.Cascade.FileSystemClassCache</a>&lt; Model, IdType &gt;.SerializeToPathAsync </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>aPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">object&#160;</td>
+          <td class="paramname"><em>aObject</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>timeMs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Serializes an object to a specified file path asynchronously and sets the file's last write time. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aPath</td><td>The target file path for serialized output.</td></tr>
+    <tr><td class="paramname">aObject</td><td>The object to serialize.</td></tr>
+    <tr><td class="paramname">timeMs</td><td>The timestamp in milliseconds to set as the file's last write time.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -291,6 +469,16 @@ Properties</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Stores a model instance asynchronously to the file system based on its id. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>Identifier of the model instance.</td></tr>
+    <tr><td class="paramname">model</td><td>The model object to store.</td></tr>
+    <tr><td class="paramname">arrivedAt</td><td>Timestamp of when the model arrived, used for file timestamping.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 
@@ -336,6 +524,16 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Stores a collection of model ids to the file system under a specific key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>The key under which the collection is stored.</td></tr>
+    <tr><td class="paramname">ids</td><td>The collection of identifiers to store.</td></tr>
+    <tr><td class="paramname">arrivedAt</td><td>Timestamp of when the collection was stored, used for file timestamping.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
@@ -360,6 +558,8 @@ Properties</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reference to cascade data layer. </p>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 

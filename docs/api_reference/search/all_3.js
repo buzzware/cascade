@@ -1,8 +1,28 @@
 var searchData=
 [
-  ['datanotavailableoffline_0',['DataNotAvailableOffline',['../class_data_not_available_offline.html',1,'']]],
-  ['defining_20models_1',['Defining Models',['../md_api__docs_2using__cascade_2simple__overview_2defining__models.html',1,'']]],
-  ['deleting_20models_2',['Deleting Models',['../md_api__docs_2using__cascade_2simple__overview_2deleting__models.html',1,'']]],
-  ['dictionary_3',['Dictionary',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a3beb75d1563ebc22253341be4ce57f44',1,'Easy::Common::Extensions']]],
-  ['dictionaryjsonconverter_4',['DictionaryJsonConverter',['../class_buzzware_1_1_cascade_1_1_dictionary_json_converter.html',1,'Buzzware::Cascade']]]
+  ['cascade_0',['Cascade',['../class_buzzware_1_1_cascade_1_1_model_class_cache.html#aec0d5fec77f511005a88e71d7ae9aa70',1,'Buzzware.Cascade.ModelClassCache.Cascade'],['../class_buzzware_1_1_cascade_1_1_model_cache.html#a3f4d83fe9dbdeca171a82ad8f8fce458',1,'Buzzware.Cascade.ModelCache.Cascade'],['../class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a91a3ce8b9b1dc6d11b338d918bca5e71',1,'Buzzware.Cascade.FileSystemClassCache.Cascade'],['../class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a7be1ee398219aecd60859dd4de6023dc',1,'Buzzware.Cascade.FileBlobCache.Cascade'],['../md__buzzware_8_cascade_2readme.html',1,'(Global Namespace)']]],
+  ['cascade_20data_20layer_3a_20a_20framework_20for_20mobile_20app_20data_20flow_1',['Cascade Data Layer: A Framework for Mobile App Data Flow',['../index.html',1,'']]],
+  ['cascadeconfig_2',['CascadeConfig',['../class_buzzware_1_1_cascade_1_1_cascade_config.html',1,'Buzzware::Cascade']]],
+  ['cascadedatalayer_3',['CascadeDataLayer',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html',1,'Buzzware.Cascade.CascadeDataLayer'],['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae26f4e964b6578749b5f7ec31a815546',1,'Buzzware.Cascade.CascadeDataLayer.CascadeDataLayer()']]],
+  ['cascadeidattribute_4',['CascadeIdAttribute',['../class_buzzware_1_1_cascade_1_1_cascade_id_attribute.html',1,'Buzzware::Cascade']]],
+  ['cascadejsonserialization_5',['CascadeJsonSerialization',['../class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html',1,'Buzzware::Cascade']]],
+  ['cascadepaginator_6',['CascadePaginator',['../class_buzzware_1_1_cascade_1_1_cascade_paginator.html',1,'Buzzware::Cascade']]],
+  ['cascadequeryoptions_7',['CascadeQueryOptions',['../class_buzzware_1_1_cascade_1_1_cascade_query_options.html',1,'Buzzware::Cascade']]],
+  ['child_8',['Child',['../class_buzzware_1_1_cascade_1_1_testing_1_1_child.html',1,'Buzzware::Cascade::Testing']]],
+  ['classinfo_9',['ClassInfo',['../class_buzzware_1_1_cascade_1_1_class_info.html',1,'Buzzware::Cascade']]],
+  ['clearall_10',['ClearAll',['../class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ab407bd2a6326c884bf097edf62c87848',1,'Buzzware.Cascade.FastFileClassCache.ClearAll()'],['../class_buzzware_1_1_cascade_1_1_file_blob_cache.html#ad7aeb00b12863b2f697ee1b1fd9615bc',1,'Buzzware.Cascade.FileBlobCache.ClearAll()'],['../class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#acc6714622446e2748f48b797a5021e5d',1,'Buzzware.Cascade.FileSystemClassCache.ClearAll()'],['../class_buzzware_1_1_cascade_1_1_model_class_cache.html#ae4777dcc1ccecd662fc0e77cf59fa1b5',1,'Buzzware.Cascade.ModelClassCache.ClearAll()'],['../class_buzzware_1_1_cascade_1_1_model_cache.html#a80811f08b2ccdad8eebd25898e103f85',1,'Buzzware.Cascade.ModelCache.ClearAll()']]],
+  ['clearcollection_3c_20model_20_3e_11',['ClearCollection&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#afe62864615733c3f1071a50e20dd64cc',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['clone_12',['Clone',['../class_buzzware_1_1_cascade_1_1_super_model.html#ac8996c3b1f1802e034c77f9e22e1b0a3',1,'Buzzware::Cascade::SuperModel']]],
+  ['clonewith_13',['CloneWith',['../class_buzzware_1_1_cascade_1_1_request_op.html#a369cbe77b34dfb117a934ba56cbc2b9c',1,'Buzzware::Cascade::RequestOp']]],
+  ['concurrentfilesystemclasscache_14',['ConcurrentFileSystemClassCache',['../class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html',1,'Buzzware::Cascade']]],
+  ['connectionfailure_15',['ConnectionFailure',['../class_buzzware_1_1_cascade_1_1_op_response.html#a1881439ce87efbc0eb5d4f937cc4adeb',1,'Buzzware::Cascade::OpResponse']]],
+  ['connectiononline_16',['ConnectionOnline',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#acb6686bb122917aa4727daa67779552e',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['convert_17',['Convert',['../interface_buzzware_1_1_cascade_1_1_i_property_converter.html#a9bb6a51db9b8594deef0f141c42fd7b1',1,'Buzzware::Cascade::IPropertyConverter']]],
+  ['converter_18',['Converter',['../class_buzzware_1_1_cascade_1_1_from_blob_attribute.html#acccf709c19b1bce68124cb8d6fdfdebe',1,'Buzzware.Cascade.FromBlobAttribute.Converter'],['../class_buzzware_1_1_cascade_1_1_from_property_attribute.html#a90c4704c8b67be8b50a6331ecf195be9',1,'Buzzware.Cascade.FromPropertyAttribute.Converter']]],
+  ['converttopropertytype_19',['ConvertToPropertyType',['../class_buzzware_1_1_cascade_1_1_from_blob_attribute.html#aa737e314cffe4b819818de8e8565773d',1,'Buzzware::Cascade::FromBlobAttribute']]],
+  ['create_3c_20m_20_3e_20',['Create&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a0211ecdaca0e6064f7e2dd8e731cce43',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['createop_21',['CreateOp',['../class_buzzware_1_1_cascade_1_1_request_op.html#af56303224a697c7ab088355ee9fdf1f9',1,'Buzzware::Cascade::RequestOp']]],
+  ['createresponse_3c_20m_20_3e_22',['CreateResponse&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae889045961f947e9517d5661025356bf',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['creating_20models_23',['Creating Models',['../md_api__docs_2using__cascade_2simple__overview_2creating__models.html',1,'']]],
+  ['custom_24',['Custom',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a90589c47f06eb971d548591f23c285af',1,'Easy::Common::Extensions']]]
 ];

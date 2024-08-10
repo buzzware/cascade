@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nowms_0',['NowMs',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#abdccb74eb29d91cba10c29f00e9bfe94',1,'Buzzware::Cascade::CascadeDataLayer']]]
+  ['arguments_0',['Arguments',['../class_buzzware_1_1_cascade_1_1_from_property_attribute.html#aebc21dca4e7ca7215e492598d9ecf1cd',1,'Buzzware::Cascade::FromPropertyAttribute']]]
 ];

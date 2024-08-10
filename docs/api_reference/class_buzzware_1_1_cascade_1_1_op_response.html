@@ -99,32 +99,35 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_op_resp
   <div class="headertitle"><div class="title">Buzzware.Cascade.OpResponse Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Represents the response of an operation request in the Cascade library. This class encapsulates information about the operation's result, its connection status, elapsed time, and more.  
+ <a href="class_buzzware_1_1_cascade_1_1_op_response.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abc1a1c66496309371511f1578272faba"><td class="memItemLeft" align="right" valign="top"><a id="abc1a1c66496309371511f1578272faba" name="abc1a1c66496309371511f1578272faba"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>OpResponse</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp, long timeMs, bool connected, bool exists, long? arrivedAtMs, object? result)</td></tr>
+<tr class="memitem:abc1a1c66496309371511f1578272faba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#abc1a1c66496309371511f1578272faba">OpResponse</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp, long timeMs, bool connected, bool exists, long? arrivedAtMs, object? result)</td></tr>
+<tr class="memdesc:abc1a1c66496309371511f1578272faba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an instance of OpResponse with the given parameters.  <br /></td></tr>
 <tr class="separator:abc1a1c66496309371511f1578272faba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb4c4b37dd81152ba27086c195835139"><td class="memItemLeft" align="right" valign="top"><a id="adb4c4b37dd81152ba27086c195835139" name="adb4c4b37dd81152ba27086c195835139"></a>
-<a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><b>withChanges</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>? requestOp=null, long? timeMs=null, bool? connected=null, bool? exists=null, long? arrivedAtMs=null, object? result=null)</td></tr>
+<tr class="memitem:adb4c4b37dd81152ba27086c195835139"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#adb4c4b37dd81152ba27086c195835139">withChanges</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>? requestOp=null, long? timeMs=null, bool? connected=null, bool? exists=null, long? arrivedAtMs=null, object? result=null)</td></tr>
+<tr class="memdesc:adb4c4b37dd81152ba27086c195835139"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new OpResponse with updated fields if given, otherwise base fields remain the same.  <br /></td></tr>
 <tr class="separator:adb4c4b37dd81152ba27086c195835139"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afef4b7ffe5eb4d0d3cd4cbfe397c3707"><td class="memItemLeft" align="right" valign="top"><a id="afef4b7ffe5eb4d0d3cd4cbfe397c3707" name="afef4b7ffe5eb4d0d3cd4cbfe397c3707"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>ResultIsBlob</b> ()</td></tr>
+<tr class="memitem:afef4b7ffe5eb4d0d3cd4cbfe397c3707"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#afef4b7ffe5eb4d0d3cd4cbfe397c3707">ResultIsBlob</a> ()</td></tr>
+<tr class="memdesc:afef4b7ffe5eb4d0d3cd4cbfe397c3707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if the operation result is a binary large object (blob).  <br /></td></tr>
 <tr class="separator:afef4b7ffe5eb4d0d3cd4cbfe397c3707"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a1b0b08506ebf18fd1b34d913a21c95"><td class="memItemLeft" align="right" valign="top"><a id="a6a1b0b08506ebf18fd1b34d913a21c95" name="a6a1b0b08506ebf18fd1b34d913a21c95"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>ResultIsEmpty</b> ()</td></tr>
+<tr class="memitem:a6a1b0b08506ebf18fd1b34d913a21c95"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#a6a1b0b08506ebf18fd1b34d913a21c95">ResultIsEmpty</a> ()</td></tr>
+<tr class="memdesc:a6a1b0b08506ebf18fd1b34d913a21c95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if the operation result is considered empty.  <br /></td></tr>
 <tr class="separator:a6a1b0b08506ebf18fd1b34d913a21c95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30ce57f68b16ee163c1a8a25860858b8"><td class="memItemLeft" align="right" valign="top"><a id="a30ce57f68b16ee163c1a8a25860858b8" name="a30ce57f68b16ee163c1a8a25860858b8"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>ToSummaryString</b> ()</td></tr>
+<tr class="memitem:a30ce57f68b16ee163c1a8a25860858b8"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#a30ce57f68b16ee163c1a8a25860858b8">ToSummaryString</a> ()</td></tr>
+<tr class="memdesc:a30ce57f68b16ee163c1a8a25860858b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Produces a summary string of the result including connection and existence status.  <br /></td></tr>
 <tr class="separator:a30ce57f68b16ee163c1a8a25860858b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a5aa410fe5a1c0a37b072b69e1aa3f1ba"><td class="memItemLeft" align="right" valign="top"><a id="a5aa410fe5a1c0a37b072b69e1aa3f1ba" name="a5aa410fe5a1c0a37b072b69e1aa3f1ba"></a>
-static <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><b>None</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp, long timeMs, string? sourceName=null)</td></tr>
+<tr class="memitem:a5aa410fe5a1c0a37b072b69e1aa3f1ba"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#a5aa410fe5a1c0a37b072b69e1aa3f1ba">None</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp, long timeMs, string? sourceName=null)</td></tr>
+<tr class="memdesc:a5aa410fe5a1c0a37b072b69e1aa3f1ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an OpResponse indicating that there was no value found.  <br /></td></tr>
 <tr class="separator:a5aa410fe5a1c0a37b072b69e1aa3f1ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1881439ce87efbc0eb5d4f937cc4adeb"><td class="memItemLeft" align="right" valign="top"><a id="a1881439ce87efbc0eb5d4f937cc4adeb" name="a1881439ce87efbc0eb5d4f937cc4adeb"></a>
-static <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ConnectionFailure</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp, long timeMs, string sourceName=null)</td></tr>
+<tr class="memitem:a1881439ce87efbc0eb5d4f937cc4adeb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#a1881439ce87efbc0eb5d4f937cc4adeb">ConnectionFailure</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp, long timeMs, string sourceName=null)</td></tr>
+<tr class="memdesc:a1881439ce87efbc0eb5d4f937cc4adeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an OpResponse indicating a connection failure.  <br /></td></tr>
 <tr class="separator:a1881439ce87efbc0eb5d4f937cc4adeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -158,23 +161,370 @@ string?&#160;</td><td class="memItemRight" valign="bottom"><b>SourceName</b></td
 Properties</h2></td></tr>
 <tr class="memitem:a9dd24d0386856805eaa48b9163fe6858"><td class="memItemLeft" align="right" valign="top"><a id="a9dd24d0386856805eaa48b9163fe6858" name="a9dd24d0386856805eaa48b9163fe6858"></a>
 IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>Results</b><code> [get]</code></td></tr>
+<tr class="memdesc:a9dd24d0386856805eaa48b9163fe6858"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides an IEnumerable interface for the results. <br /></td></tr>
 <tr class="separator:a9dd24d0386856805eaa48b9163fe6858"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a379c93503c50a040b223d59fbdb423aa"><td class="memItemLeft" align="right" valign="top"><a id="a379c93503c50a040b223d59fbdb423aa" name="a379c93503c50a040b223d59fbdb423aa"></a>
 object?&#160;</td><td class="memItemRight" valign="bottom"><b>FirstResult</b><code> [get]</code></td></tr>
+<tr class="memdesc:a379c93503c50a040b223d59fbdb423aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the first item in the results if they are enumerable, otherwise the result itself. <br /></td></tr>
 <tr class="separator:a379c93503c50a040b223d59fbdb423aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3a0150759edfd569b4c656cba246687"><td class="memItemLeft" align="right" valign="top"><a id="aa3a0150759edfd569b4c656cba246687" name="aa3a0150759edfd569b4c656cba246687"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsEnumerableResults</b><code> [get]</code></td></tr>
+<tr class="memdesc:aa3a0150759edfd569b4c656cba246687"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the results are a collection that is not a blob. <br /></td></tr>
 <tr class="separator:aa3a0150759edfd569b4c656cba246687"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af039068097db9118a77db0945a676a23"><td class="memItemLeft" align="right" valign="top"><a id="af039068097db9118a77db0945a676a23" name="af039068097db9118a77db0945a676a23"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsModelResults</b><code> [get]</code></td></tr>
+<tr class="memdesc:af039068097db9118a77db0945a676a23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the results are a model type. <br /></td></tr>
 <tr class="separator:af039068097db9118a77db0945a676a23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0b8fcb94daa1702867d5d4d4cb270a3"><td class="memItemLeft" align="right" valign="top"><a id="aa0b8fcb94daa1702867d5d4d4cb270a3" name="aa0b8fcb94daa1702867d5d4d4cb270a3"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsIdResults</b><code> [get]</code></td></tr>
+<tr class="memdesc:aa0b8fcb94daa1702867d5d4d4cb270a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the results are ids. <br /></td></tr>
 <tr class="separator:aa0b8fcb94daa1702867d5d4d4cb270a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2b09cf20895c93e6ca0c4283652daf4"><td class="memItemLeft" align="right" valign="top"><a id="ab2b09cf20895c93e6ca0c4283652daf4" name="ab2b09cf20895c93e6ca0c4283652daf4"></a>
 IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>ResultIds</b><code> [get]</code></td></tr>
+<tr class="memdesc:ab2b09cf20895c93e6ca0c4283652daf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides an IEnumerable interface for the ids found in the results. <br /></td></tr>
 <tr class="separator:ab2b09cf20895c93e6ca0c4283652daf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Represents the response of an operation request in the Cascade library. This class encapsulates information about the operation's result, its connection status, elapsed time, and more. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="abc1a1c66496309371511f1578272faba" name="abc1a1c66496309371511f1578272faba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc1a1c66496309371511f1578272faba">&#9670;&#160;</a></span>OpResponse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Buzzware.Cascade.OpResponse.OpResponse </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>&#160;</td>
+          <td class="paramname"><em>requestOp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>timeMs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>connected</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>exists</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long?&#160;</td>
+          <td class="paramname"><em>arrivedAtMs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">object?&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs an instance of OpResponse with the given parameters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">requestOp</td><td>The original request operation.</td></tr>
+    <tr><td class="paramname">timeMs</td><td>The time in milliseconds when the operation took place.</td></tr>
+    <tr><td class="paramname">connected</td><td>Indicates if the current layer is connected.</td></tr>
+    <tr><td class="paramname">exists</td><td>Indicates if the item is present in the cache.</td></tr>
+    <tr><td class="paramname">arrivedAtMs</td><td>The time in milliseconds when the response arrived.</td></tr>
+    <tr><td class="paramname">result</td><td>The result of the operation, can be null.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1881439ce87efbc0eb5d4f937cc4adeb" name="a1881439ce87efbc0eb5d4f937cc4adeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1881439ce87efbc0eb5d4f937cc4adeb">&#9670;&#160;</a></span>ConnectionFailure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> Buzzware.Cascade.OpResponse.ConnectionFailure </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>&#160;</td>
+          <td class="paramname"><em>requestOp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>timeMs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>sourceName</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs an OpResponse indicating a connection failure. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">requestOp</td><td>The original request operation.</td></tr>
+    <tr><td class="paramname">timeMs</td><td>Time when the operation attempt took place.</td></tr>
+    <tr><td class="paramname">sourceName</td><td>The name of the source that would have provided this response.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new OpResponse indicating a connection failure.</dd></dl>
+
+</div>
+</div>
+<a id="a5aa410fe5a1c0a37b072b69e1aa3f1ba" name="a5aa410fe5a1c0a37b072b69e1aa3f1ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5aa410fe5a1c0a37b072b69e1aa3f1ba">&#9670;&#160;</a></span>None()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> Buzzware.Cascade.OpResponse.None </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>&#160;</td>
+          <td class="paramname"><em>requestOp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>timeMs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?&#160;</td>
+          <td class="paramname"><em>sourceName</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs an OpResponse indicating that there was no value found. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">requestOp</td><td>The original request operation.</td></tr>
+    <tr><td class="paramname">timeMs</td><td>Time when the operation took place.</td></tr>
+    <tr><td class="paramname">sourceName</td><td>The name of the source that provided this response.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new OpResponse indicating no response was received.</dd></dl>
+
+</div>
+</div>
+<a id="afef4b7ffe5eb4d0d3cd4cbfe397c3707" name="afef4b7ffe5eb4d0d3cd4cbfe397c3707"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afef4b7ffe5eb4d0d3cd4cbfe397c3707">&#9670;&#160;</a></span>ResultIsBlob()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Buzzware.Cascade.OpResponse.ResultIsBlob </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines if the operation result is a binary large object (blob). </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the result is a blob.</dd></dl>
+
+</div>
+</div>
+<a id="a6a1b0b08506ebf18fd1b34d913a21c95" name="a6a1b0b08506ebf18fd1b34d913a21c95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a1b0b08506ebf18fd1b34d913a21c95">&#9670;&#160;</a></span>ResultIsEmpty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Buzzware.Cascade.OpResponse.ResultIsEmpty </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines if the operation result is considered empty. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the result is empty or null.</dd></dl>
+
+</div>
+</div>
+<a id="a30ce57f68b16ee163c1a8a25860858b8" name="a30ce57f68b16ee163c1a8a25860858b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30ce57f68b16ee163c1a8a25860858b8">&#9670;&#160;</a></span>ToSummaryString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Buzzware.Cascade.OpResponse.ToSummaryString </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Produces a summary string of the result including connection and existence status. </p>
+<dl class="section return"><dt>Returns</dt><dd>A string summarizing the result, connection, and existence.</dd></dl>
+
+</div>
+</div>
+<a id="adb4c4b37dd81152ba27086c195835139" name="adb4c4b37dd81152ba27086c195835139"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb4c4b37dd81152ba27086c195835139">&#9670;&#160;</a></span>withChanges()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> Buzzware.Cascade.OpResponse.withChanges </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>?&#160;</td>
+          <td class="paramname"><em>requestOp</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long?&#160;</td>
+          <td class="paramname"><em>timeMs</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool?&#160;</td>
+          <td class="paramname"><em>connected</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool?&#160;</td>
+          <td class="paramname"><em>exists</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long?&#160;</td>
+          <td class="paramname"><em>arrivedAtMs</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">object?&#160;</td>
+          <td class="paramname"><em>result</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a new OpResponse with updated fields if given, otherwise base fields remain the same. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">requestOp</td><td>Updated request operation.</td></tr>
+    <tr><td class="paramname">timeMs</td><td>Updated time in milliseconds.</td></tr>
+    <tr><td class="paramname">connected</td><td>Updated connection status.</td></tr>
+    <tr><td class="paramname">exists</td><td>Updated existence status.</td></tr>
+    <tr><td class="paramname">arrivedAtMs</td><td>Updated arrival time in milliseconds.</td></tr>
+    <tr><td class="paramname">result</td><td>Updated operation result.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new OpResponse instance with specified changes.</dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/OpResponse.cs</li>
 </ul>

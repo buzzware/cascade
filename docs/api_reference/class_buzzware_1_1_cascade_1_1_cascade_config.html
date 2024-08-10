@@ -97,38 +97,51 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_cascade
   <div class="headertitle"><div class="title">Buzzware.Cascade.CascadeConfig Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>User configuration class for the Cascade library.  
+ <a href="class_buzzware_1_1_cascade_1_1_cascade_config.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a99eb7a3a751416638293b3561048bf2a"><td class="memItemLeft" align="right" valign="top"><a id="a99eb7a3a751416638293b3561048bf2a" name="a99eb7a3a751416638293b3561048bf2a"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>DefaultFreshnessSeconds</b> = 5 * 60</td></tr>
+<tr class="memdesc:a99eb7a3a751416638293b3561048bf2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default duration, in seconds, for which data is considered fresh. <br /></td></tr>
 <tr class="separator:a99eb7a3a751416638293b3561048bf2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7cb392186607c790a7d95118641218c"><td class="memItemLeft" align="right" valign="top"><a id="ae7cb392186607c790a7d95118641218c" name="ae7cb392186607c790a7d95118641218c"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>DefaultPopulateFreshnessSeconds</b> = 12 * 3600</td></tr>
+<tr class="memdesc:ae7cb392186607c790a7d95118641218c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default duration, in seconds, for which populated data is considered fresh. <br /></td></tr>
 <tr class="separator:ae7cb392186607c790a7d95118641218c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e5ba8377b050ba2e43dfe29e95d382e"><td class="memItemLeft" align="right" valign="top"><a id="a8e5ba8377b050ba2e43dfe29e95d382e" name="a8e5ba8377b050ba2e43dfe29e95d382e"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>DefaultFallbackFreshnessSeconds</b> = RequestOp.FALLBACK_NEVER</td></tr>
+<tr class="memdesc:a8e5ba8377b050ba2e43dfe29e95d382e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Freshness value for when ConnectionOnline = True and network requests fail. <br /></td></tr>
 <tr class="separator:a8e5ba8377b050ba2e43dfe29e95d382e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5ee300d6a3aecaad15195027ed1011b"><td class="memItemLeft" align="right" valign="top"><a id="ac5ee300d6a3aecaad15195027ed1011b" name="ac5ee300d6a3aecaad15195027ed1011b"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>StoragePath</b></td></tr>
+<tr class="memdesc:ac5ee300d6a3aecaad15195027ed1011b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Root directory path for all files written by Cascade. <br /></td></tr>
 <tr class="separator:ac5ee300d6a3aecaad15195027ed1011b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:ac7129c705e24e4892155b8ab576feec2"><td class="memItemLeft" align="right" valign="top"><a id="ac7129c705e24e4892155b8ab576feec2" name="ac7129c705e24e4892155b8ab576feec2"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>PendingChangesPath</b><code> [get]</code></td></tr>
+<tr class="memdesc:ac7129c705e24e4892155b8ab576feec2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path for storing pending changes. <br /></td></tr>
 <tr class="separator:ac7129c705e24e4892155b8ab576feec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cca0b87c641632dd38559dea5a6afdb"><td class="memItemLeft" align="right" valign="top"><a id="a8cca0b87c641632dd38559dea5a6afdb" name="a8cca0b87c641632dd38559dea5a6afdb"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>HoldPath</b><code> [get]</code></td></tr>
+<tr class="memdesc:a8cca0b87c641632dd38559dea5a6afdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path for storing the hold status of records. <br /></td></tr>
 <tr class="separator:a8cca0b87c641632dd38559dea5a6afdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d6dee908275a541cc3f7674f4c4638a"><td class="memItemLeft" align="right" valign="top"><a id="a3d6dee908275a541cc3f7674f4c4638a" name="a3d6dee908275a541cc3f7674f4c4638a"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>MetaPath</b><code> [get]</code></td></tr>
+<tr class="memdesc:a3d6dee908275a541cc3f7674f4c4638a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path for storing user metadata. <br /></td></tr>
 <tr class="separator:a3d6dee908275a541cc3f7674f4c4638a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17606141cea3be7366af577840742969"><td class="memItemLeft" align="right" valign="top"><a id="a17606141cea3be7366af577840742969" name="a17606141cea3be7366af577840742969"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>FileCachePath</b><code> [get]</code></td></tr>
+<tr class="memdesc:a17606141cea3be7366af577840742969"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path for storing cache files. <br /></td></tr>
 <tr class="separator:a17606141cea3be7366af577840742969"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>User configuration class for the Cascade library. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/CascadeConfig.cs</li>
 </ul>
 </div><!-- contents -->

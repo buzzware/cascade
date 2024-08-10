@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_from_bl
   <div class="headertitle"><div class="title">Buzzware.Cascade.FromBlobAttribute Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Attribute marking a property as the destination and type for conversion from a blob of a given path. The converter is also specified.  
+ <a href="class_buzzware_1_1_cascade_1_1_from_blob_attribute.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.FromBlobAttribute:</div>
 <div class="dyncontent">
@@ -106,22 +109,119 @@ Inheritance diagram for Buzzware.Cascade.FromBlobAttribute:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aaee4ed16df4e6692d0bc2b37066f058f"><td class="memItemLeft" align="right" valign="top"><a id="aaee4ed16df4e6692d0bc2b37066f058f" name="aaee4ed16df4e6692d0bc2b37066f058f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FromBlobAttribute</b> (string pathProperty, Type? converter)</td></tr>
+<tr class="memitem:aaee4ed16df4e6692d0bc2b37066f058f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_from_blob_attribute.html#aaee4ed16df4e6692d0bc2b37066f058f">FromBlobAttribute</a> (string pathProperty, Type? converter)</td></tr>
+<tr class="memdesc:aaee4ed16df4e6692d0bc2b37066f058f"><td class="mdescLeft">&#160;</td><td class="mdescRight">FromBlobAttribute Constructor. Validates converter and initializes properties.  <br /></td></tr>
 <tr class="separator:aaee4ed16df4e6692d0bc2b37066f058f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa737e314cffe4b819818de8e8565773d"><td class="memItemLeft" align="right" valign="top"><a id="aa737e314cffe4b819818de8e8565773d" name="aa737e314cffe4b819818de8e8565773d"></a>
-object?&#160;</td><td class="memItemRight" valign="bottom"><b>ConvertToPropertyType</b> (byte[] blob, Type destinationPropertyType)</td></tr>
+<tr class="memitem:aa737e314cffe4b819818de8e8565773d"><td class="memItemLeft" align="right" valign="top">object?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_from_blob_attribute.html#aa737e314cffe4b819818de8e8565773d">ConvertToPropertyType</a> (byte[] blob, Type destinationPropertyType)</td></tr>
+<tr class="memdesc:aa737e314cffe4b819818de8e8565773d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the provided blob data into the specified destination property type. Uses the provided converter if available, otherwise returns the original blob data.  <br /></td></tr>
 <tr class="separator:aa737e314cffe4b819818de8e8565773d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a5632f1d7bc26c96f6d61f01b5b64d6d5"><td class="memItemLeft" align="right" valign="top"><a id="a5632f1d7bc26c96f6d61f01b5b64d6d5" name="a5632f1d7bc26c96f6d61f01b5b64d6d5"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>PathProperty</b><code> [get]</code></td></tr>
+<tr class="memdesc:a5632f1d7bc26c96f6d61f01b5b64d6d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of a property holding the path to the blob. <br /></td></tr>
 <tr class="separator:a5632f1d7bc26c96f6d61f01b5b64d6d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acccf709c19b1bce68124cb8d6fdfdebe"><td class="memItemLeft" align="right" valign="top"><a id="acccf709c19b1bce68124cb8d6fdfdebe" name="acccf709c19b1bce68124cb8d6fdfdebe"></a>
 <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_converter.html">IBlobConverter</a>?&#160;</td><td class="memItemRight" valign="bottom"><b>Converter</b><code> [get]</code></td></tr>
+<tr class="memdesc:acccf709c19b1bce68124cb8d6fdfdebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">The converter to be used for converting the blob data. <br /></td></tr>
 <tr class="separator:acccf709c19b1bce68124cb8d6fdfdebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Attribute marking a property as the destination and type for conversion from a blob of a given path. The converter is also specified. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aaee4ed16df4e6692d0bc2b37066f058f" name="aaee4ed16df4e6692d0bc2b37066f058f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaee4ed16df4e6692d0bc2b37066f058f">&#9670;&#160;</a></span>FromBlobAttribute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Buzzware.Cascade.FromBlobAttribute.FromBlobAttribute </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>pathProperty</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Type?&#160;</td>
+          <td class="paramname"><em>converter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>FromBlobAttribute Constructor. Validates converter and initializes properties. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pathProperty</td><td>The name of the property containing the path to the blob data.</td></tr>
+    <tr><td class="paramname">converter</td><td>The type of the converter class that should implement IBlobConverter for converting blob data.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa737e314cffe4b819818de8e8565773d" name="aa737e314cffe4b819818de8e8565773d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa737e314cffe4b819818de8e8565773d">&#9670;&#160;</a></span>ConvertToPropertyType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">object? Buzzware.Cascade.FromBlobAttribute.ConvertToPropertyType </td>
+          <td>(</td>
+          <td class="paramtype">byte[]&#160;</td>
+          <td class="paramname"><em>blob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Type&#160;</td>
+          <td class="paramname"><em>destinationPropertyType</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts the provided blob data into the specified destination property type. Uses the provided converter if available, otherwise returns the original blob data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">blob</td><td>The byte array representing the data to be converted.</td></tr>
+    <tr><td class="paramname">destinationPropertyType</td><td>The type to which the blob data should be converted.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The converted object to the destination property type or the original blob data if no converter is available.</dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/attributes/FromBlobAttribute.cs</li>
 </ul>

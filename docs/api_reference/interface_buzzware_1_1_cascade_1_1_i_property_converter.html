@@ -96,13 +96,64 @@ $(document).ready(function(){initNavTree('interface_buzzware_1_1_cascade_1_1_i_p
   <div class="headertitle"><div class="title">Buzzware.Cascade.IPropertyConverter Interface Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Interface that defines a converter to convert a property value from one type to another.  
+ <a href="interface_buzzware_1_1_cascade_1_1_i_property_converter.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9bb6a51db9b8594deef0f141c42fd7b1"><td class="memItemLeft" align="right" valign="top"><a id="a9bb6a51db9b8594deef0f141c42fd7b1" name="a9bb6a51db9b8594deef0f141c42fd7b1"></a>
-Task&lt; object?&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Convert</b> (object? input, Type destinationType, params object[] args)</td></tr>
+<tr class="memitem:a9bb6a51db9b8594deef0f141c42fd7b1"><td class="memItemLeft" align="right" valign="top">Task&lt; object?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_property_converter.html#a9bb6a51db9b8594deef0f141c42fd7b1">Convert</a> (object? input, Type destinationType, params object[] args)</td></tr>
+<tr class="memdesc:a9bb6a51db9b8594deef0f141c42fd7b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an input object to a specified destination type using additional optional arguments.  <br /></td></tr>
 <tr class="separator:a9bb6a51db9b8594deef0f141c42fd7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Interface that defines a converter to convert a property value from one type to another. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a9bb6a51db9b8594deef0f141c42fd7b1" name="a9bb6a51db9b8594deef0f141c42fd7b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bb6a51db9b8594deef0f141c42fd7b1">&#9670;&#160;</a></span>Convert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Task&lt; object?&gt; Buzzware.Cascade.IPropertyConverter.Convert </td>
+          <td>(</td>
+          <td class="paramtype">object?&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Type&#160;</td>
+          <td class="paramname"><em>destinationType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">params object[]&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts an input object to a specified destination type using additional optional arguments. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>The object to be converted.</td></tr>
+    <tr><td class="paramname">destinationType</td><td>The type to which the object should be converted.</td></tr>
+    <tr><td class="paramname">args</td><td>Optional arguments that might be needed for conversion.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The converted object or null if conversion is not possible.</dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this interface was generated from the following file:<ul>
 <li>Buzzware.Cascade/attributes/FromPropertyAttribute.cs</li>
 </ul>

@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['parent_0',['Parent',['../class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html',1,'Buzzware::Cascade::Testing']]],
-  ['populate_1',['Populate',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#aa4217e87ce1b1554789550ab1371ad50',1,'Buzzware.Cascade.CascadeDataLayer.Populate(SuperModel model, string property, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null)'],['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a2526568bda5f895f662f2a7dd01004c4',1,'Buzzware.Cascade.CascadeDataLayer.Populate(SuperModel model, IEnumerable&lt; string &gt; associations, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null)'],['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a9fde4a3f9edadedaa45d521ac23d4c44',1,'Buzzware.Cascade.CascadeDataLayer.Populate(IEnumerable&lt; SuperModel &gt; models, IEnumerable&lt; string &gt; associations, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null)'],['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a29437781cbf9cca950899460d0626b29',1,'Buzzware.Cascade.CascadeDataLayer.Populate(IEnumerable&lt; SuperModel &gt; models, string association, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null)']]],
-  ['progressreporter_2',['ProgressReporter',['../class_buzzware_1_1_cascade_1_1_progress_reporter.html',1,'Buzzware::Cascade']]],
-  ['propertychanged_3',['PropertyChanged',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae2f6033a30ca5cafa2c7a1b6bac78517',1,'Buzzware::Cascade::CascadeDataLayer']]]
+  ['offlineexception_0',['OfflineException',['../class_offline_exception.html',1,'']]],
+  ['onpropertychanged_1',['OnPropertyChanged',['../class_buzzware_1_1_cascade_1_1_super_model.html#a2c7d017a8e5020a425926e41668e811a',1,'Buzzware::Cascade::SuperModel']]],
+  ['onproxyforonpropertychanged_2',['OnProxyForOnPropertyChanged',['../class_buzzware_1_1_cascade_1_1_super_model.html#a13d95a47107dfae290c42b722bb3d3a1',1,'Buzzware::Cascade::SuperModel']]],
+  ['operationnotavailableoffline_3',['OperationNotAvailableOffline',['../class_operation_not_available_offline.html',1,'']]],
+  ['opresponse_4',['OpResponse',['../class_buzzware_1_1_cascade_1_1_op_response.html',1,'Buzzware.Cascade.OpResponse'],['../class_buzzware_1_1_cascade_1_1_op_response.html#abc1a1c66496309371511f1578272faba',1,'Buzzware.Cascade.OpResponse.OpResponse()']]]
 ];

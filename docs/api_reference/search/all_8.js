@@ -1,18 +1,9 @@
 var searchData=
 [
-  ['iblobcache_0',['IBlobCache',['../interface_buzzware_1_1_cascade_1_1_i_blob_cache.html',1,'Buzzware::Cascade']]],
-  ['iblobconverter_1',['IBlobConverter',['../interface_buzzware_1_1_cascade_1_1_i_blob_converter.html',1,'Buzzware::Cascade']]],
-  ['icascadecache_2',['ICascadeCache',['../interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html',1,'Buzzware::Cascade']]],
-  ['icascadeorigin_3',['ICascadeOrigin',['../interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html',1,'Buzzware::Cascade']]],
-  ['icascadeplatform_4',['ICascadePlatform',['../interface_buzzware_1_1_cascade_1_1_i_cascade_platform.html',1,'Buzzware::Cascade']]],
-  ['icollection_5',['ICollection',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a181a817e86063ab017b19cb85945f06e',1,'Easy::Common::Extensions']]],
-  ['idictionary_6',['IDictionary',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a57cf0c81ca7a8c21feadac6c8438bffd',1,'Easy::Common::Extensions']]],
-  ['ienumerable_7',['IEnumerable',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a9e0dd4cd0a082d60acd7c2556faa7df7',1,'Easy::Common::Extensions']]],
-  ['ilist_8',['IList',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706aad7cce600f0e290b37b99b9d8c11529b',1,'Easy::Common::Extensions']]],
-  ['immutabledictionaryjsonconverter_9',['ImmutableDictionaryJsonConverter',['../class_buzzware_1_1_cascade_1_1_immutable_dictionary_json_converter.html',1,'Buzzware::Cascade']]],
-  ['imodelclasscache_10',['IModelClassCache',['../interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html',1,'Buzzware::Cascade']]],
-  ['imodelclassorigin_11',['IModelClassOrigin',['../interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html',1,'Buzzware::Cascade']]],
-  ['invalid_12',['Invalid',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a4bbb8f967da6d1a610596d7257179c2b',1,'Easy::Common::Extensions']]],
-  ['ipropertyconverter_13',['IPropertyConverter',['../interface_buzzware_1_1_cascade_1_1_i_property_converter.html',1,'Buzzware::Cascade']]],
-  ['isexternalinit_14',['IsExternalInit',['../class_system_1_1_runtime_1_1_compiler_services_1_1_is_external_init.html',1,'System::Runtime::CompilerServices']]]
+  ['hashanystring_0',['HashAnyString',['../class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#a5e779bb4581db17a68ebc09e0b98bdcf',1,'Buzzware::Cascade::FastFileClassCache']]],
+  ['hashtable_1',['Hashtable',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706acabc0b3c65c3d25adfb69cc0517e5b3e',1,'Easy::Common::Extensions']]],
+  ['hasmanyattribute_2',['HasManyAttribute',['../class_buzzware_1_1_cascade_1_1_has_many_attribute.html',1,'Buzzware.Cascade.HasManyAttribute'],['../class_buzzware_1_1_cascade_1_1_has_many_attribute.html#a65612dc0d3b15fcd793981cccad683f3',1,'Buzzware.Cascade.HasManyAttribute.HasManyAttribute()']]],
+  ['hasmanyreplace_3',['HasManyReplace',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#aca461d0e0eae448886d0b1013ce25652',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['hasoneattribute_4',['HasOneAttribute',['../class_buzzware_1_1_cascade_1_1_has_one_attribute.html',1,'Buzzware.Cascade.HasOneAttribute'],['../class_buzzware_1_1_cascade_1_1_has_one_attribute.html#ace34e6bbce08a48825fab5492bd1b228',1,'Buzzware.Cascade.HasOneAttribute.HasOneAttribute()']]],
+  ['holdpath_5',['HoldPath',['../class_buzzware_1_1_cascade_1_1_cascade_config.html#a8cca0b87c641632dd38559dea5a6afdb',1,'Buzzware::Cascade::CascadeConfig']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['simple_20querying_20with_20cascade_0',['Simple Querying with Cascade',['../md_api__docs_2using__cascade_2simple__overview_2queries.html',1,'']]]
+  ['getting_20models_0',['Getting Models',['../md_api__docs_2using__cascade_2simple__overview_2getting__models.html',1,'']]],
+  ['glossary_1',['Glossary',['../md_api__docs_2using__cascade_2glossary.html',1,'']]]
 ];

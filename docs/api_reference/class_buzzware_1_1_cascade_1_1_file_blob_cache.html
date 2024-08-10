@@ -98,6 +98,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_file_bl
   <div class="headertitle"><div class="title">Buzzware.Cascade.FileBlobCache Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class is responsible for managing cached blobs within a local file system. It implements IBlobCache to store, fetch, and clear data.  
+ <a href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.FileBlobCache:</div>
 <div class="dyncontent">
@@ -110,46 +113,83 @@ Inheritance diagram for Buzzware.Cascade.FileBlobCache:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9a533bc951b7dcc7470eae4d897b13ef"><td class="memItemLeft" align="right" valign="top"><a id="a9a533bc951b7dcc7470eae4d897b13ef" name="a9a533bc951b7dcc7470eae4d897b13ef"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FileBlobCache</b> (string tempDir)</td></tr>
+<tr class="memitem:a9a533bc951b7dcc7470eae4d897b13ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a9a533bc951b7dcc7470eae4d897b13ef">FileBlobCache</a> (string tempDir)</td></tr>
+<tr class="memdesc:a9a533bc951b7dcc7470eae4d897b13ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">FileBlobCache Constructor. Creates the necessary directory structure.  <br /></td></tr>
 <tr class="separator:a9a533bc951b7dcc7470eae4d897b13ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a259bbf52accc3c9d747eb8f5b077e1b1"><td class="memItemLeft" align="right" valign="top"><a id="a259bbf52accc3c9d747eb8f5b077e1b1" name="a259bbf52accc3c9d747eb8f5b077e1b1"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>GetModelFilePath</b> (string path)</td></tr>
+<tr class="memitem:a259bbf52accc3c9d747eb8f5b077e1b1"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a259bbf52accc3c9d747eb8f5b077e1b1">GetModelFilePath</a> (string path)</td></tr>
+<tr class="memdesc:a259bbf52accc3c9d747eb8f5b077e1b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the absolute file path for a model associated with a specified relative path.  <br /></td></tr>
 <tr class="separator:a259bbf52accc3c9d747eb8f5b077e1b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7aeb00b12863b2f697ee1b1fd9615bc"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#ad7aeb00b12863b2f697ee1b1fd9615bc">ClearAll</a> (bool exceptHeld, DateTime? olderThan)</td></tr>
+<tr class="memdesc:ad7aeb00b12863b2f697ee1b1fd9615bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the entire cache based on the specified parameters. It can clear all files or only those older than a specific date and time, optionally preserving held blobs.  <br /></td></tr>
 <tr class="separator:ad7aeb00b12863b2f697ee1b1fd9615bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4af7f46160c86ca65474eba72c70c3ef"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a4af7f46160c86ca65474eba72c70c3ef">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memdesc:a4af7f46160c86ca65474eba72c70c3ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetches a blob from the file cache based on the provided request operation.  <br /></td></tr>
 <tr class="separator:a4af7f46160c86ca65474eba72c70c3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7938402289d13e8cc007d85076f8f738"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a7938402289d13e8cc007d85076f8f738">Store</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> opResponse)</td></tr>
+<tr class="memdesc:a7938402289d13e8cc007d85076f8f738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the result of a given operation to the blob cache. If the result is empty, it deletes the corresponding file instead.  <br /></td></tr>
 <tr class="separator:a7938402289d13e8cc007d85076f8f738"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9b7113fa440ae279ad42ac2a9f0a16e"><td class="memItemLeft" align="right" valign="top"><a id="ab9b7113fa440ae279ad42ac2a9f0a16e" name="ab9b7113fa440ae279ad42ac2a9f0a16e"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearAll</b> (bool exceptHeld, DateTime? olderThan)</td></tr>
+<tr class="memitem:ab9b7113fa440ae279ad42ac2a9f0a16e"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ab9b7113fa440ae279ad42ac2a9f0a16e">ClearAll</a> (bool exceptHeld, DateTime? olderThan)</td></tr>
 <tr class="separator:ab9b7113fa440ae279ad42ac2a9f0a16e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade12689c170b60fa373b1726a1201df4"><td class="memItemLeft" align="right" valign="top"><a id="ade12689c170b60fa373b1726a1201df4" name="ade12689c170b60fa373b1726a1201df4"></a>
-Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Fetch</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memitem:ade12689c170b60fa373b1726a1201df4"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ade12689c170b60fa373b1726a1201df4">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
 <tr class="separator:ade12689c170b60fa373b1726a1201df4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7c89910f98bd00b8c82bdea9c494746"><td class="memItemLeft" align="right" valign="top"><a id="ab7c89910f98bd00b8c82bdea9c494746" name="ab7c89910f98bd00b8c82bdea9c494746"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>Store</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> opResponse)</td></tr>
+<tr class="memitem:ab7c89910f98bd00b8c82bdea9c494746"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ab7c89910f98bd00b8c82bdea9c494746">Store</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> opResponse)</td></tr>
 <tr class="separator:ab7c89910f98bd00b8c82bdea9c494746"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a34288bdd594ef717c5f1a4c16a85c830"><td class="memItemLeft" align="right" valign="top"><a id="a34288bdd594ef717c5f1a4c16a85c830" name="a34288bdd594ef717c5f1a4c16a85c830"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>ToFilePath</b> (string path)</td></tr>
+<tr class="memitem:a34288bdd594ef717c5f1a4c16a85c830"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a34288bdd594ef717c5f1a4c16a85c830">ToFilePath</a> (string path)</td></tr>
+<tr class="memdesc:a34288bdd594ef717c5f1a4c16a85c830"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms a relative path to an absolute file path based on _tempDir.  <br /></td></tr>
 <tr class="separator:a34288bdd594ef717c5f1a4c16a85c830"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1f04673a7dbc1d5b5bfc6e068de60a9"><td class="memItemLeft" align="right" valign="top"><a id="ab1f04673a7dbc1d5b5bfc6e068de60a9" name="ab1f04673a7dbc1d5b5bfc6e068de60a9"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>GetBlobPath</b> (string path)</td></tr>
+<tr class="memitem:ab1f04673a7dbc1d5b5bfc6e068de60a9"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#ab1f04673a7dbc1d5b5bfc6e068de60a9">GetBlobPath</a> (string path)</td></tr>
+<tr class="memdesc:ab1f04673a7dbc1d5b5bfc6e068de60a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a path within the blob storage directory.  <br /></td></tr>
 <tr class="separator:ab1f04673a7dbc1d5b5bfc6e068de60a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a7be1ee398219aecd60859dd4de6023dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a7be1ee398219aecd60859dd4de6023dc">Cascade</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a7be1ee398219aecd60859dd4de6023dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Cascade data layer instance associated with this cache.  <br /></td></tr>
 <tr class="separator:a7be1ee398219aecd60859dd4de6023dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a></td></tr>
-<tr class="memitem:a62bc5a66ac6b196e019f317f58be959e inherit properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache"><td class="memItemLeft" align="right" valign="top">
-<a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cascade</b><code> [get, set]</code></td></tr>
+<tr class="memitem:a62bc5a66ac6b196e019f317f58be959e inherit properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#a62bc5a66ac6b196e019f317f58be959e">Cascade</a><code> [get, set]</code></td></tr>
 <tr class="separator:a62bc5a66ac6b196e019f317f58be959e inherit properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class is responsible for managing cached blobs within a local file system. It implements IBlobCache to store, fetch, and clear data. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a9a533bc951b7dcc7470eae4d897b13ef" name="a9a533bc951b7dcc7470eae4d897b13ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a533bc951b7dcc7470eae4d897b13ef">&#9670;&#160;</a></span>FileBlobCache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Buzzware.Cascade.FileBlobCache.FileBlobCache </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>tempDir</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>FileBlobCache Constructor. Creates the necessary directory structure. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tempDir</td><td>The base temporary directory used for storing blobs.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="ad7aeb00b12863b2f697ee1b1fd9615bc" name="ad7aeb00b12863b2f697ee1b1fd9615bc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad7aeb00b12863b2f697ee1b1fd9615bc">&#9670;&#160;</a></span>ClearAll()</h2>
@@ -185,6 +225,15 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Clears the entire cache based on the specified parameters. It can clear all files or only those older than a specific date and time, optionally preserving held blobs. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">exceptHeld</td><td>Specifies if the held blobs should be excluded from deletion.</td></tr>
+    <tr><td class="paramname">olderThan</td><td>Specifies the cutoff date for deleting files. Files older than this date will be deleted.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a>.</p>
 
 </div>
@@ -213,7 +262,86 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Fetches a blob from the file cache based on the provided request operation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">requestOp</td><td>The request operation containing the request details including the required freshness.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An OpResponse indicating the operation's result and associated data if the blob is found and valid.</dd></dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a>.</p>
+
+</div>
+</div>
+<a id="ab1f04673a7dbc1d5b5bfc6e068de60a9" name="ab1f04673a7dbc1d5b5bfc6e068de60a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1f04673a7dbc1d5b5bfc6e068de60a9">&#9670;&#160;</a></span>GetBlobPath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Buzzware.Cascade.FileBlobCache.GetBlobPath </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs a path within the blob storage directory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The path relative to the blob directory.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The full path to the specified blob as a string.</dd></dl>
+
+</div>
+</div>
+<a id="a259bbf52accc3c9d747eb8f5b077e1b1" name="a259bbf52accc3c9d747eb8f5b077e1b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a259bbf52accc3c9d747eb8f5b077e1b1">&#9670;&#160;</a></span>GetModelFilePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Buzzware.Cascade.FileBlobCache.GetModelFilePath </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the absolute file path for a model associated with a specified relative path. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The relative path to the model file within the blob directory.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The complete path to the model file as a string.</dd></dl>
 
 </div>
 </div>
@@ -241,7 +369,50 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Stores the result of a given operation to the blob cache. If the result is empty, it deletes the corresponding file instead. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">opResponse</td><td>The response operation which includes the data to be stored or the command to delete.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a>.</p>
+
+</div>
+</div>
+<a id="a34288bdd594ef717c5f1a4c16a85c830" name="a34288bdd594ef717c5f1a4c16a85c830"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34288bdd594ef717c5f1a4c16a85c830">&#9670;&#160;</a></span>ToFilePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Buzzware.Cascade.FileBlobCache.ToFilePath </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Transforms a relative path to an absolute file path based on _tempDir. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The relative path to append to the temporary directory base.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The full file path as a string.</dd></dl>
 
 </div>
 </div>
@@ -265,6 +436,8 @@ Properties</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>The Cascade data layer instance associated with this cache. </p>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a>.</p>
 

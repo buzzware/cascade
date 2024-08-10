@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_belongs
   <div class="headertitle"><div class="title">Buzzware.Cascade.BelongsToAttribute Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Attribute to denote that a property is a reference to another record (of specified id) of another type. The id is read from the property specified by IdProperty, and the type is taken from the local property.  
+ <a href="class_buzzware_1_1_cascade_1_1_belongs_to_attribute.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.BelongsToAttribute:</div>
 <div class="dyncontent">
@@ -106,16 +109,54 @@ Inheritance diagram for Buzzware.Cascade.BelongsToAttribute:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae2446e38b9e17234ffab308465ade96f"><td class="memItemLeft" align="right" valign="top"><a id="ae2446e38b9e17234ffab308465ade96f" name="ae2446e38b9e17234ffab308465ade96f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>BelongsToAttribute</b> (string idProperty)</td></tr>
+<tr class="memitem:ae2446e38b9e17234ffab308465ade96f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_belongs_to_attribute.html#ae2446e38b9e17234ffab308465ade96f">BelongsToAttribute</a> (string idProperty)</td></tr>
+<tr class="memdesc:ae2446e38b9e17234ffab308465ade96f"><td class="mdescLeft">&#160;</td><td class="mdescRight">BelongsToAttribute Constructor.  <br /></td></tr>
 <tr class="separator:ae2446e38b9e17234ffab308465ade96f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a88c27ce692bb966f3334ff3f33c8e4df"><td class="memItemLeft" align="right" valign="top"><a id="a88c27ce692bb966f3334ff3f33c8e4df" name="a88c27ce692bb966f3334ff3f33c8e4df"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>IdProperty</b><code> [get]</code></td></tr>
+<tr class="memdesc:a88c27ce692bb966f3334ff3f33c8e4df"><td class="mdescLeft">&#160;</td><td class="mdescRight">The property name in the class that holds the id of the related entity. <br /></td></tr>
 <tr class="separator:a88c27ce692bb966f3334ff3f33c8e4df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Attribute to denote that a property is a reference to another record (of specified id) of another type. The id is read from the property specified by IdProperty, and the type is taken from the local property. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae2446e38b9e17234ffab308465ade96f" name="ae2446e38b9e17234ffab308465ade96f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2446e38b9e17234ffab308465ade96f">&#9670;&#160;</a></span>BelongsToAttribute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Buzzware.Cascade.BelongsToAttribute.BelongsToAttribute </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>idProperty</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>BelongsToAttribute Constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idProperty</td><td>The name of the property that contains the id of another entity.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/attributes/BelongsToAttribute.cs</li>
 </ul>

@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_model_c
   <div class="headertitle"><div class="title">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A memory based cache for a given model type designed to store and retrieve instances of models and collections of ids with associated arrival timestamps.  
+ <a href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;:</div>
 <div class="dyncontent">
@@ -109,47 +112,62 @@ Inheritance diagram for Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;:
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a563f97cea5fccfae0227782e59c51679"><td class="memItemLeft" align="right" valign="top"><a id="a563f97cea5fccfae0227782e59c51679" name="a563f97cea5fccfae0227782e59c51679"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ModelClassCache</b> ()</td></tr>
+<tr class="memdesc:a563f97cea5fccfae0227782e59c51679"><td class="mdescLeft">&#160;</td><td class="mdescRight">ModelClassCache Constructor. <br /></td></tr>
+<tr class="separator:a563f97cea5fccfae0227782e59c51679"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4134a96f87bd0e9a5042c357e397b992"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a4134a96f87bd0e9a5042c357e397b992">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memdesc:a4134a96f87bd0e9a5042c357e397b992"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetches the requested model or collection from the cache if available and fresh enough; otherwise returns a none response to indicate a miss.  <br /></td></tr>
 <tr class="separator:a4134a96f87bd0e9a5042c357e397b992"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe1315dc774dca8ff493ee5b7dae3570"><td class="memItemLeft" align="right" valign="top">async Task&lt; Model?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#afe1315dc774dca8ff493ee5b7dae3570">Fetch&lt; Model &gt;</a> (object id, int freshnessSeconds=0)</td></tr>
+<tr class="memdesc:afe1315dc774dca8ff493ee5b7dae3570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetches a model instance from the cache if available and within freshness period.  <br /></td></tr>
 <tr class="separator:afe1315dc774dca8ff493ee5b7dae3570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c2cf983e75cd2136b5a8b088a156410"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a9c2cf983e75cd2136b5a8b088a156410">Store</a> (object id, object model, long arrivedAt)</td></tr>
+<tr class="memdesc:a9c2cf983e75cd2136b5a8b088a156410"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a model instance in the cache with the arrived timestamp.  <br /></td></tr>
 <tr class="separator:a9c2cf983e75cd2136b5a8b088a156410"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30e8df3ce13d0ce232eaf24aa36b87e3"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a30e8df3ce13d0ce232eaf24aa36b87e3">StoreCollection</a> (string key, IEnumerable ids, long arrivedAt)</td></tr>
+<tr class="memdesc:a30e8df3ce13d0ce232eaf24aa36b87e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a collection of ids in the cache with the specified name key and arrived timestamp.  <br /></td></tr>
 <tr class="separator:a30e8df3ce13d0ce232eaf24aa36b87e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba32327dc909c9290db9fc29e27bccde"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#aba32327dc909c9290db9fc29e27bccde">Remove</a> (object id)</td></tr>
+<tr class="memdesc:aba32327dc909c9290db9fc29e27bccde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a model instance from the cache based on the given id.  <br /></td></tr>
 <tr class="separator:aba32327dc909c9290db9fc29e27bccde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a07873f9d31f58541364adccdbc1aca"><td class="memItemLeft" align="right" valign="top"><a id="a5a07873f9d31f58541364adccdbc1aca" name="a5a07873f9d31f58541364adccdbc1aca"></a>
-async Task&#160;</td><td class="memItemRight" valign="bottom"><b>Remove</b> (IdType id)</td></tr>
+<tr class="memitem:a5a07873f9d31f58541364adccdbc1aca"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a5a07873f9d31f58541364adccdbc1aca">Remove</a> (IdType id)</td></tr>
+<tr class="memdesc:a5a07873f9d31f58541364adccdbc1aca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a model instance from the cache using the typed id.  <br /></td></tr>
 <tr class="separator:a5a07873f9d31f58541364adccdbc1aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4777dcc1ccecd662fc0e77cf59fa1b5"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#ae4777dcc1ccecd662fc0e77cf59fa1b5">ClearAll</a> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
+<tr class="memdesc:ae4777dcc1ccecd662fc0e77cf59fa1b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all models and collections from the cache, optionally holding certain elements if specified.  <br /></td></tr>
 <tr class="separator:ae4777dcc1ccecd662fc0e77cf59fa1b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d50b2e739cb638e44b82867f9b893af"><td class="memItemLeft" align="right" valign="top"><a id="a1d50b2e739cb638e44b82867f9b893af" name="a1d50b2e739cb638e44b82867f9b893af"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>Store</b> (object id, object model, long arrivedAt)</td></tr>
+<tr class="memitem:a1d50b2e739cb638e44b82867f9b893af"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1d50b2e739cb638e44b82867f9b893af">Store</a> (object id, object model, long arrivedAt)</td></tr>
 <tr class="separator:a1d50b2e739cb638e44b82867f9b893af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memItemLeft" align="right" valign="top"><a id="a6c206b5f3ec36b5f5dfea4fe0731b91b" name="a6c206b5f3ec36b5f5dfea4fe0731b91b"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>StoreCollection</b> (string key, IEnumerable ids, long aArrivedAt)</td></tr>
+<tr class="memitem:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6c206b5f3ec36b5f5dfea4fe0731b91b">StoreCollection</a> (string key, IEnumerable ids, long aArrivedAt)</td></tr>
 <tr class="separator:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6eb25cd59d345166cd01bd519d46a9db"><td class="memItemLeft" align="right" valign="top"><a id="a6eb25cd59d345166cd01bd519d46a9db" name="a6eb25cd59d345166cd01bd519d46a9db"></a>
-Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Fetch</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memitem:a6eb25cd59d345166cd01bd519d46a9db"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6eb25cd59d345166cd01bd519d46a9db">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
 <tr class="separator:a6eb25cd59d345166cd01bd519d46a9db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1683c928a268210e36de6e2787f66c28"><td class="memItemLeft" align="right" valign="top"><a id="a1683c928a268210e36de6e2787f66c28" name="a1683c928a268210e36de6e2787f66c28"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>Remove</b> (object id)</td></tr>
+<tr class="memitem:a1683c928a268210e36de6e2787f66c28"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1683c928a268210e36de6e2787f66c28">Remove</a> (object id)</td></tr>
 <tr class="separator:a1683c928a268210e36de6e2787f66c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a521bcf06b596a14448dbb537f6749063"><td class="memItemLeft" align="right" valign="top"><a id="a521bcf06b596a14448dbb537f6749063" name="a521bcf06b596a14448dbb537f6749063"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearAll</b> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
+<tr class="memitem:a521bcf06b596a14448dbb537f6749063"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a521bcf06b596a14448dbb537f6749063">ClearAll</a> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
 <tr class="separator:a521bcf06b596a14448dbb537f6749063"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:aec0d5fec77f511005a88e71d7ae9aa70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#aec0d5fec77f511005a88e71d7ae9aa70">Cascade</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:aec0d5fec77f511005a88e71d7ae9aa70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to the CascadeDataLayer.  <br /></td></tr>
 <tr class="separator:aec0d5fec77f511005a88e71d7ae9aa70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a></td></tr>
-<tr class="memitem:a204545d6dc8ea3363bdca69f1418916d inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td class="memItemLeft" align="right" valign="top">
-<a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Cascade</b><code> [get, set]</code></td></tr>
+<tr class="memitem:a204545d6dc8ea3363bdca69f1418916d inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a204545d6dc8ea3363bdca69f1418916d">Cascade</a><code> [get, set]</code></td></tr>
 <tr class="separator:a204545d6dc8ea3363bdca69f1418916d inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A memory based cache for a given model type designed to store and retrieve instances of models and collections of ids with associated arrival timestamps. </p>
+<div class="typeconstraint">
+<dl><dt><b>Type Constraints</b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>Model</em></td><td>&#160;:</td><td valign="top"><em>class</em></td><td>&#160;</td></tr>
+</table>
+</dd>
+</dl>
+</div>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ae4777dcc1ccecd662fc0e77cf59fa1b5" name="ae4777dcc1ccecd662fc0e77cf59fa1b5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae4777dcc1ccecd662fc0e77cf59fa1b5">&#9670;&#160;</a></span>ClearAll()</h2>
 
@@ -184,6 +202,15 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Clears all models and collections from the cache, optionally holding certain elements if specified. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">exceptHeld</td><td>Indicates whether to exclude certain held items from clearing.</td></tr>
+    <tr><td class="paramname">olderThan</td><td>Optionally specifies a date threshold to restrict which items are cleared.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
@@ -212,6 +239,15 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Fetches the requested model or collection from the cache if available and fresh enough; otherwise returns a none response to indicate a miss. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">requestOp</td><td>The operation object containing request details for fetching data.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An OpResponse object containing details about the request result.</dd></dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
@@ -226,7 +262,7 @@ Properties</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">async Task&lt; Model?&gt; <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html">Buzzware.Cascade.ModelClassCache</a>&lt; Model, IdType &gt;.Fetch&lt; Model &gt; </td>
+          <td class="memname">async Task&lt; Model?&gt; <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html">Buzzware.Cascade.ModelClassCache</a>&lt; Model, IdType &gt;.<a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a4134a96f87bd0e9a5042c357e397b992">Fetch</a>&lt; Model &gt; </td>
           <td>(</td>
           <td class="paramtype">object&#160;</td>
           <td class="paramname"><em>id</em>, </td>
@@ -249,6 +285,22 @@ Properties</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Fetches a model instance from the cache if available and within freshness period. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Model</td><td>The type of model being requested.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The identifier for the model instance.</td></tr>
+    <tr><td class="paramname">freshnessSeconds</td><td>The maximum acceptable age of the cached data in seconds.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The model instance if found and fresh enough, otherwise null.</dd></dl>
 <div class="typeconstraint">
 <dl><dt><b>Type Constraints</b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
@@ -260,8 +312,42 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a5a07873f9d31f58541364adccdbc1aca" name="a5a07873f9d31f58541364adccdbc1aca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a07873f9d31f58541364adccdbc1aca">&#9670;&#160;</a></span>Remove() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html">Buzzware.Cascade.ModelClassCache</a>&lt; Model, IdType &gt;.Remove </td>
+          <td>(</td>
+          <td class="paramtype">IdType&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Removes a model instance from the cache using the typed id. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The strongly typed identifier of the model to remove.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aba32327dc909c9290db9fc29e27bccde" name="aba32327dc909c9290db9fc29e27bccde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba32327dc909c9290db9fc29e27bccde">&#9670;&#160;</a></span>Remove()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aba32327dc909c9290db9fc29e27bccde">&#9670;&#160;</a></span>Remove() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -283,6 +369,15 @@ Properties</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Removes a model instance from the cache based on the given id. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The identifier of the model to remove.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 
@@ -328,6 +423,16 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Stores a model instance in the cache with the arrived timestamp. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The identifier representing the model.</td></tr>
+    <tr><td class="paramname">model</td><td>The model object to be stored.</td></tr>
+    <tr><td class="paramname">arrivedAt</td><td>The timestamp when the model data was obtained.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
@@ -372,6 +477,16 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Stores a collection of ids in the cache with the specified name key and arrived timestamp. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>A unique key identifying the collection.</td></tr>
+    <tr><td class="paramname">ids</td><td>The enumerable collection of model identifiers.</td></tr>
+    <tr><td class="paramname">arrivedAt</td><td>The timestamp when the collection data was obtained.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
@@ -396,6 +511,8 @@ Properties</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Reference to the CascadeDataLayer. </p>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
 
