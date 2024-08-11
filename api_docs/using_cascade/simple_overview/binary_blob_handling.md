@@ -1,14 +1,19 @@
 # Binary Blob Handling
 
-Cascade provides methods to handle binary large objects (blobs) stored in your Origin. 
+Cascade provides methods to handle binary large objects (blobs). It provides the same benefits as for models : 
+caching, persistance, offline, and abstraction.
 This document outlines the process of using Cascade's `BlobGet`, `BlobPut`, and `BlobDestroy` 
 methods to manage binary data.
 
-Blobs are normally cached by at least one cache layer, and also handled by the origin.
+Typically blobs would be cached by a file based cache, and handled by the origin using an object 
+storage service or file system.
+
+Unlike models, blobs do not have an Update method because in Cascade blobs cannot be modified, 
+but they can be replaced.
 
 ## Getting a Blob
 
-To retrieve a blob from the Origin, use the `BlobGet` method:
+To retrieve a blob, use the `BlobGet` method:
 
 ```csharp
 public async Task<byte[]> BlobGet(string path)
@@ -20,9 +25,11 @@ public async Task<byte[]> BlobGet(string path)
 
 The `path` parameter is a string that uniquely identifies the blob in the Origin.
 
+BlobGet works just like Get, where the path is equivalent to the id.  
+
 ## Putting a Blob
 
-To store or update a blob in the Origin, use the `BlobPut` method:
+To store or replace a blob, use the `BlobPut` method:
 
 ```csharp
 public async Task BlobPut(string path, byte[] data)
@@ -34,9 +41,11 @@ public async Task BlobPut(string path, byte[] data)
 - `path`: A string that uniquely identifies where the blob should be stored.
 - `data`: The binary data to be stored.
 
+BlobPut works just like Replace, where the path is equivalent to the id.
+
 ## Destroying a Blob
 
-To remove a blob from the Origin, use the `BlobDestroy` method:
+To remove a blob, use the `BlobDestroy` method:
 
 ```csharp
 public async Task BlobDestroy(string path)
