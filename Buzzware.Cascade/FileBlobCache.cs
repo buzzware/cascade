@@ -120,7 +120,7 @@ namespace Buzzware.Cascade {
       if (
         exists && 
         requestOp.FreshnessSeconds >= 0 && 
-        (requestOp.FreshnessSeconds == CascadeDataLayer.FRESHNESS_ANY || ((Cascade.NowMs - arrivedAtMs) <= requestOp.FreshnessSeconds * 1000))
+        (requestOp.FreshnessSeconds == CascadeDataLayer.FRESHNESS_ANY || (arrivedAtMs >= requestOp.FreshAfterMs))
       ) {
         var loaded = await LoadBlob(blobFilePath);
         return new OpResponse(

@@ -928,13 +928,13 @@ namespace Buzzware.Cascade {
 				var modelResponses = await GetModelsForIds(
 					requestOp.Type,
 					opResponse.ResultIds,
-					requestOp.FreshnessSeconds ?? Config.DefaultFreshnessSeconds,
+					requestOp.FreshnessSeconds,
 					fallbackFreshnessSeconds: requestOp.FallbackFreshnessSeconds,
 					hold: requestOp.Hold
 				);
 				IEnumerable<SuperModel> models = modelResponses.Select(r => (SuperModel)r.Result).ToImmutableArray();
 				if (populate.Any()) {
-					await Populate(models, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold);
+					await Populate(models, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, timeMs: requestOp.TimeMs);
 				}
 				opResponse = opResponse.withChanges(result: models); // modify the response with models instead of ids
 			} else {
@@ -1128,7 +1128,7 @@ namespace Buzzware.Cascade {
 				(
 					!connectionOnline ||		// offline
 					(requestOp.FreshnessSeconds == RequestOp.FRESHNESS_ANY) ||	// freshness not required 
-					((requestOp.FreshnessSeconds>0) && ((NowMs - cacheResponse.ArrivedAtMs) <= requestOp.FreshnessSeconds*1000))
+					((requestOp.FreshnessSeconds>0) && (cacheResponse.ArrivedAtMs >= requestOp.FreshAfterMs))
 				)
 			) {
 				opResponse = cacheResponse;	// in cache and offline or meets freshness
@@ -1294,8 +1294,10 @@ namespace Buzzware.Cascade {
 			IEnumerable iids,
 			int? freshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) {
+			var timeMsFixed = timeMs ?? NowMs;
 			const int MaxParallelRequests = 8;
 			var ids = iids.Cast<object>().ToImmutableArray();
 			Log.Debug("BEGIN GetModelsForIds");
@@ -1308,7 +1310,7 @@ namespace Buzzware.Cascade {
 				var tasks = someIds.Select(id => {
 					return Task.Run(() => ProcessRequest( // map each id to a get request and process it
 						new RequestOp(
-							NowMs,
+							timeMsFixed,
 							type,
 							RequestVerb.Get,
 							id,

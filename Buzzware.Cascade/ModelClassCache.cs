@@ -56,7 +56,7 @@ namespace Buzzware.Cascade {
           if (
             modelEntry != null && 
             (requestOp.FreshnessSeconds>=0) && 
-            (requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || ((Cascade.NowMs-modelEntry.Item2) <= requestOp.FreshnessSeconds*1000))
+            (requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || (modelEntry.Item2 >= requestOp.FreshAfterMs))
           ) {
             return new OpResponse(
               requestOp,
@@ -79,7 +79,7 @@ namespace Buzzware.Cascade {
           if (
             collEntry != null && 
             (requestOp.FreshnessSeconds>=0) && 
-            (requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || ((Cascade.NowMs-collEntry.Item2) <= requestOp.FreshnessSeconds*1000))
+            (requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || (collEntry.Item2 >= requestOp.FreshAfterMs))
           ) {
             return new OpResponse(
               requestOp,

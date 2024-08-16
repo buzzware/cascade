@@ -371,6 +371,10 @@ namespace Buzzware.Cascade {
 			Criteria = criteria;
 			Key = key;
 			Extra = extra;
+
+			FreshAfterMs = TimeMs - (FreshnessSeconds * 1000);
+			PopulateFreshAfterMs = TimeMs - (PopulateFreshnessSeconds * 1000);
+			FallbackFreshAfterMs = TimeMs - (FallbackFreshnessSeconds * 1000);
 		}
 		
 		/// <summary>
@@ -452,6 +456,16 @@ namespace Buzzware.Cascade {
 		public readonly object? Criteria;
 		public readonly object? Extra;
 		
+		public readonly IEnumerable<string>? Populate;
+		public readonly int FreshnessSeconds = FRESHNESS_DEFAULT;
+		public readonly int PopulateFreshnessSeconds = FRESHNESS_DEFAULT;
+		public readonly int FallbackFreshnessSeconds = FRESHNESS_ANY;
+		public readonly bool Hold;
+		public readonly IDictionary<string, string> Params;	// app specific paramters for the request
+		public readonly long FreshAfterMs;
+		public readonly long PopulateFreshAfterMs;
+		public readonly long FallbackFreshAfterMs;
+
 		/// <summary>
 		/// Attempts to return the Id field as an integer, if it can be interpreted as such.
 		/// </summary>
@@ -490,19 +504,7 @@ namespace Buzzware.Cascade {
 				return null;
 			}
 		}
-
-
-		// Only one of Key or Id would normally be used
-
-		public readonly IEnumerable<string>? Populate;
 		
-		public readonly int? FreshnessSeconds = FRESHNESS_DEFAULT;
-		public readonly int? PopulateFreshnessSeconds = FRESHNESS_DEFAULT;
-		public readonly int? FallbackFreshnessSeconds = FRESHNESS_ANY;
-		public readonly bool Hold;
-		
-		public readonly IDictionary<string, string> Params;	// app specific paramters for the request
-
 		/// <summary>
 		/// Converts the operation details into a concise summary string for logging or display purposes.
 		/// </summary>
