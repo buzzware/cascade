@@ -29,9 +29,12 @@ namespace Buzzware.Cascade {
 	public class RequestOp {
 		public const int FRESHNESS_DEFAULT = 5*60;
 		public const int FRESHNESS_ANY = int.MaxValue;
-		public const int FRESHNESS_FRESHEST = 30;		// allowing for the period of the request. When arrivedAfter is supported, set this back to 0 
+		public const int FRESHNESS_FRESHEST = 0;		// allowing for the period of the request. When arrivedAfter is supported, set this back to 0 
 		public const int FRESHNESS_INSIST = -1;
+		
+		public const int FALLBACK_DEFAULT = 60*60;
 		public const int FALLBACK_NEVER = -1;
+		public const int FALLBACK_ANY = 2147483647;
 
 		/// <summary>
 		/// Constructs a "Get" operation for a specific model type, with optional parameters for population and freshness.
