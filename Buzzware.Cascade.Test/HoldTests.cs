@@ -180,21 +180,21 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(cascade.IsCollectionHeld<Thing>(collBName),Is.False);
 			
 			// Ensure both models and collections exist in memory
-			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0))).Exists,Is.True);
-			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
 
-			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName))).Exists,Is.True);
-			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName, timeMs: origin.NowMs))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName, timeMs: origin.NowMs))).Exists,Is.True);
 			
 			// Clear all in the memory cache except those held
 			await memoryCache.ClearAll(exceptHeld: true);
 
 			// Verify held model and collection persist, while others are cleared
-			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0))).Exists,Is.True);
-			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0))).Exists,Is.False);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.False);
 			
-			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName))).Exists,Is.True);
-			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName))).Exists,Is.False);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName, timeMs: origin.NowMs))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName, timeMs: origin.NowMs))).Exists,Is.False);
 		}
 		
 		/// <summary>
@@ -252,9 +252,9 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(cascade.IsHeldBlob(blobPath3),Is.True);
 
 			// Ensure all blobs exist in cache before clearing
-			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath1, freshnessSeconds: 0))).Exists,Is.True);
-			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath2, freshnessSeconds: 0))).Exists,Is.True);
-			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath3, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath1, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath2, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath3, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
 
 			// Clear the cache except for held blobs
 			await fileCache.ClearAll(exceptHeld: true);
@@ -264,9 +264,9 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(cascade.IsHeldBlob(blobPath2),Is.False);
 			Assert.That(cascade.IsHeldBlob(blobPath3),Is.True);
 			
-			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath1, freshnessSeconds: 0))).Exists,Is.True);
-			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath2, freshnessSeconds: 0))).Exists,Is.False);
-			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath3, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath1, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath2, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.False);
+			Assert.That((await fileCache.Fetch(RequestOp.BlobGetOp(blobPath3, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
 
 			// Test the BlobDestroy and ensure it does not affect hold status until explicitly unheld
 			await cascade.BlobDestroy(blobPath3);

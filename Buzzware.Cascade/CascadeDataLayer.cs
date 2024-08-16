@@ -139,7 +139,7 @@ namespace Buzzware.Cascade {
 			return true;
 		}
 
-		
+
 		/// <summary>
 		/// Get data from cache/origin of model type M and return result or null
 		/// </summary>
@@ -147,7 +147,9 @@ namespace Buzzware.Cascade {
 		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
 		/// <param name="freshnessSeconds">freshness for the main object</param>
 		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <typeparam name="M">model type - subclass of SuperModel</typeparam>
 		/// <returns>model of type M or null</returns>
 		public async Task<M?> Get<M>(
@@ -156,9 +158,10 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) where M : class {
-			return (await this.GetResponse(typeof(M),id, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold)).Result as M;
+			return (await this.GetResponse(typeof(M),id, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold, timeMs)).Result as M;
 		}
 
 		/// <summary>
@@ -168,7 +171,9 @@ namespace Buzzware.Cascade {
 		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
 		/// <param name="freshnessSeconds">freshness for the main object</param>
 		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
-		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
+		/// <param name="hold">whether to mark the main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <typeparam name="M">model type - subclass of SuperModel</typeparam>
 		/// <returns>model of type M or null</returns>
 		public async Task<M?> Get<M>(
@@ -177,12 +182,13 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) where M : class {
-			return (await this.GetResponse(typeof(M),id, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold)).Result as M;
+			return (await this.GetResponse(typeof(M),id, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold, timeMs)).Result as M;
 		}
 
-		
+
 		/// <summary>
 		/// Get data from cache/origin of model type M and return result or null
 		/// </summary>
@@ -190,7 +196,9 @@ namespace Buzzware.Cascade {
 		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
 		/// <param name="freshnessSeconds">freshness for the main object</param>
 		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <typeparam name="M">model type - subclass of SuperModel</typeparam>
 		/// <returns>model of type M or null</returns>
 		public async Task<M?> Get<M>(
@@ -199,17 +207,13 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) where M : class {
-			return (await this.GetResponse(typeof(M),id, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold)).Result as M;
+			return (await this.GetResponse(typeof(M),id, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold, timeMs)).Result as M;
 		}
 
-		
-		
-		
-		
-		
-		
+
 		/// <summary>
 		/// Get a model instance of given model type and id with a full detail OpResponse object
 		/// </summary>
@@ -217,7 +221,9 @@ namespace Buzzware.Cascade {
 		/// <param name="populate">Enumerable association property names to set with data for convenience. Equivalent to multiple Get/Query requests</param>
 		/// <param name="freshnessSeconds">freshness for the main object</param>
 		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <returns>OpResponse</returns>
 		public Task<OpResponse> GetResponse(
 			Type modelType,
@@ -226,12 +232,13 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) {
 			var req = RequestOp.GetOp(
 				modelType,
 				id,
-				NowMs,
+				timeMs ?? NowMs,
 				populate,
 				freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
@@ -248,20 +255,24 @@ namespace Buzzware.Cascade {
 		/// <param name="collectionName">your chosen name for the collection</param>
 		/// <typeparam name="M">the type of the collection</typeparam>
 		/// <returns>enumerable of ids</returns>
-		public async Task<IEnumerable<object>?> GetCollection<M>(string collectionName) where M : class {
-			return (await this.GetCollectionResponse<M>(collectionName)).Result as IEnumerable<object>;
+		public async Task<IEnumerable<object>?> GetCollection<M>(
+			string collectionName,
+			long? timeMs = null
+		) where M : class {
+			return (await this.GetCollectionResponse<M>(collectionName,timeMs)).Result as IEnumerable<object>;
 		}
 
 		/// <summary>
 		/// Gets a collection literally ie an enumerable of ids with the full detail OpResponse
 		/// </summary>
 		/// <param name="collectionName">your chosen name for the collection</param>
+		/// <param name="timeMs"></param>
 		/// <typeparam name="M">the type of the collection</typeparam>
 		/// <returns>OpResponse with Results = enumerable of ids</returns>
-		public Task<OpResponse> GetCollectionResponse<M>(string collectionName) {
+		public Task<OpResponse> GetCollectionResponse<M>(string collectionName, long? timeMs = null) {
 			var req = RequestOp.GetCollectionOp<M>(
 				collectionName,
-				NowMs
+				timeMs ?? NowMs
 			);
 			return ProcessRequest(req);
 		}
@@ -312,7 +323,7 @@ namespace Buzzware.Cascade {
 			await SetCollection<Model>(collectionName, newCollection);
 			return newCollection;
 		}
-		
+
 		/// <summary>
 		/// A kind of query like that used for populating HasMany/HasOne associations. Not normally used.
 		/// </summary>
@@ -320,12 +331,19 @@ namespace Buzzware.Cascade {
 		/// <param name="propertyValue">Value of foreign key</param>
 		/// <param name="freshnessSeconds">freshness for the main object</param>
 		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <typeparam name="Model">the type of the collection</typeparam>
 		/// <returns>OpResponse</returns>
-		public async Task<OpResponse> GetWhereCollectionResponse<Model>(string propertyName, string propertyValue, int? freshnessSeconds = null, int? populateFreshnessSeconds = null) {
+		public async Task<OpResponse> GetWhereCollectionResponse<Model>(
+			string propertyName, 
+			string propertyValue, 
+			int? freshnessSeconds = null, 
+			int? populateFreshnessSeconds = null,
+			long? timeMs = null
+		) {
 			var key = CascadeUtils.WhereCollectionKey(typeof(Model).Name, propertyName, propertyValue);
 			var requestOp = new RequestOp(
-				NowMs,
+				timeMs ?? NowMs,
 				typeof(Model),
 				RequestVerb.Query,
 				null,
@@ -346,10 +364,17 @@ namespace Buzzware.Cascade {
 		/// <param name="propertyValue">Value of foreign key</param>
 		/// <param name="freshnessSeconds">freshness for the main object</param>
 		/// <param name="populateFreshnessSeconds">freshness for any populated associations</param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <typeparam name="Model">the type of the collection</typeparam>
 		/// <returns>Enumerable of models of type M</returns>
-		public async Task<IEnumerable<M>> GetWhereCollection<M>(string propertyName, string propertyValue, int? freshnessSeconds = null, int? populateFreshnessSeconds = null) where M : class {
-			var response = await this.GetWhereCollectionResponse<M>(propertyName, propertyValue, freshnessSeconds, populateFreshnessSeconds);
+		public async Task<IEnumerable<M>> GetWhereCollection<M>(
+			string propertyName, 
+			string propertyValue, 
+			int? freshnessSeconds = null, 
+			int? populateFreshnessSeconds = null,
+			long? timeMs = null
+		) where M : class {
+			var response = await this.GetWhereCollectionResponse<M>(propertyName, propertyValue, freshnessSeconds, populateFreshnessSeconds, timeMs);
 			var results = response.Results.Cast<M>().ToImmutableArray();
 			return results;
 		}
@@ -390,11 +415,13 @@ namespace Buzzware.Cascade {
 		/// </summary>
 		/// <param name="id">id of model to replace</param>
 		/// <param name="model">model to replace with. The model type is derived from this</param>
-		public async Task SetCacheRecord(object id, object model) {
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
+		public async Task SetCacheRecord(object id, object model, long? timeMs = null) {
+			var arrivedAt = timeMs ?? NowMs;
 			var modelType = model.GetType();
 			await errorControl.FilterGuard(async () => {
 				foreach (var layer in CacheLayers.Reverse()) {
-					await layer.Store(modelType, id, model, NowMs);
+					await layer.Store(modelType, id, model, arrivedAt);
 				}
 			});
 		}
@@ -408,7 +435,9 @@ namespace Buzzware.Cascade {
 		/// <param name="populate"></param>
 		/// <param name="freshnessSeconds"></param>
 		/// <param name="populateFreshnessSeconds"></param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="hold"></param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <typeparam name="M"></typeparam>
 		/// <returns>IEnumerable<M></returns>
 		public async Task<IEnumerable<M>> Query<M>(
@@ -418,9 +447,10 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) {
-			var response = await QueryResponse<M>(collectionKey, criteria, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold);
+			var response = await QueryResponse<M>(collectionKey, criteria, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold, timeMs);
 			var results = response.Results.Cast<M>().ToImmutableArray();
 			//return Array.ConvertAll<object,M>(response.Results) ?? Array.Empty<M>();
 			return results;
@@ -435,7 +465,9 @@ namespace Buzzware.Cascade {
 		/// <param name="populate"></param>
 		/// <param name="freshnessSeconds"></param>
 		/// <param name="populateFreshnessSeconds"></param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="hold"></param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <typeparam name="M"></typeparam>
 		/// <returns></returns>
 		public async Task<M?> QueryOne<M>(
@@ -445,11 +477,12 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) {
-			return (await this.Query<M>(collectionKey, criteria, populate, freshnessSeconds: freshnessSeconds, populateFreshnessSeconds: populateFreshnessSeconds, fallbackFreshnessSeconds: fallbackFreshnessSeconds, hold: hold)).FirstOrDefault();
+			return (await this.Query<M>(collectionKey, criteria, populate, freshnessSeconds: freshnessSeconds, populateFreshnessSeconds: populateFreshnessSeconds, fallbackFreshnessSeconds: fallbackFreshnessSeconds, hold: hold, timeMs: timeMs)).FirstOrDefault();
 		}
-		
+
 		/// <summary>
 		/// Do a search on the origin with the given model and criteria and cache the resulting collection under the collectionKey and return full detail OpResponse.
 		/// Models are cached and returned, as are populated association models.
@@ -459,7 +492,9 @@ namespace Buzzware.Cascade {
 		/// <param name="populate"></param>
 		/// <param name="freshnessSeconds"></param>
 		/// <param name="populateFreshnessSeconds"></param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="hold"></param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <typeparam name="M"></typeparam>
 		/// <returns>OpResponse</returns>
 		public Task<OpResponse> QueryResponse<M>(string collectionName,
@@ -468,12 +503,13 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) {
 			var req = RequestOp.QueryOp<M>(
 				collectionName,
 				criteria,
-				NowMs,
+				timeMs ?? NowMs,
 				populate: populate,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				populateFreshnessSeconds: populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
@@ -484,7 +520,6 @@ namespace Buzzware.Cascade {
 		}
 
 
-
 		/// <summary>
 		/// Populates (sets the given association property(s) on the given model each according to their definition attribute (BelongsTo/HasMany/HasOne)) with
 		/// the resulting model(s) from their internal query(s). 
@@ -492,9 +527,19 @@ namespace Buzzware.Cascade {
 		/// <param name="model">model to act on</param>
 		/// <param name="property">nameof(Model.someProperty)</param>
 		/// <param name="freshnessSeconds"></param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
 		/// <param name="hold"></param>
-		public async Task Populate(SuperModel model, string property, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
+		public async Task Populate(
+			SuperModel model, 
+			string property, 
+			int? freshnessSeconds = null, 
+			int? fallbackFreshnessSeconds = null, 
+			bool skipIfSet = false, 
+			bool? hold = null, 
+			long? timeMs = null
+		) {
 			var modelType = model.GetType();
 			var propertyInfo = modelType.GetProperty(property);
 
@@ -504,22 +549,22 @@ namespace Buzzware.Cascade {
 			}
 
 			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute), true).FirstOrDefault() is HasManyAttribute hasMany) {
-				await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds, fallbackFreshnessSeconds, hold);
+				await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(HasOneAttribute), true).FirstOrDefault() is HasOneAttribute hasOne) {
-				await processHasOne(model, modelType, propertyInfo!, hasOne, freshnessSeconds, fallbackFreshnessSeconds, hold);
+				await processHasOne(model, modelType, propertyInfo!, hasOne, freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute), true).FirstOrDefault() is BelongsToAttribute belongsTo) {
-				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, fallbackFreshnessSeconds, hold);
+				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(FromBlobAttribute), true).FirstOrDefault() is FromBlobAttribute fromBlob) {
-				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold);
+				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(FromPropertyAttribute), true).FirstOrDefault() is FromPropertyAttribute fromProperty) {
 				await processFromProperty(model, modelType, propertyInfo!, fromProperty);
 			}
 		}
-		
+
 		/// <summary>
 		/// Populates (sets the given association property(s) on the given model each according to their definition attribute (BelongsTo/HasMany/HasOne)) with
 		/// the resulting model(s) from their internal query(s). 
@@ -527,11 +572,13 @@ namespace Buzzware.Cascade {
 		/// <param name="model">model to act on</param>
 		/// <param name="property">nameof(Model.someProperty)</param>
 		/// <param name="freshnessSeconds"></param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
 		/// <param name="hold"></param>
-		public async Task Populate(SuperModel model, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
+		public async Task Populate(SuperModel model, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null, long? timeMs = null) {
 			foreach (var association in associations) {
-				await Populate(model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold);
+				await Populate(model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, timeMs);
 			}
 		}
 
@@ -541,18 +588,21 @@ namespace Buzzware.Cascade {
 		/// In future, this could be optimised for when many are associated with the same. 
 		/// </summary>
 		/// <param name="models">models to act on</param>
-		/// <param name="property">nameof(Model.someProperty)</param>
+		/// <param name="associations"></param>
 		/// <param name="freshnessSeconds"></param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
 		/// <param name="hold"></param>
-		public async Task Populate(IEnumerable<SuperModel> models, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null) {
+		/// <param name="property">nameof(Model.someProperty)</param>
+		public async Task Populate(IEnumerable<SuperModel> models, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null, long? timeMs = null) {
 			foreach (var model in models) {
 				foreach (var association in associations) {
-					await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold);
+					await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, timeMs);
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Populates (sets a given association property on the given models according to the definition attribute (BelongsTo/HasMany/HasOne)) with
 		/// the resulting model(s) from their internal query(s). This is useful for setting association(s) on a list of models.
@@ -560,12 +610,15 @@ namespace Buzzware.Cascade {
 		/// </summary>
 		/// <param name="models">models to act on</param>
 		/// <param name="property">nameof(Model.someProperty)</param>
+		/// <param name="association"></param>
 		/// <param name="freshnessSeconds"></param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="skipIfSet">If true and the property is already set, don't do anything (for performance reasons)</param>
 		/// <param name="hold"></param>
-		public async Task Populate(IEnumerable<SuperModel> models, string association, int? freshnessSeconds = null,int? fallbackFreshnessSeconds = null,  bool skipIfSet = false, bool? hold = null) {
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
+		public async Task Populate(IEnumerable<SuperModel> models, string association, int? freshnessSeconds = null,int? fallbackFreshnessSeconds = null,  bool skipIfSet = false, bool? hold = null, long? timeMs = null) {
 			foreach (var model in models) {
-				await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold);
+				await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, timeMs);
 			}
 		}
 		
@@ -831,7 +884,16 @@ namespace Buzzware.Cascade {
 			throw new NotImplementedException();
 		}
 
-		private async Task processHasMany(SuperModel model, Type modelType, PropertyInfo propertyInfo, HasManyAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null) {
+		private async Task processHasMany(
+			SuperModel model, 
+			Type modelType, 
+			PropertyInfo propertyInfo, 
+			HasManyAttribute attribute, 
+			int? freshnessSeconds = null, 
+			int? fallbackFreshnessSeconds = null, 
+			bool? hold = null,
+			long? timeMs = null			
+		) {
 			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
 			var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
@@ -842,7 +904,7 @@ namespace Buzzware.Cascade {
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
 			var requestOp = new RequestOp(
-				NowMs,
+				timeMs ?? NowMs,
 				foreignType,
 				RequestVerb.Query,
 				null,
@@ -858,7 +920,16 @@ namespace Buzzware.Cascade {
 			await SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
 		}
 
-		private async Task processHasOne(SuperModel model, Type modelType, PropertyInfo propertyInfo, HasOneAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null) {
+		private async Task processHasOne(
+			SuperModel model, 
+			Type modelType, 
+			PropertyInfo propertyInfo, 
+			HasOneAttribute attribute, 
+			int? freshnessSeconds = null, 
+			int? fallbackFreshnessSeconds = null, 
+			bool? hold = null,
+			long? timeMs = null
+		) {
 			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
 			if (isEnumerable)
@@ -870,16 +941,9 @@ namespace Buzzware.Cascade {
 				throw new ArgumentException("Unable to get foreign model type. Property should be of type <ChildModel>");
 
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
-			// var requestOp = new RequestOp(
-			// 	NowMs,
-			// 	foreignType,
-			// 	RequestVerb.Get,
-			// 	modelId,
-			// 	freshnessSeconds: freshnessSeconds
-			// );
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
 			var requestOp = new RequestOp(
-				NowMs,
+				timeMs ?? NowMs,
 				foreignType,
 				RequestVerb.Query,
 				null,
@@ -930,7 +994,8 @@ namespace Buzzware.Cascade {
 					opResponse.ResultIds,
 					requestOp.FreshnessSeconds,
 					fallbackFreshnessSeconds: requestOp.FallbackFreshnessSeconds,
-					hold: requestOp.Hold
+					hold: requestOp.Hold,
+					timeMs: requestOp.TimeMs
 				);
 				IEnumerable<SuperModel> models = modelResponses.Select(r => (SuperModel)r.Result).ToImmutableArray();
 				if (populate.Any()) {
@@ -940,7 +1005,7 @@ namespace Buzzware.Cascade {
 			} else {
 				if (populate.Any()) {
 					IEnumerable<SuperModel> results = opResponse.Results.Cast<SuperModel>();
-					await Populate(results, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold);
+					await Populate(results, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, timeMs: requestOp.TimeMs);
 				}
 			}
 			// END Populate
@@ -1013,7 +1078,7 @@ namespace Buzzware.Cascade {
 			return result!;
 		}
 
-		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null,  int? fallbackFreshnessSeconds = null, bool? hold = null) {
+		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null,  int? fallbackFreshnessSeconds = null, bool? hold = null, long? timeMs = null) {
 			var foreignModelType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var idProperty = modelType.GetProperty(attribute.IdProperty);
 			var id = idProperty.GetValue(model);
@@ -1021,7 +1086,7 @@ namespace Buzzware.Cascade {
 				return;
 
 			var requestOp = new RequestOp(
-				NowMs,
+				timeMs ?? NowMs,
 				foreignModelType,
 				RequestVerb.Get,
 				id,
@@ -1034,7 +1099,7 @@ namespace Buzzware.Cascade {
 			await SetModelProperty(model, propertyInfo, opResponse.Result);
 		}
 		
-		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null) {
+		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null, long? timeMs = null) {
 			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var pathProperty = modelType.GetProperty(attribute.PathProperty);
 			var path = pathProperty.GetValue(model) as string;
@@ -1043,7 +1108,7 @@ namespace Buzzware.Cascade {
 
 			var requestOp = RequestOp.BlobGetOp(
 				path,
-				NowMs,
+				timeMs ?? NowMs,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold: hold
@@ -1140,7 +1205,7 @@ namespace Buzzware.Cascade {
 					originResponse = await Origin.ProcessRequest(requestOp, connectionOnline);
 				} catch (Exception e) {
 					if (e is NoNetworkException)
-						originResponse = OpResponse.ConnectionFailure(requestOp,NowMs,Origin.GetType().Name);
+						originResponse = OpResponse.ConnectionFailure(requestOp,requestOp.TimeMs,Origin.GetType().Name);
 					else
 						throw;
 				}
@@ -1151,7 +1216,7 @@ namespace Buzzware.Cascade {
 					if ( // online but connection failure and meets fallback freshness
 					    cacheResponse?.Exists==true &&
 					    requestOp.FallbackFreshnessSeconds != null &&
-					    (requestOp.FallbackFreshnessSeconds == RequestOp.FRESHNESS_ANY || ((NowMs - cacheResponse.ArrivedAtMs) <= requestOp.FallbackFreshnessSeconds * 1000))
+					    (requestOp.FallbackFreshnessSeconds == RequestOp.FRESHNESS_ANY || ((requestOp.TimeMs - cacheResponse.ArrivedAtMs) <= requestOp.FallbackFreshnessSeconds * 1000))
 					) {
 						Debug.WriteLine("Buzzware.Cascade fallback to cached value");
 						opResponse = cacheResponse;
@@ -1624,39 +1689,45 @@ namespace Buzzware.Cascade {
 		}
 
 		#region Blob
-		
+
 		/// <summary>
 		/// Get a binary blob identified by the given path
 		/// </summary>
 		/// <param name="path">id of blob</param>
 		/// <param name="freshnessSeconds">freshness</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <param name="timeMs">(optional) request time (milliseconds since 1970) - ideally a group of requests will be given the same time to optimise caching</param>
 		/// <returns>model of type M or null</returns>
 		public async Task<byte[]?> BlobGet(
 			string path,
 			int? freshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) {
-			return (byte[]?)(await this.BlobGetResponse(path,freshnessSeconds, fallbackFreshnessSeconds, hold)).Result;
+			return (byte[]?)(await this.BlobGetResponse(path,freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs)).Result;
 		}
 
-		
+
 		/// <summary>
 		/// </summary>
 		/// <param name="path">path of blob to get</param>
 		/// <param name="freshnessSeconds">freshness for the main object</param>
+		/// <param name="fallbackFreshnessSeconds"></param>
 		/// <param name="hold">whether to mark the main main object and populated associations to be held in cache (protected from cache clearing and a candidate to be taken offline)</param>
+		/// <param name="timeMs"></param>
 		/// <returns>OpResponse</returns>
 		public Task<OpResponse> BlobGetResponse(
 			string path,
 			int? freshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null
+			bool? hold = null,
+			long? timeMs = null
 		) {
 			var req = RequestOp.BlobGetOp(
 				path,
-				NowMs,
+				timeMs ?? NowMs,
 				freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold

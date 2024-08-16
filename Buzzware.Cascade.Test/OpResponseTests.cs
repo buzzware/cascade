@@ -27,7 +27,7 @@ namespace Buzzware.Cascade.Test {
     public async Task ResultsTest() {
 
       // Create a collection operation request for the 'Thing' entity.
-      var request = RequestOp.GetCollectionOp<Thing>("THINGS");
+      var request = RequestOp.GetCollectionOp<Thing>("THINGS", 1000);
 
       // Create a response object simulating a successful operation with id results.
       var response = new OpResponse(

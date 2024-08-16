@@ -45,7 +45,8 @@ namespace Buzzware.Cascade {
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
 		/// <returns>A new instance of RequestOp representing a "Get" request.</returns>
-		public static RequestOp GetOp<Model>(object id,
+		public static RequestOp GetOp<Model>(
+			object id,
 			long timeMs = -1,
 			IEnumerable<string>? populate = null,
 			int? freshnessSeconds = null,
