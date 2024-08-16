@@ -107,7 +107,7 @@ Inheritance diagram for Buzzware.Cascade.FileBlobCache:</div>
  <div class="center">
   <img src="class_buzzware_1_1_cascade_1_1_file_blob_cache.png" usemap="#Buzzware.Cascade.FileBlobCache_map" alt=""/>
   <map id="Buzzware.Cascade.FileBlobCache_map" name="Buzzware.Cascade.FileBlobCache_map">
-<area href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html" alt="Buzzware.Cascade.IBlobCache" shape="rect" coords="0,0,208,24"/>
+<area href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html" title="Defines a cache for storing and retrieving blob data in a Cascade data layer." alt="Buzzware.Cascade.IBlobCache" shape="rect" coords="0,0,208,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -129,10 +129,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a7938402289d13e8cc007d85076f8f738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the result of a given operation to the blob cache. If the result is empty, it deletes the corresponding file instead.  <br /></td></tr>
 <tr class="separator:a7938402289d13e8cc007d85076f8f738"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9b7113fa440ae279ad42ac2a9f0a16e"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ab9b7113fa440ae279ad42ac2a9f0a16e">ClearAll</a> (bool exceptHeld, DateTime? olderThan)</td></tr>
+<tr class="memdesc:ab9b7113fa440ae279ad42ac2a9f0a16e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all entries from the cache, with options to retain certain entries.  <br /></td></tr>
 <tr class="separator:ab9b7113fa440ae279ad42ac2a9f0a16e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade12689c170b60fa373b1726a1201df4"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ade12689c170b60fa373b1726a1201df4">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memdesc:ade12689c170b60fa373b1726a1201df4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to retrieve an operation response from the cache based on a request operation.  <br /></td></tr>
 <tr class="separator:ade12689c170b60fa373b1726a1201df4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7c89910f98bd00b8c82bdea9c494746"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ab7c89910f98bd00b8c82bdea9c494746">Store</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> opResponse)</td></tr>
+<tr class="memdesc:ab7c89910f98bd00b8c82bdea9c494746"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a specific operation response in the cache.  <br /></td></tr>
 <tr class="separator:ab7c89910f98bd00b8c82bdea9c494746"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
@@ -151,6 +154,7 @@ Properties</h2></td></tr>
 <tr class="separator:a7be1ee398219aecd60859dd4de6023dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a></td></tr>
 <tr class="memitem:a62bc5a66ac6b196e019f317f58be959e inherit properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#a62bc5a66ac6b196e019f317f58be959e">Cascade</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a62bc5a66ac6b196e019f317f58be959e inherit properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache"><td class="mdescLeft">&#160;</td><td class="mdescRight">the Cascade instance this cache is associated with.  <br /></td></tr>
 <tr class="separator:a62bc5a66ac6b196e019f317f58be959e inherit properties_interface_buzzware_1_1_cascade_1_1_i_blob_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -234,7 +238,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ab9b7113fa440ae279ad42ac2a9f0a16e">Buzzware.Cascade.IBlobCache</a>.</p>
 
 </div>
 </div>
@@ -271,7 +275,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An OpResponse indicating the operation's result and associated data if the blob is found and valid.</dd></dl>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ade12689c170b60fa373b1726a1201df4">Buzzware.Cascade.IBlobCache</a>.</p>
 
 </div>
 </div>
@@ -377,7 +381,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ab7c89910f98bd00b8c82bdea9c494746">Buzzware.Cascade.IBlobCache</a>.</p>
 
 </div>
 </div>
@@ -439,7 +443,7 @@ Properties</h2></td></tr>
 
 <p>The Cascade data layer instance associated with this cache. </p>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#a62bc5a66ac6b196e019f317f58be959e">Buzzware.Cascade.IBlobCache</a>.</p>
 
 </div>
 </div>

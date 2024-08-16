@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['freshness_20and_20fallback_0',['Freshness and Fallback',['../md_api__docs_2using__cascade_2in__depth_2freshness__and__fallback.html',1,'']]]
+  ['defining_20models_0',['Defining Models',['../md_api__docs_2using__cascade_2simple__overview_2defining__models.html',1,'']]],
+  ['deleting_20models_1',['Deleting Models',['../md_api__docs_2using__cascade_2simple__overview_2deleting__models.html',1,'']]]
 ];

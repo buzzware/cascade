@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('interface_buzzware_1_1_cascade_1_1_i_c
   <div class="headertitle"><div class="title">Buzzware.Cascade.ICascadeCache Interface Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Interface for one cache layer.  
+ <a href="interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.ICascadeCache:</div>
 <div class="dyncontent">
@@ -110,23 +113,30 @@ Inheritance diagram for Buzzware.Cascade.ICascadeCache:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad3207b693aef784f9e25ac7d40c4bd37"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html#ad3207b693aef784f9e25ac7d40c4bd37">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memdesc:ad3207b693aef784f9e25ac7d40c4bd37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetches a cached response for a given request operation.  <br /></td></tr>
 <tr class="separator:ad3207b693aef784f9e25ac7d40c4bd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c4f6e10b10a3c638dd78356fdfff58c"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html#a3c4f6e10b10a3c638dd78356fdfff58c">Store</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> opResponse)</td></tr>
+<tr class="memdesc:a3c4f6e10b10a3c638dd78356fdfff58c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the given operation response in the cache.  <br /></td></tr>
 <tr class="separator:a3c4f6e10b10a3c638dd78356fdfff58c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3dcc23a433fe108098d51dc9bd9b5575"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html#a3dcc23a433fe108098d51dc9bd9b5575">Store</a> (Type type, object id, object model, long arrivedAt)</td></tr>
+<tr class="memdesc:a3dcc23a433fe108098d51dc9bd9b5575"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a model in the cache.  <br /></td></tr>
 <tr class="separator:a3dcc23a433fe108098d51dc9bd9b5575"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf069f10706e10974da012f136d782e9"><td class="memItemLeft" align="right" valign="top"><a id="aaf069f10706e10974da012f136d782e9" name="aaf069f10706e10974da012f136d782e9"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>StoreCollection</b> (Type type, string key, IEnumerable? ids, long arrivedAt)</td></tr>
+<tr class="memitem:aaf069f10706e10974da012f136d782e9"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html#aaf069f10706e10974da012f136d782e9">StoreCollection</a> (Type type, string key, IEnumerable? ids, long arrivedAt)</td></tr>
+<tr class="memdesc:aaf069f10706e10974da012f136d782e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a collection of model ids in the cache.  <br /></td></tr>
 <tr class="separator:aaf069f10706e10974da012f136d782e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3177fbbb9509c5b3292356338661dce"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html#af3177fbbb9509c5b3292356338661dce">ClearAll</a> (bool exceptHeld=true, DateTime? olderThan=null)</td></tr>
+<tr class="memdesc:af3177fbbb9509c5b3292356338661dce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears stored data from the cache. Removes all entries currently held except those that need to be held. Optionally clears entries older than a specified DateTime.  <br /></td></tr>
 <tr class="separator:af3177fbbb9509c5b3292356338661dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:ace29f32ea5e986ef4e81dce7f898f17a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html#ace29f32ea5e986ef4e81dce7f898f17a">Cascade</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:ace29f32ea5e986ef4e81dce7f898f17a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cascade reference.  <br /></td></tr>
 <tr class="separator:ace29f32ea5e986ef4e81dce7f898f17a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Interface for one cache layer. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="af3177fbbb9509c5b3292356338661dce" name="af3177fbbb9509c5b3292356338661dce"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af3177fbbb9509c5b3292356338661dce">&#9670;&#160;</a></span>ClearAll()</h2>
 
@@ -153,6 +163,15 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Clears stored data from the cache. Removes all entries currently held except those that need to be held. Optionally clears entries older than a specified DateTime. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">exceptHeld</td><td>If true, entries marked to be held will not be cleared.</td></tr>
+    <tr><td class="paramname">olderThan</td><td>If specified, only entries older than this date will be cleared.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_model_cache.html#a80811f08b2ccdad8eebd25898e103f85">Buzzware.Cascade.ModelCache</a>.</p>
 
 </div>
@@ -173,6 +192,17 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Fetches a cached response for a given request operation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">requestOp</td><td>The operation representing the request, which is used to locate the cached value</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The operation response</dd></dl>
+<p><br  />
+ </p>
+
 <p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_model_cache.html#a75059a176b113a8007ab15c90a677e0d">Buzzware.Cascade.ModelCache</a>.</p>
 
 </div>
@@ -192,6 +222,14 @@ Properties</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Stores the given operation response in the cache. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">opResponse</td><td>The response from an operation that includes data to be cached.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_model_cache.html#aac7f8180fa2b95495ff56a3be2beef91">Buzzware.Cascade.ModelCache</a>.</p>
 
@@ -235,7 +273,69 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Stores a model in the cache. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>The type of the model to store.</td></tr>
+    <tr><td class="paramname">id</td><td>The unique identifier for the model being cached.</td></tr>
+    <tr><td class="paramname">model</td><td>The actual model object to be cached.</td></tr>
+    <tr><td class="paramname">arrivedAt</td><td>Timestamp of when the model data arrived from the origin</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_model_cache.html#af685e75cebbe96e01facba557c2e6efb">Buzzware.Cascade.ModelCache</a>.</p>
+
+</div>
+</div>
+<a id="aaf069f10706e10974da012f136d782e9" name="aaf069f10706e10974da012f136d782e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf069f10706e10974da012f136d782e9">&#9670;&#160;</a></span>StoreCollection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Task Buzzware.Cascade.ICascadeCache.StoreCollection </td>
+          <td>(</td>
+          <td class="paramtype">Type&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IEnumerable?&#160;</td>
+          <td class="paramname"><em>ids</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>arrivedAt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Stores a collection of model ids in the cache. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>The type of models in the collection to be cached.</td></tr>
+    <tr><td class="paramname">key</td><td>A string key to reference the cached collection.</td></tr>
+    <tr><td class="paramname">ids</td><td>The identifiers of the models contained in the collection.</td></tr>
+    <tr><td class="paramname">arrivedAt</td><td>Timestamp indicating when this collection was cached.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -259,6 +359,8 @@ Properties</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Cascade reference. </p>
 
 <p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_model_cache.html#a3f4d83fe9dbdeca171a82ad8f8fce458">Buzzware.Cascade.ModelCache</a>.</p>
 

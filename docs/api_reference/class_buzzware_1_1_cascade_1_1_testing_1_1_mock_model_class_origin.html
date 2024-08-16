@@ -104,15 +104,17 @@ Inheritance diagram for Buzzware.Cascade.Testing.MockModelClassOrigin&lt; M &gt;
  <div class="center">
   <img src="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.png" usemap="#Buzzware.Cascade.Testing.MockModelClassOrigin_3C_20M_20_3E_map" alt=""/>
   <map id="Buzzware.Cascade.Testing.MockModelClassOrigin_3C_20M_20_3E_map" name="Buzzware.Cascade.Testing.MockModelClassOrigin_3C_20M_20_3E_map">
-<area href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html" alt="Buzzware.Cascade.IModelClassOrigin" shape="rect" coords="0,0,336,24"/>
+<area href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html" title="Interface defining the origin for a single class." alt="Buzzware.Cascade.IModelClassOrigin" shape="rect" coords="0,0,336,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0e519108e7e96d5676b87f7ab9f02e8c"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a0e519108e7e96d5676b87f7ab9f02e8c">Query</a> (object criteria)</td></tr>
+<tr class="memdesc:a0e519108e7e96d5676b87f7ab9f02e8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries the underlying data store using provided criteria and retrieves a collection of matching model objects.  <br /></td></tr>
 <tr class="separator:a0e519108e7e96d5676b87f7ab9f02e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59349c5e28d8aaa4b29f9dc05b5611dd"><td class="memItemLeft" align="right" valign="top">async Task&lt; object?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a59349c5e28d8aaa4b29f9dc05b5611dd">Get</a> (object id)</td></tr>
+<tr class="memdesc:a59349c5e28d8aaa4b29f9dc05b5611dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a model object by its unique identifier.  <br /></td></tr>
 <tr class="separator:a59349c5e28d8aaa4b29f9dc05b5611dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74f23b35970b3b486b2393d433ca064d"><td class="memItemLeft" align="right" valign="top"><a id="a74f23b35970b3b486b2393d433ca064d" name="a74f23b35970b3b486b2393d433ca064d"></a>
 async Task&lt; byte[]?&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetBlob</b> (string path)</td></tr>
@@ -121,18 +123,25 @@ async Task&lt; byte[]?&gt;&#160;</td><td class="memItemRight" valign="bottom"><b
 async Task&#160;</td><td class="memItemRight" valign="bottom"><b>PutBlob</b> (string path, byte[]? data)</td></tr>
 <tr class="separator:a7ffa1c2a940694dccf1ebfe23f93e468"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a499e1beff905cea42ed93a9fac8db62b"><td class="memItemLeft" align="right" valign="top">async Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a499e1beff905cea42ed93a9fac8db62b">Create</a> (object value)</td></tr>
+<tr class="memdesc:a499e1beff905cea42ed93a9fac8db62b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new model object with the provided initial values.  <br /></td></tr>
 <tr class="separator:a499e1beff905cea42ed93a9fac8db62b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a476a5f3ab6bd5b332f8f33dc552ed336"><td class="memItemLeft" align="right" valign="top">Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a476a5f3ab6bd5b332f8f33dc552ed336">Replace</a> (object value)</td></tr>
+<tr class="memdesc:a476a5f3ab6bd5b332f8f33dc552ed336"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces an existing model object with a new version.  <br /></td></tr>
 <tr class="separator:a476a5f3ab6bd5b332f8f33dc552ed336"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a044f7bff70265bcbcb77eed3e78d98"><td class="memItemLeft" align="right" valign="top">Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a1a044f7bff70265bcbcb77eed3e78d98">Update</a> (object id, IDictionary&lt; string, object?&gt; changes, object? model)</td></tr>
+<tr class="memdesc:a1a044f7bff70265bcbcb77eed3e78d98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates specific fields of an existing model object.  <br /></td></tr>
 <tr class="separator:a1a044f7bff70265bcbcb77eed3e78d98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa48f77cbe29b1178c7e4fd4b73c1d32c"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#aa48f77cbe29b1178c7e4fd4b73c1d32c">Destroy</a> (object model)</td></tr>
+<tr class="memdesc:aa48f77cbe29b1178c7e4fd4b73c1d32c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the specified model object, removing it from the underlying data store.  <br /></td></tr>
 <tr class="separator:aa48f77cbe29b1178c7e4fd4b73c1d32c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17bcf1a657003ef292bf8d9667a00210"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a17bcf1a657003ef292bf8d9667a00210">EnsureAuthenticated</a> ()</td></tr>
+<tr class="memdesc:a17bcf1a657003ef292bf8d9667a00210"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensures that the caller is authenticated before proceeding with any operations.  <br /></td></tr>
 <tr class="separator:a17bcf1a657003ef292bf8d9667a00210"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8554f903abb450d1636bcafdb33b62cb"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a8554f903abb450d1636bcafdb33b62cb">ClearAuthentication</a> ()</td></tr>
+<tr class="memdesc:a8554f903abb450d1636bcafdb33b62cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the current user's authentication status.  <br /></td></tr>
 <tr class="separator:a8554f903abb450d1636bcafdb33b62cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63ae9470412396163948c521c11157f8"><td class="memItemLeft" align="right" valign="top">Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a63ae9470412396163948c521c11157f8">Execute</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> request, bool connectionOnline)</td></tr>
+<tr class="memdesc:a63ae9470412396163948c521c11157f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes a specified operation on the model class, taking into account whether the connection is online.  <br /></td></tr>
 <tr class="separator:a63ae9470412396163948c521c11157f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb93422155eaad40a9029340ad698f73"><td class="memItemLeft" align="right" valign="top"><a id="acb93422155eaad40a9029340ad698f73" name="acb93422155eaad40a9029340ad698f73"></a>
 Task&#160;</td><td class="memItemRight" valign="bottom"><b>Execute</b> (string action, IDictionary&lt; string, object?&gt; parameters)</td></tr>
@@ -140,32 +149,32 @@ Task&#160;</td><td class="memItemRight" valign="bottom"><b>Execute</b> (string a
 <tr class="memitem:a6e34d141de0ae3777c44a7235deea658"><td class="memItemLeft" align="right" valign="top"><a id="a6e34d141de0ae3777c44a7235deea658" name="a6e34d141de0ae3777c44a7235deea658"></a>
 async Task&#160;</td><td class="memItemRight" valign="bottom"><b>Store</b> (object id, M model)</td></tr>
 <tr class="separator:a6e34d141de0ae3777c44a7235deea658"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05030b814f4f7b936a3f4fdcf9b67bf8"><td class="memItemLeft" align="right" valign="top"><a id="a05030b814f4f7b936a3f4fdcf9b67bf8" name="a05030b814f4f7b936a3f4fdcf9b67bf8"></a>
-Task&lt; IEnumerable &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Query</b> (object criteria)</td></tr>
+<tr class="memitem:a05030b814f4f7b936a3f4fdcf9b67bf8"><td class="memItemLeft" align="right" valign="top">Task&lt; IEnumerable &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a05030b814f4f7b936a3f4fdcf9b67bf8">Query</a> (object criteria)</td></tr>
+<tr class="memdesc:a05030b814f4f7b936a3f4fdcf9b67bf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries the underlying data store using provided criteria and retrieves a collection of matching model objects.  <br /></td></tr>
 <tr class="separator:a05030b814f4f7b936a3f4fdcf9b67bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaccd6364ee71f1a8a0fcea16ade36b46"><td class="memItemLeft" align="right" valign="top"><a id="aaccd6364ee71f1a8a0fcea16ade36b46" name="aaccd6364ee71f1a8a0fcea16ade36b46"></a>
-Task&lt; object?&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Get</b> (object id)</td></tr>
+<tr class="memitem:aaccd6364ee71f1a8a0fcea16ade36b46"><td class="memItemLeft" align="right" valign="top">Task&lt; object?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#aaccd6364ee71f1a8a0fcea16ade36b46">Get</a> (object id)</td></tr>
+<tr class="memdesc:aaccd6364ee71f1a8a0fcea16ade36b46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a model object by its unique identifier.  <br /></td></tr>
 <tr class="separator:aaccd6364ee71f1a8a0fcea16ade36b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5694d2232018562fee47f56ab9666d3f"><td class="memItemLeft" align="right" valign="top"><a id="a5694d2232018562fee47f56ab9666d3f" name="a5694d2232018562fee47f56ab9666d3f"></a>
-Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Create</b> (object value)</td></tr>
+<tr class="memitem:a5694d2232018562fee47f56ab9666d3f"><td class="memItemLeft" align="right" valign="top">Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a5694d2232018562fee47f56ab9666d3f">Create</a> (object value)</td></tr>
+<tr class="memdesc:a5694d2232018562fee47f56ab9666d3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new model object with the provided initial values.  <br /></td></tr>
 <tr class="separator:a5694d2232018562fee47f56ab9666d3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ae11b6030a57ea1330ef4cc2c4b1386"><td class="memItemLeft" align="right" valign="top"><a id="a7ae11b6030a57ea1330ef4cc2c4b1386" name="a7ae11b6030a57ea1330ef4cc2c4b1386"></a>
-Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Replace</b> (object value)</td></tr>
+<tr class="memitem:a7ae11b6030a57ea1330ef4cc2c4b1386"><td class="memItemLeft" align="right" valign="top">Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a7ae11b6030a57ea1330ef4cc2c4b1386">Replace</a> (object value)</td></tr>
+<tr class="memdesc:a7ae11b6030a57ea1330ef4cc2c4b1386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces an existing model object with a new version.  <br /></td></tr>
 <tr class="separator:a7ae11b6030a57ea1330ef4cc2c4b1386"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8a0a019219ad4c7d39392c6476326df"><td class="memItemLeft" align="right" valign="top"><a id="ae8a0a019219ad4c7d39392c6476326df" name="ae8a0a019219ad4c7d39392c6476326df"></a>
-Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> (object id, IDictionary&lt; string, object?&gt; changes, object? model)</td></tr>
+<tr class="memitem:ae8a0a019219ad4c7d39392c6476326df"><td class="memItemLeft" align="right" valign="top">Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#ae8a0a019219ad4c7d39392c6476326df">Update</a> (object id, IDictionary&lt; string, object?&gt; changes, object? model)</td></tr>
+<tr class="memdesc:ae8a0a019219ad4c7d39392c6476326df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates specific fields of an existing model object.  <br /></td></tr>
 <tr class="separator:ae8a0a019219ad4c7d39392c6476326df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99072e4eb0f096cd995a02c1ec7d3a52"><td class="memItemLeft" align="right" valign="top"><a id="a99072e4eb0f096cd995a02c1ec7d3a52" name="a99072e4eb0f096cd995a02c1ec7d3a52"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>Destroy</b> (object model)</td></tr>
+<tr class="memitem:a99072e4eb0f096cd995a02c1ec7d3a52"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a99072e4eb0f096cd995a02c1ec7d3a52">Destroy</a> (object model)</td></tr>
+<tr class="memdesc:a99072e4eb0f096cd995a02c1ec7d3a52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the specified model object, removing it from the underlying data store.  <br /></td></tr>
 <tr class="separator:a99072e4eb0f096cd995a02c1ec7d3a52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66d56f44318d41ec5eff732143b444d8"><td class="memItemLeft" align="right" valign="top"><a id="a66d56f44318d41ec5eff732143b444d8" name="a66d56f44318d41ec5eff732143b444d8"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>EnsureAuthenticated</b> ()</td></tr>
+<tr class="memitem:a66d56f44318d41ec5eff732143b444d8"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a66d56f44318d41ec5eff732143b444d8">EnsureAuthenticated</a> ()</td></tr>
+<tr class="memdesc:a66d56f44318d41ec5eff732143b444d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensures that the caller is authenticated before proceeding with any operations.  <br /></td></tr>
 <tr class="separator:a66d56f44318d41ec5eff732143b444d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbb236cc3d6a0fe222fc05878fc13c7f"><td class="memItemLeft" align="right" valign="top"><a id="abbb236cc3d6a0fe222fc05878fc13c7f" name="abbb236cc3d6a0fe222fc05878fc13c7f"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearAuthentication</b> ()</td></tr>
+<tr class="memitem:abbb236cc3d6a0fe222fc05878fc13c7f"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#abbb236cc3d6a0fe222fc05878fc13c7f">ClearAuthentication</a> ()</td></tr>
+<tr class="memdesc:abbb236cc3d6a0fe222fc05878fc13c7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the current user's authentication status.  <br /></td></tr>
 <tr class="separator:abbb236cc3d6a0fe222fc05878fc13c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a373fe80871d65d42c94f7b775b12cc1b"><td class="memItemLeft" align="right" valign="top"><a id="a373fe80871d65d42c94f7b775b12cc1b" name="a373fe80871d65d42c94f7b775b12cc1b"></a>
-Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Execute</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> request, bool connectionOnline)</td></tr>
+<tr class="memitem:a373fe80871d65d42c94f7b775b12cc1b"><td class="memItemLeft" align="right" valign="top">Task&lt; object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a373fe80871d65d42c94f7b775b12cc1b">Execute</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> request, bool connectionOnline)</td></tr>
+<tr class="memdesc:a373fe80871d65d42c94f7b775b12cc1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes a specified operation on the model class, taking into account whether the connection is online.  <br /></td></tr>
 <tr class="separator:a373fe80871d65d42c94f7b775b12cc1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
@@ -177,10 +186,11 @@ static ? object&#160;</td><td class="memItemRight" valign="bottom"><b>GetNatural
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a43d5f35245746e041aeb8922e40f6093"><td class="memItemLeft" align="right" valign="top"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html">ICascadeOrigin</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a43d5f35245746e041aeb8922e40f6093">Origin</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a43d5f35245746e041aeb8922e40f6093"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference of the parent origin.  <br /></td></tr>
 <tr class="separator:a43d5f35245746e041aeb8922e40f6093"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_buzzware_1_1_cascade_1_1_i_model_class_origin"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_buzzware_1_1_cascade_1_1_i_model_class_origin')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a></td></tr>
-<tr class="memitem:a0bbeafabbf0cb0cbc2fa38b54d730464 inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_origin"><td class="memItemLeft" align="right" valign="top">
-<a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html">ICascadeOrigin</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Origin</b><code> [get, set]</code></td></tr>
+<tr class="memitem:a0bbeafabbf0cb0cbc2fa38b54d730464 inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_origin"><td class="memItemLeft" align="right" valign="top"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html">ICascadeOrigin</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a0bbeafabbf0cb0cbc2fa38b54d730464">Origin</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a0bbeafabbf0cb0cbc2fa38b54d730464 inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_origin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference of the parent origin.  <br /></td></tr>
 <tr class="separator:a0bbeafabbf0cb0cbc2fa38b54d730464 inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_origin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -207,7 +217,9 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Clears the current user's authentication status. </p>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#abbb236cc3d6a0fe222fc05878fc13c7f">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>
@@ -235,7 +247,16 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Creates a new model object with the provided initial values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The initial values for creating the new model object</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The newly created model object</dd></dl>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a5694d2232018562fee47f56ab9666d3f">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>
@@ -263,7 +284,15 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Destroys the specified model object, removing it from the underlying data store. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model</td><td>The model object to be destroyed</td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a99072e4eb0f096cd995a02c1ec7d3a52">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>
@@ -290,7 +319,9 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Ensures that the caller is authenticated before proceeding with any operations. </p>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a66d56f44318d41ec5eff732143b444d8">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>
@@ -328,7 +359,17 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Executes a specified operation on the model class, taking into account whether the connection is online. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">request</td><td>The operation to be executed on the model</td></tr>
+    <tr><td class="paramname">connectionOnline</td><td>A boolean indicating whether the connection is online</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The result of the executed operation</dd></dl>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a373fe80871d65d42c94f7b775b12cc1b">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>
@@ -356,7 +397,16 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Retrieves a model object by its unique identifier. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The unique identifier of the model object</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The model object if found, otherwise null</dd></dl>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#aaccd6364ee71f1a8a0fcea16ade36b46">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>
@@ -384,7 +434,16 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Queries the underlying data store using provided criteria and retrieves a collection of matching model objects. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">criteria</td><td>The search criteria used to filter data</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A collection of model objects that meet the specified criteria</dd></dl>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a05030b814f4f7b936a3f4fdcf9b67bf8">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>
@@ -412,7 +471,16 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Replaces an existing model object with a new version. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The new model object to replace the existing one</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The replaced model object</dd></dl>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a7ae11b6030a57ea1330ef4cc2c4b1386">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>
@@ -456,7 +524,18 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Updates specific fields of an existing model object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The unique identifier of the model object to be updated</td></tr>
+    <tr><td class="paramname">changes</td><td>Dictionary of field names with their corresponding new values</td></tr>
+    <tr><td class="paramname">model</td><td>The current instance of the model object being updated</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The updated model object</dd></dl>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#ae8a0a019219ad4c7d39392c6476326df">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>
@@ -481,7 +560,9 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html">Buzzware.Cascade.IModelClassOrigin</a>.</p>
+<p>Reference of the parent origin. </p>
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#a0bbeafabbf0cb0cbc2fa38b54d730464">Buzzware.Cascade.IModelClassOrigin</a>.</p>
 
 </div>
 </div>

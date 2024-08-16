@@ -96,13 +96,57 @@ $(document).ready(function(){initNavTree('interface_buzzware_1_1_cascade_1_1_i_b
   <div class="headertitle"><div class="title">Buzzware.Cascade.IBlobConverter Interface Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Interface for blob conversion within the Cascade library. Responsible for converting binary data to a specified type.  
+ <a href="interface_buzzware_1_1_cascade_1_1_i_blob_converter.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab7bb02f590a4eb759418f20213a4ccf7"><td class="memItemLeft" align="right" valign="top"><a id="ab7bb02f590a4eb759418f20213a4ccf7" name="ab7bb02f590a4eb759418f20213a4ccf7"></a>
-object?&#160;</td><td class="memItemRight" valign="bottom"><b>Convert</b> (byte[]? blob, Type destinationPropertyType)</td></tr>
+<tr class="memitem:ab7bb02f590a4eb759418f20213a4ccf7"><td class="memItemLeft" align="right" valign="top">object?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_converter.html#ab7bb02f590a4eb759418f20213a4ccf7">Convert</a> (byte[]? blob, Type destinationPropertyType)</td></tr>
+<tr class="memdesc:ab7bb02f590a4eb759418f20213a4ccf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a blob of binary data into an instance of the specified destination type.  <br /></td></tr>
 <tr class="separator:ab7bb02f590a4eb759418f20213a4ccf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Interface for blob conversion within the Cascade library. Responsible for converting binary data to a specified type. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab7bb02f590a4eb759418f20213a4ccf7" name="ab7bb02f590a4eb759418f20213a4ccf7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7bb02f590a4eb759418f20213a4ccf7">&#9670;&#160;</a></span>Convert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">object? Buzzware.Cascade.IBlobConverter.Convert </td>
+          <td>(</td>
+          <td class="paramtype">byte?[]&#160;</td>
+          <td class="paramname"><em>blob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Type&#160;</td>
+          <td class="paramname"><em>destinationPropertyType</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a blob of binary data into an instance of the specified destination type. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">blob</td><td>The binary data to be converted. Can be null if there is no data to convert.</td></tr>
+    <tr><td class="paramname">destinationPropertyType</td><td>The target type to convert the binary data into.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The converted object, or null if the conversion cannot be performed.</dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this interface was generated from the following file:<ul>
 <li>Buzzware.Cascade/interfaces/IBlobConverter.cs</li>
 </ul>

@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('interface_buzzware_1_1_cascade_1_1_i_m
   <div class="headertitle"><div class="title">Buzzware.Cascade.IModelClassCache Interface Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Interface for a cache to store model instances for a specified model class.  
+ <a href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.IModelClassCache:</div>
 <div class="dyncontent">
@@ -113,22 +116,30 @@ Inheritance diagram for Buzzware.Cascade.IModelClassCache:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1d50b2e739cb638e44b82867f9b893af"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1d50b2e739cb638e44b82867f9b893af">Store</a> (object id, object model, long arrivedAt)</td></tr>
+<tr class="memdesc:a1d50b2e739cb638e44b82867f9b893af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Caches a model instance with a specific id.  <br /></td></tr>
 <tr class="separator:a1d50b2e739cb638e44b82867f9b893af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6c206b5f3ec36b5f5dfea4fe0731b91b">StoreCollection</a> (string key, IEnumerable ids, long aArrivedAt)</td></tr>
+<tr class="memdesc:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a collection of model ids under a specific key.  <br /></td></tr>
 <tr class="separator:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6eb25cd59d345166cd01bd519d46a9db"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6eb25cd59d345166cd01bd519d46a9db">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memdesc:a6eb25cd59d345166cd01bd519d46a9db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetches data based on a request operation.  <br /></td></tr>
 <tr class="separator:a6eb25cd59d345166cd01bd519d46a9db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1683c928a268210e36de6e2787f66c28"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1683c928a268210e36de6e2787f66c28">Remove</a> (object id)</td></tr>
+<tr class="memdesc:a1683c928a268210e36de6e2787f66c28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a model instance from the cache for a given id.  <br /></td></tr>
 <tr class="separator:a1683c928a268210e36de6e2787f66c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a521bcf06b596a14448dbb537f6749063"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a521bcf06b596a14448dbb537f6749063">ClearAll</a> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
+<tr class="memdesc:a521bcf06b596a14448dbb537f6749063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all cached items, with options to preserve certain data based on flags and timestamps.  <br /></td></tr>
 <tr class="separator:a521bcf06b596a14448dbb537f6749063"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a204545d6dc8ea3363bdca69f1418916d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a204545d6dc8ea3363bdca69f1418916d">Cascade</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a204545d6dc8ea3363bdca69f1418916d"><td class="mdescLeft">&#160;</td><td class="mdescRight">CascadeDataLayer reference.  <br /></td></tr>
 <tr class="separator:a204545d6dc8ea3363bdca69f1418916d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Interface for a cache to store model instances for a specified model class. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a521bcf06b596a14448dbb537f6749063" name="a521bcf06b596a14448dbb537f6749063"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a521bcf06b596a14448dbb537f6749063">&#9670;&#160;</a></span>ClearAll()</h2>
 
@@ -155,7 +166,17 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ab407bd2a6326c884bf097edf62c87848">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#acc6714622446e2748f48b797a5021e5d">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#ae4777dcc1ccecd662fc0e77cf59fa1b5">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
+<p>Clears all cached items, with options to preserve certain data based on flags and timestamps. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">exceptHeld</td><td>If true, items marked as 'held' will not be cleared.</td></tr>
+    <tr><td class="paramname">olderThan</td><td>Optional: if provided, only items older than this date will be cleared.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool indicating success of the clear operation.</dd></dl>
+
+<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html#ad37df14f3374698248961cd483840853">Buzzware.Cascade.ConcurrentFileSystemClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ab407bd2a6326c884bf097edf62c87848">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#acc6714622446e2748f48b797a5021e5d">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#ae4777dcc1ccecd662fc0e77cf59fa1b5">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
 
 </div>
 </div>
@@ -175,7 +196,16 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ab5013b08593abfb66508e768351fb93d">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#ac7c08c33db1568a33afc85177255977c">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a4134a96f87bd0e9a5042c357e397b992">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
+<p>Fetches data based on a request operation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">requestOp</td><td>The operation describing what data should be fetched.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An OpResponse containing the results of the fetch operation</dd></dl>
+
+<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html#a4764d219f513b96866656393cb40bc0b">Buzzware.Cascade.ConcurrentFileSystemClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ab5013b08593abfb66508e768351fb93d">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#ac7c08c33db1568a33afc85177255977c">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a4134a96f87bd0e9a5042c357e397b992">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
 
 </div>
 </div>
@@ -195,7 +225,16 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#a3f14f0f7379ae598adb8bbdb92ddc60e">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a60d457573d8f7bc546113c7744a79800">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#aba32327dc909c9290db9fc29e27bccde">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
+<p>Removes a model instance from the cache for a given id. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The identifier of the model to be removed from the cache.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool indicating success of the remove operation.</dd></dl>
+
+<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html#a386faf0ae9da61e5dd62eb4211f891e8">Buzzware.Cascade.ConcurrentFileSystemClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#a3f14f0f7379ae598adb8bbdb92ddc60e">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a60d457573d8f7bc546113c7744a79800">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#aba32327dc909c9290db9fc29e27bccde">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
 
 </div>
 </div>
@@ -231,7 +270,18 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#a78f8c02394a06949c4818c40072259ed">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a58205a26c3b87b993b0d0d914ee63913">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a9c2cf983e75cd2136b5a8b088a156410">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
+<p>Caches a model instance with a specific id. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The identifier for the model to be stored in the cache.</td></tr>
+    <tr><td class="paramname">model</td><td>The actual model instance to cache.</td></tr>
+    <tr><td class="paramname">arrivedAt</td><td>Timestamp indicating when the model was fetched or created.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool indicating success of the store operation.</dd></dl>
+
+<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html#aa207565b9adde34277d90cce8bd816d3">Buzzware.Cascade.ConcurrentFileSystemClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#a78f8c02394a06949c4818c40072259ed">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a58205a26c3b87b993b0d0d914ee63913">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a9c2cf983e75cd2136b5a8b088a156410">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
 
 </div>
 </div>
@@ -267,7 +317,18 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#af155fa46e9b5926e7c495f9b9a5d4c33">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a61b9fafbad3a5bd62142ceccdfcf874b">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a30e8df3ce13d0ce232eaf24aa36b87e3">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
+<p>Stores a collection of model ids under a specific key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>String key under which the collection of ids will be stored.</td></tr>
+    <tr><td class="paramname">ids</td><td>The collection of identifiers to store.</td></tr>
+    <tr><td class="paramname">aArrivedAt</td><td>Timestamp indicating when the collection was fetched or created.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool indicating success of the store operation.</dd></dl>
+
+<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html#a81efcd725ca52b7cfddc951b8ae5879c">Buzzware.Cascade.ConcurrentFileSystemClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#af155fa46e9b5926e7c495f9b9a5d4c33">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a61b9fafbad3a5bd62142ceccdfcf874b">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#a30e8df3ce13d0ce232eaf24aa36b87e3">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
 
 </div>
 </div>
@@ -292,7 +353,9 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a91a3ce8b9b1dc6d11b338d918bca5e71">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#aec0d5fec77f511005a88e71d7ae9aa70">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
+<p>CascadeDataLayer reference. </p>
+
+<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html#aadf5aace4d019b0dbd936722e36b3d8d">Buzzware.Cascade.ConcurrentFileSystemClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ad79c74ebbf7f0c7719c66e0b4201f5dd">Buzzware.Cascade.FastFileClassCache&lt; Model, IdType &gt;</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#a91a3ce8b9b1dc6d11b338d918bca5e71">Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType &gt;</a>, and <a class="el" href="class_buzzware_1_1_cascade_1_1_model_class_cache.html#aec0d5fec77f511005a88e71d7ae9aa70">Buzzware.Cascade.ModelClassCache&lt; Model, IdType &gt;</a>.</p>
 
 </div>
 </div>

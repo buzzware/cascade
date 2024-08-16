@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['resultids_0',['ResultIds',['../class_buzzware_1_1_cascade_1_1_op_response.html#ab2b09cf20895c93e6ca0c4283652daf4',1,'Buzzware::Cascade::OpResponse']]],
-  ['results_1',['Results',['../class_buzzware_1_1_cascade_1_1_op_response.html#a9dd24d0386856805eaa48b9163fe6858',1,'Buzzware::Cascade::OpResponse']]]
+  ['pathproperty_0',['PathProperty',['../class_buzzware_1_1_cascade_1_1_from_blob_attribute.html#a5632f1d7bc26c96f6d61f01b5b64d6d5',1,'Buzzware::Cascade::FromBlobAttribute']]],
+  ['pendingchangespath_1',['PendingChangesPath',['../class_buzzware_1_1_cascade_1_1_cascade_config.html#ac7129c705e24e4892155b8ab576feec2',1,'Buzzware::Cascade::CascadeConfig']]]
 ];

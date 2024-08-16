@@ -18,5 +18,6 @@ var class_buzzware_1_1_cascade_1_1_fast_file_class_cache =
     [ "StoreCollection", "class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#af155fa46e9b5926e7c495f9b9a5d4c33", null ],
     [ "StoreString", "class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ab650d65643564493147814b862154ab0", null ],
     [ "ToFilePath", "class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ac841f26ff5ad586191ac910cc919f678", null ],
+    [ "Cascade", "class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ad79c74ebbf7f0c7719c66e0b4201f5dd", null ],
     [ "FastFileCacheRecord", "class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#af3bd40f3823d30301713ab806c306cc0", null ]
 ];

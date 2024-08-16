@@ -107,7 +107,7 @@ Inheritance diagram for Buzzware.Cascade.FileSystemClassCache&lt; Model, IdType 
  <div class="center">
   <img src="class_buzzware_1_1_cascade_1_1_file_system_class_cache.png" usemap="#Buzzware.Cascade.FileSystemClassCache_3C_20Model_2C_20IdType_20_3E_map" alt=""/>
   <map id="Buzzware.Cascade.FileSystemClassCache_3C_20Model_2C_20IdType_20_3E_map" name="Buzzware.Cascade.FileSystemClassCache_3C_20Model_2C_20IdType_20_3E_map">
-<area href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html" alt="Buzzware.Cascade.IModelClassCache" shape="rect" coords="0,0,360,24"/>
+<area href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html" title="Interface for a cache to store model instances for a specified model class." alt="Buzzware.Cascade.IModelClassCache" shape="rect" coords="0,0,360,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -132,14 +132,19 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:acc6714622446e2748f48b797a5021e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all stored models and collections from the file system. Optionally exempts held or recently modified files.  <br /></td></tr>
 <tr class="separator:acc6714622446e2748f48b797a5021e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d50b2e739cb638e44b82867f9b893af"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1d50b2e739cb638e44b82867f9b893af">Store</a> (object id, object model, long arrivedAt)</td></tr>
+<tr class="memdesc:a1d50b2e739cb638e44b82867f9b893af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Caches a model instance with a specific id.  <br /></td></tr>
 <tr class="separator:a1d50b2e739cb638e44b82867f9b893af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6c206b5f3ec36b5f5dfea4fe0731b91b">StoreCollection</a> (string key, IEnumerable ids, long aArrivedAt)</td></tr>
+<tr class="memdesc:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a collection of model ids under a specific key.  <br /></td></tr>
 <tr class="separator:a6c206b5f3ec36b5f5dfea4fe0731b91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6eb25cd59d345166cd01bd519d46a9db"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6eb25cd59d345166cd01bd519d46a9db">Fetch</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp)</td></tr>
+<tr class="memdesc:a6eb25cd59d345166cd01bd519d46a9db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetches data based on a request operation.  <br /></td></tr>
 <tr class="separator:a6eb25cd59d345166cd01bd519d46a9db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1683c928a268210e36de6e2787f66c28"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1683c928a268210e36de6e2787f66c28">Remove</a> (object id)</td></tr>
+<tr class="memdesc:a1683c928a268210e36de6e2787f66c28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a model instance from the cache for a given id.  <br /></td></tr>
 <tr class="separator:a1683c928a268210e36de6e2787f66c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a521bcf06b596a14448dbb537f6749063"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a521bcf06b596a14448dbb537f6749063">ClearAll</a> (bool exceptHeld, DateTime? olderThan=null)</td></tr>
+<tr class="memdesc:a521bcf06b596a14448dbb537f6749063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all cached items, with options to preserve certain data based on flags and timestamps.  <br /></td></tr>
 <tr class="separator:a521bcf06b596a14448dbb537f6749063"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
@@ -158,6 +163,7 @@ Properties</h2></td></tr>
 <tr class="separator:a91a3ce8b9b1dc6d11b338d918bca5e71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a></td></tr>
 <tr class="memitem:a204545d6dc8ea3363bdca69f1418916d inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a204545d6dc8ea3363bdca69f1418916d">Cascade</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a204545d6dc8ea3363bdca69f1418916d inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td class="mdescLeft">&#160;</td><td class="mdescRight">CascadeDataLayer reference.  <br /></td></tr>
 <tr class="separator:a204545d6dc8ea3363bdca69f1418916d inherit properties_interface_buzzware_1_1_cascade_1_1_i_model_class_cache"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -260,7 +266,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a521bcf06b596a14448dbb537f6749063">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
 </div>
@@ -338,7 +344,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Operation response containing the fetched object or a failed status if not found.</dd></dl>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6eb25cd59d345166cd01bd519d46a9db">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
 </div>
@@ -374,7 +380,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1683c928a268210e36de6e2787f66c28">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
 </div>
@@ -480,7 +486,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a1d50b2e739cb638e44b82867f9b893af">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
 </div>
@@ -534,7 +540,7 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a6c206b5f3ec36b5f5dfea4fe0731b91b">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
 </div>
@@ -561,7 +567,7 @@ Properties</h2></td></tr>
 
 <p>Reference to cascade data layer. </p>
 
-<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html">Buzzware.Cascade.IModelClassCache</a>.</p>
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html#a204545d6dc8ea3363bdca69f1418916d">Buzzware.Cascade.IModelClassCache</a>.</p>
 
 </div>
 </div>

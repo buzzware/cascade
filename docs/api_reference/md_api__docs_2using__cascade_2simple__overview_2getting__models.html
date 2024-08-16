@@ -93,21 +93,21 @@ $(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2simple__
   <div class="headertitle"><div class="title">Getting Models</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md41"></a> Cascade provides a straightforward method to retrieve specific individual models from your data origin.</p>
-<h1><a class="anchor" id="autotoc_md42"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md45"></a> Cascade provides a straightforward method to retrieve specific individual models from your data origin.</p>
+<h1><a class="anchor" id="autotoc_md46"></a>
 Basic Usage</h1>
 <p>The primary method for retrieving a single model is the <code>Get</code> method. Here's how to use it:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;M&gt; Get&lt;M&gt;(<span class="keywordtype">object</span> <span class="keywordtype">id</span>) where M : <span class="keyword">class</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md43"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md47"></a>
 Parameters</h2>
 <ul>
 <li><code>M</code>: The type of model you're retrieving.</li>
 <li><code>id</code>: The unique identifier of the model you want to fetch.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md44"></a>
+<h2><a class="anchor" id="autotoc_md48"></a>
 Return Value</h2>
 <p>The method returns a <code>Task&lt;M&gt;</code>, where <code>M</code> is the type of model you're retrieving.</p>
-<h1><a class="anchor" id="autotoc_md45"></a>
+<h1><a class="anchor" id="autotoc_md49"></a>
 Example Usage</h1>
 <p>Here's a simple example of how to use the <code>Get</code> method to retrieve a Docket:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;Docket&gt; GetDocket(<span class="keywordtype">string</span> docketId)</div>
@@ -115,7 +115,7 @@ Example Usage</h1>
 <div class="line">    Docket docket = await AppCommon.Cascade.Get&lt;Docket&gt;(docketId);</div>
 <div class="line">    <span class="keywordflow">return</span> docket;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md46"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md50"></a>
 Null Results</h1>
 <p>If no model is found with the given ID, the <code>Get</code> method will return <code>null</code>.</p>
 <div class="fragment"><div class="line">Docket docket = await AppCommon.Cascade.Get&lt;Docket&gt;(<span class="stringliteral">&quot;non-existent-id&quot;</span>);</div>
@@ -123,7 +123,7 @@ Null Results</h1>
 <div class="line">{</div>
 <div class="line">    Console.WriteLine(<span class="stringliteral">&quot;Docket not found&quot;</span>);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md47"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md51"></a>
 Using Get with Different ID Types</h1>
 <p>The <code>Get</code> method can work with various ID types, depending on how your models are set up. For example:</p>
 <div class="fragment"><div class="line"><span class="comment">// Using a string ID</span></div>
@@ -131,7 +131,7 @@ Using Get with Different ID Types</h1>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Using an integer ID</span></div>
 <div class="line">Product product = await AppCommon.Cascade.Get&lt;Product&gt;(42);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md48"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md52"></a>
 Best Practices</h1>
 <ol type="1">
 <li>Use <code>Get</code> when you need to retrieve a specific model and you know its ID.</li>
