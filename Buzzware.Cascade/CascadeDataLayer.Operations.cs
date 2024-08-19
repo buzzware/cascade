@@ -1,0 +1,491 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Buzzware.StandardExceptions;
+using Easy.Common.Extensions;
+using Serilog;
+using Serilog.Events;
+
+namespace Buzzware.Cascade {
+
+	/// <summary>
+	/// </summary>
+	public partial class CascadeDataLayer {
+
+		private async Task processHasMany(
+			SuperModel model, 
+			Type modelType, 
+			PropertyInfo propertyInfo, 
+			HasManyAttribute attribute, 
+			int? freshnessSeconds = null, 
+			int? fallbackFreshnessSeconds = null, 
+			bool? hold = null,
+			long? timeMs = null			
+		) {
+			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
+			var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
+			foreignType = foreignType != null ? CascadeTypeUtils.DeNullType(foreignType) : null;
+			if (foreignType == null)
+				throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
+
+			object modelId = CascadeTypeUtils.GetCascadeId(model);
+			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
+			var requestOp = new RequestOp(
+				timeMs ?? NowMs,
+				foreignType,
+				RequestVerb.Query,
+				null,
+				value: null,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,  
+				hold: hold, 
+				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
+				key: key
+			);
+			var opResponse = await InnerProcessWithFallback(requestOp);
+			await StoreInPreviousCaches(opResponse);
+			await SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
+		}
+
+		private async Task processHasOne(
+			SuperModel model, 
+			Type modelType, 
+			PropertyInfo propertyInfo, 
+			HasOneAttribute attribute, 
+			int? freshnessSeconds = null, 
+			int? fallbackFreshnessSeconds = null, 
+			bool? hold = null,
+			long? timeMs = null
+		) {
+			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
+			if (isEnumerable)
+				throw new ArgumentException("HasOne property should not be of type IEnumerable");
+
+			var foreignType = propertyType;
+			foreignType = foreignType != null ? CascadeTypeUtils.DeNullType(foreignType) : null;
+			if (foreignType == null)
+				throw new ArgumentException("Unable to get foreign model type. Property should be of type <ChildModel>");
+
+			object modelId = CascadeTypeUtils.GetCascadeId(model);
+			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
+			var requestOp = new RequestOp(
+				timeMs ?? NowMs,
+				foreignType,
+				RequestVerb.Query,
+				null,
+				value: null,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+				hold: hold, 
+				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
+				key: key
+			);
+			var opResponse = await InnerProcessWithFallback(requestOp);
+			await StoreInPreviousCaches(opResponse);
+			await SetModelProperty(model, propertyInfo, opResponse.FirstResult);
+		}
+
+		private async Task<OpResponse> InnerProcess(RequestOp requestOp, bool connectionOnline) {
+			OpResponse opResponse = await errorControl.FilterGuard(() => {
+				switch (requestOp.Verb) {
+					case RequestVerb.Get:
+					case RequestVerb.Query:
+					case RequestVerb.BlobGet:
+						return ProcessGetOrQuery(requestOp, connectionOnline);
+					case RequestVerb.GetCollection:
+						return ProcessGetCollection(requestOp, connectionOnline);
+					case RequestVerb.Create:
+						return ProcessCreate(requestOp, connectionOnline);
+					case RequestVerb.Replace:
+					case RequestVerb.BlobPut:
+						return ProcessReplace(requestOp, connectionOnline);
+					case RequestVerb.Update:
+						return ProcessUpdate(requestOp, connectionOnline);
+					case RequestVerb.Destroy:
+					case RequestVerb.BlobDestroy:
+						return ProcessDestroy(requestOp, connectionOnline);
+					case RequestVerb.Execute:
+						return ProcessExecute(requestOp, connectionOnline);
+					default:
+						throw new ArgumentException("Unsupported verb");
+				}
+			});
+			
+			// BEGIN Populate
+			var populate = requestOp.Populate?.ToArray() ?? new string[] { };
+
+			if (requestOp.Verb == RequestVerb.Query && opResponse.IsIdResults) {
+				var modelResponses = await GetModelsForIds(
+					requestOp.Type,
+					opResponse.ResultIds,
+					requestOp.FreshnessSeconds,
+					fallbackFreshnessSeconds: requestOp.FallbackFreshnessSeconds,
+					hold: requestOp.Hold,
+					timeMs: requestOp.TimeMs
+				);
+				IEnumerable<SuperModel> models = modelResponses.Select(r => (SuperModel)r.Result).ToImmutableArray();
+				if (populate.Any()) {
+					await Populate(models, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, timeMs: requestOp.TimeMs);
+				}
+				opResponse = opResponse.withChanges(result: models); // modify the response with models instead of ids
+			} else {
+				if (populate.Any()) {
+					IEnumerable<SuperModel> results = opResponse.Results.Cast<SuperModel>();
+					await Populate(results, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, timeMs: requestOp.TimeMs);
+				}
+			}
+			// END Populate
+			
+			SetResultsImmutable(opResponse);
+			return opResponse;
+		}
+		
+		private async Task<OpResponse> ProcessRequest(RequestOp requestOp) {
+			if (Log.Logger.IsEnabled(LogEventLevel.Debug)) {
+				Log.Debug("ProcessRequest before criteria");
+				var criteria = serialization.Serialize(requestOp.Criteria);
+				Log.Debug("ProcessRequest RequestOp: {@Verb} {@Id} {@Type} {@Key} {@Freshness} {@Criteria}",
+					requestOp.Verb, requestOp.Id, requestOp.Type, requestOp.Key, requestOp.FreshnessSeconds, criteria);
+				Log.Debug("ProcessRequest after criteria");
+			}
+
+
+			// if (HavePendingChanges && shouldAttemptUploadPendingChanges) {
+			// 	try {        
+			// 		if (Buzzware.Cascade.ConnectionMode!=UploadingPendingChanges)
+			// 			Buzzware.Cascade.ConnectionMode = UploadingPendingChanges;
+			// 		UploadPendingChanges
+			// 		InnerProcess(mode=online)            // !!! should only attempt online processing
+			// 		Buzzware.Cascade.ConnectionMode = Online
+			// 	} catch (OfflineException) {
+			// 		// probably smother exceptions. If we can't complete UploadPendingChanges(), stay offline
+			// 	}
+			// }
+
+			OpResponse opResponse = await InnerProcessWithFallback(requestOp);
+			
+			await StoreInPreviousCaches(opResponse); // just store ResultIds
+			
+			if (Log.Logger.IsEnabled(LogEventLevel.Debug))
+				Log.Debug("ProcessRequest OpResponse: Connected: {@Connected} Exists: {@Exists}", opResponse.Connected,opResponse.Exists);
+			var isBlobVerb = requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobPut;
+			if (Log.Logger.IsEnabled(LogEventLevel.Verbose) && !isBlobVerb)
+				Log.Verbose("ProcessRequest OpResponse: Result: {@Result}",opResponse.Result);
+			return opResponse;
+		}
+
+		private async Task<OpResponse> InnerProcessWithFallback(RequestOp req) {
+			OpResponse? result = null;
+			// bool loop = false;
+			// do {
+			// 	try {
+			// 		loop = false;
+					result = await InnerProcess(req, this.ConnectionOnline);
+			// 	}
+			// 	catch (Exception e) {
+			// 		if (
+			// 			e is NoNetworkException ||
+			// 			e is System.Net.Sockets.SocketException || 
+			// 			e is System.Net.WebException
+			// 		) {
+			// 			if (this.ConnectionOnline) {
+			// 				this.ConnectionOnline = false;
+			// 				loop = true;
+			// 			}
+			// 			else {
+			// 				Log.Warning("Should not get OfflineException when ConnectionMode != Online");
+			// 			}
+			// 		} else {
+			// 			throw e;
+			// 		}
+			// 	}
+			// } while (loop);
+			//
+			return result!;
+		}
+
+		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null,  int? fallbackFreshnessSeconds = null, bool? hold = null, long? timeMs = null) {
+			var foreignModelType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var idProperty = modelType.GetProperty(attribute.IdProperty);
+			var id = idProperty.GetValue(model);
+			if (id == null)
+				return;
+
+			var requestOp = new RequestOp(
+				timeMs ?? NowMs,
+				foreignModelType,
+				RequestVerb.Get,
+				id,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+				hold: hold
+			);
+			var opResponse = await InnerProcessWithFallback(requestOp);
+			await StoreInPreviousCaches(opResponse);
+			await SetModelProperty(model, propertyInfo, opResponse.Result);
+		}
+		
+		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null, long? timeMs = null) {
+			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var pathProperty = modelType.GetProperty(attribute.PathProperty);
+			var path = pathProperty.GetValue(model) as string;
+			if (path == null)
+				return;
+
+			var requestOp = RequestOp.BlobGetOp(
+				path,
+				timeMs ?? NowMs,
+				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+				hold: hold
+			); 
+			var opResponse = await InnerProcessWithFallback(requestOp);
+			await StoreInPreviousCaches(opResponse);
+
+			var propertyValue = attribute.Converter!.Convert(opResponse.Result as byte[], destinationPropertyType);
+			
+			await SetModelProperty(model, propertyInfo, propertyValue);
+		}
+		
+		private async Task processFromProperty(object model, Type modelType, PropertyInfo propertyInfo, FromPropertyAttribute attribute) {
+			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var sourceProperty = modelType.GetProperty(attribute.SourcePropertyName);
+			var sourceValue = sourceProperty!.GetValue(model);
+			var destValue = await attribute.Converter!.Convert(sourceValue, destinationPropertyType, attribute.Arguments);
+			await SetModelProperty(model, propertyInfo, destValue);
+		}
+		
+		private async Task<OpResponse> ProcessGetCollection(RequestOp requestOp, bool connectionOnline) {
+			object? value;
+			ICascadeCache? layerFound = null;
+			OpResponse? opResponse = null;
+
+			RequestOp cacheReq;
+			if (connectionOnline || requestOp.FreshnessSeconds < 0)
+				cacheReq = requestOp;
+			else
+				cacheReq = requestOp.CloneWith(freshnessSeconds: RequestOp.FRESHNESS_ANY);
+			
+			// try each cache layer
+			foreach (var layer in CacheLayers) {
+				var res = await layer.Fetch(cacheReq);
+				if (res.Connected && res.Exists) {
+					layerFound = layer;
+					opResponse = res;
+					break;
+				}
+			}
+
+			if (opResponse == null) {
+				return OpResponse.None(requestOp, NowMs);
+			}
+			return opResponse!;
+		}
+		
+		private async Task<OpResponse> ProcessGetOrQuery(RequestOp requestOp, bool connectionOnline) {
+			OpResponse? opResponse = null;
+			OpResponse? cacheResponse = null;
+
+			// if offline or freshness not zero then
+			if (requestOp.FreshnessSeconds > RequestOp.FRESHNESS_INSIST) {
+				RequestOp cacheReq;
+				//if (!connectionOnline && (requestOp.FreshnessSeconds != RequestOp.FRESHNESS_INSIST))		// if offline && !insisting on fresh
+					cacheReq = requestOp.CloneWith(freshnessSeconds: FRESHNESS_ANY);											// check cache for any record
+				// else
+				// 	cacheReq = requestOp;																																	// otherwise as specified
+
+				var layers = CacheLayers.ToArray();
+				for (var i = 0; i < layers.Length; i++) {
+					var layer = layers[i];
+					var res = await layer.Fetch(cacheReq);
+					if (res.Connected && res.Exists) {
+						res.LayerIndex = i;
+						var arrivedAt = res.ArrivedAtMs == null ? "" : CascadeUtils.fromUnixMilliseconds((long)res.ArrivedAtMs).ToLocalTime().ToLongTimeString();
+						if (requestOp.Verb == RequestVerb.Get)
+							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+						else if (requestOp.Verb == RequestVerb.Query)
+							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Key} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+						else if (requestOp.Verb == RequestVerb.BlobGet)
+							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+						// layerFound = layer;
+						cacheResponse = res;
+						break;
+					}
+				}
+			}
+
+			if (
+				(cacheResponse?.Exists == true) && // in cache
+				(
+					!connectionOnline ||		// offline
+					(requestOp.FreshnessSeconds == RequestOp.FRESHNESS_ANY) ||	// freshness not required 
+					((requestOp.FreshnessSeconds>0) && (cacheResponse.ArrivedAtMs >= requestOp.FreshAfterMs))
+				)
+			) {
+				opResponse = cacheResponse;	// in cache and offline or meets freshness
+			} else {
+				if (!connectionOnline)		// mustn't be in cache and we're offline, so not much we can do
+					throw new DataNotAvailableOffline();
+				OpResponse originResponse;
+				try {
+					originResponse = await Origin.ProcessRequest(requestOp, connectionOnline);
+				} catch (Exception e) {
+					if (e is NoNetworkException)
+						originResponse = OpResponse.ConnectionFailure(requestOp,requestOp.TimeMs,Origin.GetType().Name);
+					else
+						throw;
+				}
+				originResponse.LayerIndex = -1;
+				if (originResponse.Connected) {
+					opResponse = originResponse;
+				} else {
+					if ( // online but connection failure and meets fallback freshness
+					    cacheResponse?.Exists==true &&
+					    requestOp.FallbackFreshnessSeconds != null &&
+					    (requestOp.FallbackFreshnessSeconds == RequestOp.FRESHNESS_ANY || ((requestOp.TimeMs - cacheResponse.ArrivedAtMs) <= requestOp.FallbackFreshnessSeconds * 1000))
+					) {
+						Debug.WriteLine("Buzzware.Cascade fallback to cached value");
+						opResponse = cacheResponse;
+					} else {
+						throw new DataNotAvailableOffline();
+					}
+				}
+			}
+			
+			if (requestOp.Hold && opResponse.LayerIndex!=0 /* We don't want to slow down the first cache layer (probably memory) by setting Hold */ && !(opResponse?.ResultIsEmpty() ?? false)) {
+				if (requestOp.Verb == RequestVerb.Get) {
+					Hold(requestOp.Type, requestOp.Id);
+				} else if (requestOp.Verb == RequestVerb.BlobGet) {
+					HoldBlob(((string)requestOp.Id)!);
+				} else if (requestOp.Verb == RequestVerb.Query) {
+					var isIdResults = opResponse.IsIdResults;
+					var type = requestOp.Type ?? (isIdResults ? null : opResponse.FirstResult?.GetType());
+					if (type != null) {
+						foreach (var r in opResponse.Results) {
+							var id = isIdResults ? r : CascadeTypeUtils.GetCascadeId(r);
+							if (id != null)
+								Hold(type, id);
+						}
+						HoldCollection(type,requestOp.Key);
+					}
+				}
+			}
+			return opResponse!;
+		}
+		
+		private void SetResultsImmutable(OpResponse opResponse) {
+			if (opResponse.ResultIsEmpty() || opResponse.ResultIsBlob())
+				return;
+			foreach (var result in opResponse.Results) {
+				if (result is SuperModel superModel)
+					superModel.__mutable = false;
+			}
+		}
+
+		private async Task<OpResponse> ProcessCreate(RequestOp req, bool connectionOnline) {
+			OpResponse opResponse;
+			if (connectionOnline) {
+				opResponse = await Origin.ProcessRequest(req, connectionOnline);
+				opResponse.LayerIndex = -1;
+			} else {
+				var result = OfflineUtils.CreateOffline((SuperModel)req.Value, () => Origin.NewGuid());
+				var reqWithId = req.CloneWith(id: CascadeTypeUtils.GetCascadeId(result), value: result);
+				await AddPendingChange(reqWithId);
+				opResponse = new OpResponse(
+					req,
+					NowMs,
+					false,
+					true,
+					NowMs,
+					result
+				);
+				opResponse.SourceName = this.GetType().Name;
+				opResponse.LayerIndex = -2;
+			}
+			return opResponse!;
+		}
+
+		private async Task<OpResponse> ProcessReplace(RequestOp req, bool connectionOnline) {
+			OpResponse opResponse;
+			if (connectionOnline) {
+				opResponse = await Origin.ProcessRequest(req, connectionOnline);
+				opResponse.LayerIndex = -1;
+			} else {
+				var result = req.Value; 
+				await AddPendingChange(req);
+				opResponse = new OpResponse(
+					req,
+					NowMs,
+					false,
+					true,
+					NowMs,
+					result
+				);
+				opResponse.SourceName = this.GetType().Name;
+				opResponse.LayerIndex = -2;
+			}
+			return opResponse!;
+		}
+
+		private async Task<OpResponse> ProcessUpdate(RequestOp req, bool connectionOnline) {
+			OpResponse opResponse;
+			if (connectionOnline) {
+				opResponse = await Origin.ProcessRequest(req, connectionOnline);
+				opResponse.LayerIndex = -1;
+			} else {
+				var result = ((SuperModel)req.Extra).Clone((IDictionary<string, object?>)req.Value); 
+				await AddPendingChange(req);
+				opResponse = new OpResponse(
+					req,
+					NowMs,
+					false,
+					true,
+					NowMs,
+					result
+				);
+				opResponse.SourceName = this.GetType().Name;
+				opResponse.LayerIndex = -2;
+			}
+			return opResponse!;
+		}
+
+		private async Task<OpResponse> ProcessDestroy(RequestOp req, bool connectionOnline) {
+			OpResponse opResponse;
+			if (connectionOnline) {
+				opResponse = await Origin.ProcessRequest(req, connectionOnline);
+				opResponse.LayerIndex = -1;
+			} else {
+				await AddPendingChange(req);
+				opResponse = new OpResponse(
+					req,
+					NowMs,
+					false,
+					false,
+					NowMs,
+					null
+				);
+				opResponse.SourceName = this.GetType().Name;
+				opResponse.LayerIndex = -2;
+				return opResponse;
+			}
+			return opResponse!;
+		}
+
+		private async Task<OpResponse> ProcessExecute(RequestOp req, bool connectionOnline) {
+			if (!connectionOnline) {
+				await AddPendingChange(req);
+			}
+			OpResponse opResponse = await Origin.ProcessRequest(req,connectionOnline);
+			opResponse.LayerIndex = connectionOnline ? -1 : -2;
+			return opResponse!;
+		}
+
+	}
+}

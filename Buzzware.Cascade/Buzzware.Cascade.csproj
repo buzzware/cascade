@@ -21,4 +21,8 @@ Cascade enables the creation of a data layer within an application that all busi
     <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.4" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj" />
+  </ItemGroup>
 </Project>
