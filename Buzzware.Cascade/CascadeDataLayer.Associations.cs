@@ -12,6 +12,7 @@ using Serilog;
 namespace Buzzware.Cascade {
 
 	/// <summary>
+	/// Methods to manipulate properties and association relationships between models.
 	/// </summary>
 	public partial class CascadeDataLayer {
 
@@ -21,7 +22,12 @@ namespace Buzzware.Cascade {
 			typeof(HasOneAttribute)
 		);
 
-		
+		/// <summary>
+		/// Sets a property value on a model, taking into account whether the model is a SuperModel and ensure changes happen on the main thread which is necessary for any bound UI.
+		/// </summary>
+		/// <param name="model">The model to update.</param>
+		/// <param name="propertyInfo">The metadata of the property to set.</param>
+		/// <param name="value">The value to assign to the property.</param>
 		private Task SetModelProperty(object model, PropertyInfo propertyInfo, object? value) {
 			return cascadePlatform.InvokeOnMainThreadNow(() => {
 				if (model is SuperModel superModel) {
@@ -33,12 +39,21 @@ namespace Buzzware.Cascade {
 			});
 		}
 
+		/// <summary>
+		/// Sets a collection property on a model. It ensures the property is enumerable and makes necessary type conversions.
+		/// </summary>
+		/// <param name="target">The model on which the property is being set.</param>
+		/// <param name="propertyInfo">The metadata of the property to set.</param>
+		/// <param name="value">The value to set for the property. Must be an IEnumerable.</param>
+		/// <exception cref="ArgumentException">Thrown when the property type or value types are incorrect.</exception>
 		protected async Task SetModelCollectionProperty(object target, PropertyInfo propertyInfo, object value) {
 			Type propertyType = propertyInfo.PropertyType;
+			
 			var nonNullableTargetType = CascadeTypeUtils.DeNullType(propertyType);
 			var isEnumerable = CascadeTypeUtils.IsEnumerableType(nonNullableTargetType);
 			if (!isEnumerable)
 				throw new ArgumentException("Property type should be IEnumerable");
+			
 			var singularType = isEnumerable ? CascadeTypeUtils.InnerType(nonNullableTargetType)! : nonNullableTargetType;
 			if (CascadeTypeUtils.IsNullableType(singularType))
 				throw new ArgumentException("Singular type cannot be nullable");
@@ -46,6 +61,8 @@ namespace Buzzware.Cascade {
 			var valueType = value.GetType();
 			if (!CascadeTypeUtils.IsEnumerableType(valueType))
 				throw new ArgumentException("Value must be IEnumerable");
+
+			// Convert value to the appropriate singular type if necessary.
 			var newValue = value;
 			if (!propertyType.IsAssignableFrom(valueType)) {
 				var valueSingularType = CascadeTypeUtils.GetSingularType(valueType);
@@ -64,14 +81,13 @@ namespace Buzzware.Cascade {
 			await SetModelProperty(target, propertyInfo, newValue);
 		}
 		
-		
 		/// <summary>
 		/// Replaces the value of the given HasMany property with the given IEnumerable of models and updates the caches appropriately.
-		/// This is needed eg. when you add models to a HasMany association
+		/// This is needed eg. when you add models to a HasMany association.
 		/// </summary>
-		/// <param name="model"></param>
-		/// <param name="property"></param>
-		/// <param name="models"></param>
+		/// <param name="model">The model for which the property is being replaced.</param>
+		/// <param name="property">The name of the HasMany property on the model.</param>
+		/// <param name="models">The new models to set for the association.</param>
 		/// <exception cref="ArgumentException"></exception>
 		public async Task HasManyReplace(SuperModel model, string property, IEnumerable<object> models) {
 			var modelType = model.GetType();
@@ -93,6 +109,13 @@ namespace Buzzware.Cascade {
 			}
 		}
 
+		/// <summary>
+		/// Adds an item to the HasMany association of a model, updating both the property and the caches.
+		/// </summary>
+		/// <param name="model">The main model to be updated.</param>
+		/// <param name="property">The name of the HasMany property on the model.</param>
+		/// <param name="hasManyItem">The item to add to the association.</param>
+		/// <exception cref="ArgumentException">Thrown if the property is not a HasMany property.</exception>
 		public async Task HasManyAddItem(SuperModel model, string property, SuperModel hasManyItem) {
 			var modelType = model.GetType();
 			var propertyInfo = modelType.GetProperty(property);
@@ -115,11 +138,20 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
+		/// <summary>
+		/// Utility method to either replace or remove an item from a HasMany association while optionally ensuring the item is present.
+		/// </summary>
+		/// <param name="model">The main model to be updated.</param>
+		/// <param name="property">The name of the HasMany property on the model.</param>
+		/// <param name="hasManyItem">The item to be removed, replaced, or ensured in the association.</param>
+		/// <param name="remove">Specifies whether to remove the item from the association.</param>
+		/// <param name="ensureItem">Indicates if the item should be ensured in the association, avoiding duplicates.</param>
 		protected async Task HasManyReplaceRemoveItem(SuperModel model, string property, SuperModel hasManyItem, bool remove = false, bool ensureItem = false) {
 			var modelType = model.GetType();
 			var propertyInfo = modelType.GetProperty(property);
 			var id = CascadeTypeUtils.GetCascadeId(hasManyItem);
 			
+			// Modify the list of associated models by either removing, replacing, or ensuring an item.
 			var hasManyModels = ((IEnumerable)propertyInfo!.GetValue(model)).Cast<object>().ToList();
 			var modified = false;
 			for (var i = 0; i < hasManyModels.Count; i++) {
@@ -141,29 +173,43 @@ namespace Buzzware.Cascade {
 			}
 		}
 
-		// Replaces an item in the association property and cached collection, matching by id
+		/// <summary>
+		/// Replaces an item in the association property and cached collection, matching by id.
+		/// </summary>
+		/// <param name="model">The model in which the item is being replaced.</param>
+		/// <param name="property">The name of the association property.</param>
+		/// <param name="hasManyItem">The new item for the association.</param>
 		public async Task HasManyReplaceItem(SuperModel model, string property, SuperModel hasManyItem) {
 			await HasManyReplaceRemoveItem(model, property, hasManyItem, remove: false);
 		}
 		
-		// Removes an item in the association property and cached collection, matching by id
+		/// <summary>
+		/// Removes an item from the association property and cached collection, matching by id.
+		/// </summary>
+		/// <param name="model">The model from which the item is being removed.</param>
+		/// <param name="property">The name of the association property.</param>
+		/// <param name="hasManyItem">The item to remove from the association.</param>
 		public async Task HasManyRemoveItem(SuperModel model, string property, SuperModel hasManyItem) {
 			await HasManyReplaceRemoveItem(model, property, hasManyItem, remove: true);
 		}
 		
-		// Ensures that an item occurs in the association property and cached collection, matching by id ie adds or replaces as appropriate to avoid multiple occurrances
+		/// <summary>
+		/// Ensures that an item occurs in the association property and cached collection, matching by id (adds or replaces as necessary to avoid duplicates).
+		/// </summary>
+		/// <param name="model">The model to update.</param>
+		/// <param name="property">The name of the association property.</param>
+		/// <param name="hasManyItem">The item to ensure in the association.</param>
 		public async Task HasManyEnsureItem(SuperModel model, string property, SuperModel hasManyItem) {
 			await HasManyReplaceRemoveItem(model, property, hasManyItem, remove: false, ensureItem: true);
 		}
 		
 		/// <summary>
 		/// Replaces the value of the given HasOne property with the given model.
-		/// Note: This should update the caches with a collection of one, but currently does not
 		/// </summary>
-		/// <param name="model">the main model</param>
-		/// <param name="property">name of the HasOne property on the main model</param>
-		/// <param name="value">the new model for the association</param>
-		/// <exception cref="ArgumentException"></exception>
+		/// <param name="model">The main model to update.</param>
+		/// <param name="property">The name of the HasOne property on the main model.</param>
+		/// <param name="value">The new model for the association.</param>
+		/// <exception cref="ArgumentException">Thrown if the property is not a HasOne property.</exception>
 		public async Task UpdateHasOne(SuperModel model, string property, object value) {
 			var modelType = model.GetType();
 			var propertyInfo = modelType.GetProperty(property);
@@ -173,7 +219,7 @@ namespace Buzzware.Cascade {
 				if (foreignType == null)
 					throw new ArgumentException("Unable to get foreign model type. Property should be of type a ChildModel");
 
-				//object modelId = CascadeTypeUtils.GetCascadeId(model);
+				// Setting the model property with new value.
 				await SetModelProperty(model, propertyInfo, value);
 			}
 			else {
@@ -184,15 +230,13 @@ namespace Buzzware.Cascade {
 		// Consider using UpdateHasMany & UpdateHasOne instead eg. UpdateHasMany updates the underlying collection 
 		// Use this when you have a value for the association, rather than using Populate()
 		
-		
 		/// <summary>
 		/// Use this when you only want to set an association property to a value you already have.
-		/// Consider using UpdateHasMany/UpdateHasOne/UpdateBelongsTo instead.
-		/// Note that this method does not update the caches, but the more specific methods do.
+		/// Consider using UpdateHasMany/UpdateHasOne/UpdateBelongsTo instead. This method does not update the caches.
 		/// </summary>
-		/// <param name="target">model to act on</param>
-		/// <param name="propertyName">name of association property to set</param>
-		/// <param name="value"></param>
+		/// <param name="target">The model to act on.</param>
+		/// <param name="propertyName">The name of the association property to set.</param>
+		/// <param name="value">The value to set for the association property.</param>
 		public async Task SetAssociation(object target, string propertyName, object value) {
 			var propertyInfo = target.GetType().GetProperty(propertyName)!;
 			await SetModelProperty(target, propertyInfo, value);
@@ -200,16 +244,13 @@ namespace Buzzware.Cascade {
 
 		// update the association on many models with the same property and value
 		
-		
-		
 		/// <summary>
 		/// Use this when you only want to set an association property to a value you already have.
-		/// Consider using UpdateHasMany/UpdateHasOne/UpdateBelongsTo instead.
-		/// Note that this method does not update the caches, but the more specific methods do.
+		/// Consider using UpdateHasMany/UpdateHasOne/UpdateBelongsTo instead. This method does not update the caches.
 		/// </summary>
-		/// <param name="targets">models to act on</param>
-		/// <param name="propertyName">name of association property to set</param>
-		/// <param name="value"></param>
+		/// <param name="targets">The models to act on.</param>
+		/// <param name="propertyName">The name of the association property to set.</param>
+		/// <param name="value">The value to set for the association property.</param>
 		public async Task SetAssociation(IEnumerable targets, string propertyName, object value) {
 			PropertyInfo propertyInfo = null;
 			foreach (object target in targets) {
