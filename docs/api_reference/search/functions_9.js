@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['listmodeltypes_0',['ListModelTypes',['../interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#a8fb833706f4cdfe61716dec12c767243',1,'Buzzware.Cascade.ICascadeOrigin.ListModelTypes()'],['../class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#aa80a3dd2c60c18b1f6c619c1d74db184',1,'Buzzware.Cascade.Testing.MockOrigin.ListModelTypes()']]],
-  ['lookupmodeltype_1',['LookupModelType',['../interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#aedf63d4186f51d4a88c646c667448013',1,'Buzzware.Cascade.ICascadeOrigin.LookupModelType()'],['../class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a5b5e1763616ce0450e0fb8a98086fd01',1,'Buzzware.Cascade.Testing.MockOrigin.LookupModelType()'],['../class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin2.html#a0be9e454c4e05afca7ab25ddd7975be6',1,'Buzzware.Cascade.Testing.MockOrigin2.LookupModelType()']]]
+  ['iscollectionheld_3c_20model_20_3e_0',['IsCollectionHeld&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae55f57aff6da7726939143914ba3633f',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['isheld_3c_20model_20_3e_1',['IsHeld&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ab6e67fe298c1c95ec5552ae8d893d4ba',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['isheldblob_2',['IsHeldBlob',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a01090d48869e4ab166a4cce61d67c3e3',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['iswriteverb_3',['IsWriteVerb',['../class_buzzware_1_1_cascade_1_1_request_op.html#a544ba2537e63aae5ef94451012159839',1,'Buzzware::Cascade::RequestOp']]]
 ];

@@ -19,7 +19,7 @@ var annotated_dup =
         [ "CascadeDataLayer", "class_buzzware_1_1_cascade_1_1_cascade_data_layer.html", "class_buzzware_1_1_cascade_1_1_cascade_data_layer" ],
         [ "CascadeIdAttribute", "class_buzzware_1_1_cascade_1_1_cascade_id_attribute.html", null ],
         [ "CascadeJsonSerialization", "class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html", null ],
-        [ "CascadePaginator", "class_buzzware_1_1_cascade_1_1_cascade_paginator.html", null ],
+        [ "CascadePaginator", "class_buzzware_1_1_cascade_1_1_cascade_paginator.html", "class_buzzware_1_1_cascade_1_1_cascade_paginator" ],
         [ "CascadeQueryOptions", "class_buzzware_1_1_cascade_1_1_cascade_query_options.html", "class_buzzware_1_1_cascade_1_1_cascade_query_options" ],
         [ "ClassInfo", "class_buzzware_1_1_cascade_1_1_class_info.html", null ],
         [ "ConcurrentFileSystemClassCache", "class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html", "class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache" ],

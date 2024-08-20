@@ -18,9 +18,12 @@ var searchData=
   ['imodelclassorigin_15',['IModelClassOrigin',['../interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html',1,'Buzzware::Cascade']]],
   ['invalid_16',['Invalid',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a4bbb8f967da6d1a610596d7257179c2b',1,'Easy::Common::Extensions']]],
   ['ipropertyconverter_17',['IPropertyConverter',['../interface_buzzware_1_1_cascade_1_1_i_property_converter.html',1,'Buzzware::Cascade']]],
-  ['isenumerableresults_18',['IsEnumerableResults',['../class_buzzware_1_1_cascade_1_1_op_response.html#aa3a0150759edfd569b4c656cba246687',1,'Buzzware::Cascade::OpResponse']]],
-  ['isexternalinit_19',['IsExternalInit',['../class_system_1_1_runtime_1_1_compiler_services_1_1_is_external_init.html',1,'System::Runtime::CompilerServices']]],
-  ['isidresults_20',['IsIdResults',['../class_buzzware_1_1_cascade_1_1_op_response.html#aa0b8fcb94daa1702867d5d4d4cb270a3',1,'Buzzware::Cascade::OpResponse']]],
-  ['ismodelresults_21',['IsModelResults',['../class_buzzware_1_1_cascade_1_1_op_response.html#af039068097db9118a77db0945a676a23',1,'Buzzware::Cascade::OpResponse']]],
-  ['iswriteverb_22',['IsWriteVerb',['../class_buzzware_1_1_cascade_1_1_request_op.html#a544ba2537e63aae5ef94451012159839',1,'Buzzware::Cascade::RequestOp']]]
+  ['iscollectionheld_3c_20model_20_3e_18',['IsCollectionHeld&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae55f57aff6da7726939143914ba3633f',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['isenumerableresults_19',['IsEnumerableResults',['../class_buzzware_1_1_cascade_1_1_op_response.html#aa3a0150759edfd569b4c656cba246687',1,'Buzzware::Cascade::OpResponse']]],
+  ['isexternalinit_20',['IsExternalInit',['../class_system_1_1_runtime_1_1_compiler_services_1_1_is_external_init.html',1,'System::Runtime::CompilerServices']]],
+  ['isheld_3c_20model_20_3e_21',['IsHeld&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ab6e67fe298c1c95ec5552ae8d893d4ba',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['isheldblob_22',['IsHeldBlob',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a01090d48869e4ab166a4cce61d67c3e3',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['isidresults_23',['IsIdResults',['../class_buzzware_1_1_cascade_1_1_op_response.html#aa0b8fcb94daa1702867d5d4d4cb270a3',1,'Buzzware::Cascade::OpResponse']]],
+  ['ismodelresults_24',['IsModelResults',['../class_buzzware_1_1_cascade_1_1_op_response.html#af039068097db9118a77db0945a676a23',1,'Buzzware::Cascade::OpResponse']]],
+  ['iswriteverb_25',['IsWriteVerb',['../class_buzzware_1_1_cascade_1_1_request_op.html#a544ba2537e63aae5ef94451012159839',1,'Buzzware::Cascade::RequestOp']]]
 ];
