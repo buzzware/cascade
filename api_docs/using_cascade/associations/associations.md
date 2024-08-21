@@ -11,16 +11,18 @@ In database Entity Relationship Diagrams, relationships between records are norm
 kinds of relationships are all implemented by a foreign key id referencing the id of another table. A one-to-many is the other side of a many-to-one. 
 A fourth kind of relationship - many-to-many is really an intermediate table with two many-to-one relationships.
 Therefore, all of these kinds of relationships are implemented by :
-1) foreign keys referencing other models by their primary key and type, and the ability to retrieve the referenced model
-2) the ability to retrieve all models of a foreign type that reference a local model by its id and type
+
+1. foreign keys referencing other models by their primary key and type, and the ability to retrieve the referenced model
+2. the ability to retrieve all models of a foreign type that reference a local model by its id and type
 
 Cascade provides the following attributes for declaring associations on Cascade models. The name associations and the naming of each association type comes from [Ruby On Rails](https://edgeguides.rubyonrails.org/association_basics.html)
 
 ## BelongsTo
 
 A DocketItem "belongs to" a single Docket, and the DocketItem has :
-1) a foreign key property of the same type as the Docket id to reference the Docket.
-2) a foreign association reference property of the Docket Type, and the BelongsTo attribute specifying the idProperty as the foreign key property by name.
+
+1. a foreign key property of the same type as the Docket id to reference the Docket.
+2. a foreign association reference property of the Docket Type, and the BelongsTo attribute specifying the idProperty as the foreign key property by name.
 
 ```csharp
 	public class DocketItem : SuperModel {
@@ -50,8 +52,9 @@ A DocketItem "belongs to" a single Docket, and the DocketItem has :
 ## HasMany
 
 A Docket "has many" DocketItems, and the Docket has:
-1) a collection property of ImmutableArray<DocketItem> type to hold the associated DocketItems.
-2) a HasMany attribute on the collection property specifying the foreignIdProperty as the foreign key property on the DocketItem by name.
+
+1. a collection property of ImmutableArray<DocketItem> type to hold the associated DocketItems.
+2. a HasMany attribute on the collection property specifying the foreignIdProperty as the foreign key property on the DocketItem by name.
 
 ```csharp
 public class Docket : SuperModel
@@ -81,8 +84,9 @@ The `ImmutableArray<DocketItem>` type is used for the collection to ensure threa
 ## HasOne
 
 A DocketItem "has one" DocketReceiptItem, and the DocketItem has:
-1) a reference property of DocketReceiptItem type to hold the associated DocketReceiptItem.
-2) a HasOne attribute on the reference property specifying the foreignIdProperty as the foreign key property on the DocketReceiptItem by name.
+
+1. a reference property of DocketReceiptItem type to hold the associated DocketReceiptItem.
+2. a HasOne attribute on the reference property specifying the foreignIdProperty as the foreign key property on the DocketReceiptItem by name.
 
 ```csharp
 public class DocketItem : SuperModel
@@ -110,8 +114,9 @@ In this example, the `DocketItem` class has a reference to a single `DocketRecei
 ## FromBlob
 
 A ThingPhoto has properties : 
-1) imagePath - a normal string data property which is a relative storage path as used by BlobGet/BlobPut.
-2) Image - an association property with the FromBlob attribute referencing imagePath and specifying DotNetBitmapConverter.
+
+1. imagePath - a normal string data property which is a relative storage path as used by BlobGet/BlobPut.
+2. Image - an association property with the FromBlob attribute referencing imagePath and specifying DotNetBitmapConverter.
 
 Populating the Image property will internally call BlobGet with imagePath, then the result will be converted to a Bitmap by 
 DotNetBitmapConverter and used to set Image.

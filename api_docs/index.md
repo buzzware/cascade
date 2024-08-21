@@ -22,12 +22,12 @@ end from any changes or updates made to the backend.
 As a quick introduction, the main methods provided by Cascade for applications are :
 
 1. ```var product = await cascade.Create<Product>(new Product() { colour = "Red" });```
-1. ```var product = await cascade.Get<Product>(25, populate: new string[] { nameof(Product.Manufacturer) });```
-2. ```var redThings = await cascade.Query<Product>("red_products",new JsonObject { ["colour"] = "red" });```
-3. ```var updated = await cascade.Update(product, new JsonObject { ["colour"] = "red" });```
-4. ```await cascade.Destroy(product);```
-5. ```var promoted = await cascade.Execute("PROMOTE",new JsonObject { ["product_id"] = 25 })```
-5. ```await cascade.Populate(product,new string[] { nameof(Product.Manufacturer),nameof(Product.Category) })```
+2. ```var product = await cascade.Get<Product>(25, populate: new string[] { nameof(Product.Manufacturer) });```
+3. ```var redThings = await cascade.Query<Product>("red_products",new JsonObject { ["colour"] = "red" });```
+4. ```var updated = await cascade.Update(product, new JsonObject { ["colour"] = "red" });```
+5. ```await cascade.Destroy(product);```
+6. ```var promoted = await cascade.Execute("PROMOTE",new JsonObject { ["product_id"] = 25 })```
+7. ```await cascade.Populate(product,new string[] { nameof(Product.Manufacturer),nameof(Product.Category) })```
 
 ### Application Requirements :
 

@@ -44,11 +44,11 @@ This means that the data properties of models returned by Cascade remain unmodif
 
 Association properties are treated differently to data properties. 
 
-1) Their value is typically derived from their attribute parameters and what they reference, such as foreign and local keys.
-2) When they are created as an instance eg. deserialized from a server response or loaded frmo a file based cache association properties are null by default.
-3) The `Populate()` method and `populate` option on `Get()` and `Query()` methods are used to ensure association properties are set or updated as required.
-4) An association set on a model instance will remain set, and if that same instance is retrieved later from the memory cache the association will still 
+1. Their value is typically derived from their attribute parameters and what they reference, such as foreign and local keys.
+2. When they are created as an instance eg. deserialized from a server response or loaded frmo a file based cache association properties are null by default.
+3. The `Populate()` method and `populate` option on `Get()` and `Query()` methods are used to ensure association properties are set or updated as required.
+4. An association set on a model instance will remain set, and if that same instance is retrieved later from the memory cache the association will still 
 be set whether it was requested to be populated or not. This cannot be relied on.
-5) So if your application code requires an association to be set, **you must request it to be populated to be sure that it is**, and **don't be surprised if it is 
+5. So if your application code requires an association to be set, **you must request it to be populated to be sure that it is**, and **don't be surprised if it is 
 already populated when you did not ask for it to be**.  
 
