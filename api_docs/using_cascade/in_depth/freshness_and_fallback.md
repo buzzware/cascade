@@ -70,7 +70,7 @@ The combination of freshnessSeconds and fallbackFreshnessSeconds parameters mean
 
 ## Optimal Caching for a sequence of Cascade requests
 
-When a sequence of related Cascade requests are performed, for optimum caching, the sequenceTimeMs parameter should be used to pass a common value captured from NowMs. 
+When a sequence of related Cascade requests are performed, for optimum caching, the sequenceBeganMs parameter should be used to pass a common value captured from NowMs. 
 
 Suppose we have configured cascade with a ModelClassCache layer and a API server origin. There are two models: Diary and DiaryItem. A Diary has many DiaryItem's, 
 and a DiaryItem belongs to an Area.
@@ -104,20 +104,20 @@ and not cause any real problems, except for the following possible surprises :
 The reason is that for each request, the value of 0 (absolute freshness) will apply at the moment that each request is performed, which is different from the times of the other requests by mere milliseconds, but that is enough for each resulting Diary in the cache to be not considered fresh enough, and so another request to the origin is initiated. 
 Conversely, when freshnessSeconds == 3600 the Get<Diary> request will be served by the origin and then the result instance is cached and returned 3 times for the Populate call.
 
-The solution to this is the sequenceTimeMs parameter on all read request methods. We use it like this :
+The solution to this is the sequenceBeganMs parameter on all read request methods. We use it like this :
 
 ```csharp
 public static Task<Diary> GetDiary(CascadeDataLayer cascade, int diaryId, int freshnessSeconds) {
-    var sequenceTimeMs = cascade.NowMs;
-    var diary = cascade.Get<Diary>(id,freshnessSeconds: freshnessSeconds, sequenceTimeMs: sequenceTimeMs, populate: new [] {nameof(Diary.DiaryItems)});
-    await cascade.Populate(diary.DiaryItems,nameof(DiaryItem.Diary),freshnessSeconds: freshnessSeconds, sequenceTimeMs: sequenceTimeMs);
+    var sequenceBeganMs = cascade.NowMs;
+    var diary = cascade.Get<Diary>(id,freshnessSeconds: freshnessSeconds, sequenceBeganMs: sequenceBeganMs, populate: new [] {nameof(Diary.DiaryItems)});
+    await cascade.Populate(diary.DiaryItems,nameof(DiaryItem.Diary),freshnessSeconds: freshnessSeconds, sequenceBeganMs: sequenceBeganMs);
     return diary;
 }
 ```
 
-Now the same provided sequenceTimeMs value is used for all internal freshness calculations. All cache records that arrive after sequenceTimeMs now satisfy freshnessSeconds = RequestOp.FRESHNESS_FRESHEST no matter how many requests are performed with the sequenceTimeMs value. Please note that its probably not a good idea for the sequenceTimeMs value to be stored in a global or to be more than a few minutes different from real time (except for unit tests).  
+Now the same provided sequenceBeganMs value is used for all internal freshness calculations. All cache records that arrive after sequenceBeganMs now satisfy freshnessSeconds = RequestOp.FRESHNESS_FRESHEST no matter how many requests are performed with the sequenceBeganMs value. Please note that its probably not a good idea for the sequenceBeganMs value to be stored in a global or to be more than a few minutes different from real time (except for unit tests).  
 
-Internally, CascadeDataLayer captures NowMs and passes it into all requests, and so using the populate option instead of the Populate method can save using the sequenceTimeMs parameter.
+Internally, CascadeDataLayer captures NowMs and passes it into all requests, and so using the populate option instead of the Populate method can save using the sequenceBeganMs parameter.
 
 > Teaser :
 > One day it might be possible to replace that whole method with the following line, but as of this writing the populate option only supports properties on the main object.

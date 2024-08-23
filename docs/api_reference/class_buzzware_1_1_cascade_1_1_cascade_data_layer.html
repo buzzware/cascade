@@ -138,12 +138,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a52d1116a66cb75c7ef29c121e4b5dab1"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a52d1116a66cb75c7ef29c121e4b5dab1">SetAssociation</a> (IEnumerable targets, string propertyName, object value)</td></tr>
 <tr class="memdesc:a52d1116a66cb75c7ef29c121e4b5dab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this when you only want to set an association property to a value you already have. Consider using UpdateHasMany/UpdateHasOne/UpdateBelongsTo instead. This method does not update the caches.  <br /></td></tr>
 <tr class="separator:a52d1116a66cb75c7ef29c121e4b5dab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb663b064a63bf66a38affa9f6749a8c"><td class="memItemLeft" align="right" valign="top">async Task&lt; byte[]?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#acb663b064a63bf66a38affa9f6749a8c">BlobGet</a> (string path, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:acb663b064a63bf66a38affa9f6749a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a binary blob identified by the given path with optional caching and freshness parameters.  <br /></td></tr>
-<tr class="separator:acb663b064a63bf66a38affa9f6749a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad99ef2770997f83fb460a6b144cc3405"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ad99ef2770997f83fb460a6b144cc3405">BlobGetResponse</a> (string path, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:ad99ef2770997f83fb460a6b144cc3405"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a response containing a binary blob from the data layer based on the specified path.  <br /></td></tr>
-<tr class="separator:ad99ef2770997f83fb460a6b144cc3405"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3a88ace253289ea7d1ea80e71eaa19d"><td class="memItemLeft" align="right" valign="top">async Task&lt; byte[]?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#af3a88ace253289ea7d1ea80e71eaa19d">BlobGet</a> (string path, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:af3a88ace253289ea7d1ea80e71eaa19d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a binary blob identified by the given path with optional caching and freshness parameters.  <br /></td></tr>
+<tr class="separator:af3a88ace253289ea7d1ea80e71eaa19d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d38a71bfccd774cab771b6f611e5b9a"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a8d38a71bfccd774cab771b6f611e5b9a">BlobGetResponse</a> (string path, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a8d38a71bfccd774cab771b6f611e5b9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a response containing a binary blob from the data layer based on the specified path.  <br /></td></tr>
+<tr class="separator:a8d38a71bfccd774cab771b6f611e5b9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa20101b37b5591ac92534c7a50b4a2c1"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#aa20101b37b5591ac92534c7a50b4a2c1">BlobPut</a> (string path, byte[] data)</td></tr>
 <tr class="memdesc:aa20101b37b5591ac92534c7a50b4a2c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store a binary blob at the specified path.  <br /></td></tr>
 <tr class="separator:aa20101b37b5591ac92534c7a50b4a2c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -306,54 +306,54 @@ async Task&#160;</td><td class="memItemRight" valign="bottom"><b>ClearChangesPen
 <tr class="memitem:a7ba009ef12f5d1d6f733d75926a82e08"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a7ba009ef12f5d1d6f733d75926a82e08">RemoveChangePending</a> (string main, IEnumerable&lt; string &gt;? externals)</td></tr>
 <tr class="memdesc:a7ba009ef12f5d1d6f733d75926a82e08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a main pending change file along with its associated external files.  <br /></td></tr>
 <tr class="separator:a7ba009ef12f5d1d6f733d75926a82e08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e64fddf70393142d39c5b460095d37d"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a7e64fddf70393142d39c5b460095d37d">Populate</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> model, string property, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a7e64fddf70393142d39c5b460095d37d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates a specified association property on a given model based on its association attribute definition (BelongsTo/HasMany/HasOne).  <br /></td></tr>
-<tr class="separator:a7e64fddf70393142d39c5b460095d37d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa043dbefd41bb8e4b8e1ba45ced5b17d"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#aa043dbefd41bb8e4b8e1ba45ced5b17d">Populate</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> model, IEnumerable&lt; string &gt; associations, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:aa043dbefd41bb8e4b8e1ba45ced5b17d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates specified association properties on a given model with data based on association attribute definitions.  <br /></td></tr>
-<tr class="separator:aa043dbefd41bb8e4b8e1ba45ced5b17d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a622230c932d506bf4dd79194485d9f5f"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a622230c932d506bf4dd79194485d9f5f">Populate</a> (IEnumerable&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> &gt; models, IEnumerable&lt; string &gt; associations, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a622230c932d506bf4dd79194485d9f5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates one or more association properties on each of the given models using the association attribute definitions.  <br /></td></tr>
-<tr class="separator:a622230c932d506bf4dd79194485d9f5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d44e17c7b923995e9abfc0d3cc9c50c"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a2d44e17c7b923995e9abfc0d3cc9c50c">Populate</a> (IEnumerable&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> &gt; models, string association, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a2d44e17c7b923995e9abfc0d3cc9c50c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates a specific association property on each of the provided models using its association attribute definition.  <br /></td></tr>
-<tr class="separator:a2d44e17c7b923995e9abfc0d3cc9c50c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12089f55695f9de68f7d6eca9bd93167"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a12089f55695f9de68f7d6eca9bd93167">Get&lt; M &gt;</a> (int id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a12089f55695f9de68f7d6eca9bd93167"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves data from cache or origin of model type M based on a numerical ID and returns the result or null.  <br /></td></tr>
-<tr class="separator:a12089f55695f9de68f7d6eca9bd93167"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf61430043763276c860922f359eb72e"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#aaf61430043763276c860922f359eb72e">Get&lt; M &gt;</a> (string id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:aaf61430043763276c860922f359eb72e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves data from cache or origin of model type M based on a string ID and returns the result or null.  <br /></td></tr>
-<tr class="separator:aaf61430043763276c860922f359eb72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53a80a09a3804d823055a51327312850"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a53a80a09a3804d823055a51327312850">Get&lt; M &gt;</a> (long id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a53a80a09a3804d823055a51327312850"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves data from cache or origin of model type M based on a long ID and returns the result or null.  <br /></td></tr>
-<tr class="separator:a53a80a09a3804d823055a51327312850"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fc943fa52a5403079b3c0bfbeb16890"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a9fc943fa52a5403079b3c0bfbeb16890">GetResponse</a> (Type modelType, object id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a9fc943fa52a5403079b3c0bfbeb16890"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a model instance of the given model type and ID with a full detail OpResponse object.  <br /></td></tr>
-<tr class="separator:a9fc943fa52a5403079b3c0bfbeb16890"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47cbacf67c484b05d63d571c8515aa19"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a47cbacf67c484b05d63d571c8515aa19">GetModelsForIds</a> (Type type, IEnumerable iids, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a47cbacf67c484b05d63d571c8515aa19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves models of the given type for a multitude of IDs.  <br /></td></tr>
-<tr class="separator:a47cbacf67c484b05d63d571c8515aa19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a219b161f54f4d279f6070501176a7b3d"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; object &gt;?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a219b161f54f4d279f6070501176a7b3d">GetCollection&lt; M &gt;</a> (string collectionName, long? timeMs=null)</td></tr>
-<tr class="memdesc:a219b161f54f4d279f6070501176a7b3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a collection literally, i.e., an enumerable of IDs.  <br /></td></tr>
-<tr class="separator:a219b161f54f4d279f6070501176a7b3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47935c6bb26f8972904e029aff91bc23"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a47935c6bb26f8972904e029aff91bc23">GetCollectionResponse&lt; M &gt;</a> (string collectionName, long? timeMs=null)</td></tr>
-<tr class="memdesc:a47935c6bb26f8972904e029aff91bc23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a collection as an enumerable of IDs with full detail as an OpResponse.  <br /></td></tr>
-<tr class="separator:a47935c6bb26f8972904e029aff91bc23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1f5e3bb89a936fa5cc1b6f0ee70c033"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ad1f5e3bb89a936fa5cc1b6f0ee70c033">GetWhereCollectionResponse&lt; Model &gt;</a> (string propertyName, string propertyValue, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:ad1f5e3bb89a936fa5cc1b6f0ee70c033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for populating HasMany or HasOne associations based on a foreign key.  <br /></td></tr>
-<tr class="separator:ad1f5e3bb89a936fa5cc1b6f0ee70c033"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06e7f1cf71555b2567379bf8db2eb6bf"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; M &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a06e7f1cf71555b2567379bf8db2eb6bf">GetWhereCollection&lt; M &gt;</a> (string propertyName, string propertyValue, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a06e7f1cf71555b2567379bf8db2eb6bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for populating HasMany or HasOne associations based on a foreign key.  <br /></td></tr>
-<tr class="separator:a06e7f1cf71555b2567379bf8db2eb6bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9aa737060da67a023b8f986c1589ec06"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; M &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a9aa737060da67a023b8f986c1589ec06">Query&lt; M &gt;</a> (string? collectionKey, object? criteria=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a9aa737060da67a023b8f986c1589ec06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a query on the origin with the given model and criteria, caching the resulting collection under collectionKey.  <br /></td></tr>
-<tr class="separator:a9aa737060da67a023b8f986c1589ec06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cd2f4b2c6e8d7ac698e10535a3c179b"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a6cd2f4b2c6e8d7ac698e10535a3c179b">QueryOne&lt; M &gt;</a> (string? collectionKey, object criteria=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a6cd2f4b2c6e8d7ac698e10535a3c179b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a query on the origin with the given model and criteria for a single record. Caches the result under the collectionKey.  <br /></td></tr>
-<tr class="separator:a6cd2f4b2c6e8d7ac698e10535a3c179b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a696177bccb5f90b369f3f547307722e9"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a696177bccb5f90b369f3f547307722e9">QueryResponse&lt; M &gt;</a> (string collectionName, object criteria, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? timeMs=null)</td></tr>
-<tr class="memdesc:a696177bccb5f90b369f3f547307722e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a query on the origin with the given model and criteria, caching the resulting collection under collectionKey and returns a full detail OpResponse.  <br /></td></tr>
-<tr class="separator:a696177bccb5f90b369f3f547307722e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52416da1d9c131f8285213a72d8d9df1"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a52416da1d9c131f8285213a72d8d9df1">Populate</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> model, string property, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a52416da1d9c131f8285213a72d8d9df1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates a specified association property on a given model based on its association attribute definition (BelongsTo/HasMany/HasOne).  <br /></td></tr>
+<tr class="separator:a52416da1d9c131f8285213a72d8d9df1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64438250383fdea3786b719c6b0be9f4"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a64438250383fdea3786b719c6b0be9f4">Populate</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> model, IEnumerable&lt; string &gt; associations, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a64438250383fdea3786b719c6b0be9f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates specified association properties on a given model with data based on association attribute definitions.  <br /></td></tr>
+<tr class="separator:a64438250383fdea3786b719c6b0be9f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9564bcd3197092a4d834fa27b428c839"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a9564bcd3197092a4d834fa27b428c839">Populate</a> (IEnumerable&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> &gt; models, IEnumerable&lt; string &gt; associations, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a9564bcd3197092a4d834fa27b428c839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates one or more association properties on each of the given models using the association attribute definitions.  <br /></td></tr>
+<tr class="separator:a9564bcd3197092a4d834fa27b428c839"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6351b6ab495cfaee170970b520c59e0c"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a6351b6ab495cfaee170970b520c59e0c">Populate</a> (IEnumerable&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> &gt; models, string association, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool skipIfSet=false, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a6351b6ab495cfaee170970b520c59e0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates a specific association property on each of the provided models using its association attribute definition.  <br /></td></tr>
+<tr class="separator:a6351b6ab495cfaee170970b520c59e0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8537af1b999590eacac3e963fa1eec33"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a8537af1b999590eacac3e963fa1eec33">Get&lt; M &gt;</a> (int id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a8537af1b999590eacac3e963fa1eec33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves data from cache or origin of model type M based on a numerical ID and returns the result or null.  <br /></td></tr>
+<tr class="separator:a8537af1b999590eacac3e963fa1eec33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe1b541e02f26be5b7d8c8d8b99ed4b7"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#afe1b541e02f26be5b7d8c8d8b99ed4b7">Get&lt; M &gt;</a> (string id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:afe1b541e02f26be5b7d8c8d8b99ed4b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves data from cache or origin of model type M based on a string ID and returns the result or null.  <br /></td></tr>
+<tr class="separator:afe1b541e02f26be5b7d8c8d8b99ed4b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fa2131cc31adbc9e23bf35fefaddcf9"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a8fa2131cc31adbc9e23bf35fefaddcf9">Get&lt; M &gt;</a> (long id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a8fa2131cc31adbc9e23bf35fefaddcf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves data from cache or origin of model type M based on a long ID and returns the result or null.  <br /></td></tr>
+<tr class="separator:a8fa2131cc31adbc9e23bf35fefaddcf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae69a0901c3f4552b099610c3af84f277"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae69a0901c3f4552b099610c3af84f277">GetResponse</a> (Type modelType, object id, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:ae69a0901c3f4552b099610c3af84f277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a model instance of the given model type and ID with a full detail OpResponse object.  <br /></td></tr>
+<tr class="separator:ae69a0901c3f4552b099610c3af84f277"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d3a93bab8b556e21d8c9aac29c29f2f"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a8d3a93bab8b556e21d8c9aac29c29f2f">GetModelsForIds</a> (Type type, IEnumerable iids, int? freshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a8d3a93bab8b556e21d8c9aac29c29f2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves models of the given type for a multitude of IDs.  <br /></td></tr>
+<tr class="separator:a8d3a93bab8b556e21d8c9aac29c29f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56880a623f9d36fde2a96b87989e09d5"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; object &gt;?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a56880a623f9d36fde2a96b87989e09d5">GetCollection&lt; M &gt;</a> (string collectionName, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a56880a623f9d36fde2a96b87989e09d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a collection literally, i.e., an enumerable of IDs.  <br /></td></tr>
+<tr class="separator:a56880a623f9d36fde2a96b87989e09d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18987a04243e8f4958b28e1ce2ab765e"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a18987a04243e8f4958b28e1ce2ab765e">GetCollectionResponse&lt; M &gt;</a> (string collectionName, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a18987a04243e8f4958b28e1ce2ab765e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a collection as an enumerable of IDs with full detail as an OpResponse.  <br /></td></tr>
+<tr class="separator:a18987a04243e8f4958b28e1ce2ab765e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4757402d83501bf4b601e726b299e779"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a4757402d83501bf4b601e726b299e779">GetWhereCollectionResponse&lt; Model &gt;</a> (string propertyName, string propertyValue, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a4757402d83501bf4b601e726b299e779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for populating HasMany or HasOne associations based on a foreign key.  <br /></td></tr>
+<tr class="separator:a4757402d83501bf4b601e726b299e779"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af881e913b7b016a1a59e1b86f885f349"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; M &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#af881e913b7b016a1a59e1b86f885f349">GetWhereCollection&lt; M &gt;</a> (string propertyName, string propertyValue, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:af881e913b7b016a1a59e1b86f885f349"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for populating HasMany or HasOne associations based on a foreign key.  <br /></td></tr>
+<tr class="separator:af881e913b7b016a1a59e1b86f885f349"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52b59db439f16bc2f04a9767842fa200"><td class="memItemLeft" align="right" valign="top">async Task&lt; IEnumerable&lt; M &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a52b59db439f16bc2f04a9767842fa200">Query&lt; M &gt;</a> (string? collectionKey, object? criteria=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a52b59db439f16bc2f04a9767842fa200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a query on the origin with the given model and criteria, caching the resulting collection under collectionKey.  <br /></td></tr>
+<tr class="separator:a52b59db439f16bc2f04a9767842fa200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b86a8e1f24e3f556493c932c01433a7"><td class="memItemLeft" align="right" valign="top">async Task&lt; M?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a2b86a8e1f24e3f556493c932c01433a7">QueryOne&lt; M &gt;</a> (string? collectionKey, object criteria=null, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a2b86a8e1f24e3f556493c932c01433a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a query on the origin with the given model and criteria for a single record. Caches the result under the collectionKey.  <br /></td></tr>
+<tr class="separator:a2b86a8e1f24e3f556493c932c01433a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68592a3efd89c1fd655bbb451edbabdf"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a68592a3efd89c1fd655bbb451edbabdf">QueryResponse&lt; M &gt;</a> (string collectionName, object criteria, IEnumerable&lt; string &gt;? populate=null, int? freshnessSeconds=null, int? populateFreshnessSeconds=null, int? fallbackFreshnessSeconds=null, bool? hold=null, long? sequenceBeganMs=null)</td></tr>
+<tr class="memdesc:a68592a3efd89c1fd655bbb451edbabdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a query on the origin with the given model and criteria, caching the resulting collection under collectionKey and returns a full detail OpResponse.  <br /></td></tr>
+<tr class="separator:a68592a3efd89c1fd655bbb451edbabdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0211ecdaca0e6064f7e2dd8e731cce43"><td class="memItemLeft" align="right" valign="top">async Task&lt; M &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a0211ecdaca0e6064f7e2dd8e731cce43">Create&lt; M &gt;</a> (M model, bool hold=false)</td></tr>
 <tr class="memdesc:a0211ecdaca0e6064f7e2dd8e731cce43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create and return a model of the given type. An instance is used to pass in the values, and a newly created instance is returned from the origin. Note: the populate option will be removed from all write methods. Instead Create should be called followed by any call(s) to Populate() as required.  <br /></td></tr>
 <tr class="separator:a0211ecdaca0e6064f7e2dd8e731cce43"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -645,8 +645,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="acb663b064a63bf66a38affa9f6749a8c" name="acb663b064a63bf66a38affa9f6749a8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb663b064a63bf66a38affa9f6749a8c">&#9670;&#160;</a></span>BlobGet()</h2>
+<a id="af3a88ace253289ea7d1ea80e71eaa19d" name="af3a88ace253289ea7d1ea80e71eaa19d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3a88ace253289ea7d1ea80e71eaa19d">&#9670;&#160;</a></span>BlobGet()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -682,7 +682,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -704,7 +704,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">freshnessSeconds</td><td>Desired freshness duration in seconds for the cache</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness duration if primary freshness cannot be achieved</td></tr>
     <tr><td class="paramname">hold</td><td>Indicates if the blob and its associations should be held in cache</td></tr>
-    <tr><td class="paramname">timeMs</td><td>The request timestamp in milliseconds since epoch, for caching optimization</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>The request timestamp in milliseconds since epoch, for caching optimization</td></tr>
   </table>
   </dd>
 </dl>
@@ -712,8 +712,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="ad99ef2770997f83fb460a6b144cc3405" name="ad99ef2770997f83fb460a6b144cc3405"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad99ef2770997f83fb460a6b144cc3405">&#9670;&#160;</a></span>BlobGetResponse()</h2>
+<a id="a8d38a71bfccd774cab771b6f611e5b9a" name="a8d38a71bfccd774cab771b6f611e5b9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d38a71bfccd774cab771b6f611e5b9a">&#9670;&#160;</a></span>BlobGetResponse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -749,7 +749,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -771,7 +771,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">freshnessSeconds</td><td>Desired freshness of the blob in seconds</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness in case the primary cannot be achieved</td></tr>
     <tr><td class="paramname">hold</td><td>Flag to hold the blob in cache for offline availability</td></tr>
-    <tr><td class="paramname">timeMs</td><td>Request timestamp in milliseconds since epoch</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>Request timestamp in milliseconds since epoch</td></tr>
   </table>
   </dd>
 </dl>
@@ -1608,8 +1608,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a12089f55695f9de68f7d6eca9bd93167" name="a12089f55695f9de68f7d6eca9bd93167"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12089f55695f9de68f7d6eca9bd93167">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[1/3]</span></h2>
+<a id="a8537af1b999590eacac3e963fa1eec33" name="a8537af1b999590eacac3e963fa1eec33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8537af1b999590eacac3e963fa1eec33">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1657,7 +1657,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1681,7 +1681,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">populateFreshnessSeconds</td><td>Freshness duration for any populated associations.</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</td></tr>
     <tr><td class="paramname">hold</td><td>Indicates whether to mark the main object and populated associations to be held in cache.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time represented as milliseconds since 1970. Ideally, a group of requests will be given the same time to optimize caching.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time represented as milliseconds since 1970. Ideally, a group of requests will be given the same time to optimize caching.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1703,8 +1703,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a53a80a09a3804d823055a51327312850" name="a53a80a09a3804d823055a51327312850"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53a80a09a3804d823055a51327312850">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[2/3]</span></h2>
+<a id="a8fa2131cc31adbc9e23bf35fefaddcf9" name="a8fa2131cc31adbc9e23bf35fefaddcf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fa2131cc31adbc9e23bf35fefaddcf9">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1752,7 +1752,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1776,7 +1776,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">populateFreshnessSeconds</td><td>Freshness duration for any populated associations.</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</td></tr>
     <tr><td class="paramname">hold</td><td>Indicates whether to mark the main object and populated associations to be held in cache.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time represented as milliseconds since 1970. Ideally, a group of requests will be given the same time to optimize caching.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time represented as milliseconds since 1970. Ideally, a group of requests will be given the same time to optimize caching.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1798,8 +1798,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="aaf61430043763276c860922f359eb72e" name="aaf61430043763276c860922f359eb72e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf61430043763276c860922f359eb72e">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[3/3]</span></h2>
+<a id="afe1b541e02f26be5b7d8c8d8b99ed4b7" name="afe1b541e02f26be5b7d8c8d8b99ed4b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe1b541e02f26be5b7d8c8d8b99ed4b7">&#9670;&#160;</a></span>Get&lt; M &gt;() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1847,7 +1847,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1871,7 +1871,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">populateFreshnessSeconds</td><td>Freshness duration for any populated associations.</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</td></tr>
     <tr><td class="paramname">hold</td><td>Indicates whether to mark the main object and populated associations to be held in cache.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time represented as milliseconds since 1970. Ideally, a group of requests will be given the same time to optimize caching.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time represented as milliseconds since 1970. Ideally, a group of requests will be given the same time to optimize caching.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1949,8 +1949,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a219b161f54f4d279f6070501176a7b3d" name="a219b161f54f4d279f6070501176a7b3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a219b161f54f4d279f6070501176a7b3d">&#9670;&#160;</a></span>GetCollection&lt; M &gt;()</h2>
+<a id="a56880a623f9d36fde2a96b87989e09d5" name="a56880a623f9d36fde2a96b87989e09d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56880a623f9d36fde2a96b87989e09d5">&#9670;&#160;</a></span>GetCollection&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1968,7 +1968,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2008,8 +2008,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a47935c6bb26f8972904e029aff91bc23" name="a47935c6bb26f8972904e029aff91bc23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47935c6bb26f8972904e029aff91bc23">&#9670;&#160;</a></span>GetCollectionResponse&lt; M &gt;()</h2>
+<a id="a18987a04243e8f4958b28e1ce2ab765e" name="a18987a04243e8f4958b28e1ce2ab765e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18987a04243e8f4958b28e1ce2ab765e">&#9670;&#160;</a></span>GetCollectionResponse&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2027,7 +2027,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2046,7 +2046,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">collectionName</td><td>User-defined name for the collection.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2060,8 +2060,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a47cbacf67c484b05d63d571c8515aa19" name="a47cbacf67c484b05d63d571c8515aa19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47cbacf67c484b05d63d571c8515aa19">&#9670;&#160;</a></span>GetModelsForIds()</h2>
+<a id="a8d3a93bab8b556e21d8c9aac29c29f2f" name="a8d3a93bab8b556e21d8c9aac29c29f2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d3a93bab8b556e21d8c9aac29c29f2f">&#9670;&#160;</a></span>GetModelsForIds()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2103,7 +2103,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2126,7 +2126,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">freshnessSeconds</td><td>Freshness duration for the retrieved objects.</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement.</td></tr>
     <tr><td class="paramname">hold</td><td>Indicates whether to mark the retrieved objects to be held in cache.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2134,8 +2134,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a9fc943fa52a5403079b3c0bfbeb16890" name="a9fc943fa52a5403079b3c0bfbeb16890"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9fc943fa52a5403079b3c0bfbeb16890">&#9670;&#160;</a></span>GetResponse()</h2>
+<a id="ae69a0901c3f4552b099610c3af84f277" name="ae69a0901c3f4552b099610c3af84f277"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae69a0901c3f4552b099610c3af84f277">&#9670;&#160;</a></span>GetResponse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2189,7 +2189,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2213,7 +2213,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">populateFreshnessSeconds</td><td>Freshness duration for any populated associations.</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</td></tr>
     <tr><td class="paramname">hold</td><td>Indicates whether to mark the main object and populated associations to be held in cache.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2221,8 +2221,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a06e7f1cf71555b2567379bf8db2eb6bf" name="a06e7f1cf71555b2567379bf8db2eb6bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06e7f1cf71555b2567379bf8db2eb6bf">&#9670;&#160;</a></span>GetWhereCollection&lt; M &gt;()</h2>
+<a id="af881e913b7b016a1a59e1b86f885f349" name="af881e913b7b016a1a59e1b86f885f349"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af881e913b7b016a1a59e1b86f885f349">&#9670;&#160;</a></span>GetWhereCollection&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2258,7 +2258,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2280,7 +2280,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">propertyValue</td><td>Value of the foreign key.</td></tr>
     <tr><td class="paramname">freshnessSeconds</td><td>Freshness duration for the main object.</td></tr>
     <tr><td class="paramname">populateFreshnessSeconds</td><td>Freshness duration for any populated associations.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2302,8 +2302,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="ad1f5e3bb89a936fa5cc1b6f0ee70c033" name="ad1f5e3bb89a936fa5cc1b6f0ee70c033"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1f5e3bb89a936fa5cc1b6f0ee70c033">&#9670;&#160;</a></span>GetWhereCollectionResponse&lt; Model &gt;()</h2>
+<a id="a4757402d83501bf4b601e726b299e779" name="a4757402d83501bf4b601e726b299e779"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4757402d83501bf4b601e726b299e779">&#9670;&#160;</a></span>GetWhereCollectionResponse&lt; Model &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2339,7 +2339,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2361,7 +2361,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">propertyValue</td><td>Value of the foreign key.</td></tr>
     <tr><td class="paramname">freshnessSeconds</td><td>Freshness duration for the main object.</td></tr>
     <tr><td class="paramname">populateFreshnessSeconds</td><td>Freshness duration for any populated associations.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time represented as milliseconds since 1970.</td></tr>
   </table>
   </dd>
 </dl>
@@ -3557,8 +3557,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a622230c932d506bf4dd79194485d9f5f" name="a622230c932d506bf4dd79194485d9f5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a622230c932d506bf4dd79194485d9f5f">&#9670;&#160;</a></span>Populate() <span class="overload">[1/4]</span></h2>
+<a id="a9564bcd3197092a4d834fa27b428c839" name="a9564bcd3197092a4d834fa27b428c839"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9564bcd3197092a4d834fa27b428c839">&#9670;&#160;</a></span>Populate() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3606,7 +3606,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3628,7 +3628,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">associations</td><td>A list of associations to populate for each model</td></tr>
     <tr><td class="paramname">freshnessSeconds</td><td>Specifies how fresh the data should be by setting the freshness in seconds</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness setting, used if the main requirement cannot be fulfilled. Defaults to FRESHNESS_ANY.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>Optional request time (milliseconds since 1970) for optimizing caching when multiple requests share the same time</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>Optional request time (milliseconds since 1970) for optimizing caching when multiple requests share the same time</td></tr>
     <tr><td class="paramname">skipIfSet</td><td>If set to true, skips any associations where the property is already filled</td></tr>
     <tr><td class="paramname">hold</td><td>Specifies whether to maintain the acquired data after the method completes</td></tr>
   </table>
@@ -3638,8 +3638,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a2d44e17c7b923995e9abfc0d3cc9c50c" name="a2d44e17c7b923995e9abfc0d3cc9c50c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d44e17c7b923995e9abfc0d3cc9c50c">&#9670;&#160;</a></span>Populate() <span class="overload">[2/4]</span></h2>
+<a id="a6351b6ab495cfaee170970b520c59e0c" name="a6351b6ab495cfaee170970b520c59e0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6351b6ab495cfaee170970b520c59e0c">&#9670;&#160;</a></span>Populate() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3687,7 +3687,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3712,7 +3712,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Defines a fallback freshness if the main constraint cannot be met. Defaults to FRESHNESS_ANY.</td></tr>
     <tr><td class="paramname">skipIfSet</td><td>Skip the operation for properties that have already been set, improving performance</td></tr>
     <tr><td class="paramname">hold</td><td>Determines if the data will persist after execution</td></tr>
-    <tr><td class="paramname">timeMs</td><td>An optional time in milliseconds since 1970 to be applied to optimize caching for grouped requests</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>An optional time in milliseconds since 1970 to be applied to optimize caching for grouped requests</td></tr>
   </table>
   </dd>
 </dl>
@@ -3720,8 +3720,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="aa043dbefd41bb8e4b8e1ba45ced5b17d" name="aa043dbefd41bb8e4b8e1ba45ced5b17d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa043dbefd41bb8e4b8e1ba45ced5b17d">&#9670;&#160;</a></span>Populate() <span class="overload">[3/4]</span></h2>
+<a id="a64438250383fdea3786b719c6b0be9f4" name="a64438250383fdea3786b719c6b0be9f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64438250383fdea3786b719c6b0be9f4">&#9670;&#160;</a></span>Populate() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3769,7 +3769,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3793,7 +3793,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</td></tr>
     <tr><td class="paramname">skipIfSet</td><td>If true, skips all associations for which the properties are already set</td></tr>
     <tr><td class="paramname">hold</td><td>Determines whether to hold the data during the operation</td></tr>
-    <tr><td class="paramname">timeMs</td><td>Optional request time (milliseconds since 1970) for optimizing caching</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>Optional request time (milliseconds since 1970) for optimizing caching</td></tr>
   </table>
   </dd>
 </dl>
@@ -3801,8 +3801,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a7e64fddf70393142d39c5b460095d37d" name="a7e64fddf70393142d39c5b460095d37d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e64fddf70393142d39c5b460095d37d">&#9670;&#160;</a></span>Populate() <span class="overload">[4/4]</span></h2>
+<a id="a52416da1d9c131f8285213a72d8d9df1" name="a52416da1d9c131f8285213a72d8d9df1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52416da1d9c131f8285213a72d8d9df1">&#9670;&#160;</a></span>Populate() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3850,7 +3850,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3874,7 +3874,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</td></tr>
     <tr><td class="paramname">skipIfSet</td><td>If true and the property is already set, the operation will be skipped for performance reasons</td></tr>
     <tr><td class="paramname">hold</td><td>Determines whether to hold the data or not during the operation</td></tr>
-    <tr><td class="paramname">timeMs</td><td>Optional request time (milliseconds since 1970) used for optimizing caching when a group of requests share the same time</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>Optional request time (milliseconds since 1970) used for optimizing caching when a group of requests share the same time</td></tr>
   </table>
   </dd>
 </dl>
@@ -3882,8 +3882,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a9aa737060da67a023b8f986c1589ec06" name="a9aa737060da67a023b8f986c1589ec06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9aa737060da67a023b8f986c1589ec06">&#9670;&#160;</a></span>Query&lt; M &gt;()</h2>
+<a id="a52b59db439f16bc2f04a9767842fa200" name="a52b59db439f16bc2f04a9767842fa200"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52b59db439f16bc2f04a9767842fa200">&#9670;&#160;</a></span>Query&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3937,7 +3937,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3962,7 +3962,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">populateFreshnessSeconds</td><td>Freshness duration for populated associations.</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement if main requirement is not met.</td></tr>
     <tr><td class="paramname">hold</td><td>Whether to hold objects in cache.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time as milliseconds since 1970 for optimized caching.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time as milliseconds since 1970 for optimized caching.</td></tr>
   </table>
   </dd>
 </dl>
@@ -3976,8 +3976,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a6cd2f4b2c6e8d7ac698e10535a3c179b" name="a6cd2f4b2c6e8d7ac698e10535a3c179b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6cd2f4b2c6e8d7ac698e10535a3c179b">&#9670;&#160;</a></span>QueryOne&lt; M &gt;()</h2>
+<a id="a2b86a8e1f24e3f556493c932c01433a7" name="a2b86a8e1f24e3f556493c932c01433a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b86a8e1f24e3f556493c932c01433a7">&#9670;&#160;</a></span>QueryOne&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4031,7 +4031,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4056,7 +4056,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">populateFreshnessSeconds</td><td>Freshness duration for populated associations.</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement if main requirement is not met.</td></tr>
     <tr><td class="paramname">hold</td><td>Whether to hold objects in cache.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time as milliseconds since 1970 for optimized caching.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time as milliseconds since 1970 for optimized caching.</td></tr>
   </table>
   </dd>
 </dl>
@@ -4070,8 +4070,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a696177bccb5f90b369f3f547307722e9" name="a696177bccb5f90b369f3f547307722e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a696177bccb5f90b369f3f547307722e9">&#9670;&#160;</a></span>QueryResponse&lt; M &gt;()</h2>
+<a id="a68592a3efd89c1fd655bbb451edbabdf" name="a68592a3efd89c1fd655bbb451edbabdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68592a3efd89c1fd655bbb451edbabdf">&#9670;&#160;</a></span>QueryResponse&lt; M &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4125,7 +4125,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long?&#160;</td>
-          <td class="paramname"><em>timeMs</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>sequenceBeganMs</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4150,7 +4150,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
     <tr><td class="paramname">populateFreshnessSeconds</td><td>Freshness duration for populated associations.</td></tr>
     <tr><td class="paramname">fallbackFreshnessSeconds</td><td>Fallback freshness requirement if main requirement is not met.</td></tr>
     <tr><td class="paramname">hold</td><td>Whether to hold objects in cache.</td></tr>
-    <tr><td class="paramname">timeMs</td><td>(Optional) Request time as milliseconds since 1970 for optimized caching.</td></tr>
+    <tr><td class="paramname">sequenceBeganMs</td><td>(Optional) Request time as milliseconds since 1970 for optimized caching.</td></tr>
   </table>
   </dd>
 </dl>

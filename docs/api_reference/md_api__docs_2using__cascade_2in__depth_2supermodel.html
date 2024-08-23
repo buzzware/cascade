@@ -93,12 +93,12 @@ $(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2in__dept
   <div class="headertitle"><div class="title">SuperModel In Depth</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md19"></a> </p>
-<h1><a class="anchor" id="autotoc_md20"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md22"></a> </p>
+<h1><a class="anchor" id="autotoc_md23"></a>
 Normally Immutable</h1>
 <p>Much has been written about the benefits of immutable data. The modern language Rust makes parameters, variables etc immutable by default. Of particular benefit with Cascade is that the single current instance per id of each model class can be held in a memory cache and also referenced freely in application data structures without fear of being modified by one part of the application and that affecting other parts. The current instance reflects exactly the state of the server record at the point in time it was sent by the server, without any changes.</p>
 <p>All Cascade methods that return models do so with __mutable == False. That means that any attempt to change their properties (properly implemented using GetProperty/SetProperty) will throw a MutationAttemptException.</p>
-<h2><a class="anchor" id="autotoc_md21"></a>
+<h2><a class="anchor" id="autotoc_md24"></a>
 Form Editing</h2>
 <p>Forms are intended to be implemented using the "editable proxy" feature of SuperModel :</p>
 <div class="fragment"><div class="line">var serverThing = Cascade.Get&lt;Thing&gt;(1);</div>
@@ -116,11 +116,17 @@ Form Editing</h2>
 <div class="line">editableThing = <span class="keyword">new</span> Thing(serverThing);</div>
 <div class="line"><span class="comment">// editableThing.colour == &quot;blue&quot;</span></div>
 </div><!-- fragment --><p>This means that the data properties of models returned by Cascade remain unmodified from when they arrived from the server.</p>
-<h2><a class="anchor" id="autotoc_md22"></a>
+<h2><a class="anchor" id="autotoc_md25"></a>
 Updating Association Properties</h2>
 <p>Association properties are treated differently to data properties.</p>
-<p>1) Their value is typically derived from their attribute parameters and what they reference, such as foreign and local keys. 2) When they are created as an instance eg. deserialized from a server response or loaded frmo a file based cache association properties are null by default. 3) The <code>Populate()</code> method and <code>populate</code> option on <code>Get()</code> and <code>Query()</code> methods are used to ensure association properties are set or updated as required. 4) An association set on a model instance will remain set, and if that same instance is retrieved later from the memory cache the association will still be set whether it was requested to be populated or not. This cannot be relied on. 5) So if your application code requires an association to be set, <b>you must request it to be populated to be sure that it is</b>, and <b>don't be surprised if it is already populated when you did not ask for it to be</b>. <br  />
- </p>
+<ol type="1">
+<li>Their value is typically derived from their attribute parameters and what they reference, such as foreign and local keys.</li>
+<li>When they are created as an instance eg. deserialized from a server response or loaded frmo a file based cache association properties are null by default.</li>
+<li>The <code>Populate()</code> method and <code>populate</code> option on <code>Get()</code> and <code>Query()</code> methods are used to ensure association properties are set or updated as required.</li>
+<li>An association set on a model instance will remain set, and if that same instance is retrieved later from the memory cache the association will still be set whether it was requested to be populated or not. This cannot be relied on.</li>
+<li>So if your application code requires an association to be set, <b>you must request it to be populated to be sure that it is</b>, and <b>don't be surprised if it is already populated when you did not ask for it to be</b>. <br  />
+ </li>
+</ol>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

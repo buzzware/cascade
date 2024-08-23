@@ -102,15 +102,11 @@ Usage</h2>
 <p>As a quick introduction, the main methods provided by Cascade for applications are :</p>
 <ol type="1">
 <li><code>var product = await cascade.Create&lt;Product&gt;(new Product() { colour = "Red" });</code></li>
-</ol>
-<ol type="1">
 <li><code>var product = await cascade.Get&lt;Product&gt;(25, populate: new string[] { nameof(Product.Manufacturer) });</code></li>
 <li><code>var redThings = await cascade.Query&lt;Product&gt;("red_products",new JsonObject { ["colour"] = "red" });</code></li>
 <li><code>var updated = await cascade.Update(product, new JsonObject { ["colour"] = "red" });</code></li>
 <li><code>await cascade.Destroy(product);</code></li>
 <li><code>var promoted = await cascade.Execute("PROMOTE",new JsonObject { ["product_id"] = 25 })</code></li>
-</ol>
-<ol type="1">
 <li><code>await cascade.Populate(product,new string[] { nameof(Product.Manufacturer),nameof(Product.Category) })</code></li>
 </ol>
 <h2><a class="anchor" id="autotoc_md3"></a>
