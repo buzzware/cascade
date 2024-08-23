@@ -17,6 +17,8 @@ Therefore, all of these kinds of relationships are implemented by :
 
 Cascade provides the following attributes for declaring associations on Cascade models. The name associations and the naming of each association type comes from [Ruby On Rails](https://edgeguides.rubyonrails.org/association_basics.html)
 
+In all cases, Cascade associations are declared by adding a typical property named and typed to represent what value it would have, and adding one of the following C# attributes. This property should not be serialized or deserialized, and is not by the builtin serializer. The attribute may refer to local or foreign keys, such as BelongsTo naming the local property that holds the id of the foreign record that the local instance "belongs to".
+
 ## BelongsTo
 
 A DocketItem "belongs to" a single Docket, and the DocketItem has :

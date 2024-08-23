@@ -46,7 +46,7 @@ namespace Buzzware.Cascade {
 		/// <param name="propertyInfo">The metadata of the property to set.</param>
 		/// <param name="value">The value to set for the property. Must be an IEnumerable.</param>
 		/// <exception cref="ArgumentException">Thrown when the property type or value types are incorrect.</exception>
-		protected async Task SetModelCollectionProperty(object target, PropertyInfo propertyInfo, object value) {
+		public async Task SetModelCollectionProperty(object target, PropertyInfo propertyInfo, object value) {
 			Type propertyType = propertyInfo.PropertyType;
 			
 			var nonNullableTargetType = CascadeTypeUtils.DeNullType(propertyType);

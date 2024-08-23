@@ -114,6 +114,9 @@ Inheritance diagram for Buzzware.Cascade.CascadeDataLayer:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a2a839f4895883e34926237671f2eaffc"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a2a839f4895883e34926237671f2eaffc">SetModelCollectionProperty</a> (object target, PropertyInfo propertyInfo, object value)</td></tr>
+<tr class="memdesc:a2a839f4895883e34926237671f2eaffc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a collection property on a model. It ensures the property is enumerable and makes necessary type conversions.  <br /></td></tr>
+<tr class="separator:a2a839f4895883e34926237671f2eaffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca461d0e0eae448886d0b1013ce25652"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#aca461d0e0eae448886d0b1013ce25652">HasManyReplace</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> model, string property, IEnumerable&lt; object &gt; models)</td></tr>
 <tr class="memdesc:aca461d0e0eae448886d0b1013ce25652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the value of the given HasMany property with the given IEnumerable of models and updates the caches appropriately. This is needed eg. when you add models to a HasMany association.  <br /></td></tr>
 <tr class="separator:aca461d0e0eae448886d0b1013ce25652"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -419,9 +422,6 @@ const string&#160;</td><td class="memItemRight" valign="bottom"><b>BLOB_PATH_ALT
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a2a839f4895883e34926237671f2eaffc"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a2a839f4895883e34926237671f2eaffc">SetModelCollectionProperty</a> (object target, PropertyInfo propertyInfo, object value)</td></tr>
-<tr class="memdesc:a2a839f4895883e34926237671f2eaffc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a collection property on a model. It ensures the property is enumerable and makes necessary type conversions.  <br /></td></tr>
-<tr class="separator:a2a839f4895883e34926237671f2eaffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add57c9ae1c150b09ba9ce36fb08bcd6d"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#add57c9ae1c150b09ba9ce36fb08bcd6d">HasManyReplaceRemoveItem</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> model, string property, <a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> hasManyItem, bool remove=false, bool ensureItem=false)</td></tr>
 <tr class="memdesc:add57c9ae1c150b09ba9ce36fb08bcd6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility method to either replace or remove an item from a HasMany association while optionally ensuring the item is present.  <br /></td></tr>
 <tr class="separator:add57c9ae1c150b09ba9ce36fb08bcd6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4793,7 +4793,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

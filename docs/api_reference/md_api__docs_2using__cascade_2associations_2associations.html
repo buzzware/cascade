@@ -105,6 +105,7 @@ $(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2associat
 <li>the ability to retrieve all models of a foreign type that reference a local model by its id and type</li>
 </ol>
 <p>Cascade provides the following attributes for declaring associations on Cascade models. The name associations and the naming of each association type comes from <a href="https://edgeguides.rubyonrails.org/association_basics.html">Ruby On Rails</a></p>
+<p>In all cases, Cascade associations are declared by adding a typical property named and typed to represent what value it would have, and adding one of the following C# attributes. This property should not be serialized or deserialized, and is not by the builtin serializer. The attribute may refer to local or foreign keys, such as BelongsTo naming the local property that holds the id of the foreign record that the local instance "belongs to".</p>
 <h1><a class="anchor" id="autotoc_md6"></a>
 BelongsTo</h1>
 <p>A DocketItem "belongs to" a single Docket, and the DocketItem has :</p>

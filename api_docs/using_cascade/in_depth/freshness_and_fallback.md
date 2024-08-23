@@ -1,4 +1,4 @@
-# Time, Freshness and Fallback
+# Freshness, Fallback and Time
 
 The combination of freshness and fallback freshness enables applications to specify their requirements
 in both typical online, online with network failure, and offline scenarios.
@@ -68,7 +68,7 @@ The combination of freshnessSeconds and fallbackFreshnessSeconds parameters mean
 > OLD: Cascade.Get<Model>(id, freshnessSeconds: RequestOp.FRESHNESS_INSIST)
 > NEW: Cascade.Get<Model>(id, freshnessSeconds: RequestOp.FRESHNESS_FRESHEST, fallbackFreshnessSeconds: RequestOp.FALLBACK_NEVER)
 
-## Optimal Caching for a sequence of Cascade requests
+## Optimal Caching for a sequence of Cascade requests (sequenceBeganMs)
 
 When a sequence of related Cascade requests are performed, for optimum caching, the sequenceBeganMs parameter should be used to pass a common value captured from NowMs. 
 

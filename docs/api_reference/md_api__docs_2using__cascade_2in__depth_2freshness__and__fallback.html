@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cascade: Time, Freshness and Fallback</title>
+<title>Cascade: Freshness, Fallback and Time</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -90,19 +90,19 @@ $(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2in__dept
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Time, Freshness and Fallback</div></div>
+  <div class="headertitle"><div class="title">Freshness, Fallback and Time</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md15"></a> The combination of freshness and fallback freshness enables applications to specify their requirements in both typical online, online with network failure, and offline scenarios.</p>
-<h1><a class="anchor" id="autotoc_md16"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md23"></a> The combination of freshness and fallback freshness enables applications to specify their requirements in both typical online, online with network failure, and offline scenarios.</p>
+<h1><a class="anchor" id="autotoc_md24"></a>
 Time and Now</h1>
 <p>CascadeDataLayer has a NowMs property to provide a consistent and controlled reference for the present time. All internal and related Cascade code that needs to know the present time should use NowMs. This time is a 64 bit long in milliseconds since 1/1/1970 00:00:00 UTC (it is too big for 32 bits) This time actually comes from the provided ICascadeOrigin implementation NowMs property. In production it would probably be calculated from DateTime.Now. In testing it can be a simple writable long property. This means that Cascade's concept of time can be controlled in unit tests.</p>
-<h1><a class="anchor" id="autotoc_md17"></a>
+<h1><a class="anchor" id="autotoc_md25"></a>
 What is Freshness?</h1>
 <p>Freshness is a term used in cache validation. It refers to how recently a piece of data was retrieved from its original source or "origin" in Cascade. Applications specify the freshness of the data they require when making requests. Depending upon these requirements, a cached data entry may or may not be considered 'fresh enough' to be returned. This is determined based on the time of arrival of each record from the origin which is subtracted from the current time, and compared with the freshness requirement.</p>
 <p>Freshness is only a parameter for <b>read</b> requests ie Get, Query, Populate, GetCollection or BlobGet requests.</p>
 <p>In Cascade, freshness is expressed in integer seconds, and refers to how recently the data arrived from the origin. It is <b>inverse</b> ie. a zero value means absolutely fresh - immediately from the origin, while a high value arrived long ago and is more stale. When application code requests data from Cascade with a higher freshness value it means the application is willing to accept older data, and will likely use the cache more often and perform less origin requests; while a lower requirement insists on more recent data.</p>
-<h1><a class="anchor" id="autotoc_md18"></a>
+<h1><a class="anchor" id="autotoc_md26"></a>
 What is Fallback Freshness?</h1>
 <p>In Cascade "fallback" means to return a cached value when an attempt to get the value from the origin fails. This means an app can continue without alerting the user or prompting them to retry or cancel the action they were performing.</p>
 <p>Fallback Freshness is a freshness value that is only used when</p>
@@ -116,7 +116,7 @@ What is Fallback Freshness?</h1>
  </p>
 </blockquote>
 <p>Fallback Freshness is only a parameter for <b>read</b> requests ie Get, Query, Populate, GetCollection or BlobGet requests.</p>
-<h1><a class="anchor" id="autotoc_md19"></a>
+<h1><a class="anchor" id="autotoc_md27"></a>
 Freshness and Fallback together</h1>
 <p>The combination of freshnessSeconds and fallbackFreshnessSeconds parameters means that most application data requirements can be met in online, semi-online and offline scenarios. An application can specify how fresh it would like requested data to be when it has a network connection; and also how old it will tolerate data when offline or the network connection fails.</p>
 <table class="markdownTable">
@@ -141,8 +141,8 @@ Freshness and Fallback together</h1>
 <p>&zwj;At the time of writing, freshnessSeconds = RequestOp.FRESHNESS_INSIST (-1) was used to insist that the response data must either come immediately from the origin, or a DataNotAvailableOffline should be thrown. This value is now deprecated, to be replaced by passing freshnessSeconds = RequestOp.FRESHNESS_FRESHEST (0) and fallbackFreshnessSeconds = RequestOp.FALLBACK_NEVER. Freshness values should now be &gt;= 0</p>
 <p>OLD: Cascade.Get&lt;Model&gt;(id, freshnessSeconds: RequestOp.FRESHNESS_INSIST) NEW: Cascade.Get&lt;Model&gt;(id, freshnessSeconds: RequestOp.FRESHNESS_FRESHEST, fallbackFreshnessSeconds: RequestOp.FALLBACK_NEVER) </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md20"></a>
-Optimal Caching for a sequence of Cascade requests</h1>
+<h1><a class="anchor" id="autotoc_md28"></a>
+Optimal Caching for a sequence of Cascade requests (sequenceBeganMs)</h1>
 <p>When a sequence of related Cascade requests are performed, for optimum caching, the sequenceBeganMs parameter should be used to pass a common value captured from NowMs.</p>
 <p>Suppose we have configured cascade with a ModelClassCache layer and a API server origin. There are two models: Diary and DiaryItem. A Diary has many DiaryItem's, and a DiaryItem belongs to an Area.</p>
 <p>We could write a static function like this :</p>
