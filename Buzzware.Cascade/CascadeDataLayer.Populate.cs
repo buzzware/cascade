@@ -22,7 +22,7 @@ namespace Buzzware.Cascade {
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="skipIfSet">If true and the property is already set, the operation will be skipped for performance reasons</param>
 		/// <param name="hold">Determines whether to hold the data or not during the operation</param>
-		/// <param name="timeMs">Optional request time (milliseconds since 1970) used for optimizing caching when a group of requests share the same time</param>
+		/// <param name="sequenceBeganMs">Optional request time (milliseconds since 1970) used for optimizing caching when a group of requests share the same time</param>
 		/// <returns>A Task that resolves when the operation has completed</returns>
 		public async Task Populate(
 			SuperModel model, 
@@ -31,7 +31,7 @@ namespace Buzzware.Cascade {
 			int? fallbackFreshnessSeconds = null, 
 			bool skipIfSet = false, 
 			bool? hold = null, 
-			long? timeMs = null
+			long? sequenceBeganMs = null
 		) {
 			// Retrieve the type information for the model
 			var modelType = model.GetType();
@@ -45,16 +45,16 @@ namespace Buzzware.Cascade {
 
 			// Handle property population based on associated attribute type
 			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute), true).FirstOrDefault() is HasManyAttribute hasMany) {
-				await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs);
+				await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(HasOneAttribute), true).FirstOrDefault() is HasOneAttribute hasOne) {
-				await processHasOne(model, modelType, propertyInfo!, hasOne, freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs);
+				await processHasOne(model, modelType, propertyInfo!, hasOne, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute), true).FirstOrDefault() is BelongsToAttribute belongsTo) {
-				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs);
+				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(FromBlobAttribute), true).FirstOrDefault() is FromBlobAttribute fromBlob) {
-				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs);
+				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
 			}
 			else if (propertyInfo?.GetCustomAttributes(typeof(FromPropertyAttribute), true).FirstOrDefault() is FromPropertyAttribute fromProperty) {
 				await processFromProperty(model, modelType, propertyInfo!, fromProperty);
@@ -70,11 +70,11 @@ namespace Buzzware.Cascade {
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="skipIfSet">If true, skips all associations for which the properties are already set</param>
 		/// <param name="hold">Determines whether to hold the data during the operation</param>
-		/// <param name="timeMs">Optional request time (milliseconds since 1970) for optimizing caching</param>
+		/// <param name="sequenceBeganMs">Optional request time (milliseconds since 1970) for optimizing caching</param>
 		/// <returns>A Task that resolves when the operation has completed</returns>
-		public async Task Populate(SuperModel model, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null, long? timeMs = null) {
+		public async Task Populate(SuperModel model, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null, long? sequenceBeganMs = null) {
 			foreach (var association in associations) {
-				await Populate(model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, timeMs);
+				await Populate(model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, sequenceBeganMs);
 			}
 		}
 
@@ -85,14 +85,14 @@ namespace Buzzware.Cascade {
 		/// <param name="associations">A list of associations to populate for each model</param>
 		/// <param name="freshnessSeconds">Specifies how fresh the data should be by setting the freshness in seconds</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness setting, used if the main requirement cannot be fulfilled. Defaults to FRESHNESS_ANY.</param>
-		/// <param name="timeMs">Optional request time (milliseconds since 1970) for optimizing caching when multiple requests share the same time</param>
+		/// <param name="sequenceBeganMs">Optional request time (milliseconds since 1970) for optimizing caching when multiple requests share the same time</param>
 		/// <param name="skipIfSet">If set to true, skips any associations where the property is already filled</param>
 		/// <param name="hold">Specifies whether to maintain the acquired data after the method completes</param>
 		/// <returns>A Task that resolves when the operation is complete for all models and associations</returns>
-		public async Task Populate(IEnumerable<SuperModel> models, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null, long? timeMs = null) {
+		public async Task Populate(IEnumerable<SuperModel> models, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null, long? sequenceBeganMs = null) {
 			foreach (var model in models) {
 				foreach (var association in associations) {
-					await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, timeMs);
+					await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, sequenceBeganMs);
 				}
 			}
 		}
@@ -107,11 +107,11 @@ namespace Buzzware.Cascade {
 		/// <param name="fallbackFreshnessSeconds">Defines a fallback freshness if the main constraint cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="skipIfSet">Skip the operation for properties that have already been set, improving performance</param>
 		/// <param name="hold">Determines if the data will persist after execution</param>
-		/// <param name="timeMs">An optional time in milliseconds since 1970 to be applied to optimize caching for grouped requests</param>
+		/// <param name="sequenceBeganMs">An optional time in milliseconds since 1970 to be applied to optimize caching for grouped requests</param>
 		/// <returns>A Task that resolves when the operation is complete across all models and associations specified</returns>
-		public async Task Populate(IEnumerable<SuperModel> models, string association, int? freshnessSeconds = null,int? fallbackFreshnessSeconds = null,  bool skipIfSet = false, bool? hold = null, long? timeMs = null) {
+		public async Task Populate(IEnumerable<SuperModel> models, string association, int? freshnessSeconds = null,int? fallbackFreshnessSeconds = null,  bool skipIfSet = false, bool? hold = null, long? sequenceBeganMs = null) {
 			foreach (var model in models) {
-				await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, timeMs);
+				await Populate((SuperModel)model, association, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, sequenceBeganMs);
 			}
 		}
 

@@ -31,7 +31,7 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Optional freshness requirement in seconds.</param>
 		/// <param name="fallbackFreshnessSeconds">Optional fallback freshness requirement in seconds.</param>
 		/// <param name="hold">Optional parameter to hold the data in memory for quick access.</param>
-		/// <param name="timeMs">Optional timestamp in milliseconds for when the request is made.</param>
+		/// <param name="sequenceBeganMs">Optional timestamp in milliseconds for when the request is made.</param>
 		private async Task processHasMany(
 			SuperModel model, 
 			Type modelType, 
@@ -40,7 +40,7 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null, 
 			int? fallbackFreshnessSeconds = null, 
 			bool? hold = null,
-			long? timeMs = null			
+			long? sequenceBeganMs = null			
 		) {
 			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
@@ -52,7 +52,7 @@ namespace Buzzware.Cascade {
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
 			var requestOp = new RequestOp(
-				timeMs ?? NowMs,
+				sequenceBeganMs ?? NowMs,
 				foreignType,
 				RequestVerb.Query,
 				null,
@@ -79,7 +79,7 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Optional freshness requirement in seconds.</param>
 		/// <param name="fallbackFreshnessSeconds">Optional fallback freshness requirement in seconds.</param>
 		/// <param name="hold">Optional parameter to hold the data in memory for quick access.</param>
-		/// <param name="timeMs">Optional timestamp in milliseconds</param>
+		/// <param name="sequenceBeganMs">Optional timestamp in milliseconds</param>
 		private async Task processHasOne(
 			SuperModel model, 
 			Type modelType, 
@@ -88,7 +88,7 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null, 
 			int? fallbackFreshnessSeconds = null, 
 			bool? hold = null,
-			long? timeMs = null
+			long? sequenceBeganMs = null
 		) {
 			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
@@ -103,7 +103,7 @@ namespace Buzzware.Cascade {
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
 			var requestOp = new RequestOp(
-				timeMs ?? NowMs,
+				sequenceBeganMs ?? NowMs,
 				foreignType,
 				RequestVerb.Query,
 				null,
@@ -162,17 +162,17 @@ namespace Buzzware.Cascade {
 					requestOp.FreshnessSeconds,
 					fallbackFreshnessSeconds: requestOp.FallbackFreshnessSeconds,
 					hold: requestOp.Hold,
-					timeMs: requestOp.TimeMs
+					sequenceBeganMs: requestOp.TimeMs
 				);
 				IEnumerable<SuperModel> models = modelResponses.Select(r => (SuperModel)r.Result).ToImmutableArray();
 				if (populate.Any()) {
-					await Populate(models, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, timeMs: requestOp.TimeMs);
+					await Populate(models, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, sequenceBeganMs: requestOp.TimeMs);
 				}
 				opResponse = opResponse.withChanges(result: models); // modify the response with models instead of ids
 			} else {
 				if (populate.Any()) {
 					IEnumerable<SuperModel> results = opResponse.Results.Cast<SuperModel>();
-					await Populate(results, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, timeMs: requestOp.TimeMs);
+					await Populate(results, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, sequenceBeganMs: requestOp.TimeMs);
 				}
 			}
 			// End populate operations handling
@@ -269,8 +269,8 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Optional freshness requirement in seconds.</param>
 		/// <param name="fallbackFreshnessSeconds">Optional fallback freshness requirement in seconds.</param>
 		/// <param name="hold">Optional parameter to hold the data in memory for quick access.</param>
-		/// <param name="timeMs">Optional timestamp in milliseconds for when the request is made.</param>
-		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null,  int? fallbackFreshnessSeconds = null, bool? hold = null, long? timeMs = null) {
+		/// <param name="sequenceBeganMs">Optional timestamp in milliseconds for when the request is made.</param>
+		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null,  int? fallbackFreshnessSeconds = null, bool? hold = null, long? sequenceBeganMs = null) {
 			var foreignModelType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var idProperty = modelType.GetProperty(attribute.IdProperty);
 			var id = idProperty.GetValue(model);
@@ -278,7 +278,7 @@ namespace Buzzware.Cascade {
 				return;
 
 			var requestOp = new RequestOp(
-				timeMs ?? NowMs,
+				sequenceBeganMs ?? NowMs,
 				foreignModelType,
 				RequestVerb.Get,
 				id,
@@ -302,8 +302,8 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Optional freshness requirement in seconds.</param>
 		/// <param name="fallbackFreshnessSeconds">Optional fallback freshness requirement in seconds.</param>
 		/// <param name="hold">Optional parameter to hold the data in memory for quick access.</param>
-		/// <param name="timeMs">Optional timestamp in milliseconds for when the request is made.</param>
-		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null, long? timeMs = null) {
+		/// <param name="sequenceBeganMs">Optional timestamp in milliseconds for when the request is made.</param>
+		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null, long? sequenceBeganMs = null) {
 			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
 			var pathProperty = modelType.GetProperty(attribute.PathProperty);
 			var path = pathProperty.GetValue(model) as string;
@@ -312,7 +312,7 @@ namespace Buzzware.Cascade {
 
 			var requestOp = RequestOp.BlobGetOp(
 				path,
-				timeMs ?? NowMs,
+				sequenceBeganMs ?? NowMs,
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold: hold

@@ -15,16 +15,16 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Desired freshness duration in seconds for the cache</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness duration if primary freshness cannot be achieved</param>
 		/// <param name="hold">Indicates if the blob and its associations should be held in cache</param>
-		/// <param name="timeMs">The request timestamp in milliseconds since epoch, for caching optimization</param>
+		/// <param name="sequenceBeganMs">The request timestamp in milliseconds since epoch, for caching optimization</param>
 		/// <returns>The blob data as a byte array or null if not found</returns>
 		public async Task<byte[]?> BlobGet(
 			string path,
 			int? freshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
 			bool? hold = null,
-			long? timeMs = null
+			long? sequenceBeganMs = null
 		) {
-			return (byte[]?)(await this.BlobGetResponse(path, freshnessSeconds, fallbackFreshnessSeconds, hold, timeMs)).Result;
+			return (byte[]?)(await this.BlobGetResponse(path, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs)).Result;
 		}
 
 		/// <summary>
@@ -34,19 +34,19 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Desired freshness of the blob in seconds</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness in case the primary cannot be achieved</param>
 		/// <param name="hold">Flag to hold the blob in cache for offline availability</param>
-		/// <param name="timeMs">Request timestamp in milliseconds since epoch</param>
+		/// <param name="sequenceBeganMs">Request timestamp in milliseconds since epoch</param>
 		/// <returns>A task representing the operation, with OpResponse as the result</returns>
 		public Task<OpResponse> BlobGetResponse(
 			string path,
 			int? freshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
 			bool? hold = null,
-			long? timeMs = null
+			long? sequenceBeganMs = null
 		) {
 			// Create a request operation for retrieving a binary blob
 			var req = RequestOp.BlobGetOp(
 				path,
-				timeMs ?? NowMs,
+				sequenceBeganMs ?? NowMs,
 				freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold
