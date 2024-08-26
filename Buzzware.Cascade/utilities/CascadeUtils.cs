@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -12,32 +12,76 @@ using Serilog;
 using Buzzware.StandardExceptions;
 
 namespace Buzzware.Cascade {
+
+  /// <summary>
+  /// A utility class providing general helper methods for the Cascade library.
+  /// </summary>
 	public static class CascadeUtils {
+  
+    /// <summary>
+    /// The Unix epoch reference time, set to January 1, 1970, at 00:00:00 UTC.
+    /// </summary>
 		public static DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+    /// <summary>
+    /// Current Unix time in milliseconds.
+    /// </summary>
 		public static long NowMs => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-		
-		// "Where Collections" are collections whose key begins with "WHERE__" and is defined using this function.
-		// Their key fully describes what they are - a collection of the given type where the given property has the given value.
-		// In future, the framework could parse and evaluate these names as a query eg. to refresh them
-		// Other collections should not begin with "WHERE__", and property names or values should not contain more than one consecutive underscore
-		// This function is primarily intended for collections created for associations, especially HasMany.
+
+    /// <summary>
+    /// Generates a key for 'Where Collections', which are collections where 
+    /// a given property of a given type has a specific value.
+    /// The key format is "WHERE__{typeName}__{property}__{value}". These collections
+    /// are particularly useful for associations like HasMany.
+    /// </summary>
+    /// <param name="typeName">The name of the type for the collection.</param>
+    /// <param name="property">The property name being queried.</param>
+    /// <param name="value">The value that property is being matched against.</param>
+    /// <returns>A key representing a specific query condition for a collection.</returns>
 		public static string WhereCollectionKey(string typeName,string property,string value) {
 			return $"WHERE__{typeName}__{property}__{value}";
 		}
 
+    /// <summary>
+    /// Converts a DateTime object to Unix time in milliseconds.
+    /// </summary>
+    /// <param name="aDateTime">The DateTime object to convert.</param>
+    /// <returns>Unix time representation of the provided DateTime in milliseconds.</returns>
 		public static Int64 toUnixMilliseconds(DateTime aDateTime) {
 			return (Int64)(aDateTime.ToUniversalTime() - epoch).TotalMilliseconds;
 		}
 
+    /// <summary>
+    /// Converts a specified date and time to Unix time in milliseconds.
+    /// The time is considered to be in UTC.
+    /// </summary>
+    /// <param name="year">Year of the date to convert.</param>
+    /// <param name="month">Month of the date to convert (1-12).</param>
+    /// <param name="day">Day of the month to convert (1-31).</param>
+    /// <param name="hour">Hour of the day to convert (0-23).</param>
+    /// <param name="min">Minute of the hour to convert (0-59).</param>
+    /// <param name="sec">Second of the minute to convert (0-59).</param>
+    /// <returns>Unix time representation of the specified date and time in milliseconds.</returns>
 		public static Int64 toUnixMilliseconds(int year, int month = 1, int day = 1, int hour = 0, int min = 0, int sec = 0) {
 			return toUnixMilliseconds(new DateTime(year, month, day, hour, min, sec, DateTimeKind.Utc));
 		}
 		
+    /// <summary>
+    /// Converts Unix time in milliseconds back to a DateTime object.
+    /// The resulting DateTime is in UTC.
+    /// </summary>
+    /// <param name="aTimems">Unix time in milliseconds.</param>
+    /// <returns>A DateTime object representing the given Unix time.</returns>
 		public static DateTime fromUnixMilliseconds(Int64 aTimems) {
 			return epoch.AddMilliseconds(aTimems);
 		}
 		
+    /// <summary>
+    /// Reads the contents of a binary file asynchronously.
+    /// </summary>
+    /// <param name="filePath">Path of the file to read.</param>
+    /// <param name="bufferSize">Size of the buffer to use for reading bytes, default is 8192.</param>
+    /// <returns>The byte array containing the contents of the file.</returns>
 		public static async Task<byte[]> ReadBinaryFile(string filePath, int bufferSize = 8192) {
 			byte[] buffer = new byte[bufferSize];
 			using (MemoryStream ms = new MemoryStream())
@@ -54,11 +98,22 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
+    /// <summary>
+    /// Writes a byte array to a binary file asynchronously.
+    /// </summary>
+    /// <param name="path">The file path where the data should be written.</param>
+    /// <param name="content">The byte array to write to the file.</param>
+    /// <param name="bufferSize">Size of the buffer for writing, default is 8192.</param>
 		public static async Task WriteBinaryFile(string path, byte[] content, int bufferSize = 8192) {
 			using FileStream destinationStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: bufferSize, useAsync: true);
 			await destinationStream.WriteAsync(content, 0, content.Length);
 		}
 
+    /// <summary>
+    /// Writes a string content to a text file asynchronously.
+    /// </summary>
+    /// <param name="filePath">Path to the file where the content will be written.</param>
+    /// <param name="content">String content to be written to the file.</param>
 		public static async Task WriteTextFile(string filePath, string? content) {
 			using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
 				using (var writer = new StreamWriter(stream)) {
@@ -67,6 +122,12 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
+    /// <summary>
+    /// Loads the content of a file as a string asynchronously.
+    /// If the file does not exist, returns null.
+    /// </summary>
+    /// <param name="aPath">The path to the file to read.</param>
+    /// <returns>The content of the file as a string, or null if the file does not exist.</returns>
 		public static async Task<string?> LoadFileAsStringAsync(string aPath) {
 			if (!File.Exists(aPath))
 				return null;
@@ -79,6 +140,12 @@ namespace Buzzware.Cascade {
 			return content;
 		}
 		
+    /// <summary>
+    /// Synchronously loads the content of a file as a string.
+    /// If the file does not exist, returns null.
+    /// </summary>
+    /// <param name="path">The path to the file to read.</param>
+    /// <returns>The content of the file as a string, or null if the file does not exist.</returns>
 		public static string? LoadFileAsString(string path) {
 			if (!File.Exists(path))
 				return null;
@@ -91,6 +158,11 @@ namespace Buzzware.Cascade {
 			return content;
 		}
 		
+    /// <summary>
+    /// Writes a string content to a file asynchronously.
+    /// </summary>
+    /// <param name="path">Path to the file where the content will be written.</param>
+    /// <param name="content">String content to write to the file.</param>
 		public static async Task WriteStringToFileAsync(string path, string content) {
 			using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true)) {
 				using (var writer = new StreamWriter(stream)) {
@@ -99,6 +171,11 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
+    /// <summary>
+    /// Writes a string content to a file synchronously.
+    /// </summary>
+    /// <param name="path">Path to the file where the content will be written.</param>
+    /// <param name="content">String content to write to the file.</param>
 		public static void WriteStringToFile(string path, string content) {
 			using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None)) {
 				using (var writer = new StreamWriter(stream)) {
@@ -107,82 +184,18 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
-		// public async Task Populate(ICascadeModel model, string property) {
-		// 	var modelType = model.GetType();
-		// 	var propertyInfo = modelType.GetProperty(property);
-		//
-		// 	if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute),true).FirstOrDefault() is HasManyAttribute hasMany) {
-		// 		await processHasMany(model, modelType, propertyInfo!, hasMany);
-		// 	} else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute),true).FirstOrDefault() is BelongsToAttribute belongsTo) {
-		// 		await processBelongsTo(model, modelType, propertyInfo!, belongsTo);
-		// 	}
-		// }
-
-
-		// public static string[] SplitKey(string aKey) {
-		// 	return aKey.Split(new string[] {"__"},StringSplitOptions.RemoveEmptyEntries);
-		// }
-		//
-		// public static string ExtractResource(string aKey) {
-		// 	if (aKey==null)
-		// 		return null;
-		// 	var parts = SplitKey(aKey);
-		// 	return parts.Length == 0 ? null : parts[0];
-		// }
-		//
-		// public static string ExtractId(string aKey) {
-		// 	if (aKey==null)
-		// 		return null;
-		// 	var parts = SplitKey(aKey);
-		// 	return parts.Length < 2 ? null : parts[1];
-		// }
-		//
-		// public static long ExtractLongId(string aKey) {
-		// 	if (aKey==null)
-		// 		return 0;
-		// 	var id = ExtractId(aKey);
-		// 	return id == null ? 0 : LongId(id);
-		// }
-		//
-		// public static long LongId(string aResourceId) {
-		// 	EnsureIsResourceId(aResourceId);
-		// 	return Convert.ToInt64(aResourceId);
-		// }
-		//
-		// public static string EnsureIsResourceId(string aResourceId) {
-		// 	if (!IsResourceId(aResourceId))
-		// 		throw new Exception("aResourceId is not a valid resource id");
-		// 	return aResourceId;
-		// }
-		//
-		// public static long EnsureIsResourceId(long aResourceId) {
-		// 	if (aResourceId==0)
-		// 		throw new Exception("aResourceId is not a valid resource id");
-		// 	return aResourceId;
-		// }
-		//
-		// public static bool IsResourceId(string aResourceId) {
-		// 	return !(aResourceId == null || aResourceId == "0" || aResourceId == "");
-		// }		
-		//
-		// public static bool IsResourceId(int aResourceId) {
-		// 	return !(aResourceId == 0);
-		// }
-		//
-		// public static bool IsResourceId(long aResourceId) {
-		// 	return !(aResourceId == 0);
-		// }
-		//
-		//
-		// public static string JoinKey(string resource, string id) {
-		// 	if (resource==null)
-		// 		throw new ArgumentException("A key needs a resource");
-		// 	if (id == null)
-		// 		return resource;
-		// 	return resource + "__" + id;
-		// }
 		private const int MAX_WRITE_ATTEMPTS = 5;
 
+    /// <summary>
+    /// Tries to perform a file operation with a specified number of attempts
+    /// and optional sleep time between attempts. Used to handle transient 
+    /// file sharing issues.
+    /// </summary>
+    /// <typeparam name="T">The type returned by the file operation.</typeparam>
+    /// <param name="func">The file operation func to attempt.</param>
+    /// <param name="maxAttempts">Maximum number of attempts before throwing an exception.</param>
+    /// <param name="sleepMs">Time in milliseconds to sleep between attempts.</param>
+    /// <returns>The result of the file operation if successful.</returns>
 		public static T EnsureFileOperationSync<T>(
 			Func<T> func,
 			int maxAttempts = 5,
@@ -209,6 +222,14 @@ namespace Buzzware.Cascade {
 			} while (true) ;
 		}
 
+    /// <summary>
+    /// Tries to perform a file operation with a specified number of attempts
+    /// and optional sleep time between attempts. Used to handle transient 
+    /// file sharing issues.
+    /// </summary>
+    /// <param name="func">The file operation action to attempt.</param>
+    /// <param name="maxAttempts">Maximum number of attempts before throwing an exception.</param>
+    /// <param name="sleepMs">Time in milliseconds to sleep between attempts.</param>
 		public static void EnsureFileOperationSync(
 			Action func,
 			int maxAttempts = 5,
@@ -224,7 +245,15 @@ namespace Buzzware.Cascade {
 			);
 		}
 		
-		
+    /// <summary>
+    /// Asynchronously attempts a file operation multiple times, waiting between attempts.
+    /// Used to handle transient sharing issues with I/O operations.
+    /// </summary>
+    /// <typeparam name="T">The type returned by the async operation.</typeparam>
+    /// <param name="func">The async function to attempt.</param>
+    /// <param name="maxAttempts">Maximum number of attempts before failing.</param>
+    /// <param name="sleepMs">Milliseconds to wait between attempts.</param>
+    /// <returns>The result of a successful operation.</returns>
 		public static async Task<T> EnsureFileOperation<T>(
 			Func<Task<T>> func,
 			int maxAttempts = 5,
@@ -248,6 +277,14 @@ namespace Buzzware.Cascade {
 			} while (true) ;
 		}
 
+    /// <summary>
+    /// Asynchronously attempts a void file operation multiple times, waiting between attempts.
+    /// Used to handle transient sharing issues with I/O operations.
+    /// </summary>
+    /// <param name="func">The async operation to attempt.</param>
+    /// <param name="maxAttempts">Maximum number of attempts before failing.</param>
+    /// <param name="sleepMs">Milliseconds to wait between attempts.</param>
+    /// <returns>An awaitable Task.</returns>
 		public static Task EnsureFileOperation(
 			Func<Task> func,
 			int maxAttempts = 5,
@@ -263,6 +300,11 @@ namespace Buzzware.Cascade {
 			);
 		}
 		
+    /// <summary>
+    /// Checks if an exception is related to file sharing or locking issues.
+    /// </summary>
+    /// <param name="exception">The exception to check.</param>
+    /// <returns>True if it's a file sharing exception; otherwise, false.</returns>
 		public static bool IsFileSharingException(Exception exception) {
 			var ioException = exception as IOException;
 			if (ioException == null)
@@ -274,6 +316,11 @@ namespace Buzzware.Cascade {
 			return isFileIssue;
 		}
 
+    /// <summary>
+    /// Checks if an exception is related to network issues excluding typical file sharing problems.
+    /// </summary>
+    /// <param name="exception">The exception to evaluate.</param>
+    /// <returns>True if the exception is a network IO exception, but not due to file sharing.</returns>
 		public static bool IsNetworkIOException(Exception exception) {
 			var ioException = exception as IOException;
 			if (ioException == null)
@@ -285,16 +332,34 @@ namespace Buzzware.Cascade {
 			return !isFileIssue;
 		}
 
+    /// <summary>
+    /// Determines if an exception is due to a network failure not contained
+    /// in the standard IOException causes, including Sockets and WebException.
+    /// </summary>
+    /// <param name="exception">The exception to check.</param>
+    /// <returns>True if the exception is due to non-standard network failures.</returns>
 		public static bool IsNonStandardNetworkFailureException(Exception exception) {
 			return IsNetworkIOException(exception) ||
 			       exception is System.Net.Sockets.SocketException ||
 			       exception is System.Net.WebException;
 		}
 
+    /// <summary>
+    /// Determines if an exception is due to a network failure, including 
+    /// standard, non-standard and specific exceptions like NoNetworkException.
+    /// </summary>
+    /// <param name="exception">The exception to evaluate.</param>
+    /// <returns>True if the exception is network related.</returns>
 		public static bool IsNetworkFailureException(Exception exception) {
 			return exception is NoNetworkException || IsNonStandardNetworkFailureException(exception);
 		}
-		
+
+    /// <summary>
+    /// Combines a list of path segments into a single path string using the specified separator.
+    /// </summary>
+    /// <param name="pathSegments">List of individual path segments to combine.</param>
+    /// <param name="separator">Character separator to use for combining paths.</param>
+    /// <returns>The combined path as a string.</returns>
 		public static string CombinePaths(List<string> pathSegments, char separator = '/')
 		{
 			string combinedPath = Path.Combine(pathSegments.ToArray());
@@ -302,6 +367,13 @@ namespace Buzzware.Cascade {
 			return combinedPath;
 		}
 		
+    /// <summary>
+    /// Calculates the relative path from a base path to an absolute path.
+    /// Throws an exception if the paths do not share a common root.
+    /// </summary>
+    /// <param name="basePath">The base path to calculate the relative path from.</param>
+    /// <param name="absolutePath">The absolute path to which the relative path is calculated.</param>
+    /// <returns>The relative path from the base path to the absolute path.</returns>
 		public static string GetRelativePath(string basePath, string absolutePath) {
 			string[] baseDirs = basePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 			string[] absDirs = absolutePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
@@ -351,7 +423,14 @@ namespace Buzzware.Cascade {
 
 			return relativePath.ToString();
 		}		
-		
+
+    /// <summary>
+    /// Returns the path up to and including the named folder within a given path.
+    /// If the folder is not found, returns null.
+    /// </summary>
+    /// <param name="path">The full path in which to search for the folder.</param>
+    /// <param name="folderName">The name of the folder to find.</param>
+    /// <returns>The path up to and including the specified folder, or null if not found.</returns>
 		public static string? UpToFolderNamed(string path, string folderName) {
 			var parts = path.Split('/');
 			var folderIndex = Array.LastIndexOf(parts, folderName);
@@ -361,6 +440,13 @@ namespace Buzzware.Cascade {
 			return result;
 		}
 
+    /// <summary>
+    /// Returns the path above a named folder within a given path.
+    /// If the folder is not found, returns null.
+    /// </summary>
+    /// <param name="path">The full path in which to search for the folder.</param>
+    /// <param name="folderName">The name of the folder to find.</param>
+    /// <returns>The path above the specified folder, or null if not found.</returns>
 		public static string? AboveFolderNamed(string path, string folderName) {
 			var path2 = UpToFolderNamed(path, folderName);
 			if (path2 == null)
