@@ -63,7 +63,7 @@ namespace Buzzware.Cascade {
 				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
 				key: key
 			);
-			var opResponse = await InnerProcessWithFallback(requestOp);
+			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
 			await StoreInPreviousCaches(opResponse);
 			await SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
 		}
@@ -114,7 +114,7 @@ namespace Buzzware.Cascade {
 				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
 				key: key
 			);
-			var opResponse = await InnerProcessWithFallback(requestOp);
+			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
 			await StoreInPreviousCaches(opResponse);
 			await SetModelProperty(model, propertyInfo, opResponse.FirstResult);
 		}
@@ -196,21 +196,8 @@ namespace Buzzware.Cascade {
 					requestOp.Verb, requestOp.Id, requestOp.Type, requestOp.Key, requestOp.FreshnessSeconds, criteria);
 				Log.Debug("ProcessRequest after criteria");
 			}
-
-
-			// if (HavePendingChanges && shouldAttemptUploadPendingChanges) {
-			// 	try {        
-			// 		if (Buzzware.Cascade.ConnectionMode!=UploadingPendingChanges)
-			// 			Buzzware.Cascade.ConnectionMode = UploadingPendingChanges;
-			// 		UploadPendingChanges
-			// 		InnerProcess(mode=online)            // !!! should only attempt online processing
-			// 		Buzzware.Cascade.ConnectionMode = Online
-			// 	} catch (OfflineException) {
-			// 		// probably smother exceptions. If we can't complete UploadPendingChanges(), stay offline
-			// 	}
-			// }
-
-			OpResponse opResponse = await InnerProcessWithFallback(requestOp);
+			
+			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
 			
 			await StoreInPreviousCaches(opResponse); // just store ResultIds
 			
@@ -220,42 +207,6 @@ namespace Buzzware.Cascade {
 			if (Log.Logger.IsEnabled(LogEventLevel.Verbose) && !isBlobVerb)
 				Log.Verbose("ProcessRequest OpResponse: Result: {@Result}",opResponse.Result);
 			return opResponse;
-		}
-
-		/// <summary>
-		/// Handles the process of data operation requests with fallback options, ensuring data retrieval
-		/// even when network connectivity issues occur. Switches between online and offline processing as necessary.
-		/// </summary>
-		/// <param name="req">Request operation detailing the type of operation and data parameters.</param>
-		/// <returns>OpResponse object containing the operation response data.</returns>
-		private async Task<OpResponse> InnerProcessWithFallback(RequestOp req) {
-			OpResponse? result = null;
-			// bool loop = false;
-			// do {
-			// 	try {
-			// 		loop = false;
-					result = await InnerProcess(req, this.ConnectionOnline);
-			// 	}
-			// 	catch (Exception e) {
-			// 		if (
-			// 			e is NoNetworkException ||
-			// 			e is System.Net.Sockets.SocketException || 
-			// 			e is System.Net.WebException
-			// 		) {
-			// 			if (this.ConnectionOnline) {
-			// 				this.ConnectionOnline = false;
-			// 				loop = true;
-			// 			}
-			// 			else {
-			// 				Log.Warning("Should not get OfflineException when ConnectionMode != Online");
-			// 			}
-			// 		} else {
-			// 			throw e;
-			// 		}
-			// 	}
-			// } while (loop);
-			//
-			return result!;
 		}
 
 		/// <summary>
@@ -286,7 +237,7 @@ namespace Buzzware.Cascade {
 				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold: hold
 			);
-			var opResponse = await InnerProcessWithFallback(requestOp);
+			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
 			await StoreInPreviousCaches(opResponse);
 			await SetModelProperty(model, propertyInfo, opResponse.Result);
 		}
@@ -316,8 +267,10 @@ namespace Buzzware.Cascade {
 				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
 				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
 				hold: hold
-			); 
-			var opResponse = await InnerProcessWithFallback(requestOp);
+			);
+			
+			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
+			
 			await StoreInPreviousCaches(opResponse);
 
 			var propertyValue = attribute.Converter!.Convert(opResponse.Result as byte[], destinationPropertyType);
