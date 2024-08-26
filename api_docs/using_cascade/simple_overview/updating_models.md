@@ -1,3 +1,5 @@
+@page updating_models Updating Models
+
 # Updating Models
 
 Cascade provides two primary methods for updating existing models in your Origin: `Update` and `Replace`. This guide explains how to use these methods effectively.

@@ -12,7 +12,7 @@ var searchData=
   ['firstresult_9',['FirstResult',['../class_buzzware_1_1_cascade_1_1_op_response.html#a379c93503c50a040b223d59fbdb423aa',1,'Buzzware::Cascade::OpResponse']]],
   ['fnvhash_10',['FNVHash',['../class_buzzware_1_1_cascade_1_1_f_n_v_hash.html',1,'Buzzware::Cascade']]],
   ['foreignidproperty_11',['ForeignIdProperty',['../class_buzzware_1_1_cascade_1_1_has_many_attribute.html#a1374420aeda61254c20a55b305e41476',1,'Buzzware.Cascade.HasManyAttribute.ForeignIdProperty'],['../class_buzzware_1_1_cascade_1_1_has_one_attribute.html#a8fb45262974b3403a3af3378c6d91bb2',1,'Buzzware.Cascade.HasOneAttribute.ForeignIdProperty']]],
-  ['freshness_2c_20fallback_20and_20time_12',['Freshness, Fallback and Time',['../md_api__docs_2using__cascade_2in__depth_2freshness__and__fallback.html',1,'']]],
+  ['freshness_2c_20fallback_20and_20time_12',['Freshness, Fallback and Time',['../freshness_and_fallback.html',1,'']]],
   ['freshnessseconds_13',['FreshnessSeconds',['../class_buzzware_1_1_cascade_1_1_cascade_paginator.html#a0360d1a0cb0839825d40b18bb5121003',1,'Buzzware::Cascade::CascadePaginator']]],
   ['fromblobattribute_14',['FromBlobAttribute',['../class_buzzware_1_1_cascade_1_1_from_blob_attribute.html',1,'Buzzware.Cascade.FromBlobAttribute'],['../class_buzzware_1_1_cascade_1_1_from_blob_attribute.html#aaee4ed16df4e6692d0bc2b37066f058f',1,'Buzzware.Cascade.FromBlobAttribute.FromBlobAttribute()']]],
   ['frompropertyattribute_15',['FromPropertyAttribute',['../class_buzzware_1_1_cascade_1_1_from_property_attribute.html',1,'Buzzware.Cascade.FromPropertyAttribute'],['../class_buzzware_1_1_cascade_1_1_from_property_attribute.html#a8f8f933f528428aa2f4457d235abef5c',1,'Buzzware.Cascade.FromPropertyAttribute.FromPropertyAttribute()']]]

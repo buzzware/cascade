@@ -1,3 +1,5 @@
+@page supermodel SuperModel In Depth 
+
 # SuperModel In Depth
 
 ## Normally Immutable
@@ -12,7 +14,7 @@ the server record at the point in time it was sent by the server, without any ch
 All Cascade methods that return models do so with __mutable == False. That means that any attempt to change 
 their properties (properly implemented using GetProperty/SetProperty) will throw a MutationAttemptException.
 
-### Form Editing
+### Editable Proxy Form Editing
 
 Forms are intended to be implemented using the "editable proxy" feature of SuperModel :
 

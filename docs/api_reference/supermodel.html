@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cascade: Populating Associations</title>
+<title>Cascade: SuperModel In Depth</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -64,7 +64,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2associations_2populating.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('supermodel.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -90,42 +90,36 @@ $(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2associat
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Populating Associations</div></div>
+  <div class="headertitle"><div class="title">SuperModel In Depth</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md15"></a> A Child has an association property Parent for holding a reference to its Parent.</p>
-<div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>Child : SuperModel {</div>
-<div class="line">    </div>
-<div class="line">    [Cascade.CascadeId]</div>
-<div class="line">    <span class="keyword">public</span> <span class="keywordtype">string</span> <span class="keywordtype">id</span> { <span class="keyword">get</span>; <span class="keyword">set</span>; }</div>
-<div class="line">    </div>
-<div class="line">    <span class="keyword">public</span> <span class="keywordtype">int</span>? parentId { <span class="keyword">get</span>; <span class="keyword">set</span>; }</div>
-<div class="line">    </div>
-<div class="line">    [Cascade.BelongsTo(idProperty: <span class="stringliteral">&quot;parentId&quot;</span>)]</div>
-<div class="line">    public Parent? Parent { get; <span class="keyword">set</span>; }</div>
-<div class="line">    </div>
-<div class="line">    <span class="keyword">public</span> <span class="keywordtype">int</span> age { <span class="keyword">get</span>; <span class="keyword">set</span>; }</div>
-<div class="line">}</div>
-</div><!-- fragment --><p>Let's assume that a Child with id=1 exists and it has parentId=5 and a Parent with id 5 also exists. The first time that <code>child = await Cascade.Get&lt;Child&gt;(1)</code> is called, the returned child.Parent property will always be null because it has not been populated.</p>
-<p>To populate Parent we can do :</p>
-<div class="fragment"><div class="line">await Cascade.Populate(child,nameof(Child.Parent));</div>
-</div><!-- fragment --><p>and then child.Parent will equal the instance of Parent with id=5.</p>
-<p>Likewise, we can do :</p>
-<div class="fragment"><div class="line">await Cascade.Populate(parent,nameof(Parent.Children));</div>
-</div><!-- fragment --><blockquote class="doxtable">
-<p>&zwj;Populate will populate any association property ie a property with one of the supported attributes BelongsTo, HasMany, HasOne or FromBlob. </p>
-</blockquote>
-<p>We can also pass multiple associations</p>
-<div class="fragment"><div class="line">await Cascade.Populate(order, <span class="keyword">new</span> []{ nameof(Order.Supplier),nameof(Order.Address) });</div>
-</div><!-- fragment --><p>For convenience, we can also pass the <code>populate</code> option to other methods like <code>Get</code> and <code>Query</code>, which call <code>Populate()</code> internally :</p>
-<div class="fragment"><div class="line">child = await Cascade.Get&lt;Child&gt;(1,populate: <span class="keyword">new</span> []{nameof(Child.Parent)});</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md16"></a>
-How it Works</h1>
-<ol type="1">
-<li>Values required to retrieve the value for the association property are retrieved as referenced by the attribute.</li>
-<li>Populate internally uses these values with other methods such as Get, Query and/or BlobGet to perform the necessary operation to get the value for the association property.</li>
-<li>the association property is set on the main thread (necessary for any bound UI that will update) and using SuperModel's <code>__mutateWith</code> method in order to set the property regardless of whether <code>__mutable</code> is true or false. </li>
-</ol>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md46"></a>
+SuperModel In Depth</h1>
+<h2><a class="anchor" id="autotoc_md47"></a>
+Normally Immutable</h2>
+<p>Much has been written about the benefits of immutable data. The modern language Rust makes parameters, variables etc immutable by default. Of particular benefit with Cascade is that the single current instance per id of each model class can be held in a memory cache and also referenced freely in application data structures without fear of being modified by one part of the application and that affecting other parts. The current instance reflects exactly the state of the server record at the point in time it was sent by the server, without any changes.</p>
+<p>All Cascade methods that return models do so with __mutable == False. That means that any attempt to change their properties (properly implemented using GetProperty/SetProperty) will throw a MutationAttemptException.</p>
+<h3><a class="anchor" id="autotoc_md48"></a>
+Editable Proxy Form Editing</h3>
+<p>Forms are intended to be implemented using the "editable proxy" feature of SuperModel :</p>
+<div class="fragment"><div class="line">var serverThing = Cascade.Get&lt;Thing&gt;(1);</div>
+<div class="line"><span class="comment">// serverThing.colour == &quot;red&quot;</span></div>
+<div class="line">var editableThing = <span class="keyword">new</span> Thing(serverThing);</div>
+<div class="line"><span class="comment">// editableThing.colour == &quot;red&quot;</span></div>
+<div class="line">editableThing.colour = <span class="stringliteral">&quot;blue&quot;</span>;</div>
+<div class="line"><span class="comment">// editableThing.colour == &quot;blue&quot;</span></div>
+<div class="line"><span class="comment">// Dictionary&lt;string,object?&gt; changes = editableThing.__GetChanges();</span></div>
+<div class="line"><span class="comment">// changes == { [&quot;colour&quot;] = &quot;blue&quot; }</span></div>
+</div><!-- fragment --><p><code>editableThing</code> can be used like any other model in dotnet applications eg. can be bound to UI controls, even with TwoWay binding.</p>
+<p>As shown above, __GetChanges() then returns a dictionary of changes to be sent to the server like so :</p>
+<div class="fragment"><div class="line">serverThing = await Cascade.Update(serverThing,changes);</div>
+<div class="line"><span class="comment">// serverThing.colour == &quot;blue&quot;</span></div>
+<div class="line">editableThing = <span class="keyword">new</span> Thing(serverThing);</div>
+<div class="line"><span class="comment">// editableThing.colour == &quot;blue&quot;</span></div>
+</div><!-- fragment --><p>This means that the data properties of models returned by Cascade remain unmodified from when they arrived from the server.</p>
+<h3><a class="anchor" id="autotoc_md49"></a>
+Updating Association Properties</h3>
+<p>The <code>Populate()</code> method and <code>populate</code> option on <code>Get()</code> and <code>Query()</code> methods are used to ensure association properties are set or updated as required. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

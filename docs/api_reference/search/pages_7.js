@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['pagination_20with_20cascadepaginator_0',['Pagination with CascadePaginator',['../md_api__docs_2using__cascade_2in__depth_2pagination.html',1,'']]],
-  ['populating_20associations_1',['Populating Associations',['../md_api__docs_2using__cascade_2associations_2populating.html',1,'']]]
+  ['md_5fapi_5f_5fdocs_5f2using_5f_5fcascade_5f2associations_5f2association_5f_5fhelpers_0',['md_api__docs_2using__cascade_2associations_2association__helpers',['../md_api__docs_2using__cascade_2associations_2association__helpers.html',1,'']]]
 ];

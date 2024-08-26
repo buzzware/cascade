@@ -1,3 +1,5 @@
+@page queries Simple Querying with Cascade 
+
 # Simple Querying with Cascade
 
 Cascade provides a straightforward way to query models from your data source. This guide will walk you through the process of setting up and executing queries to retrieve lists of models.

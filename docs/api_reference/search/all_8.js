@@ -19,5 +19,5 @@ var searchData=
   ['holdcollection_3c_20model_20_3e_16',['HoldCollection&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a4e8b8e3278bb032f4a54005415ade62b',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['holdmodelpath_17',['HoldModelPath',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a1ff638bd81138a1ec07d58a65d8ab9b1',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['holdpath_18',['HoldPath',['../class_buzzware_1_1_cascade_1_1_cascade_config.html#a8cca0b87c641632dd38559dea5a6afdb',1,'Buzzware::Cascade::CascadeConfig']]],
-  ['how_20associations_20work_19',['How Associations Work',['../md_api__docs_2using__cascade_2associations_2how__associations__work.html',1,'']]]
+  ['how_20associations_20work_19',['How Associations Work',['../how_associations_work.html',1,'']]]
 ];

@@ -1,3 +1,5 @@
+@page freshness_and_fallback Freshness, Fallback and Time
+
 # Freshness, Fallback and Time
 
 The combination of freshness and fallback freshness enables applications to specify their requirements

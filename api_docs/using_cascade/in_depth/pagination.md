@@ -1,6 +1,8 @@
+@page pagination Pagination with CascadePaginator 
+
 # Pagination with CascadePaginator
 
-To understand this page, it is first worth reading about queries and collections.
+To understand this page, it is first worth reading about [queries](#queries_in_depth) and [collections](#collections_in_depth).
 
 The `CascadePaginator` class provides a powerful mechanism for handling paginated data retrieval in Cascade. This document explains how to use `CascadePaginator`, its internal workings, and how to customize it for specific application needs.
 

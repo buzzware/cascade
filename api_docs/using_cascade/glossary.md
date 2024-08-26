@@ -1,3 +1,5 @@
+@page glossary Glossary
+
 # Glossary
 
 ### Freshness

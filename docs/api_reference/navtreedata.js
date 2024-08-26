@@ -27,120 +27,161 @@ var NAVTREE =
   [ "Cascade", "index.html", [
     [ "Cascade Data Layer: A Framework for Mobile App Data Flow", "index.html", null ],
     [ "Cascade", "md__buzzware_8_cascade_2readme.html", null ],
-    [ "Associations", "md_api__docs_2using__cascade_2associations_2associations.html", [
-      [ "BelongsTo", "md_api__docs_2using__cascade_2associations_2associations.html#autotoc_md6", null ],
-      [ "HasMany", "md_api__docs_2using__cascade_2associations_2associations.html#autotoc_md7", null ],
-      [ "HasOne", "md_api__docs_2using__cascade_2associations_2associations.html#autotoc_md8", null ],
-      [ "FromBlob", "md_api__docs_2using__cascade_2associations_2associations.html#autotoc_md9", null ]
-    ] ],
-    [ "How Associations Work", "md_api__docs_2using__cascade_2associations_2how__associations__work.html", [
-      [ "Association Helper Methods", "md_api__docs_2using__cascade_2associations_2how__associations__work.html#autotoc_md11", null ],
-      [ "How HasMany Works", "md_api__docs_2using__cascade_2associations_2how__associations__work.html#autotoc_md12", [
-        [ "HasMany Limitations", "md_api__docs_2using__cascade_2associations_2how__associations__work.html#autotoc_md13", null ],
-        [ "HasMany Helper Methods", "md_api__docs_2using__cascade_2associations_2how__associations__work.html#autotoc_md14", null ]
+    [ "md_api__docs_2using__cascade_2associations_2association__helpers", "md_api__docs_2using__cascade_2associations_2association__helpers.html", [
+      [ "Association Helper Methods", "md_api__docs_2using__cascade_2associations_2association__helpers.html#autotoc_md5", [
+        [ "Generic Helper Methods", "md_api__docs_2using__cascade_2associations_2association__helpers.html#autotoc_md6", null ],
+        [ "HasMany Helper Methods", "md_api__docs_2using__cascade_2associations_2association__helpers.html#autotoc_md7", null ]
       ] ]
     ] ],
-    [ "Populating Associations", "md_api__docs_2using__cascade_2associations_2populating.html", [
-      [ "How it Works", "md_api__docs_2using__cascade_2associations_2populating.html#autotoc_md16", null ]
-    ] ],
-    [ "Glossary", "md_api__docs_2using__cascade_2glossary.html", null ],
-    [ "Collections in Depth", "md_api__docs_2using__cascade_2in__depth_2collections__in__depth.html", [
-      [ "Collection Requests", "md_api__docs_2using__cascade_2in__depth_2collections__in__depth.html#autotoc_md21", null ],
-      [ "Collection Helper methods", "md_api__docs_2using__cascade_2in__depth_2collections__in__depth.html#autotoc_md22", null ]
-    ] ],
-    [ "Freshness, Fallback and Time", "md_api__docs_2using__cascade_2in__depth_2freshness__and__fallback.html", [
-      [ "Time and Now", "md_api__docs_2using__cascade_2in__depth_2freshness__and__fallback.html#autotoc_md24", null ],
-      [ "What is Freshness?", "md_api__docs_2using__cascade_2in__depth_2freshness__and__fallback.html#autotoc_md25", null ],
-      [ "What is Fallback Freshness?", "md_api__docs_2using__cascade_2in__depth_2freshness__and__fallback.html#autotoc_md26", null ],
-      [ "Freshness and Fallback together", "md_api__docs_2using__cascade_2in__depth_2freshness__and__fallback.html#autotoc_md27", null ],
-      [ "Optimal Caching for a sequence of Cascade requests (sequenceBeganMs)", "md_api__docs_2using__cascade_2in__depth_2freshness__and__fallback.html#autotoc_md28", null ]
-    ] ],
-    [ "Pagination with CascadePaginator", "md_api__docs_2using__cascade_2in__depth_2pagination.html", [
-      [ "Overview", "md_api__docs_2using__cascade_2in__depth_2pagination.html#autotoc_md30", null ],
-      [ "Using CascadePaginator", "md_api__docs_2using__cascade_2in__depth_2pagination.html#autotoc_md31", null ],
-      [ "How It Works", "md_api__docs_2using__cascade_2in__depth_2pagination.html#autotoc_md32", null ],
-      [ "Key Methods", "md_api__docs_2using__cascade_2in__depth_2pagination.html#autotoc_md33", null ],
-      [ "Customizing for Your Application", "md_api__docs_2using__cascade_2in__depth_2pagination.html#autotoc_md34", null ],
-      [ "Example Usage", "md_api__docs_2using__cascade_2in__depth_2pagination.html#autotoc_md35", null ]
-    ] ],
-    [ "Queries In Depth", "md_api__docs_2using__cascade_2in__depth_2queries__in__depth.html", [
-      [ "Query Method Overview", "md_api__docs_2using__cascade_2in__depth_2queries__in__depth.html#autotoc_md37", null ],
-      [ "Collection Creation and Naming", "md_api__docs_2using__cascade_2in__depth_2queries__in__depth.html#autotoc_md38", null ],
-      [ "Criteria Processing", "md_api__docs_2using__cascade_2in__depth_2queries__in__depth.html#autotoc_md39", null ],
-      [ "Freshness and Result Caching", "md_api__docs_2using__cascade_2in__depth_2queries__in__depth.html#autotoc_md40", null ],
-      [ "Query Execution Flow", "md_api__docs_2using__cascade_2in__depth_2queries__in__depth.html#autotoc_md41", null ],
-      [ "Example Scenario", "md_api__docs_2using__cascade_2in__depth_2queries__in__depth.html#autotoc_md42", null ],
-      [ "Criteria Flexibility", "md_api__docs_2using__cascade_2in__depth_2queries__in__depth.html#autotoc_md43", null ],
-      [ "Conclusion", "md_api__docs_2using__cascade_2in__depth_2queries__in__depth.html#autotoc_md44", null ]
-    ] ],
-    [ "SuperModel In Depth", "md_api__docs_2using__cascade_2in__depth_2supermodel.html", [
-      [ "Normally Immutable", "md_api__docs_2using__cascade_2in__depth_2supermodel.html#autotoc_md46", [
-        [ "Form Editing", "md_api__docs_2using__cascade_2in__depth_2supermodel.html#autotoc_md47", null ],
-        [ "Updating Association Properties", "md_api__docs_2using__cascade_2in__depth_2supermodel.html#autotoc_md48", null ]
+    [ "Associations", "associations.html", [
+      [ "Associations", "associations.html#autotoc_md8", [
+        [ "BelongsTo", "associations.html#autotoc_md9", null ],
+        [ "HasMany", "associations.html#autotoc_md10", null ],
+        [ "HasOne", "associations.html#autotoc_md11", null ],
+        [ "FromBlob", "associations.html#autotoc_md12", null ]
       ] ]
     ] ],
-    [ "Binary Blob Handling", "md_api__docs_2using__cascade_2simple__overview_2binary__blob__handling.html", [
-      [ "Getting a Blob", "md_api__docs_2using__cascade_2simple__overview_2binary__blob__handling.html#autotoc_md50", null ],
-      [ "Putting a Blob", "md_api__docs_2using__cascade_2simple__overview_2binary__blob__handling.html#autotoc_md51", null ],
-      [ "Destroying a Blob", "md_api__docs_2using__cascade_2simple__overview_2binary__blob__handling.html#autotoc_md52", null ]
+    [ "How Associations Work", "how_associations_work.html", [
+      [ "How Associations Work", "how_associations_work.html#autotoc_md13", [
+        [ "How HasMany Works", "how_associations_work.html#autotoc_md14", [
+          [ "HasMany Limitations", "how_associations_work.html#autotoc_md15", null ]
+        ] ]
+      ] ]
     ] ],
-    [ "Creating Models", "md_api__docs_2using__cascade_2simple__overview_2creating__models.html", [
-      [ "Instantiating Model Instances in Application Memory", "md_api__docs_2using__cascade_2simple__overview_2creating__models.html#autotoc_md54", null ],
-      [ "Creating Models in Cascade Caches and Origin", "md_api__docs_2using__cascade_2simple__overview_2creating__models.html#autotoc_md55", [
-        [ "The Create Method", "md_api__docs_2using__cascade_2simple__overview_2creating__models.html#autotoc_md56", [
-          [ "Parameters", "md_api__docs_2using__cascade_2simple__overview_2creating__models.html#autotoc_md57", null ],
-          [ "Return Value", "md_api__docs_2using__cascade_2simple__overview_2creating__models.html#autotoc_md58", null ]
+    [ "Populating", "populating.html", [
+      [ "Populating Associations", "populating.html#autotoc_md16", [
+        [ "How it Works", "populating.html#autotoc_md17", null ]
+      ] ]
+    ] ],
+    [ "Glossary", "glossary.html", [
+      [ "Glossary", "glossary.html#autotoc_md18", null ]
+    ] ],
+    [ "Collections in Depth", "collections_in_depth.html", [
+      [ "Collections in Depth", "collections_in_depth.html#autotoc_md21", [
+        [ "Collection Requests", "collections_in_depth.html#autotoc_md22", null ],
+        [ "Collection Helper methods", "collections_in_depth.html#autotoc_md23", null ]
+      ] ]
+    ] ],
+    [ "Freshness, Fallback and Time", "freshness_and_fallback.html", [
+      [ "Freshness, Fallback and Time", "freshness_and_fallback.html#autotoc_md24", [
+        [ "Time and Now", "freshness_and_fallback.html#autotoc_md25", null ],
+        [ "What is Freshness?", "freshness_and_fallback.html#autotoc_md26", null ],
+        [ "What is Fallback Freshness?", "freshness_and_fallback.html#autotoc_md27", null ],
+        [ "Freshness and Fallback together", "freshness_and_fallback.html#autotoc_md28", null ],
+        [ "Optimal Caching for a sequence of Cascade requests (sequenceBeganMs)", "freshness_and_fallback.html#autotoc_md29", null ]
+      ] ]
+    ] ],
+    [ "Pagination with CascadePaginator", "pagination.html", [
+      [ "Pagination with CascadePaginator", "pagination.html#autotoc_md30", [
+        [ "Overview", "pagination.html#autotoc_md31", null ],
+        [ "Using CascadePaginator", "pagination.html#autotoc_md32", null ],
+        [ "How It Works", "pagination.html#autotoc_md33", null ],
+        [ "Key Methods", "pagination.html#autotoc_md34", null ],
+        [ "Customizing for Your Application", "pagination.html#autotoc_md35", null ],
+        [ "Example Usage", "pagination.html#autotoc_md36", null ]
+      ] ]
+    ] ],
+    [ "Queries In Depth", "queries_in_depth.html", [
+      [ "Queries In Depth", "queries_in_depth.html#autotoc_md37", [
+        [ "Query Method Overview", "queries_in_depth.html#autotoc_md38", null ],
+        [ "Collection Creation and Naming", "queries_in_depth.html#autotoc_md39", null ],
+        [ "Criteria Processing", "queries_in_depth.html#autotoc_md40", null ],
+        [ "Freshness and Result Caching", "queries_in_depth.html#autotoc_md41", null ],
+        [ "Query Execution Flow", "queries_in_depth.html#autotoc_md42", null ],
+        [ "Example Scenario", "queries_in_depth.html#autotoc_md43", null ],
+        [ "Criteria Flexibility", "queries_in_depth.html#autotoc_md44", null ],
+        [ "Conclusion", "queries_in_depth.html#autotoc_md45", null ]
+      ] ]
+    ] ],
+    [ "SuperModel In Depth", "supermodel.html", [
+      [ "SuperModel In Depth", "supermodel.html#autotoc_md46", [
+        [ "Normally Immutable", "supermodel.html#autotoc_md47", [
+          [ "Editable Proxy Form Editing", "supermodel.html#autotoc_md48", null ],
+          [ "Updating Association Properties", "supermodel.html#autotoc_md49", null ]
+        ] ]
+      ] ]
+    ] ],
+    [ "Binary Blob Handling", "binary_blob_handling.html", [
+      [ "Binary Blob Handling", "binary_blob_handling.html#autotoc_md50", [
+        [ "Getting a Blob", "binary_blob_handling.html#autotoc_md51", null ],
+        [ "Putting a Blob", "binary_blob_handling.html#autotoc_md52", null ],
+        [ "Destroying a Blob", "binary_blob_handling.html#autotoc_md53", null ]
+      ] ]
+    ] ],
+    [ "Creating Models", "creating_models.html", [
+      [ "Creating Models", "creating_models.html#autotoc_md54", [
+        [ "Instantiating Model Instances in Application Memory", "creating_models.html#autotoc_md55", null ],
+        [ "Creating Models in Cascade Caches and Origin", "creating_models.html#autotoc_md56", [
+          [ "The Create Method", "creating_models.html#autotoc_md57", [
+            [ "Parameters", "creating_models.html#autotoc_md58", null ],
+            [ "Return Value", "creating_models.html#autotoc_md59", null ]
+          ] ],
+          [ "Handling IDs", "creating_models.html#autotoc_md60", null ],
+          [ "Basic Usage", "creating_models.html#autotoc_md61", null ]
+        ] ]
+      ] ]
+    ] ],
+    [ "Defining Models", "defining_models.html", [
+      [ "Defining Models", "defining_models.html#autotoc_md62", [
+        [ "Inheriting from SuperModel", "defining_models.html#autotoc_md63", null ],
+        [ "Defining Properties", "defining_models.html#autotoc_md64", [
+          [ "ID Property", "defining_models.html#autotoc_md65", null ],
+          [ "Value Properties", "defining_models.html#autotoc_md66", null ]
         ] ],
-        [ "Handling IDs", "md_api__docs_2using__cascade_2simple__overview_2creating__models.html#autotoc_md59", null ],
-        [ "Basic Usage", "md_api__docs_2using__cascade_2simple__overview_2creating__models.html#autotoc_md60", null ]
+        [ "Constructors", "defining_models.html#autotoc_md67", null ]
       ] ]
     ] ],
-    [ "Defining Models", "md_api__docs_2using__cascade_2simple__overview_2defining__models.html", [
-      [ "Inheriting from SuperModel", "md_api__docs_2using__cascade_2simple__overview_2defining__models.html#autotoc_md62", null ],
-      [ "Defining Properties", "md_api__docs_2using__cascade_2simple__overview_2defining__models.html#autotoc_md63", [
-        [ "ID Property", "md_api__docs_2using__cascade_2simple__overview_2defining__models.html#autotoc_md64", null ],
-        [ "Value Properties", "md_api__docs_2using__cascade_2simple__overview_2defining__models.html#autotoc_md65", null ]
-      ] ],
-      [ "Constructors", "md_api__docs_2using__cascade_2simple__overview_2defining__models.html#autotoc_md66", null ]
+    [ "Deleting Models", "deleting_models.html", [
+      [ "Deleting Models", "deleting_models.html#autotoc_md68", [
+        [ "Basic Usage", "deleting_models.html#autotoc_md71", null ]
+      ] ]
     ] ],
-    [ "Deleting Models", "md_api__docs_2using__cascade_2simple__overview_2deleting__models.html", [
-      [ "Basic Usage", "md_api__docs_2using__cascade_2simple__overview_2deleting__models.html#autotoc_md70", null ]
+    [ "Design Values and Constraints", "values_and_constraints.html", [
+      [ "Cascade Design Values and Constraints", "values_and_constraints.html#autotoc_md72", [
+        [ "Values", "values_and_constraints.html#autotoc_md73", null ],
+        [ "Constraints", "values_and_constraints.html#autotoc_md74", null ],
+        [ "In Scope", "values_and_constraints.html#autotoc_md75", null ],
+        [ "Out of Scope", "values_and_constraints.html#autotoc_md76", null ]
+      ] ]
     ] ],
-    [ "Cascade Design Values and Constraints", "md_api__docs_2using__cascade_2simple__overview_2design__values__constraints.html", [
-      [ "Values", "md_api__docs_2using__cascade_2simple__overview_2design__values__constraints.html#autotoc_md72", null ]
+    [ "Getting Models", "getting_models.html", [
+      [ "Getting Models", "getting_models.html#autotoc_md77", [
+        [ "Basic Usage", "getting_models.html#autotoc_md78", [
+          [ "Parameters", "getting_models.html#autotoc_md79", null ],
+          [ "Return Value", "getting_models.html#autotoc_md80", null ]
+        ] ],
+        [ "Example Usage", "getting_models.html#autotoc_md81", null ],
+        [ "Null Results", "getting_models.html#autotoc_md82", null ],
+        [ "Using Get with Different ID Types", "getting_models.html#autotoc_md83", null ],
+        [ "Best Practices", "getting_models.html#autotoc_md84", null ]
+      ] ]
     ] ],
-    [ "Getting Models", "md_api__docs_2using__cascade_2simple__overview_2getting__models.html", [
-      [ "Basic Usage", "md_api__docs_2using__cascade_2simple__overview_2getting__models.html#autotoc_md74", [
-        [ "Parameters", "md_api__docs_2using__cascade_2simple__overview_2getting__models.html#autotoc_md75", null ],
-        [ "Return Value", "md_api__docs_2using__cascade_2simple__overview_2getting__models.html#autotoc_md76", null ]
-      ] ],
-      [ "Example Usage", "md_api__docs_2using__cascade_2simple__overview_2getting__models.html#autotoc_md77", null ],
-      [ "Null Results", "md_api__docs_2using__cascade_2simple__overview_2getting__models.html#autotoc_md78", null ],
-      [ "Using Get with Different ID Types", "md_api__docs_2using__cascade_2simple__overview_2getting__models.html#autotoc_md79", null ],
-      [ "Best Practices", "md_api__docs_2using__cascade_2simple__overview_2getting__models.html#autotoc_md80", null ]
+    [ "Simple Querying with Cascade", "queries.html", [
+      [ "Simple Querying with Cascade", "queries.html#autotoc_md85", [
+        [ "Basic Query", "queries.html#autotoc_md86", [
+          [ "Defining Query Criteria", "queries.html#autotoc_md87", null ],
+          [ "Executing the Query", "queries.html#autotoc_md88", null ],
+          [ "Handling Results", "queries.html#autotoc_md89", null ],
+          [ "Querying a Single Model", "queries.html#autotoc_md90", null ]
+        ] ],
+        [ "Best Practices", "queries.html#autotoc_md91", null ]
+      ] ]
     ] ],
-    [ "Simple Querying with Cascade", "md_api__docs_2using__cascade_2simple__overview_2queries.html", [
-      [ "Basic Query", "md_api__docs_2using__cascade_2simple__overview_2queries.html#autotoc_md82", [
-        [ "Defining Query Criteria", "md_api__docs_2using__cascade_2simple__overview_2queries.html#autotoc_md83", null ],
-        [ "Executing the Query", "md_api__docs_2using__cascade_2simple__overview_2queries.html#autotoc_md84", null ],
-        [ "Handling Results", "md_api__docs_2using__cascade_2simple__overview_2queries.html#autotoc_md85", null ],
-        [ "Querying a Single Model", "md_api__docs_2using__cascade_2simple__overview_2queries.html#autotoc_md86", null ]
-      ] ],
-      [ "Best Practices", "md_api__docs_2using__cascade_2simple__overview_2queries.html#autotoc_md87", null ]
-    ] ],
-    [ "Updating Models", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html", [
-      [ "Update", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md89", [
-        [ "Basic Usage", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md90", null ],
-        [ "Parameters", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md91", null ],
-        [ "Example", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md92", null ]
-      ] ],
-      [ "Replace", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md93", [
-        [ "Basic Usage", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md94", null ],
-        [ "Parameters", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md95", null ],
-        [ "Example", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md96", null ]
-      ] ],
-      [ "Key Differences", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md97", null ],
-      [ "Model IDs", "md_api__docs_2using__cascade_2simple__overview_2updating__models.html#autotoc_md98", null ]
+    [ "Updating Models", "updating_models.html", [
+      [ "Updating Models", "updating_models.html#autotoc_md92", [
+        [ "Update", "updating_models.html#autotoc_md93", [
+          [ "Basic Usage", "updating_models.html#autotoc_md94", null ],
+          [ "Parameters", "updating_models.html#autotoc_md95", null ],
+          [ "Example", "updating_models.html#autotoc_md96", null ]
+        ] ],
+        [ "Replace", "updating_models.html#autotoc_md97", [
+          [ "Basic Usage", "updating_models.html#autotoc_md98", null ],
+          [ "Parameters", "updating_models.html#autotoc_md99", null ],
+          [ "Example", "updating_models.html#autotoc_md100", null ]
+        ] ],
+        [ "Key Differences", "updating_models.html#autotoc_md101", null ],
+        [ "Model IDs", "updating_models.html#autotoc_md102", null ]
+      ] ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -160,7 +201,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"class_buzzware_1_1_cascade_1_1_super_model.html#ab4ae183c5ff3105eed50b0be7e33ebba"
+"class_buzzware_1_1_cascade_1_1_super_model.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

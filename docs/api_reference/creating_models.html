@@ -64,7 +64,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2simple__overview_2creating__models.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('creating_models.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -93,9 +93,10 @@ $(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2simple__
   <div class="headertitle"><div class="title">Creating Models</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md53"></a> </p>
-<h1><a class="anchor" id="autotoc_md54"></a>
-Instantiating Model Instances in Application Memory</h1>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md54"></a>
+Creating Models</h1>
+<h2><a class="anchor" id="autotoc_md55"></a>
+Instantiating Model Instances in Application Memory</h2>
 <p>Cascade provides a straightforward method to create new models in your Origin. Cascade model classes, which inherit from SuperModel, can be used like regular C# classes while providing additional functionality for data binding and change tracking. Here's how you can work with them:</p>
 <ol type="1">
 <li><p class="startli">Creating a New Instance: You can create a new instance of a model class using its constructor:</p>
@@ -137,26 +138,26 @@ Instantiating Model Instances in Application Memory</h1>
 </div><!-- fragment --></li>
 </ol>
 <p>This approach allows you to work with your model classes in a familiar object-oriented manner while leveraging Cascade's features for data persistence and UI integration. The separation between model instantiation/modification and the actual creation on the server provides flexibility in how you structure your application logic and user interactions.</p>
-<h1><a class="anchor" id="autotoc_md55"></a>
-Creating Models in Cascade Caches and Origin</h1>
 <h2><a class="anchor" id="autotoc_md56"></a>
-The Create Method</h2>
+Creating Models in Cascade Caches and Origin</h2>
+<h3><a class="anchor" id="autotoc_md57"></a>
+The Create Method</h3>
 <p>The primary method for creating a new model is the <code>Create</code> method:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;M&gt; Create&lt;M&gt;(M model) where M : <span class="keyword">class</span></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md57"></a>
-Parameters</h3>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md58"></a>
+Parameters</h4>
 <ul>
 <li><code>M</code>: The type of model you're creating.</li>
 <li><code>model</code>: An instance of the model with the properties you want to set.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md58"></a>
-Return Value</h3>
+<h4><a class="anchor" id="autotoc_md59"></a>
+Return Value</h4>
 <p>The method returns a <code>Task&lt;M&gt;</code>, where <code>M</code> is the type of model you're creating. The returned model typically includes any server-generated fields, such as the ID.</p>
-<h2><a class="anchor" id="autotoc_md59"></a>
-Handling IDs</h2>
+<h3><a class="anchor" id="autotoc_md60"></a>
+Handling IDs</h3>
 <p>Setting the ID is optional when creating a new model, depending on the Origin. Servers will typically generates the id automatically.</p>
-<h2><a class="anchor" id="autotoc_md60"></a>
-Basic Usage</h2>
+<h3><a class="anchor" id="autotoc_md61"></a>
+Basic Usage</h3>
 <p>Here's a simple example of how to use the <code>Create</code> method to create a new Docket:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;Docket&gt; CreateDocket(Docket newDocket)</div>
 <div class="line">{</div>

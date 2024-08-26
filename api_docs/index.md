@@ -1,25 +1,27 @@
 # Cascade Data Layer: A Framework for Mobile App Data Flow
 
-Cascade is a framework designed to optimize data flow between the user interface and the server, while
-incorporating caching and persistence mechanisms. Acting as a backend
-for the front end, Cascade offers several valuable benefits that enhance application efficiency and maintain
-consistency. By providing a well-defined API with clear relationships,
+CascadeDataLayer is a kind of multi-tool for building, updating and maintaining client-side data structures
+consisting of models, collections and associations that represent the back-end and business domain.
+Cascade is a framework designed to optimize data flow between the user interface and the server with caching and persistence mechanisms. 
+Acting as a back-end for the front-end with a well-defined API with models and relationships,
 Cascade enables developers to write the user interface in a consistent and meaningful manner.
 
-The architecture of Cascade is inspired by the concept of cache layers in CPUs. Unlike CPUs, Cascade 
-supports 0 or more abstract cache layers.   
-The initial first layer is usually memory based - fastest but limited and not persistent. The second is typically 
-file-based - slower, but persistent. Cache layers are abstract, providing developers with the flexibility to 
-implement their preferred caching storage.
-
-Cascade also requires an implementation of an abstract origin (server) interface. This means almost any server can 
-be supported, including custom enterprise APIs. Inconsistencies and naming issues can be resolved in custom code to 
-maintain a clean and consistent API to app developers. By providing a robust data layer, Cascade shields the front 
-end from any changes or updates made to the backend. 
+By providing a robust data layer, Cascade shields the front 
+end from any changes or updates made to the backend. CascadeDataLayer and your ICascadeOrigin implementation handle 
+all the asynchronous complexity and manage back-end inconsistencies so that the models can kept simple and synchronous.  
 
 ### Usage
+
+Cascade also requires an implementation of an abstract origin (server) interface. This means almost any server can
+be supported, including custom enterprise APIs. Inconsistencies and naming issues can be resolved in custom code to
+maintain a clean and consistent API for app developers.
+
+The architecture of Cascade is inspired by the concept of cache layers in CPUs.
+The initial first layer is usually memory based - fastest but limited in size and not persistent. The second is typically
+file-based - slower, but persistent. Cache layers are abstract, providing developers with the flexibility to
+implement their preferred caching storage.
  
-As a quick introduction, the main methods provided by Cascade for applications are :
+As a quick introduction, here are some examples of using the main methods provided by Cascade :
 
 1. ```var product = await cascade.Create<Product>(new Product() { colour = "Red" });```
 2. ```var product = await cascade.Get<Product>(25, populate: new string[] { nameof(Product.Manufacturer) });```

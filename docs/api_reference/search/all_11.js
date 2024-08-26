@@ -13,7 +13,7 @@ var searchData=
   ['setfromblobproperty_10',['SetFromBlobProperty',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a849e3be3a19a5eca718e48dbd80cbc3a',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['setmodelcollectionproperty_11',['SetModelCollectionProperty',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a2a839f4895883e34926237671f2eaffc',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['setproperty_3c_20t_20_3e_12',['SetProperty&lt; T &gt;',['../class_buzzware_1_1_cascade_1_1_super_model.html#a5b89c9009a800dd7626a08d02e6e6685',1,'Buzzware::Cascade::SuperModel']]],
-  ['simple_20querying_20with_20cascade_13',['Simple Querying with Cascade',['../md_api__docs_2using__cascade_2simple__overview_2queries.html',1,'']]],
+  ['simple_20querying_20with_20cascade_13',['Simple Querying with Cascade',['../queries.html',1,'']]],
   ['sortedlist_14',['SortedList',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a33a04d438160a83ab3442a81bd800e01',1,'Easy::Common::Extensions']]],
   ['sourcepropertyname_15',['SourcePropertyName',['../class_buzzware_1_1_cascade_1_1_from_property_attribute.html#a6466303475773f524055563a168c6aae',1,'Buzzware::Cascade::FromPropertyAttribute']]],
   ['stack_16',['Stack',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a2187e1021a911b3807cc1bea2eb1a9ca',1,'Easy::Common::Extensions']]],
@@ -23,6 +23,6 @@ var searchData=
   ['storestring_20',['StoreString',['../class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html#ab650d65643564493147814b862154ab0',1,'Buzzware::Cascade::FastFileClassCache']]],
   ['string_21',['String',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a27118326006d3829667a400ad23d5d98',1,'Easy::Common::Extensions']]],
   ['supermodel_22',['SuperModel',['../class_buzzware_1_1_cascade_1_1_super_model.html',1,'Buzzware.Cascade.SuperModel'],['../class_buzzware_1_1_cascade_1_1_super_model.html#acc98b6c57f1612c1dfb731f04605f7fa',1,'Buzzware.Cascade.SuperModel.SuperModel()']]],
-  ['supermodel_20in_20depth_23',['SuperModel In Depth',['../md_api__docs_2using__cascade_2in__depth_2supermodel.html',1,'']]],
+  ['supermodel_20in_20depth_23',['SuperModel In Depth',['../supermodel.html',1,'']]],
   ['system_24',['System',['../namespace_system.html',1,'']]]
 ];

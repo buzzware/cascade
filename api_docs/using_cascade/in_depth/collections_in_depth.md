@@ -1,3 +1,5 @@
+@page collections_in_depth Collections in Depth
+
 # Collections in Depth
 
 In Cascade, a collection is an array of ids. At present the `PrimaryKey` of a Cascade model can be typed int, long or string.

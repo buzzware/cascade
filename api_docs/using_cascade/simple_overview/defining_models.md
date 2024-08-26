@@ -1,3 +1,5 @@
+@page defining_models Defining Models 
+
 # Defining Models
 
 Cascade requires that application models managed by Cascade inherit from a `SuperModel` base class. Here's how to use `SuperModel` to define your models. `SuperModel` has special functionality that requires the following patterns to be followed.

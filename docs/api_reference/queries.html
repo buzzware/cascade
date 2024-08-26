@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cascade: SuperModel In Depth</title>
+<title>Cascade: Simple Querying with Cascade</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -64,7 +64,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2in__depth_2supermodel.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('queries.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -90,35 +90,46 @@ $(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2in__dept
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">SuperModel In Depth</div></div>
+  <div class="headertitle"><div class="title">Simple Querying with Cascade</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md45"></a> </p>
-<h1><a class="anchor" id="autotoc_md46"></a>
-Normally Immutable</h1>
-<p>Much has been written about the benefits of immutable data. The modern language Rust makes parameters, variables etc immutable by default. Of particular benefit with Cascade is that the single current instance per id of each model class can be held in a memory cache and also referenced freely in application data structures without fear of being modified by one part of the application and that affecting other parts. The current instance reflects exactly the state of the server record at the point in time it was sent by the server, without any changes.</p>
-<p>All Cascade methods that return models do so with __mutable == False. That means that any attempt to change their properties (properly implemented using GetProperty/SetProperty) will throw a MutationAttemptException.</p>
-<h2><a class="anchor" id="autotoc_md47"></a>
-Form Editing</h2>
-<p>Forms are intended to be implemented using the "editable proxy" feature of SuperModel :</p>
-<div class="fragment"><div class="line">var serverThing = Cascade.Get&lt;Thing&gt;(1);</div>
-<div class="line"><span class="comment">// serverThing.colour == &quot;red&quot;</span></div>
-<div class="line">var editableThing = <span class="keyword">new</span> Thing(serverThing);</div>
-<div class="line"><span class="comment">// editableThing.colour == &quot;red&quot;</span></div>
-<div class="line">editableThing.colour = <span class="stringliteral">&quot;blue&quot;</span>;</div>
-<div class="line"><span class="comment">// editableThing.colour == &quot;blue&quot;</span></div>
-<div class="line"><span class="comment">// Dictionary&lt;string,object?&gt; changes = editableThing.__GetChanges();</span></div>
-<div class="line"><span class="comment">// changes == { [&quot;colour&quot;] = &quot;blue&quot; }</span></div>
-</div><!-- fragment --><p><code>editableThing</code> can be used like any other model in dotnet applications eg. can be bound to UI controls, even with TwoWay binding.</p>
-<p>As shown above, __GetChanges() then returns a dictionary of changes to be sent to the server like so :</p>
-<div class="fragment"><div class="line">serverThing = await Cascade.Update(serverThing,changes);</div>
-<div class="line"><span class="comment">// serverThing.colour == &quot;blue&quot;</span></div>
-<div class="line">editableThing = <span class="keyword">new</span> Thing(serverThing);</div>
-<div class="line"><span class="comment">// editableThing.colour == &quot;blue&quot;</span></div>
-</div><!-- fragment --><p>This means that the data properties of models returned by Cascade remain unmodified from when they arrived from the server.</p>
-<h2><a class="anchor" id="autotoc_md48"></a>
-Updating Association Properties</h2>
-<p>The <code>Populate()</code> method and <code>populate</code> option on <code>Get()</code> and <code>Query()</code> methods are used to ensure association properties are set or updated as required. </p>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md85"></a>
+Simple Querying with Cascade</h1>
+<p>Cascade provides a straightforward way to query models from your data source. This guide will walk you through the process of setting up and executing queries to retrieve lists of models.</p>
+<h2><a class="anchor" id="autotoc_md86"></a>
+Basic Query</h2>
+<p>To query models using Cascade, you typically follow these steps:</p>
+<ol type="1">
+<li>Define your query criteria</li>
+<li>Execute the query</li>
+<li>Handle the results</li>
+</ol>
+<h3><a class="anchor" id="autotoc_md87"></a>
+Defining Query Criteria</h3>
+<p>Query criteria are defined using a dictionary of key-value pairs. For example:</p>
+<div class="fragment"><div class="line">var criteria = <span class="keyword">new</span> Dictionary&lt;string, object&gt;</div>
+<div class="line">{</div>
+<div class="line">    [<span class="stringliteral">&quot;FilterText&quot;</span>] = <span class="stringliteral">&quot;SearchTerm&quot;</span>,</div>
+<div class="line">    [<span class="stringliteral">&quot;Status&quot;</span>] = <span class="stringliteral">&quot;Active&quot;</span></div>
+<div class="line">};</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md88"></a>
+Executing the Query</h3>
+<p>To execute a query:</p>
+<div class="fragment"><div class="line">IEnumerable&lt;Docket&gt; dockets = await AppCommon.Cascade.Query&lt;Docket&gt;(</div>
+<div class="line">    <span class="stringliteral">&quot;QueryName&quot;</span>,</div>
+<div class="line">    criteria</div>
+<div class="line">);</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md89"></a>
+Handling Results</h3>
+<h3><a class="anchor" id="autotoc_md90"></a>
+Querying a Single Model</h3>
+<p>To query for a single model, or null :</p>
+<div class="fragment"><div class="line">Docket docket = await AppCommon.Cascade.QueryOne&lt;Docket&gt;(</div>
+<div class="line">    <span class="stringliteral">&quot;QueryName&quot;</span>,</div>
+<div class="line">    criteria</div>
+<div class="line">);</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md91"></a>
+Best Practices</h2>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

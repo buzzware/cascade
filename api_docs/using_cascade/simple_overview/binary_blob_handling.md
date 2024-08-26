@@ -1,3 +1,5 @@
+@page binary_blob_handling Binary Blob Handling  
+
 # Binary Blob Handling
 
 Cascade provides methods to handle binary large objects (blobs). It provides the same benefits as for models : 

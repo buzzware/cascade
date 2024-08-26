@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cascade: Getting Models</title>
+<title>Cascade: How Associations Work</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -64,7 +64,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2simple__overview_2getting__models.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('how_associations_work.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -90,52 +90,41 @@ $(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2simple__
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Getting Models</div></div>
+  <div class="headertitle"><div class="title">How Associations Work</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md73"></a> Cascade provides a straightforward method to retrieve specific individual models from your data origin.</p>
-<h1><a class="anchor" id="autotoc_md74"></a>
-Basic Usage</h1>
-<p>The primary method for retrieving a single model is the <code>Get</code> method. Here's how to use it:</p>
-<div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;M&gt; Get&lt;M&gt;(<span class="keywordtype">object</span> <span class="keywordtype">id</span>) where M : <span class="keyword">class</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md75"></a>
-Parameters</h2>
-<ul>
-<li><code>M</code>: The type of model you're retrieving.</li>
-<li><code>id</code>: The unique identifier of the model you want to fetch.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md76"></a>
-Return Value</h2>
-<p>The method returns a <code>Task&lt;M&gt;</code>, where <code>M</code> is the type of model you're retrieving.</p>
-<h1><a class="anchor" id="autotoc_md77"></a>
-Example Usage</h1>
-<p>Here's a simple example of how to use the <code>Get</code> method to retrieve a Docket:</p>
-<div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;Docket&gt; GetDocket(<span class="keywordtype">string</span> docketId)</div>
-<div class="line">{</div>
-<div class="line">    Docket docket = await AppCommon.Cascade.Get&lt;Docket&gt;(docketId);</div>
-<div class="line">    <span class="keywordflow">return</span> docket;</div>
-<div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md78"></a>
-Null Results</h1>
-<p>If no model is found with the given ID, the <code>Get</code> method will return <code>null</code>.</p>
-<div class="fragment"><div class="line">Docket docket = await AppCommon.Cascade.Get&lt;Docket&gt;(<span class="stringliteral">&quot;non-existent-id&quot;</span>);</div>
-<div class="line"><span class="keywordflow">if</span> (docket == <span class="keyword">null</span>)</div>
-<div class="line">{</div>
-<div class="line">    Console.WriteLine(<span class="stringliteral">&quot;Docket not found&quot;</span>);</div>
-<div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md79"></a>
-Using Get with Different ID Types</h1>
-<p>The <code>Get</code> method can work with various ID types, depending on how your models are set up. For example:</p>
-<div class="fragment"><div class="line"><span class="comment">// Using a string ID</span></div>
-<div class="line">User user = await AppCommon.Cascade.Get&lt;User&gt;(<span class="stringliteral">&quot;user123&quot;</span>);</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// Using an integer ID</span></div>
-<div class="line">Product product = await AppCommon.Cascade.Get&lt;Product&gt;(42);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md80"></a>
-Best Practices</h1>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md13"></a>
+How Associations Work</h1>
+<blockquote class="doxtable">
+<p>&zwj;Please read <a class="el" href="associations.html">associations</a> before this </p>
+</blockquote>
+<p>Association properties are treated differently to normal data properties.</p>
 <ol type="1">
-<li>Use <code>Get</code> when you need to retrieve a specific model and you know its ID.</li>
-<li>Always check for null results when using <code>Get</code>, especially if there's a possibility that the model might not exist. </li>
+<li>Their value is typically derived from their attribute parameters and what they reference, such as foreign and local keys.</li>
+<li>When models are created as an instance eg. deserialized from a server response or loaded from a file based cache association properties are null by default.</li>
+<li>An association set on a model instance will remain set, and if that same instance is retrieved later from the memory cache the association will still be set whether it was requested to be populated or not. This cannot be relied on.</li>
+<li>So if your application code requires an association to be set, <b>you must request it to be populated to be sure that it is</b>, and <b>don't be surprised if it is already populated when you did not ask for it to be</b>.</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md14"></a>
+How HasMany Works</h2>
+<p>A HasMany property holds an array of models of a foreign type (specified by the singular type of the array) that refer to the local model by the specified foreign key property holding the local model primary key value.</p>
+<div class="fragment"><div class="line">[HasMany(foreignIdProperty: nameof(DocketItem.docketId))]</div>
+<div class="line">public ImmutableArray&lt;DocketItem&gt; Items</div>
+<div class="line">{</div>
+<div class="line">    <span class="keyword">get</span> =&gt; GetProperty(ref _Items);</div>
+<div class="line">    <span class="keyword">set</span> =&gt; SetProperty(ref _Items, value);</div>
+<div class="line">}</div>
+<div class="line"><span class="keyword">private</span> ImmutableArray&lt;DocketItem&gt; _Items;</div>
+</div><!-- fragment --><p>Cascade populates this using a Query, including generating a unique collection key using CascadeUtils.WhereCollectionKey() and criteria.</p>
+<h3><a class="anchor" id="autotoc_md15"></a>
+HasMany Limitations</h3>
+<p>Its important to note the following intentional limitations (by design) :</p>
+<ol type="1">
+<li>Like all Cascade queries, the records that match is determined by the origin. While there are generally no locally executed queries in Cascade, there is nothing to stop an ICascadeOrigin implementation from executing local queries.</li>
+<li>Like all Cascade queries, if a Docket HasMany DocketItems, and a new DocketItem is created or updated such that the docketId newly matches a HasMany query, the query collection and association property does not automatically have the new DocketItem added.</li>
+<li>Models are also not automatically removed from associations eg. when changes on the origin mean they no longer belong <br  />
+</li>
+<li>Model instances held in a HasMany association array are the current instances as of when the property was last populated. They are not automatically refreshed when new instances arrive from the origin. </li>
 </ol>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

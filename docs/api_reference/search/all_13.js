@@ -9,6 +9,6 @@ var searchData=
   ['updatehasone_6',['UpdateHasOne',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a88824eb7ebbca5ed984b42bd2029b054',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['updateop_3c_20model_20_3e_7',['UpdateOp&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_request_op.html#a2cd9f3972ffb52bf74a81afe5a208037',1,'Buzzware::Cascade::RequestOp']]],
   ['updateresponse_3c_20m_20_3e_8',['UpdateResponse&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a000f6ec1dc4b5e928d27aebc6cf0303f',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['updating_20models_9',['Updating Models',['../md_api__docs_2using__cascade_2simple__overview_2updating__models.html',1,'']]],
+  ['updating_20models_9',['Updating Models',['../updating_models.html',1,'']]],
   ['uploadchangespending_10',['UploadChangesPending',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a1b8751cf48b84b689b60665c31b03d72',1,'Buzzware::Cascade::CascadeDataLayer']]]
 ];
