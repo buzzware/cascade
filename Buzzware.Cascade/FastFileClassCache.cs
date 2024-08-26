@@ -281,11 +281,8 @@ namespace Buzzware.Cascade {
             return Task.FromResult(new OpResponse(
               requestOp,
               Cascade?.NowMs ?? 0,
-              connected: true,
               exists: true,
-              result: loaded,
-              arrivedAtMs: crModel.TimeMs
-            ));
+              arrivedAtMs: crModel.TimeMs, result: loaded));
           } else {
             return Task.FromResult(OpResponse.None(requestOp, Cascade.NowMs, this.GetType().Name));
           }
@@ -300,11 +297,8 @@ namespace Buzzware.Cascade {
             return Task.FromResult(new OpResponse(
               requestOp,
               Cascade!.NowMs,
-              connected: true,
               exists: true,
-              result: loaded,
-              arrivedAtMs: crCollection.TimeMs
-            ));
+              arrivedAtMs: crCollection.TimeMs, result: loaded));
           } else {
             return Task.FromResult(OpResponse.None(requestOp, Cascade!.NowMs, this.GetType().Name));
           }

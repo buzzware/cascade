@@ -126,11 +126,8 @@ namespace Buzzware.Cascade {
         return new OpResponse(
           requestOp,
           Cascade?.NowMs ?? 0,
-          connected: true,
           exists: true,
-          result: loaded,
-          arrivedAtMs: arrivedAtMs
-        );
+          arrivedAtMs: arrivedAtMs, result: loaded);
       } else {
         return OpResponse.None(requestOp, Cascade.NowMs, this.GetType().Name);
       }

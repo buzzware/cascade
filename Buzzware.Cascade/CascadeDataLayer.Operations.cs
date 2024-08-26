@@ -202,7 +202,7 @@ namespace Buzzware.Cascade {
 			await StoreInPreviousCaches(opResponse); // just store ResultIds
 			
 			if (Log.Logger.IsEnabled(LogEventLevel.Debug))
-				Log.Debug("ProcessRequest OpResponse: Connected: {@Connected} Exists: {@Exists}", opResponse.Connected,opResponse.Exists);
+				Log.Debug("ProcessRequest OpResponse: Exists: {@Exists}", opResponse.Exists);
 			var isBlobVerb = requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobPut;
 			if (Log.Logger.IsEnabled(LogEventLevel.Verbose) && !isBlobVerb)
 				Log.Verbose("ProcessRequest OpResponse: Result: {@Result}",opResponse.Result);
@@ -315,7 +315,7 @@ namespace Buzzware.Cascade {
 			// Try to fetch data from each cache layer
 			foreach (var layer in CacheLayers) {
 				var res = await layer.Fetch(cacheReq);
-				if (res.Connected && res.Exists) {
+				if (res.Exists) {
 					layerFound = layer;
 					opResponse = res;
 					break;
@@ -348,7 +348,7 @@ namespace Buzzware.Cascade {
 				for (var i = 0; i < layers.Length; i++) {
 					var layer = layers[i];
 					var res = await layer.Fetch(cacheReq);
-					if (res.Connected && res.Exists) {
+					if (res.Exists) {
 						res.LayerIndex = i;
 						var arrivedAt = res.ArrivedAtMs == null ? "" : CascadeUtils.fromUnixMilliseconds((long)res.ArrivedAtMs).ToLocalTime().ToLongTimeString();
 						if (requestOp.Verb == RequestVerb.Get)
@@ -377,8 +377,10 @@ namespace Buzzware.Cascade {
 				if (!connectionOnline)		// mustn't be in cache and we're offline, so not much we can do
 					throw new DataNotAvailableOffline();
 				OpResponse originResponse;
+				bool connected = false;
 				try {
 					originResponse = await Origin.ProcessRequest(requestOp, connectionOnline);
+					connected = connectionOnline;
 				} catch (Exception e) {
 					if (e is NoNetworkException)
 						originResponse = OpResponse.ConnectionFailure(requestOp,requestOp.TimeMs,Origin.GetType().Name);
@@ -386,7 +388,7 @@ namespace Buzzware.Cascade {
 						throw;
 				}
 				originResponse.LayerIndex = -1;
-				if (originResponse.Connected) {
+				if (connected) {
 					opResponse = originResponse;
 				} else {
 					if ( // online but connection failure and meets fallback freshness
@@ -456,7 +458,6 @@ namespace Buzzware.Cascade {
 				opResponse = new OpResponse(
 					req,
 					NowMs,
-					false,
 					true,
 					NowMs,
 					result
@@ -485,7 +486,6 @@ namespace Buzzware.Cascade {
 				opResponse = new OpResponse(
 					req,
 					NowMs,
-					false,
 					true,
 					NowMs,
 					result
@@ -514,7 +514,6 @@ namespace Buzzware.Cascade {
 				opResponse = new OpResponse(
 					req,
 					NowMs,
-					false,
 					true,
 					NowMs,
 					result
@@ -542,7 +541,6 @@ namespace Buzzware.Cascade {
 				opResponse = new OpResponse(
 					req,
 					NowMs,
-					false,
 					false,
 					NowMs,
 					null

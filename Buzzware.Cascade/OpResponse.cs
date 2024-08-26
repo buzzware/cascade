@@ -15,28 +15,22 @@ namespace Buzzware.Cascade {
   /// its connection status, elapsed time, and more.
   /// </summary>
   public class OpResponse {
-    
     /// <summary>
     /// Constructs an instance of OpResponse with the given parameters.
     /// </summary>
     /// <param name="requestOp">The original request operation.</param>
     /// <param name="timeMs">The time in milliseconds when the operation took place.</param>
-    /// <param name="connected">Indicates if the current layer is connected.</param>
     /// <param name="exists">Indicates if the item is present in the cache.</param>
     /// <param name="arrivedAtMs">The time in milliseconds when the response arrived.</param>
     /// <param name="result">The result of the operation, can be null.</param>
     [ImmutableObject(true)]
-    public OpResponse(
-      RequestOp requestOp,
+    public OpResponse(RequestOp requestOp,
       long timeMs,
-      bool connected,
       bool exists,
       long? arrivedAtMs,
-      object? result
-    ) {
+      object? result) {
       RequestOp = requestOp;
       TimeMs = timeMs;
-      Connected = connected;
       Exists = exists;
       ArrivedAtMs = arrivedAtMs;
       Result = result;
@@ -47,23 +41,18 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="requestOp">Updated request operation.</param>
     /// <param name="timeMs">Updated time in milliseconds.</param>
-    /// <param name="connected">Updated connection status.</param>
     /// <param name="exists">Updated existence status.</param>
     /// <param name="arrivedAtMs">Updated arrival time in milliseconds.</param>
     /// <param name="result">Updated operation result.</param>
     /// <returns>The new OpResponse instance with specified changes.</returns>
-    public OpResponse withChanges(
-      RequestOp? requestOp = null,
+    public OpResponse withChanges(RequestOp? requestOp = null,
       long? timeMs = null,
-      bool? connected = null,
       bool? exists = null,
       long? arrivedAtMs = null,
-      object? result = null
-    ) {
+      object? result = null) {
       return new OpResponse(
         requestOp: requestOp ?? this.RequestOp,
         timeMs: timeMs ?? this.TimeMs,
-        connected: connected ?? this.Connected,
         exists: exists ?? this.Exists,
         arrivedAtMs: arrivedAtMs ?? this.ArrivedAtMs,
         result: result ?? this.Result
@@ -72,7 +61,6 @@ namespace Buzzware.Cascade {
     
     public readonly RequestOp RequestOp;
     public readonly long TimeMs;
-    public readonly bool Connected; // Indicates if the current layer is connected
     public readonly bool Exists; // Indicates if the item exists in the cache or at origin
     public readonly object? Result; // Contains result for create, read, update operations
     public long? ArrivedAtMs;
@@ -176,7 +164,7 @@ namespace Buzzware.Cascade {
       catch (Exception e) {
         // swallow errors
       }
-      return $"{result} Connected:{Connected} Exists:{Exists}";
+      return $"{result} Exists:{Exists}";
     }
     
     /// <summary>
@@ -190,11 +178,8 @@ namespace Buzzware.Cascade {
       var opResponse = new OpResponse(
         requestOp,
         timeMs,
-        connected: true,
         exists: false,
-        result: null,
-        arrivedAtMs: null
-      );
+        arrivedAtMs: null, result: null);
       opResponse.SourceName = sourceName;
       return opResponse;
     }
@@ -210,11 +195,8 @@ namespace Buzzware.Cascade {
       var opResponse = new OpResponse(
         requestOp,
         timeMs,
-        connected: false,
         exists: false,
-        result: null,
-        arrivedAtMs: null
-      );
+        arrivedAtMs: null, result: null);
       opResponse.SourceName = sourceName;
       return opResponse;
     }

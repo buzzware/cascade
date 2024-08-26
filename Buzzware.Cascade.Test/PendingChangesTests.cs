@@ -47,12 +47,9 @@ namespace Buzzware.Cascade.Test {
         thing.updatedAtMs = requestOp.TimeMs;
         return Task.FromResult(new OpResponse(
           requestOp: requestOp,
-          nowMs,
-          connected: true,
+          timeMs: nowMs,
           exists: true,
-          result: thing,
-          arrivedAtMs: nowMs
-        ));
+          arrivedAtMs: nowMs, result: thing));
       });
 
       // Instantiate a new CascadeDataLayer with a mock origin and configuration.

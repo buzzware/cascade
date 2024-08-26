@@ -61,11 +61,8 @@ namespace Buzzware.Cascade {
             return new OpResponse(
               requestOp,
               Cascade.NowMs,
-              connected: true,
               exists: true,
-              result: modelEntry.Item1,
-              arrivedAtMs: modelEntry.Item2
-            );
+              arrivedAtMs: modelEntry.Item2, result: modelEntry.Item1);
           } else {
             return OpResponse.None(requestOp, Cascade.NowMs, this.GetType().Name);
           }
@@ -84,11 +81,8 @@ namespace Buzzware.Cascade {
             return new OpResponse(
               requestOp,
               Cascade.NowMs,
-              connected: true,
               exists: true,
-              result: collections[requestOp.Key!].Item1,
-              arrivedAtMs: collections[requestOp.Key!].Item2
-            );
+              arrivedAtMs: collections[requestOp.Key!].Item2, result: collections[requestOp.Key!].Item1);
           } else {
             return OpResponse.None(requestOp,Cascade.NowMs, this.GetType().Name);
           }

@@ -32,8 +32,7 @@ namespace Buzzware.Cascade.Test {
       // Create a response object simulating a successful operation with id results.
       var response = new OpResponse(
         request,
-        1000,           // Simulated duration of the operation.
-        true,           // Indicates if the operation was successful.
+        1000,           // Indicates if the operation was successful.
         true,           // Indicates if results are id-based.
         1000,           // Processing time.
         new int[] {1,2,3} // The ID results retrieved from the operation.

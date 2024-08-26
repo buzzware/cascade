@@ -97,7 +97,6 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(outThing.colour,Is.EqualTo("green"));
 			
 			// Verify cache response properties
-			Assert.That(outResponse.Connected, Is.True);
 			Assert.That(outResponse.Exists, Is.True);
 			Assert.That(outResponse.ArrivedAtMs, Is.EqualTo(1000));
 			Assert.That(outResponse.TimeMs, Is.EqualTo(origin.NowMs));

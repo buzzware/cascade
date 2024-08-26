@@ -45,12 +45,9 @@ namespace Buzzware.Cascade.Test {
 				}
 				return Task.FromResult(new OpResponse(
 					requestOp: requestOp,
-					nowMs,
-					connected: true,
+					timeMs: nowMs,
 					exists: true,
-					result: parent,
-					arrivedAtMs: nowMs
-				));
+					arrivedAtMs: nowMs, result: parent));
 			});
 		}
 		
