@@ -7,5 +7,6 @@ var searchData=
   ['arguments_4',['Arguments',['../class_buzzware_1_1_cascade_1_1_from_property_attribute.html#aebc21dca4e7ca7215e492598d9ecf1cd',1,'Buzzware::Cascade::FromPropertyAttribute']]],
   ['array_5',['Array',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a4410ec34d9e6c1a68100ca0ce033fb17',1,'Easy::Common::Extensions']]],
   ['arraylist_6',['ArrayList',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a57a97a39435cfdfed96e03f2a3bc27ce',1,'Easy::Common::Extensions']]],
-  ['associations_7',['Associations',['../associations.html',1,'']]]
+  ['association_20helper_20methods_7',['Association Helper Methods',['../association_helpers.html',1,'']]],
+  ['associations_8',['Associations',['../associations.html',1,'']]]
 ];

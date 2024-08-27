@@ -1,6 +1,4 @@
-@page supermodel SuperModel In Depth 
-
-# SuperModel In Depth
+@page supermodel SuperModel In Depth
 
 ## Normally Immutable
 

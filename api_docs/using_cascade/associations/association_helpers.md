@@ -1,8 +1,4 @@
-@page association_helpers
-
-# Association Helper Methods
-
-
+@page association_helpers Association Helper Methods
 
 ## Generic Helper Methods
 

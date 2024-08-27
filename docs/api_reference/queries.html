@@ -93,10 +93,8 @@ $(document).ready(function(){initNavTree('queries.html',''); initResizable(); })
   <div class="headertitle"><div class="title">Simple Querying with Cascade</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md85"></a>
-Simple Querying with Cascade</h1>
-<p>Cascade provides a straightforward way to query models from your data source. This guide will walk you through the process of setting up and executing queries to retrieve lists of models.</p>
-<h2><a class="anchor" id="autotoc_md86"></a>
+<div class="textblock"><p>Cascade provides a straightforward way to query models from your data source. This guide will walk you through the process of setting up and executing queries to retrieve lists of models.</p>
+<h2><a class="anchor" id="autotoc_md69"></a>
 Basic Query</h2>
 <p>To query models using Cascade, you typically follow these steps:</p>
 <ol type="1">
@@ -104,7 +102,7 @@ Basic Query</h2>
 <li>Execute the query</li>
 <li>Handle the results</li>
 </ol>
-<h3><a class="anchor" id="autotoc_md87"></a>
+<h3><a class="anchor" id="autotoc_md70"></a>
 Defining Query Criteria</h3>
 <p>Query criteria are defined using a dictionary of key-value pairs. For example:</p>
 <div class="fragment"><div class="line">var criteria = <span class="keyword">new</span> Dictionary&lt;string, object&gt;</div>
@@ -112,23 +110,23 @@ Defining Query Criteria</h3>
 <div class="line">    [<span class="stringliteral">&quot;FilterText&quot;</span>] = <span class="stringliteral">&quot;SearchTerm&quot;</span>,</div>
 <div class="line">    [<span class="stringliteral">&quot;Status&quot;</span>] = <span class="stringliteral">&quot;Active&quot;</span></div>
 <div class="line">};</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md88"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md71"></a>
 Executing the Query</h3>
 <p>To execute a query:</p>
 <div class="fragment"><div class="line">IEnumerable&lt;Docket&gt; dockets = await AppCommon.Cascade.Query&lt;Docket&gt;(</div>
 <div class="line">    <span class="stringliteral">&quot;QueryName&quot;</span>,</div>
 <div class="line">    criteria</div>
 <div class="line">);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md89"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md72"></a>
 Handling Results</h3>
-<h3><a class="anchor" id="autotoc_md90"></a>
+<h3><a class="anchor" id="autotoc_md73"></a>
 Querying a Single Model</h3>
 <p>To query for a single model, or null :</p>
 <div class="fragment"><div class="line">Docket docket = await AppCommon.Cascade.QueryOne&lt;Docket&gt;(</div>
 <div class="line">    <span class="stringliteral">&quot;QueryName&quot;</span>,</div>
 <div class="line">    criteria</div>
 <div class="line">);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md91"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md74"></a>
 Best Practices</h2>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

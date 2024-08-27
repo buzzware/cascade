@@ -1,7 +1,5 @@
 @page glossary Glossary
 
-# Glossary
-
 ### Freshness
 
 How recently did a data record arrive from the server? The value is represented in milliseconds and is inverse ie a value 

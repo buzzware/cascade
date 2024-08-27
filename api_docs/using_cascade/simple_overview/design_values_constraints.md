@@ -1,8 +1,5 @@
 @page values_and_constraints Design Values and Constraints 
 
-# Cascade Design Values and Constraints
-
-
 ## Values
 
 1. Explicitness

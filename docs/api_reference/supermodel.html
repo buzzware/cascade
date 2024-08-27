@@ -93,13 +93,11 @@ $(document).ready(function(){initNavTree('supermodel.html',''); initResizable();
   <div class="headertitle"><div class="title">SuperModel In Depth</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md46"></a>
-SuperModel In Depth</h1>
-<h2><a class="anchor" id="autotoc_md47"></a>
+<div class="textblock"><h2><a class="anchor" id="autotoc_md37"></a>
 Normally Immutable</h2>
 <p>Much has been written about the benefits of immutable data. The modern language Rust makes parameters, variables etc immutable by default. Of particular benefit with Cascade is that the single current instance per id of each model class can be held in a memory cache and also referenced freely in application data structures without fear of being modified by one part of the application and that affecting other parts. The current instance reflects exactly the state of the server record at the point in time it was sent by the server, without any changes.</p>
 <p>All Cascade methods that return models do so with __mutable == False. That means that any attempt to change their properties (properly implemented using GetProperty/SetProperty) will throw a MutationAttemptException.</p>
-<h3><a class="anchor" id="autotoc_md48"></a>
+<h3><a class="anchor" id="autotoc_md38"></a>
 Editable Proxy Form Editing</h3>
 <p>Forms are intended to be implemented using the "editable proxy" feature of SuperModel :</p>
 <div class="fragment"><div class="line">var serverThing = Cascade.Get&lt;Thing&gt;(1);</div>
@@ -117,7 +115,7 @@ Editable Proxy Form Editing</h3>
 <div class="line">editableThing = <span class="keyword">new</span> Thing(serverThing);</div>
 <div class="line"><span class="comment">// editableThing.colour == &quot;blue&quot;</span></div>
 </div><!-- fragment --><p>This means that the data properties of models returned by Cascade remain unmodified from when they arrived from the server.</p>
-<h3><a class="anchor" id="autotoc_md49"></a>
+<h3><a class="anchor" id="autotoc_md39"></a>
 Updating Association Properties</h3>
 <p>The <code>Populate()</code> method and <code>populate</code> option on <code>Get()</code> and <code>Query()</code> methods are used to ensure association properties are set or updated as required. </p>
 </div></div><!-- contents -->

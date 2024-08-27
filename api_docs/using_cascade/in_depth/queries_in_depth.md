@@ -1,7 +1,5 @@
 @page queries_in_depth Queries In Depth 
 
-# Queries In Depth
-
 Every successful query results in a collection, and so it is worth reading [Collections in Depth](collections_in_depth.md) before this page.
 
 ## Query Method Overview

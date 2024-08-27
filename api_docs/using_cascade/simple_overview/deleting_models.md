@@ -1,7 +1,5 @@
 @page deleting_models Deleting Models
 
-# Deleting Models
-
 Cascade provides a `Destroy` method to remove model instances from your origin and any caches.
 
 ```csharp

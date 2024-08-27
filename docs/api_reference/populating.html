@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cascade: Populating</title>
+<title>Cascade: Populating Associations</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -90,12 +90,10 @@ $(document).ready(function(){initNavTree('populating.html',''); initResizable();
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Populating</div></div>
+  <div class="headertitle"><div class="title">Populating Associations</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md16"></a>
-Populating Associations</h1>
-<p>A Child has an association property Parent for holding a reference to its Parent.</p>
+<div class="textblock"><p>A Child has an association property Parent for holding a reference to its Parent.</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>Child : SuperModel {</div>
 <div class="line">    </div>
 <div class="line">    [Cascade.CascadeId]</div>
@@ -121,7 +119,7 @@ Populating Associations</h1>
 <div class="fragment"><div class="line">await Cascade.Populate(order, <span class="keyword">new</span> []{ nameof(Order.Supplier),nameof(Order.Address) });</div>
 </div><!-- fragment --><p>For convenience, we can also pass the <code>populate</code> option to other methods like <code>Get</code> and <code>Query</code>, which call <code>Populate()</code> internally :</p>
 <div class="fragment"><div class="line">child = await Cascade.Get&lt;Child&gt;(1,populate: <span class="keyword">new</span> []{nameof(Child.Parent)});</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md17"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md13"></a>
 How it Works</h2>
 <ol type="1">
 <li>Values required to retrieve the value for the association property are retrieved as referenced by the attribute.</li>

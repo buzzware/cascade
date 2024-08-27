@@ -93,14 +93,12 @@ $(document).ready(function(){initNavTree('pagination.html',''); initResizable();
   <div class="headertitle"><div class="title">Pagination with CascadePaginator</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md30"></a>
-Pagination with CascadePaginator</h1>
-<p>To understand this page, it is first worth reading about <a class="el" href="queries_in_depth.html">queries</a> and <a class="el" href="collections_in_depth.html">collections</a>.</p>
+<div class="textblock"><p>To understand this page, it is first worth reading about <a class="el" href="queries_in_depth.html">queries</a> and <a class="el" href="collections_in_depth.html">collections</a>.</p>
 <p>The <code>CascadePaginator</code> class provides a powerful mechanism for handling paginated data retrieval in Cascade. This document explains how to use <code>CascadePaginator</code>, its internal workings, and how to customize it for specific application needs.</p>
-<h2><a class="anchor" id="autotoc_md31"></a>
+<h2><a class="anchor" id="autotoc_md23"></a>
 Overview</h2>
 <p><code>CascadePaginator</code> is an abstract base class that manages the complexities of paginated queries. It keeps track of queried pages, handles collection naming, and provides methods for querying, clearing, and refreshing paginated data.</p>
-<h2><a class="anchor" id="autotoc_md32"></a>
+<h2><a class="anchor" id="autotoc_md24"></a>
 Using CascadePaginator</h2>
 <p>To use <code>CascadePaginator</code>, you need to create a subclass that implements the <code>AddPaginationToCriteria</code> method. Here's an example using <code>MyAppPaginator</code>:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>MyAppPaginator&lt;Model&gt; : CascadePaginator&lt;Model&gt; where Model : class</div>
@@ -125,7 +123,7 @@ Using CascadePaginator</h2>
 <div class="line">        <span class="keywordflow">return</span> criteriaClone;</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md33"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md25"></a>
 How It Works</h2>
 <ol type="1">
 <li><b>Initialization</b>: When you create a <code>MyAppPaginator</code> instance, you provide the necessary parameters including the <code>CascadeDataLayer</code>, criteria, collection prefix, and items per page.</li>
@@ -145,7 +143,7 @@ How It Works</h2>
 </li>
 <li><b>Caching</b>: The results for each page are cached in Cascade collections, allowing for efficient subsequent retrievals.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md34"></a>
+<h2><a class="anchor" id="autotoc_md26"></a>
 Key Methods</h2>
 <ul>
 <li><code>Query(int page)</code>: Retrieves a specific page of data.</li>
@@ -153,7 +151,7 @@ Key Methods</h2>
 <li><code>Refresh(int freshnessSeconds)</code>: Refreshes cached data (implementation left to the user).</li>
 <li><code>Prepend(Model newItem)</code>: Adds a new item to the beginning of the first page's collection.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md35"></a>
+<h2><a class="anchor" id="autotoc_md27"></a>
 Customizing for Your Application</h2>
 <p>To adapt <code>CascadePaginator</code> for your specific needs:</p>
 <ol type="1">
@@ -161,7 +159,7 @@ Customizing for Your Application</h2>
 <li>Implement <code>AddPaginationToCriteria</code> to match your backend's pagination mechanism.</li>
 <li>Optionally, override other methods if you need custom behavior.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md36"></a>
+<h2><a class="anchor" id="autotoc_md28"></a>
 Example Usage</h2>
 <div class="fragment"><div class="line">var paginator = <span class="keyword">new</span> MyAppPaginator&lt;User&gt;(</div>
 <div class="line">    AppCommon.Cascade,</div>

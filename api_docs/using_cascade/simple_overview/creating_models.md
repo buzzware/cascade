@@ -1,7 +1,5 @@
 @page creating_models Creating Models 
 
-# Creating Models
-
 ## Instantiating Model Instances in Application Memory
 
 Cascade provides a straightforward method to create new models in your Origin. Cascade model classes, which inherit from SuperModel, can be used like regular C# classes while providing additional functionality for data binding and change tracking. Here's how you can work with them:

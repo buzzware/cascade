@@ -93,23 +93,21 @@ $(document).ready(function(){initNavTree('updating_models.html',''); initResizab
   <div class="headertitle"><div class="title">Updating Models</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md92"></a>
-Updating Models</h1>
-<p>Cascade provides two primary methods for updating existing models in your Origin: <code>Update</code> and <code>Replace</code>. This guide explains how to use these methods effectively.</p>
-<h2><a class="anchor" id="autotoc_md93"></a>
+<div class="textblock"><p>Cascade provides two primary methods for updating existing models in your Origin: <code>Update</code> and <code>Replace</code>. This guide explains how to use these methods effectively.</p>
+<h2><a class="anchor" id="autotoc_md75"></a>
 Update</h2>
 <p>The <code>Update</code> method allows you to modify specific fields of an existing model.</p>
-<h3><a class="anchor" id="autotoc_md94"></a>
+<h3><a class="anchor" id="autotoc_md76"></a>
 Basic Usage</h3>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;M&gt; Update&lt;M&gt;(M model, IDictionary&lt;string, object&gt; changes) where M : <span class="keyword">class</span></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md95"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md77"></a>
 Parameters</h3>
 <ul>
 <li><code>M</code>: The type of model you're updating.</li>
 <li><code>model</code>: The existing model instance.</li>
 <li><code>changes</code>: A dictionary of property names and their new values.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md96"></a>
+<h3><a class="anchor" id="autotoc_md78"></a>
 Example</h3>
 <div class="fragment"><div class="line">var changes = <span class="keyword">new</span> Dictionary&lt;string, object&gt;</div>
 <div class="line">{</div>
@@ -118,31 +116,31 @@ Example</h3>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">Docket updatedDocket = await AppCommon.Cascade.Update(existingDocket, changes);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md97"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md79"></a>
 Replace</h2>
 <p>The <code>Replace</code> method replaces an entire model with a new version.</p>
-<h3><a class="anchor" id="autotoc_md98"></a>
+<h3><a class="anchor" id="autotoc_md80"></a>
 Basic Usage</h3>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;M&gt; Replace&lt;M&gt;(M model) where M : <span class="keyword">class</span></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md99"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md81"></a>
 Parameters</h3>
 <ul>
 <li><code>M</code>: The type of model you're replacing.</li>
 <li><code>model</code>: The new model instance that will replace the existing one.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md100"></a>
+<h3><a class="anchor" id="autotoc_md82"></a>
 Example</h3>
 <div class="fragment"><div class="line">existingDocket.Description = <span class="stringliteral">&quot;Completely new description&quot;</span>;</div>
 <div class="line">existingDocket.Status = <span class="stringliteral">&quot;Completed&quot;</span>;</div>
 <div class="line"> </div>
 <div class="line">Docket replacedDocket = await AppCommon.Cascade.Replace(existingDocket);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md101"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md83"></a>
 Key Differences</h2>
 <ul>
 <li><code>Update</code> modifies only the specified fields, leaving others unchanged.</li>
 <li><code>Replace</code> overwrites the entire model with the new instance provided.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md102"></a>
+<h2><a class="anchor" id="autotoc_md84"></a>
 Model IDs</h2>
 <p>Both <code>Update</code> and <code>Replace</code> operations require the model to have a valid ID. Cascade uses this ID to identify which model in the Origin should be updated or replaced.</p>
 <div class="fragment"><div class="line"><span class="comment">// For string IDs</span></div>

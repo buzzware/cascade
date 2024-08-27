@@ -93,9 +93,7 @@ $(document).ready(function(){initNavTree('how_associations_work.html',''); initR
   <div class="headertitle"><div class="title">How Associations Work</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md13"></a>
-How Associations Work</h1>
-<blockquote class="doxtable">
+<div class="textblock"><blockquote class="doxtable">
 <p>&zwj;Please read <a class="el" href="associations.html">associations</a> before this </p>
 </blockquote>
 <p>Association properties are treated differently to normal data properties.</p>
@@ -105,7 +103,7 @@ How Associations Work</h1>
 <li>An association set on a model instance will remain set, and if that same instance is retrieved later from the memory cache the association will still be set whether it was requested to be populated or not. This cannot be relied on.</li>
 <li>So if your application code requires an association to be set, <b>you must request it to be populated to be sure that it is</b>, and <b>don't be surprised if it is already populated when you did not ask for it to be</b>.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 How HasMany Works</h2>
 <p>A HasMany property holds an array of models of a foreign type (specified by the singular type of the array) that refer to the local model by the specified foreign key property holding the local model primary key value.</p>
 <div class="fragment"><div class="line">[HasMany(foreignIdProperty: nameof(DocketItem.docketId))]</div>
@@ -116,7 +114,7 @@ How HasMany Works</h2>
 <div class="line">}</div>
 <div class="line"><span class="keyword">private</span> ImmutableArray&lt;DocketItem&gt; _Items;</div>
 </div><!-- fragment --><p>Cascade populates this using a Query, including generating a unique collection key using CascadeUtils.WhereCollectionKey() and criteria.</p>
-<h3><a class="anchor" id="autotoc_md15"></a>
+<h3><a class="anchor" id="autotoc_md12"></a>
 HasMany Limitations</h3>
 <p>Its important to note the following intentional limitations (by design) :</p>
 <ol type="1">

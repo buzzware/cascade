@@ -1,7 +1,5 @@
 @page collections_in_depth Collections in Depth
 
-# Collections in Depth
-
 In Cascade, a collection is an array of ids. At present the `PrimaryKey` of a Cascade model can be typed int, long or string.
 So a collection is actually an array of one of those types. This is not often seen by an application because the Query method takes that array and looks up the matching models using GetModelsForIds() to return an array of models.
 

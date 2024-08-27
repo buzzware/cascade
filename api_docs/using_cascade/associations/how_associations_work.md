@@ -1,6 +1,4 @@
-@page how_associations_work How Associations Work 
-
-# How Associations Work
+@page how_associations_work How Associations Work
 
 > Please read [associations](#associations) before this
 

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cascade: md_api__docs_2using__cascade_2associations_2association__helpers</title>
+<title>Cascade: Association Helper Methods</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -64,7 +64,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2associations_2association__helpers.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('association_helpers.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -90,20 +90,17 @@ $(document).ready(function(){initNavTree('md_api__docs_2using__cascade_2associat
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">md_api__docs_2using__cascade_2associations_2association__helpers</div></div>
+  <div class="headertitle"><div class="title">Association Helper Methods</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md5"></a>
-Association Helper Methods</h1>
-<p><a class="anchor" id="association_helpers"></a></p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<div class="textblock"><h2><a class="anchor" id="autotoc_md5"></a>
 Generic Helper Methods</h2>
 <p><code>SetAssociation(object target, string propertyName, object value)</code></p>
 <p>SetAssociation simply sets and association property on the given model, but ensures it is set on the main thread and regardless of the state of the __mutable property on the model.</p>
 <p>SetAssociation is rarely needed and should be avoided because it does not attempt to set the equivalent entry in the cache layers.</p>
 <p><code>SetModelCollectionProperty(object target, PropertyInfo propertyInfo, object value)</code></p>
 <p>SetModelCollectionProperty ia like SetAssociation (it calls it) except that for enumerable properties it ensures that the value matches the type of the property.</p>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
 HasMany Helper Methods</h2>
 <p>The following helper methods are provided to address many of the above limitations.</p>
 <p><code>HasManyReplace(SuperModel model, string property, IEnumerable&lt;object&gt; models)</code></p>

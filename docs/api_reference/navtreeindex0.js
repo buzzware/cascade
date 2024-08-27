@@ -1,17 +1,9 @@
 var NAVTREEINDEX0 =
 {
 "annotated.html":[20,0],
+"association_helpers.html":[2],
 "associations.html":[3],
-"associations.html#autotoc_md10":[3,0,1],
-"associations.html#autotoc_md11":[3,0,2],
-"associations.html#autotoc_md12":[3,0,3],
-"associations.html#autotoc_md8":[3,0],
-"associations.html#autotoc_md9":[3,0,0],
 "binary_blob_handling.html":[12],
-"binary_blob_handling.html#autotoc_md50":[12,0],
-"binary_blob_handling.html#autotoc_md51":[12,0,0],
-"binary_blob_handling.html#autotoc_md52":[12,0,1],
-"binary_blob_handling.html#autotoc_md53":[12,0,2],
 "class_buzzware_1_1_cascade_1_1_belongs_to_attribute.html":[20,0,0,0,2],
 "class_buzzware_1_1_cascade_1_1_belongs_to_attribute.html#a88c27ce692bb966f3334ff3f33c8e4df":[20,0,0,0,2,1],
 "class_buzzware_1_1_cascade_1_1_belongs_to_attribute.html#ae2446e38b9e17234ffab308465ade96f":[20,0,0,0,2,0],
@@ -249,5 +241,13 @@ var NAVTREEINDEX0 =
 "class_buzzware_1_1_cascade_1_1_model_cache.html#af685e75cebbe96e01facba557c2e6efb":[20,0,0,0,31,4],
 "class_buzzware_1_1_cascade_1_1_model_class_cache.html":[20,0,0,0,32],
 "class_buzzware_1_1_cascade_1_1_model_class_cache.html#a30e8df3ce13d0ce232eaf24aa36b87e3":[20,0,0,0,32,7],
-"class_buzzware_1_1_cascade_1_1_model_class_cache.html#a4134a96f87bd0e9a5042c357e397b992":[20,0,0,0,32,2]
+"class_buzzware_1_1_cascade_1_1_model_class_cache.html#a4134a96f87bd0e9a5042c357e397b992":[20,0,0,0,32,2],
+"class_buzzware_1_1_cascade_1_1_model_class_cache.html#a563f97cea5fccfae0227782e59c51679":[20,0,0,0,32,0],
+"class_buzzware_1_1_cascade_1_1_model_class_cache.html#a5a07873f9d31f58541364adccdbc1aca":[20,0,0,0,32,4],
+"class_buzzware_1_1_cascade_1_1_model_class_cache.html#a9c2cf983e75cd2136b5a8b088a156410":[20,0,0,0,32,6],
+"class_buzzware_1_1_cascade_1_1_model_class_cache.html#aba32327dc909c9290db9fc29e27bccde":[20,0,0,0,32,5],
+"class_buzzware_1_1_cascade_1_1_model_class_cache.html#ae4777dcc1ccecd662fc0e77cf59fa1b5":[20,0,0,0,32,1],
+"class_buzzware_1_1_cascade_1_1_model_class_cache.html#aec0d5fec77f511005a88e71d7ae9aa70":[20,0,0,0,32,8],
+"class_buzzware_1_1_cascade_1_1_model_class_cache.html#afe1315dc774dca8ff493ee5b7dae3570":[20,0,0,0,32,3],
+"class_buzzware_1_1_cascade_1_1_mutation_attempt_exception.html":[20,0,0,0,33]
 };
