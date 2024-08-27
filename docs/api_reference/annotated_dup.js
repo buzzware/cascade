@@ -3,28 +3,28 @@ var annotated_dup =
     [ "Buzzware", "namespace_buzzware.html", [
       [ "Cascade", "namespace_buzzware_1_1_cascade.html", [
         [ "Testing", "namespace_buzzware_1_1_cascade_1_1_testing.html", [
-          [ "Child", "class_buzzware_1_1_cascade_1_1_testing_1_1_child.html", null ],
-          [ "MockCascadePlatform", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform.html", null ],
+          [ "Child", "class_buzzware_1_1_cascade_1_1_testing_1_1_child.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_child" ],
+          [ "MockCascadePlatform", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform" ],
           [ "MockModelClassOrigin", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin" ],
           [ "MockOrigin", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin" ],
           [ "MockOrigin2", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin2.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin2" ],
-          [ "Parent", "class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html", null ],
-          [ "Thing", "class_buzzware_1_1_cascade_1_1_testing_1_1_thing.html", null ]
+          [ "Parent", "class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_parent" ],
+          [ "Thing", "class_buzzware_1_1_cascade_1_1_testing_1_1_thing.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_thing" ]
         ] ],
         [ "Utilities", "namespace_buzzware_1_1_cascade_1_1_utilities.html", [
-          [ "TimingProfiler", "class_buzzware_1_1_cascade_1_1_utilities_1_1_timing_profiler.html", null ]
+          [ "TimingProfiler", "class_buzzware_1_1_cascade_1_1_utilities_1_1_timing_profiler.html", "class_buzzware_1_1_cascade_1_1_utilities_1_1_timing_profiler" ]
         ] ],
         [ "BelongsToAttribute", "class_buzzware_1_1_cascade_1_1_belongs_to_attribute.html", "class_buzzware_1_1_cascade_1_1_belongs_to_attribute" ],
         [ "CascadeConfig", "class_buzzware_1_1_cascade_1_1_cascade_config.html", "class_buzzware_1_1_cascade_1_1_cascade_config" ],
         [ "CascadeDataLayer", "class_buzzware_1_1_cascade_1_1_cascade_data_layer.html", "class_buzzware_1_1_cascade_1_1_cascade_data_layer" ],
         [ "CascadeIdAttribute", "class_buzzware_1_1_cascade_1_1_cascade_id_attribute.html", null ],
-        [ "CascadeJsonSerialization", "class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html", null ],
+        [ "CascadeJsonSerialization", "class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html", "class_buzzware_1_1_cascade_1_1_cascade_json_serialization" ],
         [ "CascadePaginator", "class_buzzware_1_1_cascade_1_1_cascade_paginator.html", "class_buzzware_1_1_cascade_1_1_cascade_paginator" ],
         [ "CascadeQueryOptions", "class_buzzware_1_1_cascade_1_1_cascade_query_options.html", "class_buzzware_1_1_cascade_1_1_cascade_query_options" ],
         [ "ClassInfo", "class_buzzware_1_1_cascade_1_1_class_info.html", null ],
         [ "ConcurrentFileSystemClassCache", "class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html", "class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache" ],
-        [ "DictionaryJsonConverter", "class_buzzware_1_1_cascade_1_1_dictionary_json_converter.html", null ],
-        [ "EnumerableAdapter", "class_buzzware_1_1_cascade_1_1_enumerable_adapter.html", null ],
+        [ "DictionaryJsonConverter", "class_buzzware_1_1_cascade_1_1_dictionary_json_converter.html", "class_buzzware_1_1_cascade_1_1_dictionary_json_converter" ],
+        [ "EnumerableAdapter", "class_buzzware_1_1_cascade_1_1_enumerable_adapter.html", "class_buzzware_1_1_cascade_1_1_enumerable_adapter" ],
         [ "FastFileClassCache", "class_buzzware_1_1_cascade_1_1_fast_file_class_cache.html", "class_buzzware_1_1_cascade_1_1_fast_file_class_cache" ],
         [ "FileBlobCache", "class_buzzware_1_1_cascade_1_1_file_blob_cache.html", "class_buzzware_1_1_cascade_1_1_file_blob_cache" ],
         [ "FileSystemClassCache", "class_buzzware_1_1_cascade_1_1_file_system_class_cache.html", "class_buzzware_1_1_cascade_1_1_file_system_class_cache" ],
@@ -38,16 +38,15 @@ var annotated_dup =
         [ "ICascadeCache", "interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html", "interface_buzzware_1_1_cascade_1_1_i_cascade_cache" ],
         [ "ICascadeOrigin", "interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html", "interface_buzzware_1_1_cascade_1_1_i_cascade_origin" ],
         [ "ICascadePlatform", "interface_buzzware_1_1_cascade_1_1_i_cascade_platform.html", null ],
-        [ "ImmutableDictionaryJsonConverter", "class_buzzware_1_1_cascade_1_1_immutable_dictionary_json_converter.html", null ],
+        [ "ImmutableDictionaryJsonConverter", "class_buzzware_1_1_cascade_1_1_immutable_dictionary_json_converter.html", "class_buzzware_1_1_cascade_1_1_immutable_dictionary_json_converter" ],
         [ "IModelClassCache", "interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html", "interface_buzzware_1_1_cascade_1_1_i_model_class_cache" ],
         [ "IModelClassOrigin", "interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html", "interface_buzzware_1_1_cascade_1_1_i_model_class_origin" ],
         [ "IPropertyConverter", "interface_buzzware_1_1_cascade_1_1_i_property_converter.html", "interface_buzzware_1_1_cascade_1_1_i_property_converter" ],
-        [ "MetaCache", "class_buzzware_1_1_cascade_1_1_meta_cache.html", null ],
+        [ "MetaCache", "class_buzzware_1_1_cascade_1_1_meta_cache.html", "class_buzzware_1_1_cascade_1_1_meta_cache" ],
         [ "ModelCache", "class_buzzware_1_1_cascade_1_1_model_cache.html", "class_buzzware_1_1_cascade_1_1_model_cache" ],
         [ "ModelClassCache", "class_buzzware_1_1_cascade_1_1_model_class_cache.html", "class_buzzware_1_1_cascade_1_1_model_class_cache" ],
         [ "MutationAttemptException", "class_buzzware_1_1_cascade_1_1_mutation_attempt_exception.html", null ],
         [ "OpResponse", "class_buzzware_1_1_cascade_1_1_op_response.html", "class_buzzware_1_1_cascade_1_1_op_response" ],
-        [ "ProgressReporter", "class_buzzware_1_1_cascade_1_1_progress_reporter.html", null ],
         [ "RequestOp", "class_buzzware_1_1_cascade_1_1_request_op.html", "class_buzzware_1_1_cascade_1_1_request_op" ],
         [ "SuperModel", "class_buzzware_1_1_cascade_1_1_super_model.html", "class_buzzware_1_1_cascade_1_1_super_model" ]
       ] ]
@@ -59,7 +58,6 @@ var annotated_dup =
         ] ]
       ] ]
     ] ],
-    [ "DataNotAvailableOffline", "class_data_not_available_offline.html", null ],
-    [ "OfflineException", "class_offline_exception.html", null ],
-    [ "OperationNotAvailableOffline", "class_operation_not_available_offline.html", null ]
+    [ "DataNotAvailableOffline", "class_data_not_available_offline.html", "class_data_not_available_offline" ],
+    [ "OperationNotAvailableOffline", "class_operation_not_available_offline.html", "class_operation_not_available_offline" ]
 ];

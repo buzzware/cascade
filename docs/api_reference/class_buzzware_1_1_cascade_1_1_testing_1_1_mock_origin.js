@@ -1,6 +1,8 @@
 var class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin =
 [
+    [ "MockOrigin", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a34109820aa89693d9775aa4882459d0f", null ],
     [ "EnsureAuthenticated", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a177cfcc87827f2002f49566f4a958fe3", null ],
+    [ "IncNowMs", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#ad65dcb1c53d3f5434ec660c1832d3b2b", null ],
     [ "ListModelTypes", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#aa80a3dd2c60c18b1f6c619c1d74db184", null ],
     [ "LookupModelType", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a5b5e1763616ce0450e0fb8a98086fd01", null ],
     [ "NewGuid", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a1e69201cef3e8c16b7e4dfb930b45e5e", null ],

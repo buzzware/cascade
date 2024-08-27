@@ -6,9 +6,10 @@ var searchData=
   ['unholdcollection_3c_20model_20_3e_3',['UnholdCollection&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a42edfd61e41246c3fcb304124d51a75b',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['update_4',['Update',['../interface_buzzware_1_1_cascade_1_1_i_model_class_origin.html#ae8a0a019219ad4c7d39392c6476326df',1,'Buzzware.Cascade.IModelClassOrigin.Update()'],['../class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a1a044f7bff70265bcbcb77eed3e78d98',1,'Buzzware.Cascade.Testing.MockModelClassOrigin.Update()']]],
   ['update_3c_20m_20_3e_5',['Update&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a780909b792be757191988210a312f4a6',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['updatehasone_6',['UpdateHasOne',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a88824eb7ebbca5ed984b42bd2029b054',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['updateop_3c_20model_20_3e_7',['UpdateOp&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_request_op.html#a2cd9f3972ffb52bf74a81afe5a208037',1,'Buzzware::Cascade::RequestOp']]],
-  ['updateresponse_3c_20m_20_3e_8',['UpdateResponse&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a000f6ec1dc4b5e928d27aebc6cf0303f',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['updating_20models_9',['Updating Models',['../updating_models.html',1,'']]],
-  ['uploadchangespending_10',['UploadChangesPending',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a1b8751cf48b84b689b60665c31b03d72',1,'Buzzware::Cascade::CascadeDataLayer']]]
+  ['updatedatms_6',['updatedAtMs',['../class_buzzware_1_1_cascade_1_1_testing_1_1_child.html#a62a5f2b7be0027d8d67a542d7abe0b1c',1,'Buzzware.Cascade.Testing.Child.updatedAtMs'],['../class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html#a0a3c22ebad8a6d0f0e1c0e01235bbe34',1,'Buzzware.Cascade.Testing.Parent.updatedAtMs']]],
+  ['updatehasone_7',['UpdateHasOne',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a88824eb7ebbca5ed984b42bd2029b054',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['updateop_3c_20model_20_3e_8',['UpdateOp&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_request_op.html#a2cd9f3972ffb52bf74a81afe5a208037',1,'Buzzware::Cascade::RequestOp']]],
+  ['updateresponse_3c_20m_20_3e_9',['UpdateResponse&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a000f6ec1dc4b5e928d27aebc6cf0303f',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['updating_20models_10',['Updating Models',['../updating_models.html',1,'']]],
+  ['uploadchangespending_11',['UploadChangesPending',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a1b8751cf48b84b689b60665c31b03d72',1,'Buzzware::Cascade::CascadeDataLayer']]]
 ];

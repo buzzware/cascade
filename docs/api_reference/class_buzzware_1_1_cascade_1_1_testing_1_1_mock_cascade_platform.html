@@ -96,6 +96,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_testing
   <div class="headertitle"><div class="title">Buzzware.Cascade.Testing.MockCascadePlatform Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>MockCascadePlatform is an implementation of the ICascadePlatform interface used for testing purposes.  
+ <a href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.Testing.MockCascadePlatform:</div>
 <div class="dyncontent">
@@ -109,22 +112,24 @@ Inheritance diagram for Buzzware.Cascade.Testing.MockCascadePlatform:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aff06bb26ff8dbcf2959f068a0e6faa57"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform.html#aff06bb26ff8dbcf2959f068a0e6faa57">InvokeOnMainThread</a> (Action action, Func&lt; Exception, Exception &gt;? exceptionHandler=null)</td></tr>
+<tr class="memdesc:aff06bb26ff8dbcf2959f068a0e6faa57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invokes the specified action on the main thread. If an exception occurs, it can be handled by the optional exceptionHandler function. If the exceptionHandler returns a new exception, it is thrown instead.  <br /></td></tr>
 <tr class="separator:aff06bb26ff8dbcf2959f068a0e6faa57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb23f69a688bfb86bc2ed181b735ccdd"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform.html#aeb23f69a688bfb86bc2ed181b735ccdd">InvokeOnMainThreadNow</a> (Action action, Func&lt; Exception, Exception &gt;? exceptionHandler=null)</td></tr>
+<tr class="memdesc:aeb23f69a688bfb86bc2ed181b735ccdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to invoke the specified action immediately if currently on the main thread. Otherwise, it falls back to invoking the action using InvokeOnMainThread method. If an exception occurs, it can be handled by the optional exceptionHandler function.  <br /></td></tr>
 <tr class="separator:aeb23f69a688bfb86bc2ed181b735ccdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c720cf18fa07fc85d984004cc8fc19b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform.html#a7c720cf18fa07fc85d984004cc8fc19b">IsMainThread</a> ()</td></tr>
+<tr class="memdesc:a7c720cf18fa07fc85d984004cc8fc19b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if the current execution context is the main thread. This mock implementation always returns true, simulating a scenario where the main thread is always active.  <br /></td></tr>
 <tr class="separator:a7c720cf18fa07fc85d984004cc8fc19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3d8df370c982636c7974c54e64aaa50"><td class="memItemLeft" align="right" valign="top"><a id="ab3d8df370c982636c7974c54e64aaa50" name="ab3d8df370c982636c7974c54e64aaa50"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>InvokeOnMainThread</b> (Action action, Func&lt; Exception, Exception &gt;? exceptionHandler=null)</td></tr>
+<tr class="memitem:ab3d8df370c982636c7974c54e64aaa50"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_platform.html#ab3d8df370c982636c7974c54e64aaa50">InvokeOnMainThread</a> (Action action, Func&lt; Exception, Exception &gt;? exceptionHandler=null)</td></tr>
 <tr class="separator:ab3d8df370c982636c7974c54e64aaa50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad22e34201832db4ae0eeca963d1b438e"><td class="memItemLeft" align="right" valign="top"><a id="ad22e34201832db4ae0eeca963d1b438e" name="ad22e34201832db4ae0eeca963d1b438e"></a>
-Task&#160;</td><td class="memItemRight" valign="bottom"><b>InvokeOnMainThreadNow</b> (Action action, Func&lt; Exception, Exception &gt;? exceptionHandler=null)</td></tr>
+<tr class="memitem:ad22e34201832db4ae0eeca963d1b438e"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_platform.html#ad22e34201832db4ae0eeca963d1b438e">InvokeOnMainThreadNow</a> (Action action, Func&lt; Exception, Exception &gt;? exceptionHandler=null)</td></tr>
 <tr class="separator:ad22e34201832db4ae0eeca963d1b438e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acffcc8da39f3d8604cd44cb869ec10b8"><td class="memItemLeft" align="right" valign="top"><a id="acffcc8da39f3d8604cd44cb869ec10b8" name="acffcc8da39f3d8604cd44cb869ec10b8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsMainThread</b> ()</td></tr>
+<tr class="memitem:acffcc8da39f3d8604cd44cb869ec10b8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_platform.html#acffcc8da39f3d8604cd44cb869ec10b8">IsMainThread</a> ()</td></tr>
 <tr class="separator:acffcc8da39f3d8604cd44cb869ec10b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>MockCascadePlatform is an implementation of the ICascadePlatform interface used for testing purposes. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aff06bb26ff8dbcf2959f068a0e6faa57" name="aff06bb26ff8dbcf2959f068a0e6faa57"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff06bb26ff8dbcf2959f068a0e6faa57">&#9670;&#160;</a></span>InvokeOnMainThread()</h2>
 
@@ -158,6 +163,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsMainThread</b> ()</
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Invokes the specified action on the main thread. If an exception occurs, it can be handled by the optional exceptionHandler function. If the exceptionHandler returns a new exception, it is thrown instead. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">action</td><td>The action to be invoked on the main thread.</td></tr>
+    <tr><td class="paramname">exceptionHandler</td><td>Optional function to handle any exceptions that occur during the action.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_platform.html">Buzzware.Cascade.ICascadePlatform</a>.</p>
 
@@ -197,6 +211,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsMainThread</b> ()</
 </table>
 </div><div class="memdoc">
 
+<p>Attempts to invoke the specified action immediately if currently on the main thread. Otherwise, it falls back to invoking the action using InvokeOnMainThread method. If an exception occurs, it can be handled by the optional exceptionHandler function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">action</td><td>The action to be invoked.</td></tr>
+    <tr><td class="paramname">exceptionHandler</td><td>Optional function to handle any exceptions that occur during the action.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_platform.html">Buzzware.Cascade.ICascadePlatform</a>.</p>
 
 </div>
@@ -223,6 +246,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsMainThread</b> ()</
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Determines if the current execution context is the main thread. This mock implementation always returns true, simulating a scenario where the main thread is always active. </p>
+<dl class="section return"><dt>Returns</dt><dd>bool indicating if the current context is the main thread (always true in this mock).</dd></dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_platform.html">Buzzware.Cascade.ICascadePlatform</a>.</p>
 

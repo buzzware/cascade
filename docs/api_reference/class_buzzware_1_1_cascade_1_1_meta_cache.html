@@ -96,34 +96,320 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_meta_ca
   <div class="headertitle"><div class="title">Buzzware.Cascade.MetaCache Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>The MetaCache class provides caching functionality for metadata associated with CascadeDataLayer. It enables loading, storage, retrieval, and clearing of metadata in a dictionary structure, maintaining a local cache and synchronizing changes with the CascadeDataLayer. As metadata is implemented using files, this cache can be used for fast UI updates by avoiding file access.  
+ <a href="class_buzzware_1_1_cascade_1_1_meta_cache.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abc62b0cee56abbef349690b0990c3da2"><td class="memItemLeft" align="right" valign="top"><a id="abc62b0cee56abbef349690b0990c3da2" name="abc62b0cee56abbef349690b0990c3da2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>MetaCache</b> (<a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a> cascade, string metaPath)</td></tr>
+<tr class="memitem:abc62b0cee56abbef349690b0990c3da2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_meta_cache.html#abc62b0cee56abbef349690b0990c3da2">MetaCache</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a> cascade, string metaPath)</td></tr>
+<tr class="memdesc:abc62b0cee56abbef349690b0990c3da2"><td class="mdescLeft">&#160;</td><td class="mdescRight">MetaCache Constructor Initializes a new MetaCache with a specified data layer and metadata path.  <br /></td></tr>
 <tr class="separator:abc62b0cee56abbef349690b0990c3da2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ad27fdd0b8ce96228091ad57cdd5469"><td class="memItemLeft" align="right" valign="top"><a id="a1ad27fdd0b8ce96228091ad57cdd5469" name="a1ad27fdd0b8ce96228091ad57cdd5469"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Load</b> ()</td></tr>
+<tr class="memdesc:a1ad27fdd0b8ce96228091ad57cdd5469"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads metadata from the metaPath directory into the local cache. Clears the existing cache and fetches fresh metadata from the data layer. <br /></td></tr>
 <tr class="separator:a1ad27fdd0b8ce96228091ad57cdd5469"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a536d722ef9b04a4f750e53c44c64f4ac"><td class="memItemLeft" align="right" valign="top"><a id="a536d722ef9b04a4f750e53c44c64f4ac" name="a536d722ef9b04a4f750e53c44c64f4ac"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MetaSet</b> (string path, string value)</td></tr>
+<tr class="memitem:a536d722ef9b04a4f750e53c44c64f4ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_meta_cache.html#a536d722ef9b04a4f750e53c44c64f4ac">MetaSet</a> (string path, string value)</td></tr>
+<tr class="memdesc:a536d722ef9b04a4f750e53c44c64f4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets metadata for a specific path in both the local cache and the data layer.  <br /></td></tr>
 <tr class="separator:a536d722ef9b04a4f750e53c44c64f4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a577bc26c9bc4459424aabffaee34518d"><td class="memItemLeft" align="right" valign="top"><a id="a577bc26c9bc4459424aabffaee34518d" name="a577bc26c9bc4459424aabffaee34518d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MetaSetExists</b> (string path, bool value)</td></tr>
+<tr class="memitem:a577bc26c9bc4459424aabffaee34518d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_meta_cache.html#a577bc26c9bc4459424aabffaee34518d">MetaSetExists</a> (string path, bool value)</td></tr>
+<tr class="memdesc:a577bc26c9bc4459424aabffaee34518d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the existence of metadata for a specific path in both the local cache and the data layer.  <br /></td></tr>
 <tr class="separator:a577bc26c9bc4459424aabffaee34518d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a113464696852d89f723d094596d089cf"><td class="memItemLeft" align="right" valign="top"><a id="a113464696852d89f723d094596d089cf" name="a113464696852d89f723d094596d089cf"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>MetaGet</b> (string path, string value)</td></tr>
+<tr class="memitem:a113464696852d89f723d094596d089cf"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_meta_cache.html#a113464696852d89f723d094596d089cf">MetaGet</a> (string path, string value)</td></tr>
+<tr class="memdesc:a113464696852d89f723d094596d089cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the metadata value associated with a specific path from the local cache.  <br /></td></tr>
 <tr class="separator:a113464696852d89f723d094596d089cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abee3e4505270d713b729c59d372cf710"><td class="memItemLeft" align="right" valign="top"><a id="abee3e4505270d713b729c59d372cf710" name="abee3e4505270d713b729c59d372cf710"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>MetaGetExists</b> (string path)</td></tr>
+<tr class="memitem:abee3e4505270d713b729c59d372cf710"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_meta_cache.html#abee3e4505270d713b729c59d372cf710">MetaGetExists</a> (string path)</td></tr>
+<tr class="memdesc:abee3e4505270d713b729c59d372cf710"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks for the existence of metadata for a specific path in the local cache.  <br /></td></tr>
 <tr class="separator:abee3e4505270d713b729c59d372cf710"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c6bfc584202e7ec0cb895cbce384bfd"><td class="memItemLeft" align="right" valign="top"><a id="a3c6bfc584202e7ec0cb895cbce384bfd" name="a3c6bfc584202e7ec0cb895cbce384bfd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>MetaClear</b> (DateTime? olderThan=null)</td></tr>
+<tr class="memitem:a3c6bfc584202e7ec0cb895cbce384bfd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_meta_cache.html#a3c6bfc584202e7ec0cb895cbce384bfd">MetaClear</a> (DateTime? olderThan=null)</td></tr>
+<tr class="memdesc:a3c6bfc584202e7ec0cb895cbce384bfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears metadata from the local cache and optionally removes files older than a specified date from the data layer.  <br /></td></tr>
 <tr class="separator:a3c6bfc584202e7ec0cb895cbce384bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3e913a03767a4dbaf3d2995c7c6c6c3"><td class="memItemLeft" align="right" valign="top"><a id="aa3e913a03767a4dbaf3d2995c7c6c6c3" name="aa3e913a03767a4dbaf3d2995c7c6c6c3"></a>
-IEnumerable&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>MetaList</b> ()</td></tr>
+<tr class="memitem:aa3e913a03767a4dbaf3d2995c7c6c6c3"><td class="memItemLeft" align="right" valign="top">IEnumerable&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_meta_cache.html#aa3e913a03767a4dbaf3d2995c7c6c6c3">MetaList</a> ()</td></tr>
+<tr class="memdesc:aa3e913a03767a4dbaf3d2995c7c6c6c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a list of all metadata keys present in the local cache.  <br /></td></tr>
 <tr class="separator:aa3e913a03767a4dbaf3d2995c7c6c6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The MetaCache class provides caching functionality for metadata associated with CascadeDataLayer. It enables loading, storage, retrieval, and clearing of metadata in a dictionary structure, maintaining a local cache and synchronizing changes with the CascadeDataLayer. As metadata is implemented using files, this cache can be used for fast UI updates by avoiding file access. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="abc62b0cee56abbef349690b0990c3da2" name="abc62b0cee56abbef349690b0990c3da2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc62b0cee56abbef349690b0990c3da2">&#9670;&#160;</a></span>MetaCache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Buzzware.Cascade.MetaCache.MetaCache </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td>
+          <td class="paramname"><em>cascade</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>metaPath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>MetaCache Constructor Initializes a new MetaCache with a specified data layer and metadata path. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cascade</td><td>The CascadeDataLayer instance used for metadata operations.</td></tr>
+    <tr><td class="paramname">metaPath</td><td>The path to the directory where metadata files are stored.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3c6bfc584202e7ec0cb895cbce384bfd" name="a3c6bfc584202e7ec0cb895cbce384bfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c6bfc584202e7ec0cb895cbce384bfd">&#9670;&#160;</a></span>MetaClear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Buzzware.Cascade.MetaCache.MetaClear </td>
+          <td>(</td>
+          <td class="paramtype">DateTime?&#160;</td>
+          <td class="paramname"><em>olderThan</em> = <code>null</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clears metadata from the local cache and optionally removes files older than a specified date from the data layer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">olderThan</td><td>An optional parameter to specify a date. Files older than this date will be removed.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a113464696852d89f723d094596d089cf" name="a113464696852d89f723d094596d089cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a113464696852d89f723d094596d089cf">&#9670;&#160;</a></span>MetaGet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Buzzware.Cascade.MetaCache.MetaGet </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the metadata value associated with a specific path from the local cache. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The relative path for which the metadata value is requested.</td></tr>
+    <tr><td class="paramname">value</td><td>Unused parameter in the method, could be intended for future use.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The metadata value associated with the specified path.</dd></dl>
+
+</div>
+</div>
+<a id="abee3e4505270d713b729c59d372cf710" name="abee3e4505270d713b729c59d372cf710"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abee3e4505270d713b729c59d372cf710">&#9670;&#160;</a></span>MetaGetExists()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Buzzware.Cascade.MetaCache.MetaGetExists </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks for the existence of metadata for a specific path in the local cache. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The relative path for which the existence check is performed.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the metadata exists, otherwise false.</dd></dl>
+
+</div>
+</div>
+<a id="aa3e913a03767a4dbaf3d2995c7c6c6c3" name="aa3e913a03767a4dbaf3d2995c7c6c6c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3e913a03767a4dbaf3d2995c7c6c6c3">&#9670;&#160;</a></span>MetaList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerable&lt; string &gt; Buzzware.Cascade.MetaCache.MetaList </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Provides a list of all metadata keys present in the local cache. </p>
+<dl class="section return"><dt>Returns</dt><dd>An enumerable containing all metadata keys stored in the local cache.</dd></dl>
+
+</div>
+</div>
+<a id="a536d722ef9b04a4f750e53c44c64f4ac" name="a536d722ef9b04a4f750e53c44c64f4ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a536d722ef9b04a4f750e53c44c64f4ac">&#9670;&#160;</a></span>MetaSet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Buzzware.Cascade.MetaCache.MetaSet </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets metadata for a specific path in both the local cache and the data layer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The relative path for the metadata.</td></tr>
+    <tr><td class="paramname">value</td><td>The metadata value to be set. If null, the metadata is removed.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a577bc26c9bc4459424aabffaee34518d" name="a577bc26c9bc4459424aabffaee34518d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a577bc26c9bc4459424aabffaee34518d">&#9670;&#160;</a></span>MetaSetExists()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Buzzware.Cascade.MetaCache.MetaSetExists </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the existence of metadata for a specific path in both the local cache and the data layer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The relative path for the metadata.</td></tr>
+    <tr><td class="paramname">value</td><td>A boolean indicating whether the metadata should exist (true) or be removed (false).</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/utilities/MetaCache.cs</li>
 </ul>

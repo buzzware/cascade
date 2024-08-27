@@ -59,11 +59,7 @@ var hierarchy =
       [ "Buzzware.Cascade.ImmutableDictionaryJsonConverter", "class_buzzware_1_1_cascade_1_1_immutable_dictionary_json_converter.html", null ]
     ] ],
     [ "Buzzware.Cascade.MetaCache", "class_buzzware_1_1_cascade_1_1_meta_cache.html", null ],
-    [ "NoNetworkException", null, [
-      [ "OfflineException", "class_offline_exception.html", null ]
-    ] ],
     [ "Buzzware.Cascade.OpResponse", "class_buzzware_1_1_cascade_1_1_op_response.html", null ],
-    [ "Buzzware.Cascade.ProgressReporter", "class_buzzware_1_1_cascade_1_1_progress_reporter.html", null ],
     [ "Buzzware.Cascade.RequestOp", "class_buzzware_1_1_cascade_1_1_request_op.html", null ],
     [ "StandardException", null, [
       [ "DataNotAvailableOffline", "class_data_not_available_offline.html", null ],

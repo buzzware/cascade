@@ -96,16 +96,71 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_f_n_v_h
   <div class="headertitle"><div class="title">Buzzware.Cascade.FNVHash Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>FNVHash provides methods for generating hash values using the <a href="https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function">Fowler-Noll-Vo hashing algorithm</a>. It is chosen for its speed (10-100X SHA-256) and low collision rate. It supports generating hash values of varying bit lengths. FNV is not a cryptographic hash.  
+ <a href="class_buzzware_1_1_cascade_1_1_f_n_v_hash.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a9982af931e9ba019f96c8cf498f0a80a"><td class="memItemLeft" align="right" valign="top"><a id="a9982af931e9ba019f96c8cf498f0a80a" name="a9982af931e9ba019f96c8cf498f0a80a"></a>
-static ulong&#160;</td><td class="memItemRight" valign="bottom"><b>GetHash</b> (string? aString, int aHashBits)</td></tr>
+<tr class="memitem:a9982af931e9ba019f96c8cf498f0a80a"><td class="memItemLeft" align="right" valign="top">static ulong&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_f_n_v_hash.html#a9982af931e9ba019f96c8cf498f0a80a">GetHash</a> (string? aString, int aHashBits)</td></tr>
+<tr class="memdesc:a9982af931e9ba019f96c8cf498f0a80a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a hash value for a given string using a specified bit length. This method utilizes the FNV hashing algorithm and supports 32-bit and 64-bit hashing.  <br /></td></tr>
 <tr class="separator:a9982af931e9ba019f96c8cf498f0a80a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf54efff642c9244dd75272c77db1944"><td class="memItemLeft" align="right" valign="top"><a id="adf54efff642c9244dd75272c77db1944" name="adf54efff642c9244dd75272c77db1944"></a>
-static long&#160;</td><td class="memItemRight" valign="bottom"><b>Negative52BitHash</b> (string? aString)</td></tr>
-<tr class="separator:adf54efff642c9244dd75272c77db1944"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>FNVHash provides methods for generating hash values using the <a href="https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function">Fowler-Noll-Vo hashing algorithm</a>. It is chosen for its speed (10-100X SHA-256) and low collision rate. It supports generating hash values of varying bit lengths. FNV is not a cryptographic hash. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a9982af931e9ba019f96c8cf498f0a80a" name="a9982af931e9ba019f96c8cf498f0a80a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9982af931e9ba019f96c8cf498f0a80a">&#9670;&#160;</a></span>GetHash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static ulong Buzzware.Cascade.FNVHash.GetHash </td>
+          <td>(</td>
+          <td class="paramtype">string?&#160;</td>
+          <td class="paramname"><em>aString</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>aHashBits</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generates a hash value for a given string using a specified bit length. This method utilizes the FNV hashing algorithm and supports 32-bit and 64-bit hashing. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aString</td><td>The input string to hash.</td></tr>
+    <tr><td class="paramname">aHashBits</td><td>The bit length of the hash</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Hash value of specified bit length.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">ArgumentOutOfRangeException</td><td>Thrown when an invalid bit size is provided.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/utilities/FNVHash.cs</li>
 </ul>

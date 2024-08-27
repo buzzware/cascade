@@ -201,7 +201,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"class_buzzware_1_1_cascade_1_1_super_model.html"
+"class_buzzware_1_1_cascade_1_1_model_class_cache.html#a563f97cea5fccfae0227782e59c51679",
+"interface_buzzware_1_1_cascade_1_1_i_property_converter.html#a9bb6a51db9b8594deef0f141c42fd7b1"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

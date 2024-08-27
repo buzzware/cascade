@@ -98,6 +98,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_enumera
   <div class="headertitle"><div class="title">Buzzware.Cascade.EnumerableAdapter&lt; T &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class implements IEnumerable&lt;T&gt; to adapt a non-generic IEnumerable to work with a specified type T by casting the elements of the source enumeration to type T.  
+ <a href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.EnumerableAdapter&lt; T &gt;:</div>
 <div class="dyncontent">
@@ -107,28 +110,188 @@ Inheritance diagram for Buzzware.Cascade.EnumerableAdapter&lt; T &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a39b37404cc5f04933829dbbd83b4de00"><td class="memItemLeft" align="right" valign="top"><a id="a39b37404cc5f04933829dbbd83b4de00" name="a39b37404cc5f04933829dbbd83b4de00"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>EnumerableAdapter</b> (IEnumerable source)</td></tr>
+<tr class="memitem:a39b37404cc5f04933829dbbd83b4de00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html#a39b37404cc5f04933829dbbd83b4de00">EnumerableAdapter</a> (IEnumerable source)</td></tr>
+<tr class="memdesc:a39b37404cc5f04933829dbbd83b4de00"><td class="mdescLeft">&#160;</td><td class="mdescRight">EnumerableAdapter Constructor. Initializes a new EnumerableAdapter with a specified non-generic source enumeration.  <br /></td></tr>
 <tr class="separator:a39b37404cc5f04933829dbbd83b4de00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e0cf18694d0441668605c4473cb83b8"><td class="memItemLeft" align="right" valign="top"><a id="a1e0cf18694d0441668605c4473cb83b8" name="a1e0cf18694d0441668605c4473cb83b8"></a>
-IEnumerator&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetEnumerator</b> ()</td></tr>
+<tr class="memitem:a1e0cf18694d0441668605c4473cb83b8"><td class="memItemLeft" align="right" valign="top">IEnumerator&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html#a1e0cf18694d0441668605c4473cb83b8">GetEnumerator</a> ()</td></tr>
+<tr class="memdesc:a1e0cf18694d0441668605c4473cb83b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an enumerator that iterates through the collection, converting each element to the target generic type T.  <br /></td></tr>
 <tr class="separator:a1e0cf18694d0441668605c4473cb83b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aec4071bb3a02eb0b1cd3454bc3a45f31"><td class="memItemLeft" align="right" valign="top"><a id="aec4071bb3a02eb0b1cd3454bc3a45f31" name="aec4071bb3a02eb0b1cd3454bc3a45f31"></a>
-static IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>Create</b> (Type itemType, IEnumerable source)</td></tr>
+<tr class="memitem:aec4071bb3a02eb0b1cd3454bc3a45f31"><td class="memItemLeft" align="right" valign="top">static IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html#aec4071bb3a02eb0b1cd3454bc3a45f31">Create</a> (Type itemType, IEnumerable source)</td></tr>
+<tr class="memdesc:aec4071bb3a02eb0b1cd3454bc3a45f31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an IEnumerable of a specified item type from a non-generic source. This method adapts the source to the generic IEnumerable using reflection.  <br /></td></tr>
 <tr class="separator:aec4071bb3a02eb0b1cd3454bc3a45f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c082af1cb27026a4d174108bebb6c82"><td class="memItemLeft" align="right" valign="top"><a id="a4c082af1cb27026a4d174108bebb6c82" name="a4c082af1cb27026a4d174108bebb6c82"></a>
-static IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>CreateImmutableArray</b> (Type itemType, IEnumerable source)</td></tr>
+<tr class="memitem:a4c082af1cb27026a4d174108bebb6c82"><td class="memItemLeft" align="right" valign="top">static IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html#a4c082af1cb27026a4d174108bebb6c82">CreateImmutableArray</a> (Type itemType, IEnumerable source)</td></tr>
+<tr class="memdesc:a4c082af1cb27026a4d174108bebb6c82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an ImmutableArray of a specified item type from a non-generic source and returns it as the base type IEnumerable. Utilizes the CreateRange method for creation.  <br /></td></tr>
 <tr class="separator:a4c082af1cb27026a4d174108bebb6c82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:aacfb76bc2d70e65cc88462227320cbec"><td class="memItemLeft" align="right" valign="top"><a id="aacfb76bc2d70e65cc88462227320cbec" name="aacfb76bc2d70e65cc88462227320cbec"></a>
 IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>Source</b><code> [get]</code></td></tr>
+<tr class="memdesc:aacfb76bc2d70e65cc88462227320cbec"><td class="mdescLeft">&#160;</td><td class="mdescRight">The non-generic source enumeration that will be adapted to IEnumerable&lt;T&gt; <br /></td></tr>
 <tr class="separator:aacfb76bc2d70e65cc88462227320cbec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This class implements IEnumerable&lt;T&gt; to adapt a non-generic IEnumerable to work with a specified type T by casting the elements of the source enumeration to type T. </p>
+<p>Static class providing utility methods for creating generic and non-generic sequences from a non-generic source using the EnumerableAdapter. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a39b37404cc5f04933829dbbd83b4de00" name="a39b37404cc5f04933829dbbd83b4de00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39b37404cc5f04933829dbbd83b4de00">&#9670;&#160;</a></span>EnumerableAdapter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html">Buzzware.Cascade.EnumerableAdapter</a>&lt; T &gt;.<a class="el" href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html">EnumerableAdapter</a> </td>
+          <td>(</td>
+          <td class="paramtype">IEnumerable&#160;</td>
+          <td class="paramname"><em>source</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>EnumerableAdapter Constructor. Initializes a new EnumerableAdapter with a specified non-generic source enumeration. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">source</td><td>The non-generic IEnumerable source to be adapted.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aec4071bb3a02eb0b1cd3454bc3a45f31" name="aec4071bb3a02eb0b1cd3454bc3a45f31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec4071bb3a02eb0b1cd3454bc3a45f31">&#9670;&#160;</a></span>Create()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static IEnumerable <a class="el" href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html">Buzzware.Cascade.EnumerableAdapter</a>&lt; T &gt;.Create </td>
+          <td>(</td>
+          <td class="paramtype">Type&#160;</td>
+          <td class="paramname"><em>itemType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IEnumerable&#160;</td>
+          <td class="paramname"><em>source</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates an IEnumerable of a specified item type from a non-generic source. This method adapts the source to the generic IEnumerable using reflection. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">itemType</td><td>The type of the elements expected in the source.</td></tr>
+    <tr><td class="paramname">source</td><td>The non-generic IEnumerable source to be adapted.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An IEnumerable interface over the adapted source.</dd></dl>
+
+</div>
+</div>
+<a id="a4c082af1cb27026a4d174108bebb6c82" name="a4c082af1cb27026a4d174108bebb6c82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c082af1cb27026a4d174108bebb6c82">&#9670;&#160;</a></span>CreateImmutableArray()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static IEnumerable <a class="el" href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html">Buzzware.Cascade.EnumerableAdapter</a>&lt; T &gt;.CreateImmutableArray </td>
+          <td>(</td>
+          <td class="paramtype">Type&#160;</td>
+          <td class="paramname"><em>itemType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IEnumerable&#160;</td>
+          <td class="paramname"><em>source</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates an ImmutableArray of a specified item type from a non-generic source and returns it as the base type IEnumerable. Utilizes the CreateRange method for creation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">itemType</td><td>The type of the elements expected in the source.</td></tr>
+    <tr><td class="paramname">source</td><td>The non-generic IEnumerable source to be converted.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An IEnumerable interface over an immutable array of the source elements.</dd></dl>
+
+</div>
+</div>
+<a id="a1e0cf18694d0441668605c4473cb83b8" name="a1e0cf18694d0441668605c4473cb83b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e0cf18694d0441668605c4473cb83b8">&#9670;&#160;</a></span>GetEnumerator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerator&lt; T &gt; <a class="el" href="class_buzzware_1_1_cascade_1_1_enumerable_adapter.html">Buzzware.Cascade.EnumerableAdapter</a>&lt; T &gt;.GetEnumerator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns an enumerator that iterates through the collection, converting each element to the target generic type T. </p>
+<dl class="section return"><dt>Returns</dt><dd>An IEnumerator of type T to iterate through the collection.</dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/utilities/EnumerableAdapter.cs</li>
 </ul>

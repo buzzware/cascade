@@ -89,5 +89,7 @@ var menudata={children:[
 {text:"o",url:"functions_prop.html#index_o"},
 {text:"p",url:"functions_prop.html#index_p"},
 {text:"r",url:"functions_prop.html#index_r"},
-{text:"s",url:"functions_prop.html#index_s"}]},
+{text:"s",url:"functions_prop.html#index_s"},
+{text:"u",url:"functions_prop.html#index_u"},
+{text:"w",url:"functions_prop.html#index_w"}]},
 {text:"Events",url:"functions_evnt.html"}]}]}]}

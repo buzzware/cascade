@@ -7,7 +7,7 @@ var indexSectionsWithContent =
   4: "dps",
   5: "rs",
   6: "abcdghilqs",
-  7: "_acfhilmnoprs",
+  7: "_acfhilmnoprsuw",
   8: "p",
   9: "abcdfghmpqsu"
 };

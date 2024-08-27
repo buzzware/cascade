@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('class_data_not_available_offline.html'
   <div class="headertitle"><div class="title">DataNotAvailableOffline Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Represents an exception thrown when data is not available offline and a server connection is required to access it. Extends the StandardException class with a default message and status.  
+ <a href="class_data_not_available_offline.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for DataNotAvailableOffline:</div>
 <div class="dyncontent">
@@ -106,19 +109,76 @@ Inheritance diagram for DataNotAvailableOffline:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af07b7c4534772ffec616de0f47e3a67b"><td class="memItemLeft" align="right" valign="top"><a id="af07b7c4534772ffec616de0f47e3a67b" name="af07b7c4534772ffec616de0f47e3a67b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DataNotAvailableOffline</b> (string aMessage=null, Exception aInnerException=null, int aStatus=DefaultStatus)</td></tr>
+<tr class="memitem:af07b7c4534772ffec616de0f47e3a67b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_data_not_available_offline.html#af07b7c4534772ffec616de0f47e3a67b">DataNotAvailableOffline</a> (string aMessage=null, Exception aInnerException=null, int aStatus=<a class="el" href="class_data_not_available_offline.html#a07fb69a5e0df5986ff0094347e62e9a1">DefaultStatus</a>)</td></tr>
+<tr class="memdesc:af07b7c4534772ffec616de0f47e3a67b"><td class="mdescLeft">&#160;</td><td class="mdescRight">DataNotAvailableOffline Constructor.  <br /></td></tr>
 <tr class="separator:af07b7c4534772ffec616de0f47e3a67b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:aeef0113d49e98c5b1198c0c13aa4a426"><td class="memItemLeft" align="right" valign="top"><a id="aeef0113d49e98c5b1198c0c13aa4a426" name="aeef0113d49e98c5b1198c0c13aa4a426"></a>
 const new string&#160;</td><td class="memItemRight" valign="bottom"><b>DefaultMessage</b> = &quot;The server could not be reached and the data is not available without it.&quot;</td></tr>
+<tr class="memdesc:aeef0113d49e98c5b1198c0c13aa4a426"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default error message indicating the server could not be reached and data is unavailable offline. <br /></td></tr>
 <tr class="separator:aeef0113d49e98c5b1198c0c13aa4a426"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07fb69a5e0df5986ff0094347e62e9a1"><td class="memItemLeft" align="right" valign="top"><a id="a07fb69a5e0df5986ff0094347e62e9a1" name="a07fb69a5e0df5986ff0094347e62e9a1"></a>
 const new int&#160;</td><td class="memItemRight" valign="bottom"><b>DefaultStatus</b> = 410</td></tr>
+<tr class="memdesc:a07fb69a5e0df5986ff0094347e62e9a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default HTTP status code representing the error condition. <br /></td></tr>
 <tr class="separator:a07fb69a5e0df5986ff0094347e62e9a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Represents an exception thrown when data is not available offline and a server connection is required to access it. Extends the StandardException class with a default message and status. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="af07b7c4534772ffec616de0f47e3a67b" name="af07b7c4534772ffec616de0f47e3a67b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af07b7c4534772ffec616de0f47e3a67b">&#9670;&#160;</a></span>DataNotAvailableOffline()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DataNotAvailableOffline.DataNotAvailableOffline </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>aMessage</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Exception&#160;</td>
+          <td class="paramname"><em>aInnerException</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>aStatus</em> = <code><a class="el" href="class_data_not_available_offline.html#a07fb69a5e0df5986ff0094347e62e9a1">DefaultStatus</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>DataNotAvailableOffline Constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aMessage</td><td>Custom error message, defaults to predefined message if null.</td></tr>
+    <tr><td class="paramname">aInnerException</td><td>The inner exception that caused this exception, if any.</td></tr>
+    <tr><td class="paramname">aStatus</td><td>HTTP status code for the error, defaults to 410.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/utilities/CascadeExceptions.cs</li>
 </ul>

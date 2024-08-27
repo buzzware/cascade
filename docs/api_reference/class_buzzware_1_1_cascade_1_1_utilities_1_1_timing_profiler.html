@@ -96,22 +96,126 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_utiliti
   <div class="headertitle"><div class="title">Buzzware.Cascade.Utilities.TimingProfiler Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A utility class for profiling the duration of code execution blocks. It allows for tracking multiple iterations and calculating statistics such as minimum, maximum, average, and standard deviation of execution times.  
+ <a href="class_buzzware_1_1_cascade_1_1_utilities_1_1_timing_profiler.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ade58929a1e19e03f76c035261ae2ef73"><td class="memItemLeft" align="right" valign="top"><a id="ade58929a1e19e03f76c035261ae2ef73" name="ade58929a1e19e03f76c035261ae2ef73"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>TimingProfiler</b> (string name)</td></tr>
+<tr class="memitem:ade58929a1e19e03f76c035261ae2ef73"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_utilities_1_1_timing_profiler.html#ade58929a1e19e03f76c035261ae2ef73">TimingProfiler</a> (string name)</td></tr>
+<tr class="memdesc:ade58929a1e19e03f76c035261ae2ef73"><td class="mdescLeft">&#160;</td><td class="mdescRight">TimingProfiler Constructor.  <br /></td></tr>
 <tr class="separator:ade58929a1e19e03f76c035261ae2ef73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e696addb77b2b6230d8e65b860b979b"><td class="memItemLeft" align="right" valign="top"><a id="a1e696addb77b2b6230d8e65b860b979b" name="a1e696addb77b2b6230d8e65b860b979b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Start</b> (int? iterations=null)</td></tr>
+<tr class="memitem:a1e696addb77b2b6230d8e65b860b979b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_utilities_1_1_timing_profiler.html#a1e696addb77b2b6230d8e65b860b979b">Start</a> (int? iterations=null)</td></tr>
+<tr class="memdesc:a1e696addb77b2b6230d8e65b860b979b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the timing profile, optionally specifying the number of iterations to track.  <br /></td></tr>
 <tr class="separator:a1e696addb77b2b6230d8e65b860b979b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad89912922125ce19c08123da89910bba"><td class="memItemLeft" align="right" valign="top"><a id="ad89912922125ce19c08123da89910bba" name="ad89912922125ce19c08123da89910bba"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Stop</b> ()</td></tr>
+<tr class="memdesc:ad89912922125ce19c08123da89910bba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the current timing session and records the elapsed time. Automatically restarts the stopwatch if more iterations are expected. <br /></td></tr>
 <tr class="separator:ad89912922125ce19c08123da89910bba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e3c1d5c1963c1cf3013286d2fc1d4bd"><td class="memItemLeft" align="right" valign="top"><a id="a3e3c1d5c1963c1cf3013286d2fc1d4bd" name="a3e3c1d5c1963c1cf3013286d2fc1d4bd"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Report</b> ()</td></tr>
+<tr class="memitem:a3e3c1d5c1963c1cf3013286d2fc1d4bd"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_utilities_1_1_timing_profiler.html#a3e3c1d5c1963c1cf3013286d2fc1d4bd">Report</a> ()</td></tr>
+<tr class="memdesc:a3e3c1d5c1963c1cf3013286d2fc1d4bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a report of the timing statistics, including each iteration's timing, and computed minimum, maximum, average, and standard deviation if applicable.  <br /></td></tr>
 <tr class="separator:a3e3c1d5c1963c1cf3013286d2fc1d4bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A utility class for profiling the duration of code execution blocks. It allows for tracking multiple iterations and calculating statistics such as minimum, maximum, average, and standard deviation of execution times. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ade58929a1e19e03f76c035261ae2ef73" name="ade58929a1e19e03f76c035261ae2ef73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade58929a1e19e03f76c035261ae2ef73">&#9670;&#160;</a></span>TimingProfiler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Buzzware.Cascade.Utilities.TimingProfiler.TimingProfiler </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>TimingProfiler Constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name identifier for this instance of the profiler.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3e3c1d5c1963c1cf3013286d2fc1d4bd" name="a3e3c1d5c1963c1cf3013286d2fc1d4bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e3c1d5c1963c1cf3013286d2fc1d4bd">&#9670;&#160;</a></span>Report()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Buzzware.Cascade.Utilities.TimingProfiler.Report </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generates a report of the timing statistics, including each iteration's timing, and computed minimum, maximum, average, and standard deviation if applicable. </p>
+<dl class="section return"><dt>Returns</dt><dd>A formatted string containing the timing statistics report.</dd></dl>
+
+</div>
+</div>
+<a id="a1e696addb77b2b6230d8e65b860b979b" name="a1e696addb77b2b6230d8e65b860b979b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e696addb77b2b6230d8e65b860b979b">&#9670;&#160;</a></span>Start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Buzzware.Cascade.Utilities.TimingProfiler.Start </td>
+          <td>(</td>
+          <td class="paramtype">int?&#160;</td>
+          <td class="paramname"><em>iterations</em> = <code>null</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Starts the timing profile, optionally specifying the number of iterations to track. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iterations</td><td>The total number of iterations for timing. Defaults to 1 if not provided.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/utilities/TimingProfiler.cs</li>
 </ul>

@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_testing
   <div class="headertitle"><div class="title">Buzzware.Cascade.Testing.Parent Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A Parent model for demonstrating SuperModel and associations (with Child). Not a human parent.  
+ <a href="class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.Testing.Parent:</div>
 <div class="dyncontent">
@@ -109,8 +112,12 @@ Inheritance diagram for Buzzware.Cascade.Testing.Parent:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a347367fe050394c9dbc8b20d39c5bc64"><td class="memItemLeft" align="right" valign="top"><a id="a347367fe050394c9dbc8b20d39c5bc64" name="a347367fe050394c9dbc8b20d39c5bc64"></a>
-<a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html">Parent</a>&#160;</td><td class="memItemRight" valign="bottom"><b>withChanges</b> (string? colour=null, string? size=null, long? updatedAtMs=null)</td></tr>
+<tr class="memitem:acbdbf42f33cab31771610644511efeed"><td class="memItemLeft" align="right" valign="top"><a id="acbdbf42f33cab31771610644511efeed" name="acbdbf42f33cab31771610644511efeed"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Parent</b> ()</td></tr>
+<tr class="memdesc:acbdbf42f33cab31771610644511efeed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parent Constructor. <br /></td></tr>
+<tr class="separator:acbdbf42f33cab31771610644511efeed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a347367fe050394c9dbc8b20d39c5bc64"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html">Parent</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html#a347367fe050394c9dbc8b20d39c5bc64">withChanges</a> (string? colour=null, string? size=null, long? <a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html#a0a3c22ebad8a6d0f0e1c0e01235bbe34">updatedAtMs</a>=null)</td></tr>
+<tr class="memdesc:a347367fe050394c9dbc8b20d39c5bc64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new Parent object with the same id, and optionally modified values for colour, size, and updatedAtMs. If these are not provided, the current object's values will be used.  <br /></td></tr>
 <tr class="separator:a347367fe050394c9dbc8b20d39c5bc64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_buzzware_1_1_cascade_1_1_super_model"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_buzzware_1_1_cascade_1_1_super_model')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">Buzzware.Cascade.SuperModel</a></td></tr>
 <tr class="memitem:acc98b6c57f1612c1dfb731f04605f7fa inherit pub_methods_class_buzzware_1_1_cascade_1_1_super_model"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html#acc98b6c57f1612c1dfb731f04605f7fa">SuperModel</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a>? proxyFor=null)</td></tr>
@@ -143,9 +150,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>__ClearChanges</b> ()
 Properties</h2></td></tr>
 <tr class="memitem:a10617dd14c378c98463b45bfce322ef8"><td class="memItemLeft" align="right" valign="top"><a id="a10617dd14c378c98463b45bfce322ef8" name="a10617dd14c378c98463b45bfce322ef8"></a>
 long&#160;</td><td class="memItemRight" valign="bottom"><b>id</b><code> [get, set]</code></td></tr>
+<tr class="memdesc:a10617dd14c378c98463b45bfce322ef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The unique identifier. <br /></td></tr>
 <tr class="separator:a10617dd14c378c98463b45bfce322ef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad455de42767c7a8621aef50b76e72cc8"><td class="memItemLeft" align="right" valign="top"><a id="ad455de42767c7a8621aef50b76e72cc8" name="ad455de42767c7a8621aef50b76e72cc8"></a>
 IEnumerable&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_child.html">Child</a> &gt;?&#160;</td><td class="memItemRight" valign="bottom"><b>Children</b><code> [get, set]</code></td></tr>
+<tr class="memdesc:ad455de42767c7a8621aef50b76e72cc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a collection of Child entities associated with this Parent. It is mapped by a foreign key relationship based on the parentId property. <br /></td></tr>
 <tr class="separator:ad455de42767c7a8621aef50b76e72cc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6609b037f844845356a4a22b2ab6e376"><td class="memItemLeft" align="right" valign="top"><a id="a6609b037f844845356a4a22b2ab6e376" name="a6609b037f844845356a4a22b2ab6e376"></a>
 string?&#160;</td><td class="memItemRight" valign="bottom"><b>colour</b><code> [get, set]</code></td></tr>
@@ -155,6 +164,7 @@ string?&#160;</td><td class="memItemRight" valign="bottom"><b>Size</b><code> [ge
 <tr class="separator:a040db9e5878fb5e91d73088d51633b97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a3c22ebad8a6d0f0e1c0e01235bbe34"><td class="memItemLeft" align="right" valign="top"><a id="a0a3c22ebad8a6d0f0e1c0e01235bbe34" name="a0a3c22ebad8a6d0f0e1c0e01235bbe34"></a>
 long&#160;</td><td class="memItemRight" valign="bottom"><b>updatedAtMs</b><code> [get, set]</code></td></tr>
+<tr class="memdesc:a0a3c22ebad8a6d0f0e1c0e01235bbe34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timestamp, in milliseconds, when the Parent entity was last updated. <br /></td></tr>
 <tr class="separator:a0a3c22ebad8a6d0f0e1c0e01235bbe34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_class_buzzware_1_1_cascade_1_1_super_model"><td colspan="2" onclick="javascript:toggleInherit('properties_class_buzzware_1_1_cascade_1_1_super_model')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">Buzzware.Cascade.SuperModel</a></td></tr>
 <tr class="memitem:a2a77c2618eebb1fd6dc600cfa6aed900 inherit properties_class_buzzware_1_1_cascade_1_1_super_model"><td class="memItemLeft" align="right" valign="top">
@@ -197,6 +207,62 @@ readonly ConcurrentDictionary&lt; string, bool &gt;&#160;</td><td class="memItem
 PropertyChangedEventHandler?&#160;</td><td class="memItemRight" valign="bottom"><b>PropertyChanged</b></td></tr>
 <tr class="separator:a034e8d67a2810d3da340f376213450ce inherit events_class_buzzware_1_1_cascade_1_1_super_model"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A Parent model for demonstrating SuperModel and associations (with Child). Not a human parent. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a347367fe050394c9dbc8b20d39c5bc64" name="a347367fe050394c9dbc8b20d39c5bc64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a347367fe050394c9dbc8b20d39c5bc64">&#9670;&#160;</a></span>withChanges()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html">Parent</a> Buzzware.Cascade.Testing.Parent.withChanges </td>
+          <td>(</td>
+          <td class="paramtype">string?&#160;</td>
+          <td class="paramname"><em>colour</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?&#160;</td>
+          <td class="paramname"><em>size</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long?&#160;</td>
+          <td class="paramname"><em>updatedAtMs</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a new Parent object with the same id, and optionally modified values for colour, size, and updatedAtMs. If these are not provided, the current object's values will be used. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">colour</td><td>colour</td></tr>
+    <tr><td class="paramname">size</td><td>size</td></tr>
+    <tr><td class="paramname">updatedAtMs</td><td>updatedAtMs</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new Parent object with specified or existing values.</dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/Testing/Parent.cs</li>
 </ul>

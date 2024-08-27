@@ -97,6 +97,9 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_testing
   <div class="headertitle"><div class="title">Buzzware.Cascade.Testing.MockOrigin Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Represents a mock implementation of the ICascadeOrigin interface for testing purposes. Handles operations related to request processing and time manipulation in a simulated environment.  
+ <a href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Buzzware.Cascade.Testing.MockOrigin:</div>
 <div class="dyncontent">
@@ -104,32 +107,32 @@ Inheritance diagram for Buzzware.Cascade.Testing.MockOrigin:</div>
   <img src="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.png" usemap="#Buzzware.Cascade.Testing.MockOrigin_map" alt=""/>
   <map id="Buzzware.Cascade.Testing.MockOrigin_map" name="Buzzware.Cascade.Testing.MockOrigin_map">
 <area href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html" title="Defines a Cascade Origin, with methods to process requests, manage authentication,..." alt="Buzzware.Cascade.ICascadeOrigin" shape="rect" coords="0,0,242,24"/>
-<area href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin2.html" alt="Buzzware.Cascade.Testing.MockOrigin2" shape="rect" coords="0,112,242,136"/>
+<area href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin2.html" title="MockOrigin2 offers a mock implementation of the ICascadeOrigin interface for testing purposes...." alt="Buzzware.Cascade.Testing.MockOrigin2" shape="rect" coords="0,112,242,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a34109820aa89693d9775aa4882459d0f"><td class="memItemLeft" align="right" valign="top"><a id="a34109820aa89693d9775aa4882459d0f" name="a34109820aa89693d9775aa4882459d0f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>MockOrigin</b> (long nowMs=1000, Func&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html">MockOrigin</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>, Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt; &gt;? handleRequest=null)</td></tr>
+<tr class="memitem:a34109820aa89693d9775aa4882459d0f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a34109820aa89693d9775aa4882459d0f">MockOrigin</a> (long nowMs=1000, Func&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html">MockOrigin</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>, Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt; &gt;? handleRequest=null)</td></tr>
+<tr class="memdesc:a34109820aa89693d9775aa4882459d0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">MockOrigin Constructor Initializes a new instance of the MockOrigin class with optional parameters for current time and request handling.  <br /></td></tr>
 <tr class="separator:a34109820aa89693d9775aa4882459d0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a177cfcc87827f2002f49566f4a958fe3"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a177cfcc87827f2002f49566f4a958fe3">EnsureAuthenticated</a> (Type? type)</td></tr>
-<tr class="memdesc:a177cfcc87827f2002f49566f4a958fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensures that the session is authenticated, potentially for a specific type.  <br /></td></tr>
+<tr class="memdesc:a177cfcc87827f2002f49566f4a958fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensures that the current session is authenticated for accessing models of a specific type.  <br /></td></tr>
 <tr class="separator:a177cfcc87827f2002f49566f4a958fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b5e1763616ce0450e0fb8a98086fd01"><td class="memItemLeft" align="right" valign="top">virtual Type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a5b5e1763616ce0450e0fb8a98086fd01">LookupModelType</a> (string typeName)</td></tr>
-<tr class="memdesc:a5b5e1763616ce0450e0fb8a98086fd01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the model type based on the provided type name.  <br /></td></tr>
+<tr class="memdesc:a5b5e1763616ce0450e0fb8a98086fd01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves and returns the corresponding Type object for a given type name in the mock environment.  <br /></td></tr>
 <tr class="separator:a5b5e1763616ce0450e0fb8a98086fd01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e69201cef3e8c16b7e4dfb930b45e5e"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a1e69201cef3e8c16b7e4dfb930b45e5e">NewGuid</a> ()</td></tr>
-<tr class="memdesc:a1e69201cef3e8c16b7e4dfb930b45e5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a new GUID as a string.  <br /></td></tr>
+<tr class="memdesc:a1e69201cef3e8c16b7e4dfb930b45e5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a new globally unique identifier (GUID) in string format.  <br /></td></tr>
 <tr class="separator:a1e69201cef3e8c16b7e4dfb930b45e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa80a3dd2c60c18b1f6c619c1d74db184"><td class="memItemLeft" align="right" valign="top">IEnumerable&lt; Type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#aa80a3dd2c60c18b1f6c619c1d74db184">ListModelTypes</a> ()</td></tr>
-<tr class="memdesc:aa80a3dd2c60c18b1f6c619c1d74db184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lists all the model types registered.  <br /></td></tr>
+<tr class="memdesc:aa80a3dd2c60c18b1f6c619c1d74db184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lists the model types available in the mock environment.  <br /></td></tr>
 <tr class="separator:aa80a3dd2c60c18b1f6c619c1d74db184"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad65dcb1c53d3f5434ec660c1832d3b2b"><td class="memItemLeft" align="right" valign="top"><a id="ad65dcb1c53d3f5434ec660c1832d3b2b" name="ad65dcb1c53d3f5434ec660c1832d3b2b"></a>
-long&#160;</td><td class="memItemRight" valign="bottom"><b>IncNowMs</b> (long incMs=1000)</td></tr>
+<tr class="memitem:ad65dcb1c53d3f5434ec660c1832d3b2b"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#ad65dcb1c53d3f5434ec660c1832d3b2b">IncNowMs</a> (long incMs=1000)</td></tr>
+<tr class="memdesc:ad65dcb1c53d3f5434ec660c1832d3b2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advances the current time by a specified number of milliseconds in the mock environment.  <br /></td></tr>
 <tr class="separator:ad65dcb1c53d3f5434ec660c1832d3b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab1a24c4d884eba757cb2d1b05aae0b2"><td class="memItemLeft" align="right" valign="top">virtual Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#aab1a24c4d884eba757cb2d1b05aae0b2">ProcessRequest</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> request, bool connectionOnline)</td></tr>
-<tr class="memdesc:aab1a24c4d884eba757cb2d1b05aae0b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a request and returns a response eg. from a server.  <br /></td></tr>
+<tr class="memdesc:aab1a24c4d884eba757cb2d1b05aae0b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a request operation in the mock environment and determines the response. Utilizes the provided HandleRequest delegate if available, otherwise throws an exception.  <br /></td></tr>
 <tr class="separator:aab1a24c4d884eba757cb2d1b05aae0b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67000423678699e451b5b9472bd00a9c"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#a67000423678699e451b5b9472bd00a9c">ProcessRequest</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> request, bool connectionOnline)</td></tr>
 <tr class="memdesc:a67000423678699e451b5b9472bd00a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a request and returns a response eg. from a server.  <br /></td></tr>
@@ -150,10 +153,10 @@ long&#160;</td><td class="memItemRight" valign="bottom"><b>IncNowMs</b> (long in
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a74c9465d9eae44ec17db9b87c3625690"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a74c9465d9eae44ec17db9b87c3625690">Cascade</a><code> [get, set]</code></td></tr>
-<tr class="memdesc:a74c9465d9eae44ec17db9b87c3625690"><td class="mdescLeft">&#160;</td><td class="mdescRight">CascadeDataLayer reference.  <br /></td></tr>
+<tr class="memdesc:a74c9465d9eae44ec17db9b87c3625690"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides access to the Cascade data layer instance associated with this origin.  <br /></td></tr>
 <tr class="separator:a74c9465d9eae44ec17db9b87c3625690"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a863f11be05b2e51eaa64fe41842b0464"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a863f11be05b2e51eaa64fe41842b0464">NowMs</a><code> [get, set]</code></td></tr>
-<tr class="memdesc:a863f11be05b2e51eaa64fe41842b0464"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current time in milliseconds since 1970.  <br /></td></tr>
+<tr class="memdesc:a863f11be05b2e51eaa64fe41842b0464"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the current time in milliseconds within the mock environment.  <br /></td></tr>
 <tr class="separator:a863f11be05b2e51eaa64fe41842b0464"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_buzzware_1_1_cascade_1_1_i_cascade_origin"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_buzzware_1_1_cascade_1_1_i_cascade_origin')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html">Buzzware.Cascade.ICascadeOrigin</a></td></tr>
 <tr class="memitem:a3d773c4afc119315d43d89eca4bbad61 inherit properties_interface_buzzware_1_1_cascade_1_1_i_cascade_origin"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html">CascadeDataLayer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#a3d773c4afc119315d43d89eca4bbad61">Cascade</a><code> [get, set]</code></td></tr>
@@ -163,6 +166,54 @@ Properties</h2></td></tr>
 <tr class="memdesc:adb43172386dc8e28e66aeb7f1b884ff2 inherit properties_interface_buzzware_1_1_cascade_1_1_i_cascade_origin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current time in milliseconds since 1970.  <br /></td></tr>
 <tr class="separator:adb43172386dc8e28e66aeb7f1b884ff2 inherit properties_interface_buzzware_1_1_cascade_1_1_i_cascade_origin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Represents a mock implementation of the ICascadeOrigin interface for testing purposes. Handles operations related to request processing and time manipulation in a simulated environment. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a34109820aa89693d9775aa4882459d0f" name="a34109820aa89693d9775aa4882459d0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34109820aa89693d9775aa4882459d0f">&#9670;&#160;</a></span>MockOrigin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Buzzware.Cascade.Testing.MockOrigin.MockOrigin </td>
+          <td>(</td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>nowMs</em> = <code>1000</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Func&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html">MockOrigin</a>, <a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>, Task&lt; <a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> &gt; &gt;?&#160;</td>
+          <td class="paramname"><em>handleRequest</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>MockOrigin Constructor Initializes a new instance of the MockOrigin class with optional parameters for current time and request handling. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nowMs</td><td>Represents the current time in milliseconds in the mock environment. Default is 1000 ms.</td></tr>
+    <tr><td class="paramname">handleRequest</td><td>A function delegate for handling requests, allowing customization of request processing.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a177cfcc87827f2002f49566f4a958fe3" name="a177cfcc87827f2002f49566f4a958fe3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a177cfcc87827f2002f49566f4a958fe3">&#9670;&#160;</a></span>EnsureAuthenticated()</h2>
@@ -188,16 +239,50 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Ensures that the session is authenticated, potentially for a specific type. </p>
+<p>Ensures that the current session is authenticated for accessing models of a specific type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">type</td><td>The type for which authentication is being ensured. Defaults to null.</td></tr>
+    <tr><td class="paramname">type</td><td>The Type for which authentication is required.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A task representing the authentication process.</dd></dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#a3ab270bce56d694d86f73f6d723ac403">Buzzware.Cascade.ICascadeOrigin</a>.</p>
+
+</div>
+</div>
+<a id="ad65dcb1c53d3f5434ec660c1832d3b2b" name="ad65dcb1c53d3f5434ec660c1832d3b2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad65dcb1c53d3f5434ec660c1832d3b2b">&#9670;&#160;</a></span>IncNowMs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">long Buzzware.Cascade.Testing.MockOrigin.IncNowMs </td>
+          <td>(</td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>incMs</em> = <code>1000</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Advances the current time by a specified number of milliseconds in the mock environment. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">incMs</td><td>The number of milliseconds to increment the current time. Default is 1000 ms.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new current time in milliseconds after the increment.</dd></dl>
 
 </div>
 </div>
@@ -224,8 +309,8 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Lists all the model types registered. </p>
-<dl class="section return"><dt>Returns</dt><dd>An enumerable containing all registered model types.</dd></dl>
+<p>Lists the model types available in the mock environment. </p>
+<dl class="section return"><dt>Returns</dt><dd>An enumeration of Type objects representing the available model types.</dd></dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#a8fb833706f4cdfe61716dec12c767243">Buzzware.Cascade.ICascadeOrigin</a>.</p>
 
@@ -255,14 +340,20 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the model type based on the provided type name. </p>
+<p>Resolves and returns the corresponding Type object for a given type name in the mock environment. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">typeName</td><td>The name of the type to be looked up.</td></tr>
+    <tr><td class="paramname">typeName</td><td>The name of the type to be resolved.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The Type corresponding to the provided type name.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The Type object that corresponds to the provided type name.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">TypeLoadException</td><td>Thrown when the specified type name cannot be found.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#aedf63d4186f51d4a88c646c667448013">Buzzware.Cascade.ICascadeOrigin</a>.</p>
 
@@ -293,8 +384,8 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Generates a new GUID as a string. </p>
-<dl class="section return"><dt>Returns</dt><dd>A string representing a new GUID.</dd></dl>
+<p>Generates a new globally unique identifier (GUID) in string format. </p>
+<dl class="section return"><dt>Returns</dt><dd>A new GUID as a string.</dd></dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#a07ef9ab2a1535b24eafb1d33dbc0ab5f">Buzzware.Cascade.ICascadeOrigin</a>.</p>
 
@@ -334,7 +425,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Receives a request and returns a response eg. from a server. </p>
+<p>Processes a request operation in the mock environment and determines the response. Utilizes the provided HandleRequest delegate if available, otherwise throws an exception. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">request</td><td>The request operation to be processed.</td></tr>
@@ -342,7 +433,13 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A task returning an OpResponse indicating the outcome of the request.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>OpResponse object detailing the result of the request processing.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">NotImplementedException</td><td>Thrown if no HandleRequest delegate is provided and the method is not overridden.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#a67000423678699e451b5b9472bd00a9c">Buzzware.Cascade.ICascadeOrigin</a>.</p>
 
@@ -371,7 +468,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>CascadeDataLayer reference. </p>
+<p>Provides access to the Cascade data layer instance associated with this origin. </p>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#a3d773c4afc119315d43d89eca4bbad61">Buzzware.Cascade.ICascadeOrigin</a>.</p>
 
@@ -397,7 +494,7 @@ Properties</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Current time in milliseconds since 1970. </p>
+<p>Represents the current time in milliseconds within the mock environment. </p>
 
 <p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_origin.html#adb43172386dc8e28e66aeb7f1b884ff2">Buzzware.Cascade.ICascadeOrigin</a>.</p>
 
