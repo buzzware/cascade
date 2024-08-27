@@ -85,5 +85,21 @@ namespace Buzzware.Cascade.Test {
       var isEnumerable = CascadeTypeUtils.IsEnumerableType(nonNullableTargetType);
       Assert.That(isEnumerable, Is.True);
     }
+
+    /// <summary>
+    /// Test GetDefaultValue with a variety of types
+    /// </summary>
+    [Test]
+    public void DefaultTypeTest() {
+      Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(string)),Is.EqualTo(null));
+      Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(bool)),Is.EqualTo(false));
+      Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(bool?)),Is.EqualTo(null));
+      Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(int)),Is.EqualTo(0));
+      Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(long)),Is.EqualTo(0));
+      Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(double)),Is.EqualTo(0.0));
+      Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(double?)),Is.EqualTo(null));
+      Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(DateTime?)),Is.EqualTo(null));
+      Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(DateTime)),Is.EqualTo(DateTime.MinValue));
+    }
   }
 }

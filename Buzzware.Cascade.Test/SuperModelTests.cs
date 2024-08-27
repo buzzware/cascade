@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -238,5 +239,101 @@ namespace Buzzware.Cascade.Test {
       Assert.That(proxyEvents.Count,Is.EqualTo(1));
       Assert.That(proxyEvents.First().Key, Is.EqualTo(nameof(Thing.__HasChanges)));
     }
+
+
+    // Model used for testing 
+    class AllTypesModel : SuperModel {
+      
+      private string? _aString;
+      public string? AString
+      {
+          get => GetProperty(ref _aString);
+          set => SetProperty(ref _aString, value);
+      }
+
+      private int? _aInt;
+      public int? AInt
+      {
+          get => GetProperty(ref _aInt);
+          set => SetProperty(ref _aInt, value);
+      }
+
+      private bool? _aBool;
+      public bool? ABool
+      {
+          get => GetProperty(ref _aBool);
+          set => SetProperty(ref _aBool, value);
+      }
+
+      private double? _aDouble;
+      public double? ADouble
+      {
+          get => GetProperty(ref _aDouble);
+          set => SetProperty(ref _aDouble, value);
+      }
+
+      private DateTime? _aDateTime;
+      public DateTime? ADateTime
+      {
+          get => GetProperty(ref _aDateTime);
+          set => SetProperty(ref _aDateTime, value);
+      }
+    }
+
+    /// <summary>
+    /// Test __ApplyChanges with various type conversions
+    /// </summary>
+    [Test]
+    public void ApplyChangesGeneralConversion() {
+
+      var DateTime1 = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc); 
+      var DateTime2 = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Utc); 
+      
+      var model = new AllTypesModel() {
+        AString = "xyz",
+        AInt = 3,
+        ABool = true,
+        ADouble = 3.14,
+        ADateTime = DateTime1
+      };
+      model.__ApplyChanges(new Dictionary<string, object?>() {
+        [nameof(AllTypesModel.AString)] = 123,
+        [nameof(AllTypesModel.AInt)] = "123",
+        [nameof(AllTypesModel.ABool)] = "false",
+        [nameof(AllTypesModel.ADouble)] = 5,
+        [nameof(AllTypesModel.ADateTime)] = DateTime2
+      });
+      Assert.That(model.AString, Is.EqualTo("123"));
+      Assert.That(model.AInt, Is.EqualTo(123));
+      Assert.That(model.ABool, Is.False);
+      Assert.That(model.ADouble, Is.EqualTo(5.0));
+      Assert.That(model.ADateTime, Is.EqualTo(DateTime2));
+    }
+    
+    /// <summary>
+    /// Test DateTime conversions
+    /// </summary>
+    [Test]
+    public void ApplyChangesDateTimeConversion() {
+      var DateTime1 = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc); 
+      var DateTime2 = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Utc); 
+      var model = new AllTypesModel();
+      
+      model.__ApplyChanges(new Dictionary<string, object?>() {
+        [nameof(AllTypesModel.ADateTime)] = DateTime1.ToString("yyyy-MM-dd HH:mm:ss")
+      });
+      Assert.That(model.ADateTime, Is.EqualTo(DateTime1));
+      
+      model.__ApplyChanges(new Dictionary<string, object?>() {
+        [nameof(AllTypesModel.ADateTime)] = DateTime2.ToString("yyyy-MM-ddTHH:mm:ss")
+      });
+      Assert.That(model.ADateTime, Is.EqualTo(DateTime2));
+      
+      model.__ApplyChanges(new Dictionary<string, object?>() {
+        [nameof(AllTypesModel.ADateTime)] = DateTime1.ToString("yyyy-MM-ddTHH:mm:ss")+"Z"
+      });
+      Assert.That(model.ADateTime.Value.ToUniversalTime(), Is.EqualTo(DateTime1));
+    }
+    
   }
 }

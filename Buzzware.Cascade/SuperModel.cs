@@ -131,11 +131,7 @@ namespace Buzzware.Cascade {
           prop?.SetValue(this,kv.Value);
         }
         catch (Exception e) {
-          Console.WriteLine($"SuperModel.__ApplyChanges exception fired setting {kv.Key}={kv.Value}");
-          Console.WriteLine(e.ToString());
-          prop?.SetValue(this,CascadeTypeUtils.ConvertTo(prop.PropertyType,kv.Value));
-          Console.WriteLine($"SuperModel.__ApplyChanges CascadeTypeUtils.ConvertTo succeeded");
-          //throw;
+          prop?.SetValue(this,CascadeTypeUtils.ConvertTo(prop.PropertyType,kv.Value,CascadeTypeUtils.GetDefaultValue(prop.PropertyType)));
         }
       }
     }

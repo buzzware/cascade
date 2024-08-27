@@ -165,30 +165,26 @@ namespace Buzzware.Cascade {
     /// <param name="defaultValue">Optional default value to return in case of conversion failure.</param>
     /// <returns>The converted value or the default value if conversion fails.</returns>
     public static object? ConvertTo(Type type, object? value, object? defaultValue = null) {
-      if (value == null || value == DBNull.Value) {
+      if (value == null || value == DBNull.Value)
         return defaultValue;
-      }
-
+      
       try {
-        // If the value is already of the target type, return it directly.
-        if (type.IsInstanceOfType(value)) {
+        
+        Type targetType = Nullable.GetUnderlyingType(type) ?? type;
+
+        if (targetType.IsInstanceOfType(value))
           return value;
-        }
-
-        // Use TypeConverter for general type conversion.
-        System.ComponentModel.TypeConverter converter = TypeDescriptor.GetConverter(type);
-        if (converter != null && converter.CanConvertFrom(value.GetType())) {
+        
+        TypeConverter converter = TypeDescriptor.GetConverter(targetType);
+        if (converter.CanConvertFrom(value.GetType()))
           return converter.ConvertFrom(value);
-        }
-
-        // Fallback to Convert.ChangeType for basic types.
-        return Convert.ChangeType(value, type);
-      }
-      catch (Exception) {
-        // In case of any conversion error, return the default value.
+        
+        return Convert.ChangeType(value, targetType);
+        
+      } catch (Exception) {
         return defaultValue;
       }
-    }    
+    }
     
     /// <summary>
     /// Retrieves the type of the Cascade ID property from a given model type.
@@ -434,6 +430,18 @@ namespace Buzzware.Cascade {
         return IntegerWillFit(value, type);
       }
       return false;
+    }
+    
+    /// <summary>
+    /// Gets the default value for given type eg. the value a variable of this type will contain if not intiialized
+    /// </summary>
+    /// <param name="type">The Type</param>
+    /// <returns>A value, often null</returns>
+    public static object? GetDefaultValue(Type type) {
+      if (type.IsValueType)
+        return Activator.CreateInstance(type);
+      else
+        return null;
     }
   }
 }

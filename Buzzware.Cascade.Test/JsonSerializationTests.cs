@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Drawing;
@@ -112,6 +113,31 @@ namespace Buzzware.Cascade.Test {
       Assert.That(things2!.Count, Is.EqualTo(2));
       Assert.That(things2[0]["id"], Is.EqualTo(things[0].id));
       Assert.That(things2[0]["name"], Is.EqualTo(things[0].name));
+    }
+
+    private class SimpleModel : SuperModel {
+      public DateTime? MyTime {
+      	get => GetProperty(ref _MyTime); 
+      	set => SetProperty(ref _MyTime, value);
+      }
+      private DateTime? _MyTime;
+    } 
+    
+    [Test]
+    public void TestDateTimeSerialization() {
+      
+      var DateTime1UTC = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc); 
+      var DateTime2Local = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Local);
+
+      var dateTime1UTCString = sz.Serialize(new SimpleModel() { MyTime = DateTime1UTC });
+      Assert.That(dateTime1UTCString, Is.EqualTo("{\"MyTime\":\"2000-01-01T00:00:00Z\"}"));
+      var dateTime1UTCDz = sz.DeserializeType<SimpleModel>(dateTime1UTCString);
+      Assert.That(dateTime1UTCDz.MyTime!.Value.ToUniversalTime(), Is.EqualTo(DateTime1UTC));
+      
+      var dateTime2LocalString = sz.Serialize(new SimpleModel() { MyTime = DateTime2Local });
+      Assert.That(dateTime2LocalString, Is.EqualTo("{\"MyTime\":\"2020-12-24T16:00:00Z\"}"));
+      var dateTime2LocalDz = sz.DeserializeType<SimpleModel>(dateTime2LocalString);
+      Assert.That(dateTime2LocalDz.MyTime, Is.EqualTo(DateTime2Local));
     }
   }
 }

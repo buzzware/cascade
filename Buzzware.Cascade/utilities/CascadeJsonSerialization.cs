@@ -41,15 +41,18 @@ namespace Buzzware.Cascade {
 				Converters = {
 					new DictionaryJsonConverter(),
 					new ImmutableDictionaryJsonConverter(),
+					new DateTimeJsonConverter()
 				}
 			};
 			
       // General options for JSON serialization
 			jsonSerializerOptions = new JsonSerializerOptions() {
-				TypeInfoResolver = new DefaultJsonTypeInfoResolver
-				{
+				TypeInfoResolver = new DefaultJsonTypeInfoResolver {
 					Modifiers = { IgnoreProperties }
 				},
+				Converters = {
+					new DateTimeJsonConverter()
+				}
 			};
 		}
 		
