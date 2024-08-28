@@ -124,20 +124,37 @@ namespace Buzzware.Cascade.Test {
     } 
     
     [Test]
-    public void TestDateTimeSerialization() {
-      
+    public void TestDateTimeSerializationTwoWay() {
       var DateTime1UTC = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc); 
       var DateTime2Local = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Local);
 
+      // Serialize DateTime1UTC to make sure it gets serialized as UTC with a Z
       var dateTime1UTCString = sz.Serialize(new SimpleModel() { MyTime = DateTime1UTC });
       Assert.That(dateTime1UTCString, Is.EqualTo("{\"MyTime\":\"2000-01-01T00:00:00Z\"}"));
+      // Deserialize string to make sure it gets deserialized as the same time as the original, but local
       var dateTime1UTCDz = sz.DeserializeType<SimpleModel>(dateTime1UTCString);
+      Assert.That(dateTime1UTCDz.MyTime!.Value.Kind, Is.EqualTo(DateTimeKind.Local));
       Assert.That(dateTime1UTCDz.MyTime!.Value.ToUniversalTime(), Is.EqualTo(DateTime1UTC));
       
+      // Serialize DateTime2Local to make sure it gets serialized as UTC with a Z
       var dateTime2LocalString = sz.Serialize(new SimpleModel() { MyTime = DateTime2Local });
       Assert.That(dateTime2LocalString, Is.EqualTo("{\"MyTime\":\"2020-12-24T16:00:00Z\"}"));
+      // Deserialize string to make sure it gets deserialized as the same time as the original, but local
       var dateTime2LocalDz = sz.DeserializeType<SimpleModel>(dateTime2LocalString);
+      Assert.That(dateTime2LocalDz.MyTime!.Value.Kind, Is.EqualTo(DateTimeKind.Local));
       Assert.That(dateTime2LocalDz.MyTime, Is.EqualTo(DateTime2Local));
     }
+    
+    
+    [Test]
+    public void TestDateTimeDeserialization() {
+      // Deserialize with Z, treat it as UTC but return as local DateTime
+      var dateTimeZ = sz.DeserializeType<SimpleModel>("{\"MyTime\":\"2000-01-01T00:00:00Z\"}");
+      Assert.That(dateTimeZ.MyTime!.Value, Is.EqualTo(new DateTime(2000, 1, 1, 8, 0, 0, DateTimeKind.Local)));
+      // Deserialize without Z, treat it as UTC but return as local DateTime
+      var dateTimeNoZ = sz.DeserializeType<SimpleModel>("{\"MyTime\":\"2000-01-01T00:00:00\"}");
+      Assert.That(dateTimeZ.MyTime!.Value, Is.EqualTo(new DateTime(2000, 1, 1, 8, 0, 0, DateTimeKind.Local)));
+    }
+    
   }
 }
