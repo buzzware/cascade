@@ -150,10 +150,22 @@ namespace Buzzware.Cascade.Test {
     public void TestDateTimeDeserialization() {
       // Deserialize with Z, treat it as UTC but return as local DateTime
       var dateTimeZ = sz.DeserializeType<SimpleModel>("{\"MyTime\":\"2000-01-01T00:00:00Z\"}");
-      Assert.That(dateTimeZ.MyTime!.Value, Is.EqualTo(new DateTime(2000, 1, 1, 8, 0, 0, DateTimeKind.Local)));
-      // Deserialize without Z, treat it as UTC but return as local DateTime
+      Assert.That(dateTimeZ.MyTime!.Value.Kind, Is.EqualTo(DateTimeKind.Local));
+      Assert.That(dateTimeZ.MyTime!.Value.ToUniversalTime(), Is.EqualTo(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)));
+      
+      // Deserialize without Z, treat it as local
       var dateTimeNoZ = sz.DeserializeType<SimpleModel>("{\"MyTime\":\"2000-01-01T00:00:00\"}");
-      Assert.That(dateTimeZ.MyTime!.Value, Is.EqualTo(new DateTime(2000, 1, 1, 8, 0, 0, DateTimeKind.Local)));
+      Assert.That(dateTimeNoZ.MyTime!.Value, Is.EqualTo(new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Local)));
+      
+      // local timezone
+      var dateTimeLocalTz = sz.DeserializeType<SimpleModel>("{\"MyTime\":\"2000-01-01T00:00:00+08:00\"}");
+      Assert.That(dateTimeLocalTz.MyTime!.Value.Kind, Is.EqualTo(DateTimeKind.Local));
+      Assert.That(dateTimeLocalTz.MyTime!.Value.ToUniversalTime(), Is.EqualTo(new DateTime(1999, 12, 31, 16, 0, 0, DateTimeKind.Utc)));
+      
+      // Deserialize with other tz, return as local DateTime
+      var dateTimeOtherTz = sz.DeserializeType<SimpleModel>("{\"MyTime\":\"2000-01-01T00:00:00+10:00\"}");
+      Assert.That(dateTimeOtherTz.MyTime!.Value.Kind, Is.EqualTo(DateTimeKind.Local));
+      Assert.That(dateTimeOtherTz.MyTime!.Value.ToUniversalTime(), Is.EqualTo(new DateTime(1999, 12, 31, 14, 0, 0, DateTimeKind.Utc)));
     }
     
   }
