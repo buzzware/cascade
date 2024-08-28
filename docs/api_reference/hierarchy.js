@@ -55,6 +55,7 @@ var hierarchy =
     [ "Buzzware.Cascade.IPropertyConverter", "interface_buzzware_1_1_cascade_1_1_i_property_converter.html", null ],
     [ "System.Runtime.CompilerServices.IsExternalInit", "class_system_1_1_runtime_1_1_compiler_services_1_1_is_external_init.html", null ],
     [ "JsonConverter", null, [
+      [ "Buzzware.Cascade.DateTimeJsonConverter", "class_buzzware_1_1_cascade_1_1_date_time_json_converter.html", null ],
       [ "Buzzware.Cascade.DictionaryJsonConverter", "class_buzzware_1_1_cascade_1_1_dictionary_json_converter.html", null ],
       [ "Buzzware.Cascade.ImmutableDictionaryJsonConverter", "class_buzzware_1_1_cascade_1_1_immutable_dictionary_json_converter.html", null ]
     ] ],
