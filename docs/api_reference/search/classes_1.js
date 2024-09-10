@@ -5,8 +5,9 @@ var searchData=
   ['cascadeidattribute_2',['CascadeIdAttribute',['../class_buzzware_1_1_cascade_1_1_cascade_id_attribute.html',1,'Buzzware::Cascade']]],
   ['cascadejsonserialization_3',['CascadeJsonSerialization',['../class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html',1,'Buzzware::Cascade']]],
   ['cascadepaginator_4',['CascadePaginator',['../class_buzzware_1_1_cascade_1_1_cascade_paginator.html',1,'Buzzware::Cascade']]],
-  ['cascadequeryoptions_5',['CascadeQueryOptions',['../class_buzzware_1_1_cascade_1_1_cascade_query_options.html',1,'Buzzware::Cascade']]],
-  ['child_6',['Child',['../class_buzzware_1_1_cascade_1_1_testing_1_1_child.html',1,'Buzzware::Cascade::Testing']]],
-  ['classinfo_7',['ClassInfo',['../class_buzzware_1_1_cascade_1_1_class_info.html',1,'Buzzware::Cascade']]],
-  ['concurrentfilesystemclasscache_8',['ConcurrentFileSystemClassCache',['../class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html',1,'Buzzware::Cascade']]]
+  ['cascadepropertyinfo_5',['CascadePropertyInfo',['../class_buzzware_1_1_cascade_1_1_cascade_property_info.html',1,'Buzzware::Cascade']]],
+  ['cascadequeryoptions_6',['CascadeQueryOptions',['../class_buzzware_1_1_cascade_1_1_cascade_query_options.html',1,'Buzzware::Cascade']]],
+  ['child_7',['Child',['../class_buzzware_1_1_cascade_1_1_testing_1_1_child.html',1,'Buzzware::Cascade::Testing']]],
+  ['classinfo_8',['ClassInfo',['../class_buzzware_1_1_cascade_1_1_class_info.html',1,'Buzzware::Cascade']]],
+  ['concurrentfilesystemclasscache_9',['ConcurrentFileSystemClassCache',['../class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html',1,'Buzzware::Cascade']]]
 ];

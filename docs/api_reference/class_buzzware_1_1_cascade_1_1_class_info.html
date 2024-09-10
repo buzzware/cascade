@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_class_i
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#properties">Properties</a> &#124;
 <a href="class_buzzware_1_1_cascade_1_1_class_info-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Buzzware.Cascade.ClassInfo Class Reference</div></div>
 </div><!--header-->
@@ -100,16 +100,212 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_class_i
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1dc5db8d5820854a4ffd6206ac386b6d"><td class="memItemLeft" align="right" valign="top"><a id="a1dc5db8d5820854a4ffd6206ac386b6d" name="a1dc5db8d5820854a4ffd6206ac386b6d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ClassInfo</b> (Type aType)</td></tr>
+<tr class="memitem:a1dc5db8d5820854a4ffd6206ac386b6d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_class_info.html#a1dc5db8d5820854a4ffd6206ac386b6d">ClassInfo</a> (Type aType)</td></tr>
+<tr class="memdesc:a1dc5db8d5820854a4ffd6206ac386b6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ClassInfo Constructor.  <br /></td></tr>
 <tr class="separator:a1dc5db8d5820854a4ffd6206ac386b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90ac20c37e7af3047af47178295a2d8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_property_info.html">CascadePropertyInfo</a>?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_class_info.html#a90ac20c37e7af3047af47178295a2d8f">GetPropertyInfo</a> (string name)</td></tr>
+<tr class="memdesc:a90ac20c37e7af3047af47178295a2d8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to get a specific property's CascadePropertyInfo by its name.  <br /></td></tr>
+<tr class="separator:a90ac20c37e7af3047af47178295a2d8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10c045474770e9a1741dd149a0ebe7d3"><td class="memItemLeft" align="right" valign="top">object?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_class_info.html#a10c045474770e9a1741dd149a0ebe7d3">GetValue</a> (object aInstance, string aName)</td></tr>
+<tr class="memdesc:a10c045474770e9a1741dd149a0ebe7d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value of a specified property from an instance.  <br /></td></tr>
+<tr class="separator:a10c045474770e9a1741dd149a0ebe7d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6ec120b24f87074c7db2e85bca1b515"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_class_info.html#aa6ec120b24f87074c7db2e85bca1b515">SetValue</a> (object aInstance, string aName, object? aValue)</td></tr>
+<tr class="memdesc:aa6ec120b24f87074c7db2e85bca1b515"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a value for a specified property in a given object instance.  <br /></td></tr>
+<tr class="separator:aa6ec120b24f87074c7db2e85bca1b515"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a30529999c928b4cf00f8536181bb2fad"><td class="memItemLeft" align="right" valign="top"><a id="a30529999c928b4cf00f8536181bb2fad" name="a30529999c928b4cf00f8536181bb2fad"></a>
-Dictionary&lt; String, PropertyInfo &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>propertyInfos</b> = null</td></tr>
-<tr class="separator:a30529999c928b4cf00f8536181bb2fad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
+Properties</h2></td></tr>
+<tr class="memitem:a5958e21997400adf31677739f8aa6bd3"><td class="memItemLeft" align="right" valign="top"><a id="a5958e21997400adf31677739f8aa6bd3" name="a5958e21997400adf31677739f8aa6bd3"></a>
+ImmutableDictionary&lt; string, <a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_property_info.html">CascadePropertyInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>AllPropertyInfos</b><code> [get]</code></td></tr>
+<tr class="separator:a5958e21997400adf31677739f8aa6bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fa88a677223ba88b4a28b5491fb544d"><td class="memItemLeft" align="right" valign="top"><a id="a6fa88a677223ba88b4a28b5491fb544d" name="a6fa88a677223ba88b4a28b5491fb544d"></a>
+ImmutableDictionary&lt; string, <a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_property_info.html">CascadePropertyInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>DataAndIdPropertyInfos</b><code> [get]</code></td></tr>
+<tr class="separator:a6fa88a677223ba88b4a28b5491fb544d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacbf980bf6a58817c96022f482048ac6"><td class="memItemLeft" align="right" valign="top"><a id="aacbf980bf6a58817c96022f482048ac6" name="aacbf980bf6a58817c96022f482048ac6"></a>
+ImmutableArray&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>DataAndIdNames</b><code> [get]</code></td></tr>
+<tr class="separator:aacbf980bf6a58817c96022f482048ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a754086005a6b4fc3c97ed1acf22fbb82"><td class="memItemLeft" align="right" valign="top"><a id="a754086005a6b4fc3c97ed1acf22fbb82" name="a754086005a6b4fc3c97ed1acf22fbb82"></a>
+ImmutableDictionary&lt; string, <a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_property_info.html">CascadePropertyInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Associationinfos</b><code> [get]</code></td></tr>
+<tr class="separator:a754086005a6b4fc3c97ed1acf22fbb82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4657c402d3ab427e9eecd013c560c5d6"><td class="memItemLeft" align="right" valign="top"><a id="a4657c402d3ab427e9eecd013c560c5d6" name="a4657c402d3ab427e9eecd013c560c5d6"></a>
+ImmutableDictionary&lt; string, <a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_property_info.html">CascadePropertyInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>DataAndAssociationInfos</b><code> [get]</code></td></tr>
+<tr class="separator:a4657c402d3ab427e9eecd013c560c5d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1850128568015365d0114cbdb89f8c8c"><td class="memItemLeft" align="right" valign="top"><a id="a1850128568015365d0114cbdb89f8c8c" name="a1850128568015365d0114cbdb89f8c8c"></a>
+<a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_property_info.html">CascadePropertyInfo</a>?&#160;</td><td class="memItemRight" valign="bottom"><b>IdProperty</b><code> [get]</code></td></tr>
+<tr class="separator:a1850128568015365d0114cbdb89f8c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a758a08b1c15a1882d9997fd027057762"><td class="memItemLeft" align="right" valign="top"><a id="a758a08b1c15a1882d9997fd027057762" name="a758a08b1c15a1882d9997fd027057762"></a>
+Type&#160;</td><td class="memItemRight" valign="bottom"><b>Type</b><code> [get]</code></td></tr>
+<tr class="separator:a758a08b1c15a1882d9997fd027057762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a1dc5db8d5820854a4ffd6206ac386b6d" name="a1dc5db8d5820854a4ffd6206ac386b6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dc5db8d5820854a4ffd6206ac386b6d">&#9670;&#160;</a></span>ClassInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Buzzware.Cascade.ClassInfo.ClassInfo </td>
+          <td>(</td>
+          <td class="paramtype">Type&#160;</td>
+          <td class="paramname"><em>aType</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ClassInfo Constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aType</td><td>The class/type to extract metadata and properties for.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a90ac20c37e7af3047af47178295a2d8f" name="a90ac20c37e7af3047af47178295a2d8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90ac20c37e7af3047af47178295a2d8f">&#9670;&#160;</a></span>GetPropertyInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_property_info.html">CascadePropertyInfo</a>? Buzzware.Cascade.ClassInfo.GetPropertyInfo </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tries to get a specific property's CascadePropertyInfo by its name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the property to retrieve information for.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A CascadePropertyInfo object if the property exists; otherwise, null.</dd></dl>
+
+</div>
+</div>
+<a id="a10c045474770e9a1741dd149a0ebe7d3" name="a10c045474770e9a1741dd149a0ebe7d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10c045474770e9a1741dd149a0ebe7d3">&#9670;&#160;</a></span>GetValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">object? Buzzware.Cascade.ClassInfo.GetValue </td>
+          <td>(</td>
+          <td class="paramtype">object&#160;</td>
+          <td class="paramname"><em>aInstance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>aName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves the value of a specified property from an instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aInstance</td><td>The object instance to get the property value from.</td></tr>
+    <tr><td class="paramname">aName</td><td>The name of the property to retrieve.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The value of the specified property or null if the property does not exist.</dd></dl>
+
+</div>
+</div>
+<a id="aa6ec120b24f87074c7db2e85bca1b515" name="aa6ec120b24f87074c7db2e85bca1b515"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6ec120b24f87074c7db2e85bca1b515">&#9670;&#160;</a></span>SetValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Buzzware.Cascade.ClassInfo.SetValue </td>
+          <td>(</td>
+          <td class="paramtype">object&#160;</td>
+          <td class="paramname"><em>aInstance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>aName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">object?&#160;</td>
+          <td class="paramname"><em>aValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets a value for a specified property in a given object instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aInstance</td><td>The object in which to set the property value.</td></tr>
+    <tr><td class="paramname">aName</td><td>The name of the property to set.</td></tr>
+    <tr><td class="paramname">aValue</td><td>The value to assign to the property.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Buzzware.Cascade/FastReflection.cs</li>
 </ul>

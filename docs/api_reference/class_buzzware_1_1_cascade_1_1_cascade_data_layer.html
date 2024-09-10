@@ -114,9 +114,9 @@ Inheritance diagram for Buzzware.Cascade.CascadeDataLayer:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2a839f4895883e34926237671f2eaffc"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a2a839f4895883e34926237671f2eaffc">SetModelCollectionProperty</a> (object target, PropertyInfo propertyInfo, object value)</td></tr>
-<tr class="memdesc:a2a839f4895883e34926237671f2eaffc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a collection property on a model. It ensures the property is enumerable and makes necessary type conversions.  <br /></td></tr>
-<tr class="separator:a2a839f4895883e34926237671f2eaffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3eab966137ab0f387cc747971ea42bd"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae3eab966137ab0f387cc747971ea42bd">SetModelCollectionProperty</a> (object target, <a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_property_info.html">CascadePropertyInfo</a> propertyInfo, object value)</td></tr>
+<tr class="memdesc:ae3eab966137ab0f387cc747971ea42bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a collection property on a model. It ensures the property is enumerable and makes necessary type conversions.  <br /></td></tr>
+<tr class="separator:ae3eab966137ab0f387cc747971ea42bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca461d0e0eae448886d0b1013ce25652"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#aca461d0e0eae448886d0b1013ce25652">HasManyReplace</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> model, string property, IEnumerable&lt; object &gt; models)</td></tr>
 <tr class="memdesc:aca461d0e0eae448886d0b1013ce25652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the value of the given HasMany property with the given IEnumerable of models and updates the caches appropriately. This is needed eg. when you add models to a HasMany association.  <br /></td></tr>
 <tr class="separator:aca461d0e0eae448886d0b1013ce25652"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,9 +135,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a88824eb7ebbca5ed984b42bd2029b054"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a88824eb7ebbca5ed984b42bd2029b054">UpdateHasOne</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_super_model.html">SuperModel</a> model, string property, object value)</td></tr>
 <tr class="memdesc:a88824eb7ebbca5ed984b42bd2029b054"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the value of the given HasOne property with the given model.  <br /></td></tr>
 <tr class="separator:a88824eb7ebbca5ed984b42bd2029b054"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78a58eec92b8d1dbec812a05f6a7af27"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a78a58eec92b8d1dbec812a05f6a7af27">SetAssociation</a> (object target, string propertyName, object value)</td></tr>
-<tr class="memdesc:a78a58eec92b8d1dbec812a05f6a7af27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this when you only want to set an association property to a value you already have. Consider using UpdateHasMany/UpdateHasOne/UpdateBelongsTo instead. This method does not update the caches.  <br /></td></tr>
-<tr class="separator:a78a58eec92b8d1dbec812a05f6a7af27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cf3992edd0405e62350e2359be0056e"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a1cf3992edd0405e62350e2359be0056e">SetAssociation</a> (object target, string propertyName, object value)</td></tr>
+<tr class="memdesc:a1cf3992edd0405e62350e2359be0056e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this when you only want to set an association property to a value you already have. Consider using UpdateHasMany/UpdateHasOne/UpdateBelongsTo instead. This method does not update the caches.  <br /></td></tr>
+<tr class="separator:a1cf3992edd0405e62350e2359be0056e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52d1116a66cb75c7ef29c121e4b5dab1"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a52d1116a66cb75c7ef29c121e4b5dab1">SetAssociation</a> (IEnumerable targets, string propertyName, object value)</td></tr>
 <tr class="memdesc:a52d1116a66cb75c7ef29c121e4b5dab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this when you only want to set an association property to a value you already have. Consider using UpdateHasMany/UpdateHasOne/UpdateBelongsTo instead. This method does not update the caches.  <br /></td></tr>
 <tr class="separator:a52d1116a66cb75c7ef29c121e4b5dab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4423,8 +4423,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a78a58eec92b8d1dbec812a05f6a7af27" name="a78a58eec92b8d1dbec812a05f6a7af27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78a58eec92b8d1dbec812a05f6a7af27">&#9670;&#160;</a></span>SetAssociation() <span class="overload">[2/2]</span></h2>
+<a id="a1cf3992edd0405e62350e2359be0056e" name="a1cf3992edd0405e62350e2359be0056e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cf3992edd0405e62350e2359be0056e">&#9670;&#160;</a></span>SetAssociation() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4433,7 +4433,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">async Task Buzzware.Cascade.CascadeDataLayer.SetAssociation </td>
+          <td class="memname">Task Buzzware.Cascade.CascadeDataLayer.SetAssociation </td>
           <td>(</td>
           <td class="paramtype">object&#160;</td>
           <td class="paramname"><em>target</em>, </td>
@@ -4758,8 +4758,8 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
 
 </div>
 </div>
-<a id="a2a839f4895883e34926237671f2eaffc" name="a2a839f4895883e34926237671f2eaffc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a839f4895883e34926237671f2eaffc">&#9670;&#160;</a></span>SetModelCollectionProperty()</h2>
+<a id="ae3eab966137ab0f387cc747971ea42bd" name="ae3eab966137ab0f387cc747971ea42bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3eab966137ab0f387cc747971ea42bd">&#9670;&#160;</a></span>SetModelCollectionProperty()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4776,7 +4776,7 @@ PropertyChangedEventHandler&#160;</td><td class="memItemRight" valign="bottom"><
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">PropertyInfo&#160;</td>
+          <td class="paramtype"><a class="el" href="class_buzzware_1_1_cascade_1_1_cascade_property_info.html">CascadePropertyInfo</a>&#160;</td>
           <td class="paramname"><em>propertyInfo</em>, </td>
         </tr>
         <tr>

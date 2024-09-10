@@ -39,9 +39,11 @@ var searchData=
   ['getop_36',['GetOp',['../class_buzzware_1_1_cascade_1_1_request_op.html#aa32705c95e1f768282c0d0d848f607f9',1,'Buzzware::Cascade::RequestOp']]],
   ['getop_3c_20model_20_3e_37',['GetOp&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_request_op.html#a7cdd90022fe65782361ed7f122089ae1',1,'Buzzware::Cascade::RequestOp']]],
   ['getproperty_3c_20t_20_3e_38',['GetProperty&lt; T &gt;',['../class_buzzware_1_1_cascade_1_1_super_model.html#ab4ae183c5ff3105eed50b0be7e33ebba',1,'Buzzware::Cascade::SuperModel']]],
-  ['getresponse_39',['GetResponse',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae69a0901c3f4552b099610c3af84f277',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['getting_20models_40',['Getting Models',['../getting_models.html',1,'']]],
-  ['getwherecollection_3c_20m_20_3e_41',['GetWhereCollection&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#af881e913b7b016a1a59e1b86f885f349',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['getwherecollectionresponse_3c_20model_20_3e_42',['GetWhereCollectionResponse&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a4757402d83501bf4b601e726b299e779',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['glossary_43',['Glossary',['../glossary.html',1,'']]]
+  ['getpropertyinfo_39',['GetPropertyInfo',['../class_buzzware_1_1_cascade_1_1_class_info.html#a90ac20c37e7af3047af47178295a2d8f',1,'Buzzware::Cascade::ClassInfo']]],
+  ['getresponse_40',['GetResponse',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae69a0901c3f4552b099610c3af84f277',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['getting_20models_41',['Getting Models',['../getting_models.html',1,'']]],
+  ['getvalue_42',['GetValue',['../class_buzzware_1_1_cascade_1_1_class_info.html#a10c045474770e9a1741dd149a0ebe7d3',1,'Buzzware.Cascade.ClassInfo.GetValue()'],['../class_buzzware_1_1_cascade_1_1_cascade_property_info.html#a11eb58ce525142ed05210bce197c5a11',1,'Buzzware.Cascade.CascadePropertyInfo.GetValue()']]],
+  ['getwherecollection_3c_20m_20_3e_43',['GetWhereCollection&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#af881e913b7b016a1a59e1b86f885f349',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['getwherecollectionresponse_3c_20model_20_3e_44',['GetWhereCollectionResponse&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a4757402d83501bf4b601e726b299e779',1,'Buzzware::Cascade::CascadeDataLayer']]],
+  ['glossary_45',['Glossary',['../glossary.html',1,'']]]
 ];

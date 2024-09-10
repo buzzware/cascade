@@ -11,6 +11,7 @@ var hierarchy =
     [ "Buzzware.Cascade.CascadeConfig", "class_buzzware_1_1_cascade_1_1_cascade_config.html", null ],
     [ "Buzzware.Cascade.CascadeJsonSerialization", "class_buzzware_1_1_cascade_1_1_cascade_json_serialization.html", null ],
     [ "Buzzware.Cascade.CascadePaginator< Model >", "class_buzzware_1_1_cascade_1_1_cascade_paginator.html", null ],
+    [ "Buzzware.Cascade.CascadePropertyInfo", "class_buzzware_1_1_cascade_1_1_cascade_property_info.html", null ],
     [ "Buzzware.Cascade.CascadeQueryOptions", "class_buzzware_1_1_cascade_1_1_cascade_query_options.html", null ],
     [ "Buzzware.Cascade.ClassInfo", "class_buzzware_1_1_cascade_1_1_class_info.html", null ],
     [ "Exception", null, [

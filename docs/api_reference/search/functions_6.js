@@ -8,5 +8,6 @@ var searchData=
   ['fileblobcache_5',['FileBlobCache',['../class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a9a533bc951b7dcc7470eae4d897b13ef',1,'Buzzware::Cascade::FileBlobCache']]],
   ['filesystemclasscache_6',['FileSystemClassCache',['../class_buzzware_1_1_cascade_1_1_file_system_class_cache.html#ac58c1865d0901f2b35dbbec7354be25d',1,'Buzzware::Cascade::FileSystemClassCache']]],
   ['fromblobattribute_7',['FromBlobAttribute',['../class_buzzware_1_1_cascade_1_1_from_blob_attribute.html#aaee4ed16df4e6692d0bc2b37066f058f',1,'Buzzware::Cascade::FromBlobAttribute']]],
-  ['frompropertyattribute_8',['FromPropertyAttribute',['../class_buzzware_1_1_cascade_1_1_from_property_attribute.html#a8f8f933f528428aa2f4457d235abef5c',1,'Buzzware::Cascade::FromPropertyAttribute']]]
+  ['frompropertyattribute_8',['FromPropertyAttribute',['../class_buzzware_1_1_cascade_1_1_from_property_attribute.html#a8f8f933f528428aa2f4457d235abef5c',1,'Buzzware::Cascade::FromPropertyAttribute']]],
+  ['frompropertyinfo_9',['FromPropertyInfo',['../class_buzzware_1_1_cascade_1_1_cascade_property_info.html#a45cc15d9ba9a32a85dd24e2bdce26931',1,'Buzzware::Cascade::CascadePropertyInfo']]]
 ];
