@@ -5,7 +5,7 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.5.2</Version>
+    <Version>2.5.3</Version>
     <Title>Cascade Data Layer</Title>
     <Authors>Gary McGhee, Buzzware Solutions</Authors>
     <Description>Cascade is a framework for managing model data within a mobile client application.
