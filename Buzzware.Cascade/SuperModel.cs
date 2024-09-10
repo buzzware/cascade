@@ -72,13 +72,11 @@ namespace Buzzware.Cascade {
       Dictionary<string, object?>? changes = null;
       if (raiseIncoming) {
         changes = new Dictionary<string, object?>();
-        var selectedProperties = FastReflection.getProperties(this.GetType())
-          .Where(n=>n.Key[0]!='_')
-          .ToArray();
+        var selectedProperties = FastReflection.GetClassInfo(this.GetType())!.DataAndAssociationInfos.ToArray();
         foreach (var prop in selectedProperties) {
           var wasProxyChange = _propertySet.TryGetValue(prop.Key, out var setValue) && setValue; 
-          var oldValue = FastReflection.invokeGetter(this, prop.Key);
-          var newActualValue = FastReflection.invokeGetter(value, prop.Key);
+          var oldValue = FastReflection.GetValue(this, prop.Key);
+          var newActualValue = FastReflection.GetValue(value, prop.Key);
           var newValue = wasProxyChange && keepChanges ? oldValue : newActualValue;
           var sameValue = Nullable.Equals(newValue, oldValue);
           if (keepChanges && wasProxyChange && Nullable.Equals(newActualValue,oldValue))
@@ -108,9 +106,9 @@ namespace Buzzware.Cascade {
     /// <returns>A dictionary of property names and their values.</returns>
     public IDictionary<string, object?> __GetChanges() {
       var result = new Dictionary<string, object?>();
+      var ci = FastReflection.GetClassInfo(this.GetType());
       foreach (var kv in _propertySet) {
-        var prop = this.GetType().GetProperty(kv.Key);
-        result[kv.Key] = prop.GetValue(this);
+        result[kv.Key] = ci.GetValue(this,kv.Key);
       }
       return result;
     }
@@ -125,13 +123,14 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="changes">A dictionary containing property names and the values to apply.</param>
     public void __ApplyChanges(IDictionary<string, object?> changes) {
+      var ci = FastReflection.GetClassInfo(this.GetType());
       foreach (var kv in changes) {
-        var prop = this.GetType().GetProperty(kv.Key);
+        var prop = ci.GetPropertyInfo(kv.Key);
         try {
           prop?.SetValue(this,kv.Value);
         }
         catch (Exception e) {
-          prop?.SetValue(this,CascadeTypeUtils.ConvertTo(prop.PropertyType,kv.Value,CascadeTypeUtils.GetDefaultValue(prop.PropertyType)));
+          prop!.SetValue(this,CascadeTypeUtils.ConvertTo(prop.Type,kv.Value,CascadeTypeUtils.GetDefaultValue(prop.Type)));
         }
       }
     }
@@ -213,7 +212,7 @@ namespace Buzzware.Cascade {
         if (_propertySet.ContainsKey(propertyName))
           return backingStore;
         else
-          return (T)_proxyFor.GetType().GetProperty(propertyName).GetValue(_proxyFor);
+          return (T)FastReflection.GetValue(_proxyFor,propertyName);
       } 
       else
         return backingStore;

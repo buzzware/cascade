@@ -35,7 +35,7 @@ namespace Buzzware.Cascade {
 		) {
 			// Retrieve the type information for the model
 			var modelType = model.GetType();
-			var propertyInfo = modelType.GetProperty(property);
+			var propertyInfo = FastReflection.GetPropertyInfo(modelType,property);
 
 			// Check if the target property is already set and skip if necessary
 			if (skipIfSet && model != null && propertyInfo.GetValue(model) != null) {
@@ -44,19 +44,19 @@ namespace Buzzware.Cascade {
 			}
 
 			// Handle property population based on associated attribute type
-			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute), true).FirstOrDefault() is HasManyAttribute hasMany) {
+			if (propertyInfo?.KindAttribute is HasManyAttribute hasMany) {
 				await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
 			}
-			else if (propertyInfo?.GetCustomAttributes(typeof(HasOneAttribute), true).FirstOrDefault() is HasOneAttribute hasOne) {
+			else if (propertyInfo?.KindAttribute is HasOneAttribute hasOne) {
 				await processHasOne(model, modelType, propertyInfo!, hasOne, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
 			}
-			else if (propertyInfo?.GetCustomAttributes(typeof(BelongsToAttribute), true).FirstOrDefault() is BelongsToAttribute belongsTo) {
+			else if (propertyInfo?.KindAttribute is BelongsToAttribute belongsTo) {
 				await processBelongsTo(model, modelType, propertyInfo!, belongsTo, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
 			}
-			else if (propertyInfo?.GetCustomAttributes(typeof(FromBlobAttribute), true).FirstOrDefault() is FromBlobAttribute fromBlob) {
+			else if (propertyInfo?.KindAttribute is FromBlobAttribute fromBlob) {
 				await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
 			}
-			else if (propertyInfo?.GetCustomAttributes(typeof(FromPropertyAttribute), true).FirstOrDefault() is FromPropertyAttribute fromProperty) {
+			else if (propertyInfo?.KindAttribute is FromPropertyAttribute fromProperty) {
 				await processFromProperty(model, modelType, propertyInfo!, fromProperty);
 			}
 		}

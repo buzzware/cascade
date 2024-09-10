@@ -26,19 +26,30 @@ namespace Buzzware.Cascade {
 		/// Sets a property value on a model, taking into account whether the model is a SuperModel and ensure changes happen on the main thread which is necessary for any bound UI.
 		/// </summary>
 		/// <param name="model">The model to update.</param>
-		/// <param name="propertyInfo">The metadata of the property to set.</param>
+		/// <param name="pi">The metadata of the property to set.</param>
 		/// <param name="value">The value to assign to the property.</param>
-		private Task SetModelProperty(object model, PropertyInfo propertyInfo, object? value) {
+		private Task SetModelProperty(object model, CascadePropertyInfo pi, object? value) {
 			return cascadePlatform.InvokeOnMainThreadNow(() => {
 				if (model is SuperModel superModel) {
-					superModel.__mutateWith(model => propertyInfo.SetValue(model, value));
+					superModel.__mutateWith(model => pi.SetValue(model, value));
 				}
 				else {
-					propertyInfo.SetValue(model, value);
+					pi.SetValue(model, value);
 				}
 			});
 		}
-
+		
+		/// <summary>
+		/// Sets a property value on a model, taking into account whether the model is a SuperModel and ensure changes happen on the main thread which is necessary for any bound UI.
+		/// </summary>
+		/// <param name="model">The model to update.</param>
+		/// <param name="propertyInfo">The metadata of the property to set.</param>
+		/// <param name="value">The value to assign to the property.</param>
+		private Task SetModelProperty(object model, string name, object? value) {
+			var pi = FastReflection.GetPropertyInfo(model.GetType(),name);
+			return SetModelProperty(model, pi, value);
+		}
+		
 		/// <summary>
 		/// Sets a collection property on a model. It ensures the property is enumerable and makes necessary type conversions.
 		/// </summary>
@@ -46,15 +57,11 @@ namespace Buzzware.Cascade {
 		/// <param name="propertyInfo">The metadata of the property to set.</param>
 		/// <param name="value">The value to set for the property. Must be an IEnumerable.</param>
 		/// <exception cref="ArgumentException">Thrown when the property type or value types are incorrect.</exception>
-		public async Task SetModelCollectionProperty(object target, PropertyInfo propertyInfo, object value) {
-			Type propertyType = propertyInfo.PropertyType;
-			
-			var nonNullableTargetType = CascadeTypeUtils.DeNullType(propertyType);
-			var isEnumerable = CascadeTypeUtils.IsEnumerableType(nonNullableTargetType);
-			if (!isEnumerable)
+		public async Task SetModelCollectionProperty(object target, CascadePropertyInfo propertyInfo, object value) {
+			if (!propertyInfo.IsTypeEnumerable)
 				throw new ArgumentException("Property type should be IEnumerable");
 			
-			var singularType = isEnumerable ? CascadeTypeUtils.InnerType(nonNullableTargetType)! : nonNullableTargetType;
+			var singularType = propertyInfo.InnerType ?? propertyInfo.NotNullType;
 			if (CascadeTypeUtils.IsNullableType(singularType))
 				throw new ArgumentException("Singular type cannot be nullable");
 
@@ -64,7 +71,7 @@ namespace Buzzware.Cascade {
 
 			// Convert value to the appropriate singular type if necessary.
 			var newValue = value;
-			if (!propertyType.IsAssignableFrom(valueType)) {
+			if (!propertyInfo.Type.IsAssignableFrom(valueType)) {
 				var valueSingularType = CascadeTypeUtils.GetSingularType(valueType);
 				if (valueSingularType != singularType) {
 					var valueSingularIsUntyped = valueSingularType == typeof(object);
@@ -90,19 +97,14 @@ namespace Buzzware.Cascade {
 		/// <param name="models">The new models to set for the association.</param>
 		/// <exception cref="ArgumentException"></exception>
 		public async Task HasManyReplace(SuperModel model, string property, IEnumerable<object> models) {
-			var modelType = model.GetType();
-			var propertyInfo = modelType.GetProperty(property);
-			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute), true).FirstOrDefault() is HasManyAttribute hasMany) {
-				var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
-				var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
-				var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
-				foreignType = foreignType != null ? CascadeTypeUtils.DeNullType(foreignType) : null;
-				if (foreignType == null)
+			var ci = FastReflection.GetClassInfo(model);
+			var pi = ci.GetPropertyInfo(property);
+			if (pi?.KindAttribute is HasManyAttribute hasMany) {
+				if (pi.InnerNotNullType == null)
 					throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
-
 				object modelId = CascadeTypeUtils.GetCascadeId(model);
-				await SetCacheWhereCollection(foreignType, hasMany.ForeignIdProperty, modelId.ToString(), models);
-				await SetModelCollectionProperty(model, propertyInfo, models);
+				await SetCacheWhereCollection(pi.InnerNotNullType, hasMany.ForeignIdProperty, modelId.ToString(), models);
+				await SetModelCollectionProperty(model, pi, models);
 			}
 			else {
 				throw new ArgumentException($"{property} is not a [HasMany] property");
@@ -117,22 +119,18 @@ namespace Buzzware.Cascade {
 		/// <param name="hasManyItem">The item to add to the association.</param>
 		/// <exception cref="ArgumentException">Thrown if the property is not a HasMany property.</exception>
 		public async Task HasManyAddItem(SuperModel model, string property, SuperModel hasManyItem) {
-			var modelType = model.GetType();
-			var propertyInfo = modelType.GetProperty(property);
-			if (propertyInfo?.GetCustomAttributes(typeof(HasManyAttribute), true).FirstOrDefault() is HasManyAttribute hasMany) {
-				var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
-				var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
-				var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
-				foreignType = foreignType != null ? CascadeTypeUtils.DeNullType(foreignType) : null;
-				if (foreignType == null)
+			var ci = FastReflection.GetClassInfo(model);
+			var pi = ci.GetPropertyInfo(property);
+			if (pi?.KindAttribute is HasManyAttribute hasMany) {
+				if (pi.InnerNotNullType == null)
 					throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
 
-				var hasManyModels = ((IEnumerable)(propertyInfo!.GetValue(model) ?? Array.Empty<object>())).Cast<object>().ToList();
+				var hasManyModels = ((IEnumerable)(pi!.GetValue(model) ?? Array.Empty<object>())).Cast<object>().ToList();
 				hasManyModels.Add(hasManyItem);
 				
 				object modelId = CascadeTypeUtils.GetCascadeId(model);
-				await SetCacheWhereCollection(foreignType, hasMany.ForeignIdProperty, modelId.ToString(), hasManyModels.ToImmutableArray());
-				await SetModelCollectionProperty(model, propertyInfo, hasManyModels);
+				await SetCacheWhereCollection(pi.InnerNotNullType, hasMany.ForeignIdProperty, modelId.ToString(), hasManyModels.ToImmutableArray());
+				await SetModelCollectionProperty(model, pi, hasManyModels);
 			} else {
 				throw new ArgumentException($"{property} is not a [HasMany] property");
 			}
@@ -147,12 +145,12 @@ namespace Buzzware.Cascade {
 		/// <param name="remove">Specifies whether to remove the item from the association.</param>
 		/// <param name="ensureItem">Indicates if the item should be ensured in the association, avoiding duplicates.</param>
 		protected async Task HasManyReplaceRemoveItem(SuperModel model, string property, SuperModel hasManyItem, bool remove = false, bool ensureItem = false) {
-			var modelType = model.GetType();
-			var propertyInfo = modelType.GetProperty(property);
+			var ci = FastReflection.GetClassInfo(model);
+			var pi = ci.GetPropertyInfo(property);
 			var id = CascadeTypeUtils.GetCascadeId(hasManyItem);
 			
 			// Modify the list of associated models by either removing, replacing, or ensuring an item.
-			var hasManyModels = ((IEnumerable)propertyInfo!.GetValue(model)).Cast<object>().ToList();
+			var hasManyModels = ((IEnumerable)pi!.GetValue(model)).Cast<object>().ToList();
 			var modified = false;
 			for (var i = 0; i < hasManyModels.Count; i++) {
 				var existing = hasManyModels[i];
@@ -211,16 +209,19 @@ namespace Buzzware.Cascade {
 		/// <param name="value">The new model for the association.</param>
 		/// <exception cref="ArgumentException">Thrown if the property is not a HasOne property.</exception>
 		public async Task UpdateHasOne(SuperModel model, string property, object value) {
-			var modelType = model.GetType();
-			var propertyInfo = modelType.GetProperty(property);
-			if (propertyInfo?.GetCustomAttributes(typeof(HasOneAttribute), true).FirstOrDefault() is HasOneAttribute hasOne) {
-				var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+			var ci = FastReflection.GetClassInfo(model);
+			var pi = ci.GetPropertyInfo(property);
+			
+			// var modelType = model.GetType();
+			// var propertyInfo = modelType.GetProperty(property);
+			if (pi?.KindAttribute is HasOneAttribute hasOne) {
+				var propertyType = pi.NotNullType;
 				var foreignType = propertyType;
 				if (foreignType == null)
 					throw new ArgumentException("Unable to get foreign model type. Property should be of type a ChildModel");
 
 				// Setting the model property with new value.
-				await SetModelProperty(model, propertyInfo, value);
+				await SetModelProperty(model, pi, value);
 			}
 			else {
 				throw new ArgumentException($"{property} is not a [HasMany] property");
@@ -237,9 +238,8 @@ namespace Buzzware.Cascade {
 		/// <param name="target">The model to act on.</param>
 		/// <param name="propertyName">The name of the association property to set.</param>
 		/// <param name="value">The value to set for the association property.</param>
-		public async Task SetAssociation(object target, string propertyName, object value) {
-			var propertyInfo = target.GetType().GetProperty(propertyName)!;
-			await SetModelProperty(target, propertyInfo, value);
+		public Task SetAssociation(object target, string propertyName, object value) {
+			return SetModelProperty(target, propertyName, value);
 		}
 
 		// update the association on many models with the same property and value
@@ -252,11 +252,14 @@ namespace Buzzware.Cascade {
 		/// <param name="propertyName">The name of the association property to set.</param>
 		/// <param name="value">The value to set for the association property.</param>
 		public async Task SetAssociation(IEnumerable targets, string propertyName, object value) {
-			PropertyInfo propertyInfo = null;
-			foreach (object target in targets) {
-				if (propertyInfo == null)
-					propertyInfo = target.GetType().GetProperty(propertyName)!;
-				await SetModelProperty(target, propertyInfo, value);
+			var targetsArray = targets.Cast<Object>().ToArray();
+			if (!targetsArray.Any())
+				return;
+			var ci = FastReflection.GetClassInfo(targetsArray.First());
+			if (!ci.Associationinfos.TryGetValue(propertyName,out var pi))
+				throw new ArgumentException(propertyName+" is not an association property");
+			foreach (object target in targetsArray) {
+				await SetModelProperty(target, pi, value);
 			}
 		}
 		

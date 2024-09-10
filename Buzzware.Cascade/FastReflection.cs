@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Easy.Common.Extensions;
 
 // This file is for future use. The idea is to cache and speed up reflection calls which can be costly in performance 
 
@@ -22,28 +25,145 @@ namespace Buzzware.Cascade {
 
 // https://github.com/KSemenenko/CreateInstance
 
+	public enum CascadePropertyKind {
+		None,
+		Unknown,
+		Internal,
+		Id,
+		Data,
+		HasOne,
+		HasMany,
+		BelongsTo,
+		FromBlob,
+		FromProperty
+	}
 
+	public class CascadePropertyInfo {
 
+		public static CascadePropertyInfo FromPropertyInfo(PropertyInfo pi) {
+			CascadePropertyKind kind = CascadePropertyKind.Unknown;
+
+			var attrs = pi.GetCustomAttributes(true).ToArray();
+			Attribute? attr;
+
+			if ((attr = attrs.FirstOrDefault(a => a is FromPropertyAttribute) as Attribute) != null) {
+				kind = CascadePropertyKind.FromProperty;
+			} else if (pi.Name.StartsWith("_")) {
+				kind = CascadePropertyKind.Internal;
+			} else if (CascadeTypeUtils.IsSimple(pi.PropertyType)) {
+				if ((attr = attrs.FirstOrDefault(a => a is CascadeIdAttribute) as Attribute) != null) {
+					kind = CascadePropertyKind.Id;
+				} else {
+					kind = CascadePropertyKind.Data;
+				}
+			} else if (attrs.Any()) {
+				if ((attr = attrs.FirstOrDefault(a => a is BelongsToAttribute) as Attribute) != null) {
+					kind = CascadePropertyKind.BelongsTo;
+				} else if ((attr = attrs.FirstOrDefault(a => a is HasManyAttribute) as Attribute) != null) {
+					kind = CascadePropertyKind.HasMany;
+				} else if ((attr = attrs.FirstOrDefault(a => a is HasOneAttribute) as Attribute) != null) {
+					kind = CascadePropertyKind.HasOne;
+				} else if ((attr = attrs.FirstOrDefault(a => a is FromBlobAttribute) as Attribute) != null) {
+					kind = CascadePropertyKind.FromBlob;
+				}
+			}
+			return new CascadePropertyInfo(
+				pi,
+				kind,
+				attr
+			);
+		}
+		
+		private readonly PropertyInfo propertyInfo;
+		public string Name => propertyInfo.Name;
+		public Type Type => propertyInfo.PropertyType;
+		private Type notNullType;
+		public Type NotNullType => notNullType;
+		public Type? InnerType { get; }
+		public Type? InnerNotNullType { get; }
+		public bool IsTypeEnumerable { get; }
+		public Attribute? KindAttribute { get; }
+		public bool CanRead => propertyInfo.CanRead;
+		public bool CanWrite => propertyInfo.CanWrite;
+		public readonly CascadePropertyKind Kind;
+		
+		public CascadePropertyInfo(PropertyInfo pi, CascadePropertyKind kind, Attribute? attr) {
+			propertyInfo = pi;
+			Kind = kind;
+			KindAttribute = attr;
+			notNullType = CascadeTypeUtils.DeNullType(pi.PropertyType);
+			IsTypeEnumerable = notNullType.Implements<IEnumerable>() && notNullType != typeof(string);
+			if (IsTypeEnumerable) {
+				InnerType = CascadeTypeUtils.InnerType(notNullType);
+				InnerNotNullType = CascadeTypeUtils.DeNullType(InnerType!);
+			}
+		}
+		
+		public object GetValue(object aInstance) {
+			return propertyInfo.GetValue(aInstance, null);
+		}
+
+		public void SetValue(object aInstance, object? aValue) {
+			propertyInfo.SetValue(aInstance, aValue, null);
+		}
+	}
+	
 	public class ClassInfo {
-		public Dictionary<String,PropertyInfo> propertyInfos = null;
-		Type type;
+		private ImmutableDictionary<String,CascadePropertyInfo> allPropertyInfos;
+		public ImmutableDictionary<string, CascadePropertyInfo> AllPropertyInfos => allPropertyInfos;
+		private ImmutableDictionary<String,CascadePropertyInfo> dataAndIdPropertyInfos;
+		public ImmutableDictionary<string, CascadePropertyInfo> DataAndIdPropertyInfos => dataAndIdPropertyInfos;
+		private ImmutableArray<string> dataAndIdNames;
+		public ImmutableArray<string> DataAndIdNames => dataAndIdNames; 
+		private ImmutableDictionary<String,CascadePropertyInfo> associationinfos;
+		public ImmutableDictionary<string, CascadePropertyInfo> Associationinfos => associationinfos;
+		private ImmutableDictionary<string, CascadePropertyInfo> dataAndAssociationInfos;
+		public ImmutableDictionary<string, CascadePropertyInfo> DataAndAssociationInfos => dataAndAssociationInfos; 
+		
+		private CascadePropertyInfo? idProperty;
+		public CascadePropertyInfo? IdProperty => idProperty;
+		
+		private Type type;
+		public Type Type => type;
 
 		public ClassInfo(Type aType) {
 			this.type = aType;
-			this.propertyInfos = new Dictionary<String,PropertyInfo>();		// maybe should use ConcurrentDictionary
-			collectClassInfo();
+			CollectClassInfo();
+			dataAndIdPropertyInfos = ImmutableDictionary.CreateRange(AllPropertyInfos.Where(kvp => kvp.Value.Kind == CascadePropertyKind.Data || kvp.Value.Kind == CascadePropertyKind.Id));
+			dataAndIdNames = dataAndIdPropertyInfos.Select(p=>p.Value.Name).ToImmutableArray();
+			associationinfos = ImmutableDictionary.CreateRange(AllPropertyInfos.Where(
+				kvp => kvp.Value.Kind == CascadePropertyKind.HasOne || 
+				       kvp.Value.Kind == CascadePropertyKind.HasMany ||
+				       kvp.Value.Kind == CascadePropertyKind.BelongsTo ||
+				       kvp.Value.Kind == CascadePropertyKind.FromBlob ||
+				       kvp.Value.Kind == CascadePropertyKind.FromProperty
+			));
+			dataAndAssociationInfos = dataAndIdPropertyInfos.AddRange(associationinfos);
+			idProperty = AllPropertyInfos.Values.FirstOrDefault(pi => pi.Kind == CascadePropertyKind.Id);
 		}
-
-		void collectClassInfo() {
-			foreach (PropertyInfo prop in type.GetRuntimeProperties()) {
+		
+		void CollectClassInfo() {
+			var pis = new Dictionary<String, CascadePropertyInfo>();
+			foreach (PropertyInfo prop in Type.GetRuntimeProperties()) {
 				if (!prop.CanRead)
 					continue;
 				if (prop.Name.Contains("."))
 					continue;
-				//if (prop.IsDefined(typeof(JsonIgnoreAttribute)))
-				//	continue;
-				propertyInfos[prop.Name] = prop;
-			}			
+				pis[prop.Name] = CascadePropertyInfo.FromPropertyInfo(prop);
+			}
+			allPropertyInfos = pis.ToImmutableDictionary();
+		}
+
+		public CascadePropertyInfo? GetPropertyInfo(string name) {
+			return allPropertyInfos.TryGetValue(name, out CascadePropertyInfo info) ? info : null;
+		}
+
+		public object? GetValue(object aInstance, string aName) {
+			return GetPropertyInfo(aName)?.GetValue(aInstance);
+		}
+
+		public void SetValue(object aInstance, string aName, object? aValue) {
+			GetPropertyInfo(aName)?.SetValue(aInstance,aValue);
 		}
 
 		//public object propertyGet(object aInstance, string aName) {
@@ -56,59 +176,44 @@ namespace Buzzware.Cascade {
 
 	public static class FastReflection {
 
-		static Dictionary<Type, ClassInfo> classInfos = null;
+		static Dictionary<Type, ClassInfo>? classInfos = null;
 
-		public static void reset() {
+		public static void Reset() {
 			classInfos = null;
 		}
 
-		public static Dictionary<String,PropertyInfo> getProperties(Type aType) {
-			var ci = ensureClassInfo(aType);
-			return ci.propertyInfos;
-		}
-
-		public static Dictionary<String,PropertyInfo> getWriteableProperties(Type aType) {
-			var result = new Dictionary<String, PropertyInfo>();
-			foreach (var pair in getProperties(aType))
-				if (pair.Value.CanWrite)
-					result.Add(pair.Key, pair.Value);
-			return result;
-		}
-
-		public static Dictionary<String,PropertyInfo> getReadableProperties(Type aType) {
-			var result = new Dictionary<String, PropertyInfo>();
-			foreach (var pair in getProperties(aType))
-				if (pair.Value.CanWrite)
-					result.Add(pair.Key, pair.Value);
-			return result;
-		}
-
-		public static object getDefault(Type aType) {
-			if(aType.GetTypeInfo().IsValueType)
-   			return Activator.CreateInstance(aType);
-   		return null;
-		}				
-
-		public static PropertyInfo getPropertyInfo(Type aType, string aName) {
-			var ci = ensureClassInfo(aType);
-			if (ci == null)
-				throw new ArgumentException("Unknown Type");
-			var pi = ci.propertyInfos.ContainsKey(aName) ? ci.propertyInfos[aName] : null;
-			return pi;
-		}
-
-		static ClassInfo ensureClassInfo(Type aType) {
+		public static ClassInfo GetClassInfo(Type aType) {
 			if (classInfos == null)
 				classInfos = new Dictionary<Type, ClassInfo>();
-			var ci = classInfos.ContainsKey(aType) ? classInfos[aType] : null;
+			var ci = classInfos.TryGetValue(aType, out var info) ? info : null;
 			if (ci == null) {
+				if (!aType.IsClass)
+					throw new ArgumentException("The specified type is not a class.");
 				ci = new ClassInfo(aType);
 				classInfos[aType] = ci;
 			}
 			return ci;
 		}
+		
+		public static ClassInfo GetClassInfo(object obj) {
+			return GetClassInfo(obj.GetType());
+		}
+		
+		public static IReadOnlyDictionary<String,CascadePropertyInfo> GetProperties(Type aType) {
+			var ci = GetClassInfo(aType);
+			return ci.AllPropertyInfos;
+		}
+		
+		public static object GetDefault(Type aType) {
+			if(aType.GetTypeInfo().IsValueType)
+   			return Activator.CreateInstance(aType);
+   		return null;
+		}				
 
-
+		public static CascadePropertyInfo? GetPropertyInfo(Type? aType, string aName) {
+			return aType!=null ? GetClassInfo(aType).GetPropertyInfo(aName) : null;
+		}
+		
 		// from https://github.com/NancyFx/Nancy/blob/master/src/Nancy/ViewEngines/Extensions.cs
 		public static bool IsAnonymousType(object source) {
     	return source != null && IsAnonymousType(source.GetType());
@@ -125,46 +230,41 @@ namespace Buzzware.Cascade {
 						 && type.GetTypeInfo().GetCustomAttributes(typeof(CompilerGeneratedAttribute)).Any();
 		}
 
-		public static object invokeGetter(object aInstance, string aName) {
-			var pi = getPropertyInfo(aInstance.GetType(), aName);
+		public static object? GetValue(object aInstance, string aName) {
+			var pi = GetPropertyInfo(aInstance.GetType(), aName);
 			if (pi == null)
 				throw new ArgumentException("Unknown or inaccesible property "+aName);
 			return pi.GetValue(aInstance);
 		}
-
-		public static void invokeSetter(object aInstance, string aName, object aValue) {
-			var ci = ensureClassInfo(aInstance.GetType());
-			if (ci == null)
-				throw new ArgumentException("Unknown Type");
-			var pi = ci.propertyInfos[aName];
+		
+		public static object? TryGetValue(object aInstance, string aName) {
+			return GetPropertyInfo(aInstance.GetType(), aName)?.GetValue(aInstance);
+		}
+		
+		public static void SetValue(object aInstance, string aName, object aValue) {
+			var pi = GetPropertyInfo(aInstance.GetType(), aName);
 			if (pi == null)
-				throw new ArgumentException("Unknown or inaccesible property "+aName);
-			try {
-				pi.SetValue(aInstance, aValue);
-			} catch (Exception e) {
-			//#if DEBUG
-			//	Log.Debug("Failed setting " + aName);
-			//#endif
-			}
+				throw new ArgumentException("Unknown Type or inaccesible property");
+			pi.SetValue(aInstance, aValue);
 		}
 
-		public static void convertAndSet(object aInstance, string aName, object aValue) {
-			var ci = ensureClassInfo(aInstance.GetType());
+		public static void ConvertAndSet(object aInstance, string aName, object aValue) {
+			var ci = GetClassInfo(aInstance.GetType());
 			if (ci == null)
 				throw new ArgumentException("Unknown Type");
-			var pi = ci.propertyInfos[aName];
+			var pi = ci.AllPropertyInfos.TryGetValue(aName, out var cpi) ? cpi : (CascadePropertyInfo?)null;
 			if (pi == null)
 				throw new ArgumentException("Unknown or inaccesible property " + aName);
 
-			Type t = pi.PropertyType;
+			Type t = pi.Type;
 			if (t != null && aValue == null && t.GetType().GetTypeInfo().IsPrimitive && (t==typeof(Double) || t==typeof(float) || t==typeof(Decimal) || t==typeof(Single)))
 				aValue = Double.NaN;
 			else
-				aValue = FastReflection.convertToType(aValue, pi.PropertyType);
+				aValue = FastReflection.ConvertToType(aValue, pi.Type);
 			pi.SetValue(aInstance, aValue);
 		}			
 
-		public static object convertToType(object aValue, Type aType) {
+		public static object ConvertToType(object aValue, Type aType) {
 			if (aType.GetType().GetTypeInfo().IsInterface) {  // should check if implements interface, but how?
 				if (aValue.GetType().GetTypeInfo().ImplementedInterfaces.Contains(aType))
 					return aValue;
@@ -178,11 +278,10 @@ namespace Buzzware.Cascade {
 				if (aValue == null && (aType == typeof(Double) || aType == typeof(float) || aType == typeof(Decimal) || aType == typeof(Single))) {
 					return Double.NaN;
 				} else {
-					return getDefault(aType);
+					return GetDefault(aType);
 				}
 			}
 		}
-
-}
+	}
 }
 

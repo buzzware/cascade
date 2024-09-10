@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -114,11 +115,11 @@ namespace Buzzware.Cascade {
 		/// <returns>The converted property value</returns>
 		public async Task<object?> SetFromBlobProperty(SuperModel model, string property, byte[] blob) {
 			// Retrieve the property information and convert the blob using its attribute
-			PropertyInfo propertyInfo = model.GetType().GetProperty(property)!;
-			var attribute = propertyInfo.GetCustomAttribute<FromBlobAttribute>();
-			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
-			var propertyValue = attribute.ConvertToPropertyType(blob, destinationPropertyType);
-			
+			CascadePropertyInfo propertyInfo = FastReflection.GetPropertyInfo(model.GetType(),property)!;
+			var attribute = propertyInfo.KindAttribute as FromBlobAttribute;
+			if (attribute==null)
+				throw new ArgumentException("missing FromBlobAttribute");
+			var propertyValue = attribute.ConvertToPropertyType(blob, propertyInfo.NotNullType);
 			// Set the property of the model to the converted value
 			await SetModelProperty(model, propertyInfo, propertyValue);
 			return propertyValue;

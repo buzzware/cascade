@@ -192,7 +192,7 @@ namespace Buzzware.Cascade {
     /// <param name="cascadeModelType">The type of the Cascade model.</param>
     /// <returns>The type of the Cascade ID property.</returns>
     public static Type GetCascadeIdType(Type cascadeModelType) {
-      return CascadeIdPropertyRequired(cascadeModelType).PropertyType;
+      return CascadeIdPropertyRequired(cascadeModelType).Type;
     }
 
     /// <summary>
@@ -201,7 +201,7 @@ namespace Buzzware.Cascade {
     /// <param name="cascadeModel">The instance of the Cascade model.</param>
     /// <returns>The type of the Cascade ID property.</returns>
     public static Type GetCascadeIdType(object cascadeModel) {
-      return CascadeIdPropertyRequired(cascadeModel).PropertyType;
+      return CascadeIdPropertyRequired(cascadeModel).Type;
     }
 
     /// <summary>
@@ -238,11 +238,8 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="cascadeModelType">The type of the Cascade model.</param>
     /// <returns>The Cascade ID property information if available; otherwise, null.</returns>
-    public static PropertyInfo? TryGetCascadeIdProperty(Type cascadeModelType) {
-      var propertyInfos = cascadeModelType.GetProperties();
-      return propertyInfos.FirstOrDefault(pi => {
-        return Attribute.IsDefined(pi, typeof(CascadeIdAttribute));
-      });
+    public static CascadePropertyInfo? TryGetCascadeIdProperty(Type cascadeModelType) {
+      return FastReflection.GetClassInfo(cascadeModelType).IdProperty;
     }
 
     /// <summary>
@@ -252,7 +249,7 @@ namespace Buzzware.Cascade {
     /// <param name="cascadeModelType">The type of the Cascade model.</param>
     /// <returns>The property information for the Cascade ID.</returns>
     /// <exception cref="MissingMemberException">Thrown when the Cascade ID property is not found.</exception>
-    public static PropertyInfo CascadeIdPropertyRequired(Type cascadeModelType) {
+    public static CascadePropertyInfo CascadeIdPropertyRequired(Type cascadeModelType) {
       return TryGetCascadeIdProperty(cascadeModelType)
         ?? throw new MissingMemberException("The model is missing [CascadeId] on an id property");
     }
@@ -264,7 +261,7 @@ namespace Buzzware.Cascade {
     /// <param name="cascadeModel">The Cascade model instance.</param>
     /// <returns>The property information for the Cascade ID.</returns>
     /// <exception cref="MissingMemberException">Thrown when the Cascade ID property is not found.</exception>
-    public static PropertyInfo CascadeIdPropertyRequired(object cascadeModel) {
+    public static CascadePropertyInfo CascadeIdPropertyRequired(object cascadeModel) {
       return CascadeIdPropertyRequired(cascadeModel.GetType());
     }
     

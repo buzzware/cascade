@@ -35,20 +35,21 @@ namespace Buzzware.Cascade {
 		private async Task processHasMany(
 			SuperModel model, 
 			Type modelType, 
-			PropertyInfo propertyInfo, 
+			CascadePropertyInfo propertyInfo, 
 			HasManyAttribute attribute, 
 			int? freshnessSeconds = null, 
 			int? fallbackFreshnessSeconds = null, 
 			bool? hold = null,
 			long? sequenceBeganMs = null			
 		) {
-			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
-			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
-			var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
-			foreignType = foreignType != null ? CascadeTypeUtils.DeNullType(foreignType) : null;
+			// var propertyType = propertyInfo.NotNullType;
+			// var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
+			// var foreignType = isEnumerable ? CascadeTypeUtils.InnerType(propertyType!) : null;
+			// foreignType = foreignType != null ? CascadeTypeUtils.DeNullType(foreignType) : null;
+			var foreignType = propertyInfo.InnerNotNullType!;
 			if (foreignType == null)
 				throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
-
+			
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
 			var requestOp = new RequestOp(
@@ -83,23 +84,20 @@ namespace Buzzware.Cascade {
 		private async Task processHasOne(
 			SuperModel model, 
 			Type modelType, 
-			PropertyInfo propertyInfo, 
+			CascadePropertyInfo propertyInfo, 
 			HasOneAttribute attribute, 
 			int? freshnessSeconds = null, 
 			int? fallbackFreshnessSeconds = null, 
 			bool? hold = null,
 			long? sequenceBeganMs = null
 		) {
-			var propertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
-			var isEnumerable = (propertyType?.Implements<IEnumerable>() ?? false) && propertyType != typeof(string);
-			if (isEnumerable)
+			if (propertyInfo.IsTypeEnumerable)
 				throw new ArgumentException("HasOne property should not be of type IEnumerable");
-
-			var foreignType = propertyType;
-			foreignType = foreignType != null ? CascadeTypeUtils.DeNullType(foreignType) : null;
+			
+			var foreignType = propertyInfo.NotNullType;
 			if (foreignType == null)
-				throw new ArgumentException("Unable to get foreign model type. Property should be of type <ChildModel>");
-
+				throw new ArgumentException("Unable to get foreign model type. Property should be of type ImmutableArray<ChildModel>");
+			
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
 			var requestOp = new RequestOp(
@@ -133,7 +131,7 @@ namespace Buzzware.Cascade {
 					case RequestVerb.Query:
 					case RequestVerb.BlobGet:
 						return ProcessGetOrQuery(requestOp, connectionOnline);
-					case RequestVerb.GetCollection:
+					case RequestVerb.GetCollection: 
 						return ProcessGetCollection(requestOp, connectionOnline);
 					case RequestVerb.Create:
 						return ProcessCreate(requestOp, connectionOnline);
@@ -221,10 +219,9 @@ namespace Buzzware.Cascade {
 		/// <param name="fallbackFreshnessSeconds">Optional fallback freshness requirement in seconds.</param>
 		/// <param name="hold">Optional parameter to hold the data in memory for quick access.</param>
 		/// <param name="sequenceBeganMs">Optional timestamp in milliseconds for when the request is made.</param>
-		private async Task processBelongsTo(object model, Type modelType, PropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null,  int? fallbackFreshnessSeconds = null, bool? hold = null, long? sequenceBeganMs = null) {
-			var foreignModelType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
-			var idProperty = modelType.GetProperty(attribute.IdProperty);
-			var id = idProperty.GetValue(model);
+		private async Task processBelongsTo(object model, Type modelType, CascadePropertyInfo propertyInfo, BelongsToAttribute attribute, int? freshnessSeconds = null,  int? fallbackFreshnessSeconds = null, bool? hold = null, long? sequenceBeganMs = null) {
+			var foreignModelType = propertyInfo.NotNullType;
+			var id = FastReflection.GetValue(model, attribute.IdProperty);
 			if (id == null)
 				return;
 
@@ -254,13 +251,17 @@ namespace Buzzware.Cascade {
 		/// <param name="fallbackFreshnessSeconds">Optional fallback freshness requirement in seconds.</param>
 		/// <param name="hold">Optional parameter to hold the data in memory for quick access.</param>
 		/// <param name="sequenceBeganMs">Optional timestamp in milliseconds for when the request is made.</param>
-		private async Task processFromBlob(object model, Type modelType, PropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null, long? sequenceBeganMs = null) {
-			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
-			var pathProperty = modelType.GetProperty(attribute.PathProperty);
-			var path = pathProperty.GetValue(model) as string;
+		private async Task processFromBlob(object model, Type modelType, CascadePropertyInfo propertyInfo, FromBlobAttribute attribute, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool? hold = null, long? sequenceBeganMs = null) {
+			// var destinationPropertyType = propertyInfo.NotNullType;
+			// var pathProperty = modelType.GetProperty(attribute.PathProperty);
+			// var path = pathProperty.GetValue(model) as string;
+			// if (path == null)
+			// 	return;
+
+			var path = FastReflection.GetValue(model,attribute.PathProperty) as string;
 			if (path == null)
 				return;
-
+			
 			var requestOp = RequestOp.BlobGetOp(
 				path,
 				sequenceBeganMs ?? NowMs,
@@ -273,7 +274,7 @@ namespace Buzzware.Cascade {
 			
 			await StoreInPreviousCaches(opResponse);
 
-			var propertyValue = attribute.Converter!.Convert(opResponse.Result as byte[], destinationPropertyType);
+			var propertyValue = attribute.Converter!.Convert(opResponse.Result as byte[], propertyInfo.NotNullType);
 			
 			await SetModelProperty(model, propertyInfo, propertyValue);
 		}
@@ -286,8 +287,8 @@ namespace Buzzware.Cascade {
 		/// <param name="modelType">The type of the model.</param>
 		/// <param name="propertyInfo">The property information defines where to set the converted value.</param>
 		/// <param name="attribute">The FromPropertyAttribute containing metadata for the conversion process.</param>
-		private async Task processFromProperty(object model, Type modelType, PropertyInfo propertyInfo, FromPropertyAttribute attribute) {
-			var destinationPropertyType = CascadeTypeUtils.DeNullType(propertyInfo.PropertyType);
+		private async Task processFromProperty(object model, Type modelType, CascadePropertyInfo propertyInfo, FromPropertyAttribute attribute) {
+			var destinationPropertyType = propertyInfo.NotNullType;
 			var sourceProperty = modelType.GetProperty(attribute.SourcePropertyName);
 			var sourceValue = sourceProperty!.GetValue(model);
 			var destValue = await attribute.Converter!.Convert(sourceValue, destinationPropertyType, attribute.Arguments);
