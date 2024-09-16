@@ -201,8 +201,13 @@ namespace Buzzware.Cascade {
 			var classInfo = FastReflection.GetClassInfo(incomingModel);
 			if (outgoingModel.GetType() != classInfo.Type)
 				throw new ArgumentException("Incoming model type is not the same as outgoing model type - unsupported mismatch");
+			var changes = requestOp.Verb==RequestVerb.Update ? requestOp.Value as IDictionary<string, object?> : null;
 			foreach (var pi in classInfo.Associationinfos.Values) {
-				var value = pi.GetValue(incomingModel); 
+				object? value = null;
+				if (changes?.TryGetValue(pi.Name, out var change) ?? false)
+					value = change;
+				else
+					value = pi.GetValue(incomingModel);
 				if (value==null)
 					continue;
 				switch (pi.Kind) {
