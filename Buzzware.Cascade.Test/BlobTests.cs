@@ -159,6 +159,38 @@ namespace Buzzware.Cascade.Test {
       await cascade.Populate(diaryPhoto, nameof(ThingPhoto.ConvertedThumbnail));
       Assert.That(diaryPhoto.ConvertedThumbnail,Is.Not.Null);
     }
+    
+    /// <summary>
+    /// Tests the FromBlob functionality when updating the path, ensuring it correctly populates the association.
+    /// </summary>
+    [Test]
+    public async Task FromBlob_UpdatePath_PopulatesAssociation()
+    {
+      // Arrange
+      var bitmap1 = new Bitmap(10, 10);
+      var image1 = TestUtils.BlobFromBitmap(bitmap1, ImageFormat.Png);
+      await cascade.BlobPut("path/to/image1.png", image1);
+      var bitmap2 = new Bitmap(20, 20);
+      var image2 = TestUtils.BlobFromBitmap(bitmap2, ImageFormat.Png);
+      await cascade.BlobPut("path/to/image2.png", image2);
+
+      var thingPhoto = new ThingPhoto { id = 1, imagePath = "path/to/image1.png" };
+      thingPhoto = await cascade.Create(thingPhoto);
+
+      // Act
+      await cascade.Populate(thingPhoto, nameof(ThingPhoto.Image));
+
+      // Assert
+      Assert.That(thingPhoto.imagePath, Is.EqualTo("path/to/image1.png"));
+      Assert.That(thingPhoto.Image!.Width, Is.EqualTo(bitmap1.Width));
+
+      // Act
+      thingPhoto = await cascade.Update(thingPhoto, new Dictionary<string, object?>() { [nameof(ThingPhoto.imagePath)] = "path/to/image2.png" });
+
+      // Assert
+      Assert.That(thingPhoto.imagePath, Is.EqualTo("path/to/image2.png"));
+      Assert.That(thingPhoto.Image!.Width, Is.EqualTo(bitmap2.Width));
+    }    
   }
 }
 

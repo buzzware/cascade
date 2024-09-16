@@ -187,6 +187,12 @@ namespace Buzzware.Cascade {
 			return opResponse;
 		}
 
+		/// <summary>
+		/// Transfer any associations that are set on the requestOp to the opResponse
+		/// </summary>
+		/// <param name="requestOp"></param>
+		/// <param name="opResponse"></param>
+		/// <exception cref="ArgumentException"></exception>
 		private async Task TransferAssociations(RequestOp requestOp, OpResponse opResponse) {
 			var incomingModel = (requestOp.Value as SuperModel) ?? (requestOp.Extra as SuperModel);
 			var outgoingModel = opResponse.Result as SuperModel;

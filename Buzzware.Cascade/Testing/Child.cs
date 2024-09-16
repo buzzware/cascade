@@ -27,17 +27,17 @@ namespace Buzzware.Cascade.Testing {
     /// <summary>
     /// The Parent association model property
     /// </summary>
-    [Cascade.BelongsTo(idProperty: "parentId")]
+    [Cascade.BelongsTo(idProperty: nameof(parentId))]
     public Parent? Parent {
       get => GetProperty(ref _parent);
       set => SetProperty(ref _parent, value);
     }
     private Parent? _parent;
-   
+    
     /// <summary>
     /// The Detail association model property
     /// </summary>
-    [Cascade.BelongsTo(idProperty: "detailId")]
+    [Cascade.HasOne(foreignIdProperty: nameof(ChildDetail.childId))]
     public ChildDetail? Detail {
       get => GetProperty(ref _detail);
       set => SetProperty(ref _detail, value);

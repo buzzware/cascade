@@ -132,8 +132,11 @@ namespace Buzzware.Cascade.Testing {
     }
 
     /// <summary></summary>
-    public Task<object> Replace(object value) {
-      throw new System.NotImplementedException();
+    public async Task<object> Replace(object model) {
+      var classInfo = FastReflection.GetClassInfo(model);
+      var blank = (Activator.CreateInstance(classInfo.Type) as SuperModel)!;
+      FastReflection.CopyProperties(model, blank, classInfo.DataAndIdNames);
+      return blank;
     }
 
     /// <summary></summary>
