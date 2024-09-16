@@ -43,7 +43,7 @@ namespace Buzzware.Cascade {
         kind = CascadePropertyKind.FromProperty;
       } else if (pi.Name.StartsWith("_")) {
         kind = CascadePropertyKind.Internal;
-      } else if (CascadeTypeUtils.IsSimple(pi.PropertyType)) {
+      } else if (CascadeTypeUtils.IsSimple(CascadeTypeUtils.DeNullType(pi.PropertyType))) {
         if ((attr = attrs.FirstOrDefault(a => a is CascadeIdAttribute) as Attribute) != null) {
           kind = CascadePropertyKind.Id;
         } else {
@@ -127,7 +127,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="aInstance">The object instance from which to get the property value.</param>
     /// <returns>The value of the property from the instance.</returns>
-    public object GetValue(object aInstance) {
+    public object? GetValue(object aInstance) {
       return propertyInfo.GetValue(aInstance, null);
     }
 
@@ -266,6 +266,10 @@ namespace Buzzware.Cascade {
       classInfos = null;
     }
 
+    public static ClassInfo GetClassInfo<T>() {
+      return GetClassInfo(typeof(T));
+    }
+
     /// <summary>
     /// Retrieves or constructs ClassInfo for a specified type.
     /// Ensures that only class types are used.
@@ -299,9 +303,12 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="aType">The class/type to extract properties from.</param>
     /// <returns>A dictionary of property names and their corresponding CascadePropertyInfo.</returns>
-    public static IReadOnlyDictionary<String,CascadePropertyInfo> GetProperties(Type aType) {
+    public static IReadOnlyDictionary<String,CascadePropertyInfo> GetPropertyInfos(Type aType, IEnumerable<string>? propertyNames = null) {
       var ci = GetClassInfo(aType);
-      return ci.AllPropertyInfos;
+      var result = ci.AllPropertyInfos;
+      if (propertyNames != null)
+        result = result.Where(kvp => propertyNames.Contains(kvp.Key)).ToImmutableDictionary(kvp => kvp.Key, kvp => kvp.Value);
+      return result;
     }
     
     /// <summary>
@@ -438,6 +445,23 @@ namespace Buzzware.Cascade {
         } else {
           return GetDefault(aType);
         }
+      }
+    }
+
+    public static void CopyProperties(object source, object destination, IEnumerable<string>? propertyNames = null) {
+      var sourceInfo = GetClassInfo(source);
+      var destInfo = GetClassInfo(destination);
+      
+      if (propertyNames == null) {
+        if (sourceInfo == destInfo)
+          propertyNames = sourceInfo.AllPropertyInfos.Keys;
+        else
+          throw new NotImplementedException("assuming the same type for now");
+      }
+
+      foreach (var pn in propertyNames) {
+        var value = sourceInfo.GetValue(source, pn);
+        destInfo.SetValue(destination, pn, value);
       }
     }
   }

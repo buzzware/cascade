@@ -149,37 +149,79 @@ namespace Buzzware.Cascade {
 						throw new ArgumentException("Unsupported verb");
 				}
 			});
-			
-			// Begin to handle populate operations on the response
-			var populate = requestOp.Populate?.ToArray() ?? new string[] { };
 
-			if (requestOp.Verb == RequestVerb.Query && opResponse.IsIdResults) {
-				var modelResponses = await GetModelsForIds(
-					requestOp.Type,
-					opResponse.ResultIds,
-					requestOp.FreshnessSeconds,
-					fallbackFreshnessSeconds: requestOp.FallbackFreshnessSeconds,
-					hold: requestOp.Hold,
-					sequenceBeganMs: requestOp.TimeMs
-				);
-				IEnumerable<SuperModel> models = modelResponses.Select(r => (SuperModel)r.Result).ToImmutableArray();
-				if (populate.Any()) {
-					await Populate(models, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, sequenceBeganMs: requestOp.TimeMs);
+			var isModelRead = requestOp.Verb == RequestVerb.Get || requestOp.Verb == RequestVerb.Query;
+			var transferAssociations = requestOp.Verb == RequestVerb.Update || requestOp.Verb == RequestVerb.Replace || requestOp.Verb == RequestVerb.Create;  
+
+			if (isModelRead) {
+				// Begin to handle populate operations on the response
+				var populate = requestOp.Populate?.ToArray() ?? new string[] { };
+				if (requestOp.Verb == RequestVerb.Query && opResponse.IsIdResults) {
+					var modelResponses = await GetModelsForIds(
+						requestOp.Type,
+						opResponse.ResultIds,
+						requestOp.FreshnessSeconds,
+						fallbackFreshnessSeconds: requestOp.FallbackFreshnessSeconds,
+						hold: requestOp.Hold,
+						sequenceBeganMs: requestOp.TimeMs
+					);
+					IEnumerable<SuperModel> models = modelResponses.Select(r => (SuperModel)r.Result).ToImmutableArray();
+					if (populate.Any()) {
+						await Populate(models, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, sequenceBeganMs: requestOp.TimeMs);
+					}
+					opResponse = opResponse.withChanges(result: models); // modify the response with models instead of ids
+				} else {
+					if (populate.Any()) {
+						IEnumerable<SuperModel> results = opResponse.Results.Cast<SuperModel>();
+						await Populate(results, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, sequenceBeganMs: requestOp.TimeMs);
+					}
 				}
-				opResponse = opResponse.withChanges(result: models); // modify the response with models instead of ids
-			} else {
-				if (populate.Any()) {
-					IEnumerable<SuperModel> results = opResponse.Results.Cast<SuperModel>();
-					await Populate(results, populate, freshnessSeconds: requestOp.PopulateFreshnessSeconds, hold: requestOp.Hold, sequenceBeganMs: requestOp.TimeMs);
-				}
+				// End populate operations handling
 			}
-			// End populate operations handling
-			
+			if (transferAssociations) {
+				await TransferAssociations(requestOp, opResponse);
+			}
+
 			// Set the operation response results to be immutable
 			SetResultsImmutable(opResponse);
 			return opResponse;
 		}
-		
+
+		private async Task TransferAssociations(RequestOp requestOp, OpResponse opResponse) {
+			var incomingModel = (requestOp.Value as SuperModel) ?? (requestOp.Extra as SuperModel);
+			var outgoingModel = opResponse.Result as SuperModel;
+			if (incomingModel==null || outgoingModel==null)
+				return;
+			var classInfo = FastReflection.GetClassInfo(incomingModel);
+			if (outgoingModel.GetType() != classInfo.Type)
+				throw new ArgumentException("Incoming model type is not the same as outgoing model type - unsupported mismatch");
+			foreach (var pi in classInfo.Associationinfos.Values) {
+				var value = pi.GetValue(incomingModel); 
+				if (value==null)
+					continue;
+				switch (pi.Kind) {
+					case CascadePropertyKind.HasMany:
+					case CascadePropertyKind.HasOne:
+						pi.SetValue(outgoingModel, value);
+						break;
+					case CascadePropertyKind.BelongsTo:
+					case CascadePropertyKind.FromBlob:
+						string? assocProperty = null;
+						if (pi.Kind==CascadePropertyKind.BelongsTo)
+							assocProperty = (pi.KindAttribute as BelongsToAttribute)?.IdProperty;
+						else if (pi.Kind==CascadePropertyKind.FromBlob)
+							assocProperty = (pi.KindAttribute as FromBlobAttribute)?.PathProperty;
+						var incomingAssocKeyValue = assocProperty!=null ? classInfo.GetValue(incomingModel,assocProperty) : null;
+						var outgoingAssocKeyValue = assocProperty!=null ? classInfo.GetValue(outgoingModel,assocProperty) : null;
+						if (incomingAssocKeyValue == outgoingAssocKeyValue)
+							pi.SetValue(outgoingModel, value);
+						else
+							await Populate(outgoingModel, pi.Name, FRESHNESS_ANY);
+						break;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Coordinates the entire process of handling a data RequestOp, including logging for debug,
 		/// processing with fallback options, and storing results in previous caches.

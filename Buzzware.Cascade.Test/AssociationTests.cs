@@ -61,10 +61,10 @@ namespace Buzzware.Cascade.Test {
 			
 			// Create and store sample Child objects with parent associations in the childOrigin
 			Child[] allChildren = new[] {
-				new Child() { id = "5", parentId = 1, age = 2 },
-				new Child() { id = "6", parentId = 1, age = 4 },
-				new Child() { id = "7", parentId = 2, age = 5 },
-				new Child() { id = "8", parentId = 2, age = 7 },
+				new Child() { id = "5", parentId = 1, level = 2 },
+				new Child() { id = "6", parentId = 1, level = 4 },
+				new Child() { id = "7", parentId = 2, level = 5 },
+				new Child() { id = "8", parentId = 2, level = 7 },
 			};
 			foreach (var c in allChildren)
 				await childOrigin.Store(c.id, c);

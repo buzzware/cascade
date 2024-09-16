@@ -70,9 +70,9 @@ namespace Buzzware.Cascade.Test {
       
       // Create list of Child objects as test data.
       var children = new List<Child>() {
-        new Child() {id = "1", age = 1},
-        new Child() {id = "2", age = 2},
-        new Child() {id = "3", age = 3}
+        new Child() {id = "1", level = 1},
+        new Child() {id = "2", level = 2},
+        new Child() {id = "3", level = 3}
       };
       
       // Use reflection to get the Children property type

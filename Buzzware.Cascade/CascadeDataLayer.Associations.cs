@@ -150,7 +150,7 @@ namespace Buzzware.Cascade {
 			var id = CascadeTypeUtils.GetCascadeId(hasManyItem);
 			
 			// Modify the list of associated models by either removing, replacing, or ensuring an item.
-			var hasManyModels = ((IEnumerable)pi!.GetValue(model)).Cast<object>().ToList();
+			var hasManyModels = (pi!.GetValue(model) as IEnumerable)?.Cast<object>().ToList();
 			var modified = false;
 			for (var i = 0; i < hasManyModels.Count; i++) {
 				var existing = hasManyModels[i];

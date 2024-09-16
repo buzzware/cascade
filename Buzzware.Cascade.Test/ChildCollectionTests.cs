@@ -52,10 +52,10 @@ namespace Buzzware.Cascade.Test {
 				new Parent() { id = 2, colour = "green" }
 			};
 			Child[] allChildren = new[] {
-				new Child() { id = "C1", parentId = 1, weight = 5},
-				new Child() { id = "C2", parentId = 1, weight = 7},
-				new Child() { id = "C3", parentId = 2, weight = 2},
-				new Child() { id = "C4", parentId = 2, weight = 4},
+				new Child() { id = "C1", parentId = 1, tally = 5},
+				new Child() { id = "C2", parentId = 1, tally = 7},
+				new Child() { id = "C3", parentId = 2, tally = 2},
+				new Child() { id = "C4", parentId = 2, tally = 4},
 			};
 
 			// Storing parents and children in their mock origins
@@ -87,7 +87,7 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(parent1.Children.Count(), Is.EqualTo(2));
 
 			// Add a new child in the origin for parent1
-			var child5 = new Child() { id = "C5", parentId = 1, weight = 11 };
+			var child5 = new Child() { id = "C5", parentId = 1, tally = 11 };
 			await childOrigin.Store(child5.id, child5);
 			
 			Assert.That(parent1.Children.Count(), Is.EqualTo(2)); // Verify children aren't updated automatically
@@ -105,7 +105,7 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(preExistingChildCollection, Has.Length.EqualTo(3));
 
 			// Manually add a new child and update local collections
-			var child6 = new Child() { id = "C6", parentId = 1, weight = 13 };
+			var child6 = new Child() { id = "C6", parentId = 1, tally = 13 };
 			await childOrigin.Store(child6.id, child6);
 			preExistingChildCollection = preExistingChildCollection.Insert(0,child6);
 

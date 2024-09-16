@@ -35,13 +35,13 @@ namespace Buzzware.Cascade.Test {
     [Test]
     public async Task Simple() {
       // Create and serialize a child object
-      var child = new Child() { age = 25 };
+      var child = new Child() { level = 25 };
       var output = sz.SerializeToNode(child);
 
       // Validate that specific properties are not included in serialization
       Assert.That(output.HasKey(nameof(SuperModel.__mutable)), Is.False);
       Assert.That(output.HasKey(nameof(Child.Parent)), Is.False);
-      Assert.That(output.Keys, Is.EquivalentTo(new string[] { "id", "parentId", "weight", "power", "age", "updatedAtMs" }));
+      Assert.That(output.Keys, Is.EquivalentTo(new string[] { "id", "parentId", "tally", "power", "level", "updatedAtMs" }));
       
       // Create and serialize a parent object with a child
       var parent = new Parent() { colour = "blue", Children = new[] { child } };

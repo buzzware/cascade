@@ -384,8 +384,8 @@ namespace Buzzware.Cascade.Test {
       var child1 = new Child() {
         id = "c1",
         Parent = parent,
-        age = 7,
-        weight = 55
+        level = 7,
+        tally = 55
       };
       RequestOp requestOpChild1 = RequestOp.CreateOp(child1, cascade.NowMs);
 
@@ -393,8 +393,8 @@ namespace Buzzware.Cascade.Test {
       var child2 = new Child() {
         id = "c2",
         Parent = parent,
-        age = 11,
-        weight = 77
+        level = 11,
+        tally = 77
       };
       RequestOp requestOpChild2 = RequestOp.CreateOp(child2, cascade.NowMs);
 
@@ -420,8 +420,8 @@ namespace Buzzware.Cascade.Test {
       var child3 = new Child() {
         id = "c3",
         Parent = parent,
-        age = 17,
-        weight = 99
+        level = 17,
+        tally = 99
       };
       RequestOp requestOpChild3 = RequestOp.CreateOp(child3, cascade.NowMs);
       var filepathChild3 = await cascade.AddPendingChange(requestOpChild3);

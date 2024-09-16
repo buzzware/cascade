@@ -35,13 +35,23 @@ namespace Buzzware.Cascade.Testing {
     private Parent? _parent;
    
     /// <summary>
-    /// The weight attribute of the Child model.
+    /// The Detail association model property
     /// </summary>
-    public double? weight {
-      get => GetProperty(ref _weight);
-      set => SetProperty(ref _weight, value);
+    [Cascade.BelongsTo(idProperty: "detailId")]
+    public ChildDetail? Detail {
+      get => GetProperty(ref _detail);
+      set => SetProperty(ref _detail, value);
     }
-    private double? _weight;
+    private ChildDetail? _detail;
+   
+    /// <summary>
+    /// The tally attribute of the Child model.
+    /// </summary>
+    public double? tally {
+      get => GetProperty(ref _tally);
+      set => SetProperty(ref _tally, value);
+    }
+    private double? _tally;
 
     /// <summary>
     /// The power attribute of the Child model.
@@ -53,13 +63,13 @@ namespace Buzzware.Cascade.Testing {
     private double? _power;
 
     /// <summary>
-    /// The age attribute of the Child model.
+    /// The level attribute of the Child model.
     /// </summary>
-    public int age {
-      get => GetProperty(ref _age);
-      set => SetProperty(ref _age, value);
+    public int level {
+      get => GetProperty(ref _level);
+      set => SetProperty(ref _level, value);
     }
-    private int _age;
+    private int _level;
 
     /// <summary>
     /// A timestamp representing when this model was last updated, in milliseconds since 1970.
@@ -79,18 +89,21 @@ namespace Buzzware.Cascade.Testing {
     /// <summary>
     /// Creates a new instance with modified properties, leaving unspecified properties unchanged.
     /// </summary>
-    /// <param name="weight">weight</param>
+    /// <param name="tally">tally</param>
     /// <param name="power">power</param>
+    /// <param name="level">level</param>
     /// <param name="updatedAtMs">updatedAtMs</param>
     /// <returns>A new instance with updated properties</returns>
     public Child withChanges(
-      double? weight = null,
+      double? tally = null,
       double? power = null,
+      int? level = null,
       long? updatedAtMs = null
     ) {
       var result = new Child() {id = this.id};
-      result.weight = weight ?? this.weight;
+      result.tally = tally ?? this.tally;
       result.power = power ?? this.power;
+      result.level = level ?? this.level;
       result.updatedAtMs = updatedAtMs ?? this.updatedAtMs;
       return result;
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -47,6 +48,14 @@ namespace Buzzware.Cascade.Testing {
     private readonly Dictionary<object, M> models = new Dictionary<object, M>();
     private readonly Dictionary<string, byte[]> blobs = new Dictionary<string, byte[]>();
 
+    // create a new model instance of the generic type, optionally with the proxyFor parameter
+    private M CreateModel(M proxyFor = null) {
+      if (proxyFor==null)
+        return (M)Activator.CreateInstance(typeof(M));
+      else
+        return (M)Activator.CreateInstance(typeof(M),new object[] {proxyFor}); 
+    }
+    
     /// <summary>
     /// Queries the stored models based on provided criteria.
     /// The criteria are matched against model properties to filter the collection.
@@ -128,8 +137,12 @@ namespace Buzzware.Cascade.Testing {
     }
 
     /// <summary></summary>
-    public Task<object> Update(object id, IDictionary<string, object?> changes, object? model) {
-      throw new System.NotImplementedException();
+    public async Task<object> Update(object id, IDictionary<string, object?> changes, object? model) {
+      var classInfo = FastReflection.GetClassInfo(model);
+      var blank = (Activator.CreateInstance(classInfo.Type) as SuperModel)!;
+      FastReflection.CopyProperties(model, blank, classInfo.DataAndIdNames);
+      blank.__ApplyChanges(changes);
+      return blank;
     }
 
     /// <summary></summary>
