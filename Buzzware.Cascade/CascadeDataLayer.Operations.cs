@@ -213,7 +213,7 @@ namespace Buzzware.Cascade {
 				switch (pi.Kind) {
 					case CascadePropertyKind.HasMany:
 					case CascadePropertyKind.HasOne:
-						pi.SetValue(outgoingModel, value);
+						await SetModelProperty(outgoingModel, pi, value);
 						break;
 					case CascadePropertyKind.BelongsTo:
 					case CascadePropertyKind.FromBlob:
@@ -225,7 +225,7 @@ namespace Buzzware.Cascade {
 						var incomingAssocKeyValue = assocProperty!=null ? classInfo.GetValue(incomingModel,assocProperty) : null;
 						var outgoingAssocKeyValue = assocProperty!=null ? classInfo.GetValue(outgoingModel,assocProperty) : null;
 						if (incomingAssocKeyValue == outgoingAssocKeyValue)
-							pi.SetValue(outgoingModel, value);
+							await SetModelProperty(outgoingModel, pi, value);
 						else
 							await Populate(outgoingModel, pi.Name, FRESHNESS_ANY);
 						break;
