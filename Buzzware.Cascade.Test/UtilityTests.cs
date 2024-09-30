@@ -82,7 +82,7 @@ namespace Buzzware.Cascade.Test {
       // Get the non-nullable type of the Children property
       var nonNullableTargetType = CascadeTypeUtils.DeNullType(nullableChildrenType);
       
-      var isEnumerable = CascadeTypeUtils.IsEnumerableType(nonNullableTargetType);
+      var isEnumerable = CascadeTypeUtils.IsEnumerableModelType(nonNullableTargetType);
       Assert.That(isEnumerable, Is.True);
     }
 
@@ -101,5 +101,16 @@ namespace Buzzware.Cascade.Test {
       Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(DateTime?)),Is.EqualTo(null));
       Assert.That(CascadeTypeUtils.GetDefaultValue(typeof(DateTime)),Is.EqualTo(DateTime.MinValue));
     }
+
+    [Test]
+    public void InnerTypeTest() {
+      Assert.That(CascadeTypeUtils.InnerType(typeof(Thing[])),Is.EqualTo(typeof(Thing)));
+      Assert.That(CascadeTypeUtils.InnerType(typeof(Thing)),Is.EqualTo(null));
+      Assert.That(CascadeTypeUtils.InnerType(typeof(byte[])),Is.EqualTo(typeof(byte)));
+      Assert.That(CascadeTypeUtils.InnerType(typeof(byte)),Is.EqualTo(null));
+      Assert.That(CascadeTypeUtils.InnerType(typeof(int[])),Is.EqualTo(typeof(int)));
+      Assert.That(CascadeTypeUtils.InnerType(typeof(int)),Is.EqualTo(null));
+    }
+
   }
 }

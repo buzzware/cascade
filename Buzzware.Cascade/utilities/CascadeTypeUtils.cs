@@ -68,7 +68,10 @@ namespace Buzzware.Cascade {
     /// <param name="type">The type to evaluate.</param>
     /// <returns>The inner type of the generic type; otherwise, null.</returns>
     public static Type? InnerType(Type type) {
-      return type.GenericTypeArguments.FirstOrDefault();
+      if (type.IsArray)
+        return type.GetElementType();
+      else
+        return type.GenericTypeArguments.FirstOrDefault();
     }
 
     /// <summary>
@@ -87,6 +90,22 @@ namespace Buzzware.Cascade {
     /// <returns>True if the type is enumerable and not a string; otherwise, false.</returns>
     public static bool IsEnumerableType(Type type) {
       return (type?.Implements<IEnumerable>() ?? false) && type != typeof(string);
+    }
+
+    public static bool IsModelType(Type type) {
+      return type.Implements<SuperModel>();
+    }
+    
+    /// <summary>
+    /// Checks if the specified type is an enumerable Model type
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns>True if the type is enumerable and not a string; otherwise, false.</returns>
+    public static bool IsEnumerableModelType(Type type) {
+      if (!IsEnumerableType(type))
+        return false;
+      var innerType = InnerType(type);
+      return innerType!=null && IsModelType(innerType);
     }
 
     /// <summary>

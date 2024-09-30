@@ -190,7 +190,29 @@ namespace Buzzware.Cascade.Test {
       // Assert
       Assert.That(thingPhoto.imagePath, Is.EqualTo("path/to/image2.png"));
       Assert.That(thingPhoto.Image!.Width, Is.EqualTo(bitmap2.Width));
-    }    
+    }
+
+
+    [Test]
+    public async Task PopulateThumbnailBytesTest() {
+      // Arrange
+      var bitmap = new Bitmap(10, 10);
+      var image = TestUtils.BlobFromBitmap(bitmap, ImageFormat.Png);
+      await cascade.BlobPut(BLOB1_PATH, image);
+
+      var thingPhoto = new ThingPhoto {
+        id = 1,
+        imagePath = BLOB1_PATH
+      };
+      await cascade.Create(thingPhoto);
+
+      // Act
+      await cascade.Populate(thingPhoto, nameof(ThingPhoto.ImageBytes));
+
+      // Assert
+      Assert.That(thingPhoto.ImageBytes, Is.Not.Null);
+      Assert.That(thingPhoto.ImageBytes.Length, Is.GreaterThan(0));
+    }
   }
 }
 

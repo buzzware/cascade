@@ -28,9 +28,9 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="pathProperty">The name of the property containing the path to the blob data.</param>
     /// <param name="converter">The type of the converter class that should implement IBlobConverter for converting blob data.</param>
-    public FromBlobAttribute(string pathProperty, Type? converter) {
+    public FromBlobAttribute(string pathProperty, Type? converter = null) {
       // Check if the provided converter type implements IBlobConverter
-      if (!converter.Implements<IBlobConverter>())
+      if (converter!=null && !converter.Implements<IBlobConverter>())
         throw new ArgumentException("Converter must implement IBlobConverter");
 
       PathProperty = pathProperty;

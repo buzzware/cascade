@@ -88,6 +88,13 @@ namespace Buzzware.Cascade.Test {
     }
     private Bitmap? _Thumbnail;
     
+    [FromBlob(nameof(imagePath))]
+    public byte[]? ImageBytes {
+    	get => GetProperty(ref _ImageBytes); 
+    	set => SetProperty(ref _ImageBytes, value);
+    }
+    private byte[] _ImageBytes;
+    
     /// <summary>
     /// Bitmap representation of a converted thumbnail derived from the main image
     /// </summary>

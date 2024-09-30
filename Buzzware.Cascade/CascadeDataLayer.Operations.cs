@@ -327,7 +327,7 @@ namespace Buzzware.Cascade {
 			
 			await StoreInPreviousCaches(opResponse);
 
-			var propertyValue = attribute.Converter!.Convert(opResponse.Result as byte[], propertyInfo.NotNullType);
+			var propertyValue = attribute.Converter != null ? attribute.Converter.Convert(opResponse.Result as byte[], propertyInfo.NotNullType) : opResponse.Result as byte[];
 			
 			await SetModelProperty(model, propertyInfo, propertyValue);
 		}
