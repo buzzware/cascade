@@ -228,18 +228,21 @@ namespace Buzzware.Cascade {
     /// <param name="cascadeModel">The model instance to evaluate.</param>
     /// <returns>The value of the Cascade ID if available; otherwise, null.</returns>
     public static object? TryGetCascadeId(object? cascadeModel) {
-      if (cascadeModel == null)
-        return null;
-      return TryGetCascadeIdProperty(cascadeModel.GetType())?.GetValue(cascadeModel);
+      var type = cascadeModel?.GetType();
+      if (type == null || !type.IsClass || type == typeof(object)) 
+        return null;  
+      return TryGetCascadeIdProperty(type)?.GetValue(cascadeModel!);
     }
 
     /// <summary>
     /// Attempts to retrieve the Cascade ID property from a given model type.
     /// </summary>
-    /// <param name="cascadeModelType">The type of the Cascade model.</param>
+    /// <param name="type">The type of the Cascade model.</param>
     /// <returns>The Cascade ID property information if available; otherwise, null.</returns>
-    public static CascadePropertyInfo? TryGetCascadeIdProperty(Type cascadeModelType) {
-      return FastReflection.GetClassInfo(cascadeModelType).IdProperty;
+    public static CascadePropertyInfo? TryGetCascadeIdProperty(Type type) {
+      if (!type.IsClass || type == typeof(object)) 
+        return null;  
+      return FastReflection.GetClassInfo(type).IdProperty;
     }
 
     /// <summary>
