@@ -23,17 +23,22 @@ namespace Buzzware.Cascade {
     /// <param name="exists">Indicates if the item is present in the cache.</param>
     /// <param name="arrivedAtMs">The time in milliseconds when the response arrived.</param>
     /// <param name="result">The result of the operation, can be null.</param>
+    /// <param name="eTag"></param>
     [ImmutableObject(true)]
-    public OpResponse(RequestOp requestOp,
+    public OpResponse(
+      RequestOp requestOp,
       long timeMs,
       bool exists,
       long? arrivedAtMs,
-      object? result) {
+      object? result,
+      string? eTag = null
+    ) {
       RequestOp = requestOp;
       TimeMs = timeMs;
       Exists = exists;
       ArrivedAtMs = arrivedAtMs;
       Result = result;
+      ETag = eTag;
     }
 
     /// <summary>
@@ -44,18 +49,23 @@ namespace Buzzware.Cascade {
     /// <param name="exists">Updated existence status.</param>
     /// <param name="arrivedAtMs">Updated arrival time in milliseconds.</param>
     /// <param name="result">Updated operation result.</param>
+    /// <param name="eTag"></param>
     /// <returns>The new OpResponse instance with specified changes.</returns>
-    public OpResponse withChanges(RequestOp? requestOp = null,
+    public OpResponse withChanges(
+      RequestOp? requestOp = null,
       long? timeMs = null,
       bool? exists = null,
       long? arrivedAtMs = null,
-      object? result = null) {
+      object? result = null,
+      string? eTag = null
+    ) {
       return new OpResponse(
         requestOp: requestOp ?? this.RequestOp,
         timeMs: timeMs ?? this.TimeMs,
         exists: exists ?? this.Exists,
         arrivedAtMs: arrivedAtMs ?? this.ArrivedAtMs,
-        result: result ?? this.Result
+        result: result ?? this.Result,
+        eTag: eTag ?? this.ETag
       );
     }
     
@@ -66,6 +76,7 @@ namespace Buzzware.Cascade {
     public long? ArrivedAtMs;
     public int LayerIndex;
     public string? SourceName;
+    public readonly string? ETag;
 
     /// <summary>
     /// Determines if the operation result is a binary large object (blob).

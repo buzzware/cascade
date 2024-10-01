@@ -119,16 +119,18 @@ namespace Buzzware.Cascade {
 			long timeMs = -1,
 			int? freshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null, 
-			bool? hold = null
+			bool? hold = null,
+			string? eTag = null
 		) {
 			return new RequestOp(
 				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
-				typeof(byte[]),
+				typeof(byte[]),		
 				RequestVerb.BlobGet,
 				path,
 				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
 				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
-				hold: hold
+				hold: hold,
+				eTag:	eTag
 			);
 		}
 		
@@ -360,7 +362,8 @@ namespace Buzzware.Cascade {
 			bool? hold = null,
 			object? criteria = null,
 			string? key = null,
-			object? extra = null
+			object? extra = null,
+			string? eTag = null
 		) {
 			TimeMs = timeMs;
 			Type = type;
@@ -375,12 +378,15 @@ namespace Buzzware.Cascade {
 			Criteria = criteria;
 			Key = key;
 			Extra = extra;
+			ETag = eTag;
 
 			FreshAfterMs = TimeMs - (FreshnessSeconds * 1000);
 			PopulateFreshAfterMs = TimeMs - (PopulateFreshnessSeconds * 1000);
 			FallbackFreshAfterMs = TimeMs - (FallbackFreshnessSeconds * 1000);
 		}
+
 		
+
 		/// <summary>
 		/// Creates a new instance of RequestOp by cloning the current instance and optionally modifying its properties.
 		/// </summary>
@@ -411,7 +417,8 @@ namespace Buzzware.Cascade {
 			bool? hold = null,
 			object? criteria = null,
 			string? key = null,
-			object? extra = null
+			object? extra = null,
+			string? eTag = null
 		) {
 			return new RequestOp(
 				timeMs ?? this.TimeMs,
@@ -426,7 +433,8 @@ namespace Buzzware.Cascade {
 				hold: hold ?? this.Hold,
 				criteria: criteria ?? this.Criteria,
 				key: key ?? this.Key,
-				extra: extra ?? this.Extra
+				extra: extra ?? this.Extra,
+				eTag: eTag ?? this.ETag
 			);
 		}
 
@@ -459,6 +467,7 @@ namespace Buzzware.Cascade {
 		public readonly string? Key;		// eg. Products or Products__34
 		public readonly object? Criteria;
 		public readonly object? Extra;
+		public readonly string? ETag;
 		
 		public readonly IEnumerable<string>? Populate;
 		public readonly int FreshnessSeconds = FRESHNESS_DEFAULT;
