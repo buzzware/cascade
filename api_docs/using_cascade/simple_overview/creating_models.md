@@ -105,3 +105,7 @@ public async Task<Docket> CreateDocket(Docket newDocket)
     return createdDocket;
 }
 ```
+
+## Creating Models with Association
+
+When creating a model, only the 
