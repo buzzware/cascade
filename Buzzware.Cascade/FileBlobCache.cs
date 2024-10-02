@@ -15,6 +15,34 @@ namespace Buzzware.Cascade {
   public class FileBlobCache : IBlobCache {
     private readonly string _tempDir;
 
+    public const string BLOB_ETAGS = "BlobEtags";
+    public const string BLOB_PATH_ALT_SEPARATOR = "_%_";
+
+    public string EncodeBlobEtagPath(string path) {
+      return path.Replace("/", BLOB_PATH_ALT_SEPARATOR);
+    }
+
+    public string BlobEtagPath(string? blobPath) {
+      if (blobPath == null) {
+        return BLOB_ETAGS;
+      }
+      else {
+        return Path.Combine(BLOB_ETAGS, EncodeBlobEtagPath(blobPath));
+      }
+    }
+
+    public void StoreBlobEtag(string blobPath, string? etag) {
+      Cascade.MetaSet(BlobEtagPath(blobPath), etag);
+    }
+
+    public string? FetchBlobEtag(string blobPath) {
+      return Cascade.MetaGet(BlobEtagPath(blobPath));
+    }
+
+    public void ClearBlobEtags(string blobPath) {
+      Cascade.MetaClearPath(BlobEtagPath(blobPath));
+    }
+    
     /// <summary>
     /// The Cascade data layer instance associated with this cache.
     /// </summary>
@@ -86,6 +114,7 @@ namespace Buzzware.Cascade {
           }
           CascadeUtils.EnsureFileOperationSync(() => {
             File.Delete(file);
+            ClearBlobEtags(path);
           });
         }
       } else {
@@ -95,6 +124,7 @@ namespace Buzzware.Cascade {
             File.Delete(file);
           });
         }
+        ClearBlobEtags(FullBlobPath);
       }
     }
 
@@ -127,7 +157,10 @@ namespace Buzzware.Cascade {
           requestOp,
           Cascade?.NowMs ?? 0,
           exists: true,
-          arrivedAtMs: arrivedAtMs, result: loaded);
+          arrivedAtMs: arrivedAtMs, 
+          result: loaded,
+          eTag: FetchBlobEtag(path)
+        );
       } else {
         return OpResponse.None(requestOp, Cascade.NowMs, this.GetType().Name);
       }
@@ -154,6 +187,7 @@ namespace Buzzware.Cascade {
             throw new ArgumentException("Result must be null or byte[]");
           await StoreBlob(modelFilePath, (byte[]) opResponse.Result, arrivedAt);
         }
+        StoreBlobEtag(path, opResponse.ETag);
       } catch (Exception e) {
         Log.Debug(e.Message);   // sharing violation exception sometimes happens here
       }

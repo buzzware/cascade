@@ -39,7 +39,7 @@ namespace Buzzware.Cascade {
 		/// <param name="value">The value to associate with the key. Null to remove the key.</param>
 		public void MetaSet(
 			string path,	// forward-slash relative path to a document (the key)
-			string value	// a string or null (the value)
+			string? value	// a string or null (the value)
 		) {
 			path = MetaResolvePath(path);
 			var folder = Path.GetDirectoryName(path)!;

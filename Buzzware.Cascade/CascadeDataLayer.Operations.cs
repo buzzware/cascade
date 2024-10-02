@@ -418,6 +418,7 @@ namespace Buzzware.Cascade {
 				}
 			}
 
+
 			if (
 				(cacheResponse?.Exists == true) && // in cache
 				(
@@ -433,6 +434,9 @@ namespace Buzzware.Cascade {
 				OpResponse originResponse;
 				bool connected = false;
 				try {
+					if (requestOp.Verb == RequestVerb.BlobGet && cacheResponse?.ETag != null) {
+						requestOp = requestOp.CloneWith(eTag: cacheResponse.ETag);
+					}
 					originResponse = await Origin.ProcessRequest(requestOp, connectionOnline);
 					connected = connectionOnline;
 				} catch (Exception e) {
@@ -443,11 +447,19 @@ namespace Buzzware.Cascade {
 				}
 				originResponse.LayerIndex = -1;
 				if (connected) {
-					opResponse = originResponse;
+					if (					// originResponse indicates matching eTag, so return cacheResponse
+						requestOp.Verb==RequestVerb.BlobGet && 
+						originResponse.Result==null &&
+						cacheResponse!.Exists &&
+						originResponse.ETag!=null && originResponse.ETag == cacheResponse!.ETag
+					)
+						opResponse = cacheResponse;
+					else 
+						opResponse = originResponse;
 				} else {
 					if ( // online but connection failure and meets fallback freshness
 					    cacheResponse?.Exists==true &&
-					    requestOp.FallbackFreshnessSeconds != null &&
+					    //requestOp.FallbackFreshnessSeconds != null &&
 					    (requestOp.FallbackFreshnessSeconds == RequestOp.FRESHNESS_ANY || ((requestOp.TimeMs - cacheResponse.ArrivedAtMs) <= requestOp.FallbackFreshnessSeconds * 1000))
 					) {
 						Debug.WriteLine("Buzzware.Cascade fallback to cached value");
