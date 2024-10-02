@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
+using Buzzware.Cascade.Test;
 using Buzzware.StandardExceptions;
 
 namespace Buzzware.Cascade.Testing {
@@ -19,6 +20,7 @@ namespace Buzzware.Cascade.Testing {
 
     private readonly Dictionary<Type,IModelClassOrigin> classOrigins;
     private readonly Dictionary<string,byte[]> blobs;
+    public readonly FriendlyDictionary<string,string> ETags;
     
     /// <summary>
     /// Simulates offline behavior when set to true, throwing a NoNetworkException during request processing.
@@ -37,6 +39,7 @@ namespace Buzzware.Cascade.Testing {
       NowMs = nowMs;
       this.classOrigins = classOrigins;
       blobs = new Dictionary<string, byte[]>();
+      ETags = new FriendlyDictionary<string, string>();
       foreach (var pair in classOrigins) {
         pair.Value.Origin = this;
       }
@@ -57,14 +60,27 @@ namespace Buzzware.Cascade.Testing {
         throw new NoNetworkException();
       
       object? result = null;
+      string? etag = null;
 
       // Handling blob operations
+      
       if (request.Verb == RequestVerb.BlobGet) {
-        result = await BlobGet(((string?)request.Id)!);
+        var path = (string)request.Id!;
+        if (request.ETag != null && (request.ETag == ETags[path])) {
+          result = null;
+          etag = ETags[path];
+        } else {
+          result = await BlobGet(path);
+          etag = ETags[path];
+        }
       } else if (request.Verb == RequestVerb.BlobPut) {
-        result = await BlobPut(((string?)request.Id)!,(request.Value as byte[]));
+        var path = (string)request.Id!;
+        result = await BlobPut(path,(request.Value as byte[]));
+        etag = ETags[path] = request.ETag;
       } else if (request.Verb == RequestVerb.BlobDestroy) {
-        await BlobDestroy(((string?)request.Id)!);
+        var path = (string)request.Id!;
+        await BlobDestroy(path);
+        ETags[path] = null;
         result = null;
       } else {
         // Handling class origin operations
@@ -102,8 +118,11 @@ namespace Buzzware.Cascade.Testing {
         NowMs,
         true,
         NowMs,
-        result
-      );
+        result,
+        eTag: etag
+      ) {
+        SourceName = this.GetType().Name
+      };
     }
 
     /// <summary>

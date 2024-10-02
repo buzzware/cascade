@@ -29,6 +29,7 @@ namespace Buzzware.Cascade.Test {
     CascadeDataLayer cascade;
     private FastFileClassCache<Thing,Int32> thingFileCache;
     private FastFileClassCache<ThingPhoto,int> photoFileCache;
+    private ModelCache modelCache;
 
     /// <summary>
     /// Sets up the testing environment before each test.
@@ -66,7 +67,7 @@ namespace Buzzware.Cascade.Test {
       );
       thingFileCache = new FastFileClassCache<Thing, int>(cascadeDir);
       photoFileCache = new FastFileClassCache<ThingPhoto, int>(cascadeDir);
-      var modelCache = new ModelCache(
+      modelCache = new ModelCache(
         aClassCache: new Dictionary<Type, IModelClassCache>() {
           { typeof(Thing), thingFileCache },
           { typeof(ThingPhoto), photoFileCache },
@@ -192,7 +193,6 @@ namespace Buzzware.Cascade.Test {
       Assert.That(thingPhoto.Image!.Width, Is.EqualTo(bitmap2.Width));
     }
 
-
     [Test]
     public async Task PopulateThumbnailBytesTest() {
       // Arrange
@@ -212,6 +212,56 @@ namespace Buzzware.Cascade.Test {
       // Assert
       Assert.That(thingPhoto.ImageBytes, Is.Not.Null);
       Assert.That(thingPhoto.ImageBytes.Length, Is.GreaterThan(0));
+    }
+
+    
+    
+    [Test]
+    public async Task EtagTest() {
+      OpResponse? response = null;
+      var blob11 = TestUtils.NewBlob(11,100);
+      await origin.ProcessRequest(RequestOp.BlobPutOp(BLOB1_PATH, cascade.NowMs, blob11).CloneWith(eTag: "11"), true);
+      var thingPhoto = new ThingPhoto {
+        id = 1,
+        imagePath = BLOB1_PATH
+      };
+      await cascade.Create(thingPhoto);
+
+      // Act
+      await cascade.Populate(thingPhoto, nameof(ThingPhoto.ImageBytes));
+
+      // Assert
+      Assert.That(thingPhoto.ImageBytes, Is.EquivalentTo(blob11));
+
+      origin.NowMs += 1000;
+
+      // any freshness, so should come from cache as normal
+      response = await cascade.BlobGetResponse(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_ANY);
+      Assert.That(response.Result, Is.EquivalentTo(blob11));
+      Assert.That(response.SourceName, Is.EqualTo("FileBlobCache"));
+      
+      // freshest, but etag should match and we still get cache version
+      response = await cascade.BlobGetResponse(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_FRESHEST);
+      Assert.That(response.Result, Is.EquivalentTo(blob11));
+      Assert.That(response.SourceName, Is.EqualTo("FileBlobCache"));
+      
+      // change origin version
+      var blob12 = TestUtils.NewBlob(12,100);
+      response = await origin.ProcessRequest(RequestOp.BlobPutOp(BLOB1_PATH, cascade.NowMs, blob12).CloneWith(eTag: "12"), true);
+
+      origin.NowMs += 1000;
+      
+      // origin changed but with freshness any we still get cache version
+      response = await cascade.BlobGetResponse(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_ANY);
+      Assert.That(response.Result, Is.EquivalentTo(blob11));
+      Assert.That(response.SourceName, Is.EqualTo("FileBlobCache"));
+      
+      origin.NowMs += 1000;
+      
+      // freshest, and etag has changed so get origin version
+      response = await cascade.BlobGetResponse(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_FRESHEST);
+      Assert.That(response.Result, Is.EquivalentTo(blob12));
+      Assert.That(response.SourceName, Is.EqualTo("MockOrigin2"));
     }
   }
 }
