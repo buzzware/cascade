@@ -51,8 +51,12 @@ namespace Buzzware.Cascade {
 			if (blobCache != null) 
 				await blobCache.ClearAll(exceptHeld: exceptHeld, olderThan: olderThan);
 		}
-		
-    /// <summary>
+
+		public Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs) {
+			return blobCache?.NotifyBlobIsFresh(blobPath, arrivedAtMs) ?? Task.CompletedTask;
+		}
+
+		/// <summary>
     /// ModelCache Constructor
     /// </summary>
     /// <param name="aClassCache">Dictionary that provides the model class caches to be managed.</param>

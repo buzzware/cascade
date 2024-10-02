@@ -193,6 +193,12 @@ namespace Buzzware.Cascade {
       }
     }
 
+    public async Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs) {
+      var modelFilePath = GetModelFilePath(blobPath);
+      if (File.Exists(modelFilePath))
+        File.SetLastWriteTimeUtc(modelFilePath, CascadeUtils.fromUnixMilliseconds(arrivedAtMs));
+    }
+
     /// <summary>
     /// Loads a blob from a file in the file cache, reading it as a byte array.
     /// </summary>

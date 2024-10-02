@@ -53,5 +53,15 @@ namespace Buzzware.Cascade {
     /// <param name="exceptHeld">If true, entries marked to be held will not be cleared.</param>
     /// <param name="olderThan">If specified, only entries older than this date will be cleared.</param>
 		Task ClearAll(bool exceptHeld = true, DateTime? olderThan = null);
+
+    /// <summary>
+    /// Set the ArrivedAtMs value for the given blobPath to the given value.
+    /// This is not absolutely necessary but for maximum efficiency should be implemented.
+    /// It is only used when eTags indicate that a local blob is still fresh. 
+    /// </summary>
+    /// <param name="blobPath"></param>
+    /// <param name="arrivedAtMs"></param>
+    /// <returns></returns>
+		Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs);
 	}
 }

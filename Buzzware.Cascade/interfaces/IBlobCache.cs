@@ -32,5 +32,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="opResponse">The operation response to store in the cache.</param>
     Task Store(OpResponse opResponse);
+
+    Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs);
   }
 }

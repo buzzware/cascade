@@ -512,6 +512,8 @@ namespace Buzzware.Cascade {
 			get {
 				if (Id == null)
 					return null;
+				if (Id is string s)
+					return s;
 				if ((Id is int) || (Id is long))
 					return ((long)Id).ToString();
 				return null;

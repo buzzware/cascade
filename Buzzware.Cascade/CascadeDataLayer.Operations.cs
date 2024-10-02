@@ -447,15 +447,17 @@ namespace Buzzware.Cascade {
 				}
 				originResponse.LayerIndex = -1;
 				if (connected) {
-					if (					// originResponse indicates matching eTag, so return cacheResponse
-						requestOp.Verb==RequestVerb.BlobGet && 
-						originResponse.Result==null &&
-						cacheResponse!.Exists &&
-						originResponse.ETag!=null && originResponse.ETag == cacheResponse!.ETag
-					)
+					if ( // originResponse indicates matching eTag, so return cacheResponse
+					    requestOp.Verb == RequestVerb.BlobGet &&
+					    originResponse.Result == null &&
+					    cacheResponse!.Exists &&
+					    originResponse.ETag != null && originResponse.ETag == cacheResponse!.ETag
+					) {
 						opResponse = cacheResponse;
-					else 
+						await NotifyCacheBlobIsFresh(cacheResponse.RequestOp.IdAsString!,originResponse.ArrivedAtMs ?? NowMs);
+					} else {
 						opResponse = originResponse;
+					}
 				} else {
 					if ( // online but connection failure and meets fallback freshness
 					    cacheResponse?.Exists==true &&
@@ -490,7 +492,13 @@ namespace Buzzware.Cascade {
 			}
 			return opResponse!;
 		}
-		
+
+		private async Task NotifyCacheBlobIsFresh(string blobPath, long arrivedAtMs) {
+			foreach (var cacheLayer in CacheLayers) {
+				await cacheLayer.NotifyBlobIsFresh(blobPath, arrivedAtMs);
+			}
+		}
+
 		/// <summary>
 		/// Sets the results of the operation response to be immutable. Indicates that the results should
 		/// not be modified after retrieval, ensuring data integrity.

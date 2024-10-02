@@ -30,6 +30,7 @@ namespace Buzzware.Cascade.Test {
     private FastFileClassCache<Thing,Int32> thingFileCache;
     private FastFileClassCache<ThingPhoto,int> photoFileCache;
     private ModelCache modelCache;
+    private FileBlobCache blobCache;
 
     /// <summary>
     /// Sets up the testing environment before each test.
@@ -67,12 +68,13 @@ namespace Buzzware.Cascade.Test {
       );
       thingFileCache = new FastFileClassCache<Thing, int>(cascadeDir);
       photoFileCache = new FastFileClassCache<ThingPhoto, int>(cascadeDir);
+      blobCache = new FileBlobCache(cascadeDir);
       modelCache = new ModelCache(
         aClassCache: new Dictionary<Type, IModelClassCache>() {
           { typeof(Thing), thingFileCache },
           { typeof(ThingPhoto), photoFileCache },
         },
-        blobCache: new FileBlobCache(cascadeDir)
+        blobCache: blobCache
       );
       
       // Configures the CascadeDataLayer with the initialized components
@@ -244,6 +246,9 @@ namespace Buzzware.Cascade.Test {
       response = await cascade.BlobGetResponse(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_FRESHEST);
       Assert.That(response.Result, Is.EquivalentTo(blob11));
       Assert.That(response.SourceName, Is.EqualTo("FileBlobCache"));
+      // check cache ArrivedAtMs has been updated
+      response = await blobCache.Fetch(RequestOp.BlobGetOp(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_ANY));
+      Assert.That(response.ArrivedAtMs, Is.EqualTo(origin.NowMs));
       
       // change origin version
       var blob12 = TestUtils.NewBlob(12,100);
