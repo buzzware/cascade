@@ -138,7 +138,7 @@ namespace Buzzware.Cascade {
 			if (opResponse.LayerIndex == 0)
 				return;
 
-			await errorControl.FilterGuard(async () => {
+			//await errorControl.FilterGuard(async () => {
 				ICascadeCache? layerFound = null;
 				var layers = CacheLayers.ToArray();
 
@@ -160,7 +160,7 @@ namespace Buzzware.Cascade {
 					else
 						await layer.Store(opResponse);
 				}
-			});
+			//});
 		}
 
 		/// <summary>

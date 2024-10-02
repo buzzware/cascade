@@ -66,7 +66,10 @@ namespace Buzzware.Cascade {
         arrivedAtMs: arrivedAtMs ?? this.ArrivedAtMs,
         result: result ?? this.Result,
         eTag: eTag ?? this.ETag
-      );
+      ) {
+        SourceName = this.SourceName,
+        LayerIndex = LayerIndex
+      };
     }
     
     public readonly RequestOp RequestOp;

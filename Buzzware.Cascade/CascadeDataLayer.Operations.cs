@@ -453,8 +453,8 @@ namespace Buzzware.Cascade {
 					    cacheResponse!.Exists &&
 					    originResponse.ETag != null && originResponse.ETag == cacheResponse!.ETag
 					) {
-						opResponse = cacheResponse;
-						await NotifyCacheBlobIsFresh(cacheResponse.RequestOp.IdAsString!,originResponse.ArrivedAtMs ?? NowMs);
+						opResponse = cacheResponse.withChanges(arrivedAtMs: originResponse.ArrivedAtMs ?? NowMs);
+						await NotifyCacheBlobIsFresh(opResponse.RequestOp.IdAsString!,(long)opResponse.ArrivedAtMs!);
 					} else {
 						opResponse = originResponse;
 					}

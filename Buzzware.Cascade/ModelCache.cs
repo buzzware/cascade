@@ -76,7 +76,7 @@ namespace Buzzware.Cascade {
 			if (requestOp.Verb is RequestVerb.BlobGet or RequestVerb.BlobPut) {
 				if (blobCache != null) {
 					opResponse = await blobCache.Fetch(requestOp);
-					opResponse.SourceName = blobCache.GetType().Name;
+					opResponse.SourceName ??= blobCache.GetType().Name;
 				} else {
 					opResponse = OpResponse.None(requestOp, Cascade.NowMs, this.GetType().Name);
 				}

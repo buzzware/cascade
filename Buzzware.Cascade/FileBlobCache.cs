@@ -27,7 +27,7 @@ namespace Buzzware.Cascade {
         return BLOB_ETAGS;
       }
       else {
-        return Path.Combine(BLOB_ETAGS, EncodeBlobEtagPath(blobPath));
+        return Path.Combine(BLOB_ETAGS, EncodeBlobEtagPath(blobPath)+".txt");
       }
     }
 
@@ -142,7 +142,9 @@ namespace Buzzware.Cascade {
       var path = requestOp.Id as string;
       if (path == null)
         throw new Exception("Id must be a string");
-
+ 
+      path = path.TrimStart('/');
+      
       // Determine the path and existence of the blob file
       string blobFilePath = GetModelFilePath(path);
       exists = File.Exists(blobFilePath);
@@ -153,14 +155,17 @@ namespace Buzzware.Cascade {
         (requestOp.FreshnessSeconds == CascadeDataLayer.FRESHNESS_ANY || (arrivedAtMs >= requestOp.FreshAfterMs))
       ) {
         var loaded = await LoadBlob(blobFilePath);
+        var etag = FetchBlobEtag(path);
         return new OpResponse(
           requestOp,
           Cascade?.NowMs ?? 0,
           exists: true,
           arrivedAtMs: arrivedAtMs, 
           result: loaded,
-          eTag: FetchBlobEtag(path)
-        );
+          eTag: etag
+        ) {
+          SourceName = this.GetType().Name
+        };
       } else {
         return OpResponse.None(requestOp, Cascade.NowMs, this.GetType().Name);
       }
@@ -173,6 +178,7 @@ namespace Buzzware.Cascade {
     /// <param name="opResponse">The response operation which includes the data to be stored or the command to delete.</param>
     public async Task Store(OpResponse opResponse) {
       var path = opResponse.RequestOp.Id as string;
+      path = path?.TrimStart('/');
       long arrivedAt = opResponse.ArrivedAtMs ?? Cascade.NowMs;
 
       // Validate and process the path for storage
