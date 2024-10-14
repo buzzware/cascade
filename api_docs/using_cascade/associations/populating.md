@@ -56,3 +56,6 @@ child = await Cascade.Get<Child>(1,populate: new []{nameof(Child.Parent)});
 2. Populate internally uses these values with other methods such as Get, Query and/or BlobGet to perform the necessary operation to get the value 
 for the association property.
 3. the association property is set on the main thread (necessary for any bound UI that will update) and using SuperModel's `__mutateWith` method in order to set the property regardless of whether `__mutable` is true or false.
+
+Example tests are AssociationTests.cs, BlobTests.cs and PopulateTests.cs
+
