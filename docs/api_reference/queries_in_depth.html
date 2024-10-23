@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('queries_in_depth.html',''); initResiza
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>Every successful query results in a collection, and so it is worth reading Collections in Depth before this page.</p>
-<h2><a class="anchor" id="autotoc_md29"></a>
+<h2><a class="anchor" id="autotoc_md52"></a>
 Query Method Overview</h2>
 <p>The basic signature of the Query method is:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;IEnumerable&lt;M&gt;&gt; Query&lt;M&gt;(</div>
@@ -105,7 +105,7 @@ Query Method Overview</h2>
 <div class="line">    <span class="keywordtype">int</span>? populateFreshnessSeconds = <span class="keyword">null</span>,</div>
 <div class="line">    <span class="keywordtype">bool</span>? hold = <span class="keyword">null</span></div>
 <div class="line">) where M : class</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md30"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md53"></a>
 Collection Creation and Naming</h2>
 <p>The first time you call the Query method with a model type, collection name and criteria, the query is executed on the origin and then the resulting ids are stored in all cache layers using the collection name.</p>
 <p>On future calls, the collection name is used to retrieve any past results that match the model type, collection name and criteria. If freshness requirements are met, the cached value is returned.</p>
@@ -114,11 +114,11 @@ Collection Creation and Naming</h2>
 <div class="fragment"><div class="line">var criteria = <span class="keyword">new</span> { Status = <span class="stringliteral">&quot;Active&quot;</span>, Category = <span class="stringliteral">&quot;Electronics&quot;</span> };</div>
 <div class="line">var results = await cascade.Query&lt;Product&gt;(<span class="stringliteral">&quot;ProductList&quot;</span>, criteria);</div>
 </div><!-- fragment --><p>Internally, Cascade might generate a collection name like "ProductList_hash(criteria)", where the hash is derived from the criteria object.</p>
-<h2><a class="anchor" id="autotoc_md31"></a>
+<h2><a class="anchor" id="autotoc_md54"></a>
 Criteria Processing</h2>
 <p>The <code>criteria</code> object is serialized and becomes part of the collection name. This is crucial for distinguishing between different queries and their respective result sets. The actual interpretation and application of the criteria are handled by the ICascadeOrigin implementation.</p>
 <p>The ICascadeOrigin is responsible for translating the criteria into a format that the underlying data source can understand. For example, if the Origin is a RESTful API, the criteria might be converted into query parameters. If it's a SQL database, the criteria could be translated into WHERE clauses.</p>
-<h2><a class="anchor" id="autotoc_md32"></a>
+<h2><a class="anchor" id="autotoc_md55"></a>
 Freshness and Result Caching</h2>
 <p>The <code>freshnessSeconds</code> parameter plays a vital role in determining whether to execute the query or return cached results:</p>
 <ol type="1">
@@ -126,7 +126,7 @@ Freshness and Result Caching</h2>
 <li>If the collection doesn't exist or is stale, Cascade executes the query against the Origin, stores the results in the collection, and then returns them.</li>
 </ol>
 <p>This mechanism allows for efficient caching of query results, reducing unnecessary network calls and database load.</p>
-<h2><a class="anchor" id="autotoc_md33"></a>
+<h2><a class="anchor" id="autotoc_md56"></a>
 Query Execution Flow</h2>
 <ol type="1">
 <li>App or Cascade calls Query with model type, collection name and criteria</li>
@@ -136,7 +136,7 @@ Query Execution Flow</h2>
 <li>The Origin applies the criteria to filter the data.</li>
 <li>Cascade receives the results, stores them in the cache layers with the collection name, and returns them to the caller.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md34"></a>
+<h2><a class="anchor" id="autotoc_md57"></a>
 Example Scenario</h2>
 <p>Let's walk through an example:</p>
 <div class="fragment"><div class="line">var criteria = <span class="keyword">new</span> { Department = <span class="stringliteral">&quot;Sales&quot;</span>, MinSalary = 50000 };</div>
@@ -153,7 +153,7 @@ Example Scenario</h2>
 <li>The Origin (e.g., a database) applies the criteria, filtering for Sales employees with salaries &gt;= 50000.</li>
 <li>Cascade receives the results, caches them in the collection, and returns them.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md35"></a>
+<h2><a class="anchor" id="autotoc_md58"></a>
 Criteria Flexibility</h2>
 <p>The <code>criteria</code> object can be as simple or complex as needed. It could be a dictionary, an anonymous object, or a custom class. The ICascadeOrigin implementation is responsible for interpreting this object and applying it to the data source.</p>
 <p>For instance, an Origin might support advanced querying features:</p>
@@ -163,7 +163,7 @@ Criteria Flexibility</h2>
 <div class="line">    HireDate = <span class="keyword">new</span> { After = DateTime.Now.AddYears(-5) }</div>
 <div class="line">};</div>
 </div><!-- fragment --><p>The Origin would then translate this into appropriate filtering logic for its data source.</p>
-<h2><a class="anchor" id="autotoc_md36"></a>
+<h2><a class="anchor" id="autotoc_md59"></a>
 Conclusion</h2>
 <p>The Query method in Cascade provides a powerful and flexible way to retrieve data, balancing efficiency through caching with the need for fresh data. By incorporating the criteria into the collection name and leveraging the ICascadeOrigin for actual data retrieval, Cascade offers a robust solution for querying data in various scenarios. </p>
 </div></div><!-- contents -->

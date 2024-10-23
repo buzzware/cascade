@@ -93,13 +93,24 @@ $(document).ready(function(){initNavTree('glossary.html',''); initResizable(); }
   <div class="headertitle"><div class="title">Glossary</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h3><a class="anchor" id="autotoc_md14"></a>
+<div class="textblock"><h3><a class="anchor" id="autotoc_md17"></a>
 Freshness</h3>
 <p>How recently did a data record arrive from the server? The value is represented in milliseconds and is inverse ie a value of 0 means the most fresh.</p>
-<h3><a class="anchor" id="autotoc_md15"></a>
+<h3><a class="anchor" id="autotoc_md18"></a>
 Fallback Freshness</h3>
-<p>A value of acceptable freshness applied to the situation where ConnectionOnline == True and a request to the origin has failed due to network or server failure. In that situation, if the required value is in cache and is fresher (more recent than) than the fallback freshness value, it will be returned otherwise ignored. </p>
-</div></div><!-- contents -->
+<p>A value of acceptable freshness applied to the situation where ConnectionOnline == True and a request to the origin has failed due to network or server failure. In that situation, if the required value is in cache and is fresher (more recent than) than the fallback freshness value, it will be returned otherwise ignored.</p>
+<h3><a class="anchor" id="autotoc_md19"></a>
+Data Properties</h3>
+<p>Properties of a model that hold data</p>
+<h3><a class="anchor" id="autotoc_md20"></a>
+Association Properties</h3>
+<p>Properties of a model that hold a reference or array of references to other models, or the result of a blob conversion (using <code>[FromBlob]</code>). These properties are not serialized or deserialized as they are not recognised by the origin. For example :</p>
+<div class="fragment"><div class="line">public class Child {</div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line">}</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->

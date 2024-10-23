@@ -105,12 +105,12 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_op_resp
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a46aa5b6482e574ccb24a13e7d4edd370"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#a46aa5b6482e574ccb24a13e7d4edd370">OpResponse</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp, long timeMs, bool exists, long? arrivedAtMs, object? result)</td></tr>
-<tr class="memdesc:a46aa5b6482e574ccb24a13e7d4edd370"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an instance of OpResponse with the given parameters.  <br /></td></tr>
-<tr class="separator:a46aa5b6482e574ccb24a13e7d4edd370"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3ec54e414d5e7bb14d1fb6b8c792e8d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#ac3ec54e414d5e7bb14d1fb6b8c792e8d">withChanges</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>? requestOp=null, long? timeMs=null, bool? exists=null, long? arrivedAtMs=null, object? result=null)</td></tr>
-<tr class="memdesc:ac3ec54e414d5e7bb14d1fb6b8c792e8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new OpResponse with updated fields if given, otherwise base fields remain the same.  <br /></td></tr>
-<tr class="separator:ac3ec54e414d5e7bb14d1fb6b8c792e8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc7d3714452b1baf452ca795eeb0cc14"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#afc7d3714452b1baf452ca795eeb0cc14">OpResponse</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a> requestOp, long timeMs, bool exists, long? arrivedAtMs, object? result, string? eTag=null)</td></tr>
+<tr class="memdesc:afc7d3714452b1baf452ca795eeb0cc14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an instance of OpResponse with the given parameters.  <br /></td></tr>
+<tr class="separator:afc7d3714452b1baf452ca795eeb0cc14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9236e08a4769c2899f65b12fa51efc4f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#a9236e08a4769c2899f65b12fa51efc4f">withChanges</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_request_op.html">RequestOp</a>? requestOp=null, long? timeMs=null, bool? exists=null, long? arrivedAtMs=null, object? result=null, string? eTag=null)</td></tr>
+<tr class="memdesc:a9236e08a4769c2899f65b12fa51efc4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new OpResponse with updated fields if given, otherwise base fields remain the same.  <br /></td></tr>
+<tr class="separator:a9236e08a4769c2899f65b12fa51efc4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afef4b7ffe5eb4d0d3cd4cbfe397c3707"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html#afef4b7ffe5eb4d0d3cd4cbfe397c3707">ResultIsBlob</a> ()</td></tr>
 <tr class="memdesc:afef4b7ffe5eb4d0d3cd4cbfe397c3707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if the operation result is a binary large object (blob).  <br /></td></tr>
 <tr class="separator:afef4b7ffe5eb4d0d3cd4cbfe397c3707"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,6 +153,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>LayerIndex</b></td></t
 <tr class="memitem:a0014b846505213137c3f34ff64046b59"><td class="memItemLeft" align="right" valign="top"><a id="a0014b846505213137c3f34ff64046b59" name="a0014b846505213137c3f34ff64046b59"></a>
 string?&#160;</td><td class="memItemRight" valign="bottom"><b>SourceName</b></td></tr>
 <tr class="separator:a0014b846505213137c3f34ff64046b59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfb1d91360822f69bb9fca16d3823822"><td class="memItemLeft" align="right" valign="top"><a id="acfb1d91360822f69bb9fca16d3823822" name="acfb1d91360822f69bb9fca16d3823822"></a>
+readonly? string&#160;</td><td class="memItemRight" valign="bottom"><b>ETag</b></td></tr>
+<tr class="separator:acfb1d91360822f69bb9fca16d3823822"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -184,8 +187,8 @@ IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>ResultIds</b><
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents the response of an operation request in the Cascade library. This class encapsulates information about the operation's result, its connection status, elapsed time, and more. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a46aa5b6482e574ccb24a13e7d4edd370" name="a46aa5b6482e574ccb24a13e7d4edd370"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46aa5b6482e574ccb24a13e7d4edd370">&#9670;&#160;</a></span>OpResponse()</h2>
+<a id="afc7d3714452b1baf452ca795eeb0cc14" name="afc7d3714452b1baf452ca795eeb0cc14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc7d3714452b1baf452ca795eeb0cc14">&#9670;&#160;</a></span>OpResponse()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -221,7 +224,13 @@ IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>ResultIds</b><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">object?&#160;</td>
-          <td class="paramname"><em>result</em>&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?&#160;</td>
+          <td class="paramname"><em>eTag</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -244,6 +253,7 @@ IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>ResultIds</b><
     <tr><td class="paramname">exists</td><td>Indicates if the item is present in the cache.</td></tr>
     <tr><td class="paramname">arrivedAtMs</td><td>The time in milliseconds when the response arrived.</td></tr>
     <tr><td class="paramname">result</td><td>The result of the operation, can be null.</td></tr>
+    <tr><td class="paramname">eTag</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -441,8 +451,8 @@ IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>ResultIds</b><
 
 </div>
 </div>
-<a id="ac3ec54e414d5e7bb14d1fb6b8c792e8d" name="ac3ec54e414d5e7bb14d1fb6b8c792e8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3ec54e414d5e7bb14d1fb6b8c792e8d">&#9670;&#160;</a></span>withChanges()</h2>
+<a id="a9236e08a4769c2899f65b12fa51efc4f" name="a9236e08a4769c2899f65b12fa51efc4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9236e08a4769c2899f65b12fa51efc4f">&#9670;&#160;</a></span>withChanges()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -478,7 +488,13 @@ IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>ResultIds</b><
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">object?&#160;</td>
-          <td class="paramname"><em>result</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>result</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string?&#160;</td>
+          <td class="paramname"><em>eTag</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -501,6 +517,7 @@ IEnumerable&#160;</td><td class="memItemRight" valign="bottom"><b>ResultIds</b><
     <tr><td class="paramname">exists</td><td>Updated existence status.</td></tr>
     <tr><td class="paramname">arrivedAtMs</td><td>Updated arrival time in milliseconds.</td></tr>
     <tr><td class="paramname">result</td><td>Updated operation result.</td></tr>
+    <tr><td class="paramname">eTag</td><td></td></tr>
   </table>
   </dd>
 </dl>

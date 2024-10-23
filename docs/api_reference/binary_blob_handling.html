@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('binary_blob_handling.html',''); initRe
 <div class="textblock"><p>Cascade provides methods to handle binary large objects (blobs). It provides the same benefits as for models : caching, persistance, offline, and abstraction. This document outlines the process of using Cascade's <code>BlobGet</code>, <code>BlobPut</code>, and <code>BlobDestroy</code> methods to manage binary data.</p>
 <p>Typically blobs would be cached by a file based cache, and handled by the origin using an object storage service or file system.</p>
 <p>Unlike models, blobs do not have an Update method because in Cascade blobs cannot be modified, but they can be replaced.</p>
-<h2><a class="anchor" id="autotoc_md40"></a>
+<h2><a class="anchor" id="autotoc_md63"></a>
 Getting a Blob</h2>
 <p>To retrieve a blob, use the <code>BlobGet</code> method:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;byte[]&gt; BlobGet(<span class="keywordtype">string</span> path)</div>
@@ -107,7 +107,7 @@ Getting a Blob</h2>
 </div><!-- fragment --><p>The <code>path</code> parameter is a string that uniquely identifies the blob in the Origin.</p>
 <p>BlobGet works just like Get, where the path is equivalent to the id. <br  />
 </p>
-<h2><a class="anchor" id="autotoc_md41"></a>
+<h2><a class="anchor" id="autotoc_md64"></a>
 Putting a Blob</h2>
 <p>To store or replace a blob, use the <code>BlobPut</code> method:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task BlobPut(<span class="keywordtype">string</span> path, <span class="keywordtype">byte</span>[] data)</div>
@@ -119,7 +119,7 @@ Putting a Blob</h2>
 <li><code>data</code>: The binary data to be stored.</li>
 </ul>
 <p>BlobPut works just like Replace, where the path is equivalent to the id.</p>
-<h2><a class="anchor" id="autotoc_md42"></a>
+<h2><a class="anchor" id="autotoc_md65"></a>
 Destroying a Blob</h2>
 <p>To remove a blob, use the <code>BlobDestroy</code> method:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task BlobDestroy(<span class="keywordtype">string</span> path)</div>

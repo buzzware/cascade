@@ -7,9 +7,9 @@ var indexSectionsWithContent =
   4: "dps",
   5: "rs",
   6: "abcdghilqs",
-  7: "_acfhilmnoprsuw",
+  7: "_acdfhilmnoprstu",
   8: "p",
-  9: "abcdfghpqsu"
+  9: "abcdfghipqsu"
 };
 
 var indexSectionNames =

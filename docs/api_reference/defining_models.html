@@ -94,17 +94,17 @@ $(document).ready(function(){initNavTree('defining_models.html',''); initResizab
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>Cascade requires that application models managed by Cascade inherit from a <code>SuperModel</code> base class. Here's how to use <code>SuperModel</code> to define your models. <code>SuperModel</code> has special functionality that requires the following patterns to be followed.</p>
-<h2><a class="anchor" id="autotoc_md50"></a>
+<h2><a class="anchor" id="autotoc_md74"></a>
 Inheriting from SuperModel</h2>
 <p>To create a Cascade-compatible model, inherit from the <code>SuperModel</code> class:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>Docket : SuperModel</div>
 <div class="line">{</div>
 <div class="line">    <span class="comment">// Model properties and methods</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md51"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md75"></a>
 Defining Properties</h2>
 <p>When defining properties in your model, the <code>GetProperty&lt;T&gt;()</code> and <code>SetProperty(value)</code> methods provided by <code>SuperModel</code> must be used to support special functionality of <code>SuperModel</code> and Cascade.</p>
-<h3><a class="anchor" id="autotoc_md52"></a>
+<h3><a class="anchor" id="autotoc_md76"></a>
 ID Property</h3>
 <p>Cascade-managed models require a property with the <code>[CascadeId]</code> attribute. Theoretically, any value type could work, but only string, int and long have been tested.</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>Docket : SuperModel</div>
@@ -123,7 +123,7 @@ ID Property</h3>
 <div class="line">    <span class="comment">//     set =&gt; SetProperty(value);</span></div>
 <div class="line">    <span class="comment">// }    </span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md53"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md77"></a>
 Value Properties</h3>
 <p>The property names of your model should typically match exactly (including casing and any underscores) the property names from your server API (ignore the C# Style Guide property name capitalisation here).</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> <span class="keyword">class </span>Docket : SuperModel</div>
@@ -153,7 +153,7 @@ Value Properties</h3>
 <div class="line">        <span class="keyword">set</span> =&gt; SetProperty(value);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md54"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md78"></a>
 Constructors</h2>
 <p>Due to the rules of C# and special functionality of Cascade, your models can either :</p>
 <ol type="1">

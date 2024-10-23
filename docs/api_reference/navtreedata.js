@@ -30,10 +30,30 @@ var NAVTREE =
     [ "Association Helper Methods", "association_helpers.html", null ],
     [ "Associations", "associations.html", null ],
     [ "How Associations Work", "how_associations_work.html", null ],
+    [ "Associations Maintained through Create, Update and Replace Operations", "maintained_associations.html", null ],
     [ "Populating Associations", "populating.html", null ],
     [ "Glossary", "glossary.html", null ],
+    [ "Blobs In Depth", "blobs_in_depth.html", null ],
     [ "Collections in Depth", "collections_in_depth.html", null ],
     [ "Freshness, Fallback and Time", "freshness_and_fallback.html", null ],
+    [ "Implementing a Custom ICascadeOrigin for Your Server", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html", [
+      [ "Introduction", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md32", null ],
+      [ "Why CascadeOrigin is Required", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md33", null ],
+      [ "Minimum Contract: ICascadeOrigin", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md34", null ],
+      [ "Recommended Implementation Approach", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md35", null ],
+      [ "Implementation Guide", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md36", [
+        [ "1. Basic Origin Structure", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md37", null ],
+        [ "2. Basic Class Origin Structure", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md38", null ],
+        [ "2. Implementing Core Methods", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md39", null ],
+        [ "3. Implementing Blob Handling", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md40", null ]
+      ] ],
+      [ "Key Considerations", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md41", [
+        [ "Authentication", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md42", null ],
+        [ "Exception Handling", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md43", null ],
+        [ "Serialization", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md44", null ],
+        [ "Online/Offline Behavior", "md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md45", null ]
+      ] ]
+    ] ],
     [ "Pagination with CascadePaginator", "pagination.html", null ],
     [ "Queries In Depth", "queries_in_depth.html", null ],
     [ "SuperModel In Depth", "supermodel.html", null ],
@@ -63,7 +83,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"class_buzzware_1_1_cascade_1_1_model_class_cache.html"
+"class_buzzware_1_1_cascade_1_1_model_cache.html#ae63db8cfe3ed677e72ab81c56806853f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

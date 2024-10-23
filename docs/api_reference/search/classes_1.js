@@ -8,6 +8,7 @@ var searchData=
   ['cascadepropertyinfo_5',['CascadePropertyInfo',['../class_buzzware_1_1_cascade_1_1_cascade_property_info.html',1,'Buzzware::Cascade']]],
   ['cascadequeryoptions_6',['CascadeQueryOptions',['../class_buzzware_1_1_cascade_1_1_cascade_query_options.html',1,'Buzzware::Cascade']]],
   ['child_7',['Child',['../class_buzzware_1_1_cascade_1_1_testing_1_1_child.html',1,'Buzzware::Cascade::Testing']]],
-  ['classinfo_8',['ClassInfo',['../class_buzzware_1_1_cascade_1_1_class_info.html',1,'Buzzware::Cascade']]],
-  ['concurrentfilesystemclasscache_9',['ConcurrentFileSystemClassCache',['../class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html',1,'Buzzware::Cascade']]]
+  ['childdetail_8',['ChildDetail',['../class_buzzware_1_1_cascade_1_1_testing_1_1_child_detail.html',1,'Buzzware::Cascade::Testing']]],
+  ['classinfo_9',['ClassInfo',['../class_buzzware_1_1_cascade_1_1_class_info.html',1,'Buzzware::Cascade']]],
+  ['concurrentfilesystemclasscache_10',['ConcurrentFileSystemClassCache',['../class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html',1,'Buzzware::Cascade']]]
 ];

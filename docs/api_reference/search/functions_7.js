@@ -22,7 +22,7 @@ var searchData=
   ['getproperty_3c_20t_20_3e_19',['GetProperty&lt; T &gt;',['../class_buzzware_1_1_cascade_1_1_super_model.html#ab4ae183c5ff3105eed50b0be7e33ebba',1,'Buzzware::Cascade::SuperModel']]],
   ['getpropertyinfo_20',['GetPropertyInfo',['../class_buzzware_1_1_cascade_1_1_class_info.html#a90ac20c37e7af3047af47178295a2d8f',1,'Buzzware::Cascade::ClassInfo']]],
   ['getresponse_21',['GetResponse',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae69a0901c3f4552b099610c3af84f277',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['getvalue_22',['GetValue',['../class_buzzware_1_1_cascade_1_1_cascade_property_info.html#a11eb58ce525142ed05210bce197c5a11',1,'Buzzware.Cascade.CascadePropertyInfo.GetValue()'],['../class_buzzware_1_1_cascade_1_1_class_info.html#a10c045474770e9a1741dd149a0ebe7d3',1,'Buzzware.Cascade.ClassInfo.GetValue()']]],
+  ['getvalue_22',['GetValue',['../class_buzzware_1_1_cascade_1_1_cascade_property_info.html#aabb45ce473e8bdb094aab7bdaa57af63',1,'Buzzware.Cascade.CascadePropertyInfo.GetValue()'],['../class_buzzware_1_1_cascade_1_1_class_info.html#a10c045474770e9a1741dd149a0ebe7d3',1,'Buzzware.Cascade.ClassInfo.GetValue()']]],
   ['getwherecollection_3c_20m_20_3e_23',['GetWhereCollection&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#af881e913b7b016a1a59e1b86f885f349',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['getwherecollectionresponse_3c_20model_20_3e_24',['GetWhereCollectionResponse&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a4757402d83501bf4b601e726b299e779',1,'Buzzware::Cascade::CascadeDataLayer']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['pagination_20with_20cascadepaginator_0',['Pagination with CascadePaginator',['../pagination.html',1,'']]],
-  ['populating_20associations_1',['Populating Associations',['../populating.html',1,'']]]
+  ['implementing_20a_20custom_20icascadeorigin_20for_20your_20server_0',['Implementing a Custom ICascadeOrigin for Your Server',['../md_api__docs_2using__cascade_2in__depth_2implementing__origin.html',1,'']]]
 ];

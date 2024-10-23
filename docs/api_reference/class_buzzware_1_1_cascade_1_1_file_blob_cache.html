@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('class_buzzware_1_1_cascade_1_1_file_bl
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#properties">Properties</a> &#124;
 <a href="class_buzzware_1_1_cascade_1_1_file_blob_cache-members.html">List of all members</a>  </div>
@@ -113,6 +114,21 @@ Inheritance diagram for Buzzware.Cascade.FileBlobCache:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a6a74527bfb142dd0ae3abe0fa2409d16"><td class="memItemLeft" align="right" valign="top"><a id="a6a74527bfb142dd0ae3abe0fa2409d16" name="a6a74527bfb142dd0ae3abe0fa2409d16"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>EncodeBlobEtagPath</b> (string path)</td></tr>
+<tr class="separator:a6a74527bfb142dd0ae3abe0fa2409d16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12e0ba3e673e189d16f81d467855b567"><td class="memItemLeft" align="right" valign="top"><a id="a12e0ba3e673e189d16f81d467855b567" name="a12e0ba3e673e189d16f81d467855b567"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>BlobEtagPath</b> (string? blobPath)</td></tr>
+<tr class="separator:a12e0ba3e673e189d16f81d467855b567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cec48916330122c6218210a0b04f276"><td class="memItemLeft" align="right" valign="top"><a id="a3cec48916330122c6218210a0b04f276" name="a3cec48916330122c6218210a0b04f276"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>StoreBlobEtag</b> (string blobPath, string? etag)</td></tr>
+<tr class="separator:a3cec48916330122c6218210a0b04f276"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67d38e16b4788352dc53429d02d9e261"><td class="memItemLeft" align="right" valign="top"><a id="a67d38e16b4788352dc53429d02d9e261" name="a67d38e16b4788352dc53429d02d9e261"></a>
+string?&#160;</td><td class="memItemRight" valign="bottom"><b>FetchBlobEtag</b> (string blobPath)</td></tr>
+<tr class="separator:a67d38e16b4788352dc53429d02d9e261"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5e6ef3e30269c8d5894a953e2eb5cdc"><td class="memItemLeft" align="right" valign="top"><a id="ad5e6ef3e30269c8d5894a953e2eb5cdc" name="ad5e6ef3e30269c8d5894a953e2eb5cdc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ClearBlobEtags</b> (string blobPath)</td></tr>
+<tr class="separator:ad5e6ef3e30269c8d5894a953e2eb5cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a533bc951b7dcc7470eae4d897b13ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a9a533bc951b7dcc7470eae4d897b13ef">FileBlobCache</a> (string tempDir)</td></tr>
 <tr class="memdesc:a9a533bc951b7dcc7470eae4d897b13ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">FileBlobCache Constructor. Creates the necessary directory structure.  <br /></td></tr>
 <tr class="separator:a9a533bc951b7dcc7470eae4d897b13ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,6 +144,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7938402289d13e8cc007d85076f8f738"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a7938402289d13e8cc007d85076f8f738">Store</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> opResponse)</td></tr>
 <tr class="memdesc:a7938402289d13e8cc007d85076f8f738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the result of a given operation to the blob cache. If the result is empty, it deletes the corresponding file instead.  <br /></td></tr>
 <tr class="separator:a7938402289d13e8cc007d85076f8f738"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10e32d3ab3ca0d37aea26518e3ed126d"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_buzzware_1_1_cascade_1_1_file_blob_cache.html#a10e32d3ab3ca0d37aea26518e3ed126d">NotifyBlobIsFresh</a> (string blobPath, long arrivedAtMs)</td></tr>
+<tr class="separator:a10e32d3ab3ca0d37aea26518e3ed126d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9b7113fa440ae279ad42ac2a9f0a16e"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ab9b7113fa440ae279ad42ac2a9f0a16e">ClearAll</a> (bool exceptHeld, DateTime? olderThan)</td></tr>
 <tr class="memdesc:ab9b7113fa440ae279ad42ac2a9f0a16e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all entries from the cache, with options to retain certain entries.  <br /></td></tr>
 <tr class="separator:ab9b7113fa440ae279ad42ac2a9f0a16e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,6 +155,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab7c89910f98bd00b8c82bdea9c494746"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html#ab7c89910f98bd00b8c82bdea9c494746">Store</a> (<a class="el" href="class_buzzware_1_1_cascade_1_1_op_response.html">OpResponse</a> opResponse)</td></tr>
 <tr class="memdesc:ab7c89910f98bd00b8c82bdea9c494746"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores a specific operation response in the cache.  <br /></td></tr>
 <tr class="separator:ab7c89910f98bd00b8c82bdea9c494746"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8985e41f32649736aca834ec1d2c3392"><td class="memItemLeft" align="right" valign="top"><a id="a8985e41f32649736aca834ec1d2c3392" name="a8985e41f32649736aca834ec1d2c3392"></a>
+Task&#160;</td><td class="memItemRight" valign="bottom"><b>NotifyBlobIsFresh</b> (string blobPath, long arrivedAtMs)</td></tr>
+<tr class="separator:a8985e41f32649736aca834ec1d2c3392"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a584ae6173000bcf6abaae239e16cba5c"><td class="memItemLeft" align="right" valign="top"><a id="a584ae6173000bcf6abaae239e16cba5c" name="a584ae6173000bcf6abaae239e16cba5c"></a>
+const string&#160;</td><td class="memItemRight" valign="bottom"><b>BLOB_ETAGS</b> = &quot;BlobEtags&quot;</td></tr>
+<tr class="separator:a584ae6173000bcf6abaae239e16cba5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21be9f17443af2d9dfbc70e26b8056c9"><td class="memItemLeft" align="right" valign="top"><a id="a21be9f17443af2d9dfbc70e26b8056c9" name="a21be9f17443af2d9dfbc70e26b8056c9"></a>
+const string&#160;</td><td class="memItemRight" valign="bottom"><b>BLOB_PATH_ALT_SEPARATOR</b> = &quot;_%_&quot;</td></tr>
+<tr class="separator:a21be9f17443af2d9dfbc70e26b8056c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -346,6 +376,44 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The complete path to the model file as a string.</dd></dl>
+
+</div>
+</div>
+<a id="a10e32d3ab3ca0d37aea26518e3ed126d" name="a10e32d3ab3ca0d37aea26518e3ed126d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10e32d3ab3ca0d37aea26518e3ed126d">&#9670;&#160;</a></span>NotifyBlobIsFresh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task Buzzware.Cascade.FileBlobCache.NotifyBlobIsFresh </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>blobPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>arrivedAtMs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_buzzware_1_1_cascade_1_1_i_blob_cache.html">Buzzware.Cascade.IBlobCache</a>.</p>
 
 </div>
 </div>

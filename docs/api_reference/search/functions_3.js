@@ -14,7 +14,7 @@ var searchData=
   ['clearlayer_11',['ClearLayer',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a0b78e49bcaff0a7d44550ba1898b42d3',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['clearlayers_12',['ClearLayers',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#afcc61872563b8d015c5ac068e7e6e2b5',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['clone_13',['Clone',['../class_buzzware_1_1_cascade_1_1_super_model.html#ac8996c3b1f1802e034c77f9e22e1b0a3',1,'Buzzware::Cascade::SuperModel']]],
-  ['clonewith_14',['CloneWith',['../class_buzzware_1_1_cascade_1_1_request_op.html#a369cbe77b34dfb117a934ba56cbc2b9c',1,'Buzzware::Cascade::RequestOp']]],
+  ['clonewith_14',['CloneWith',['../class_buzzware_1_1_cascade_1_1_request_op.html#aefa642e8db61c07234a297d2171347ea',1,'Buzzware::Cascade::RequestOp']]],
   ['collectionappend_3c_20model_20_3e_15',['CollectionAppend&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a2ada7928ef00e51aa14e8d34625150e1',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['collectionprepend_3c_20model_20_3e_16',['CollectionPrepend&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a4829f9b3f70297a13e827b0503ce4e66',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['connectionfailure_17',['ConnectionFailure',['../class_buzzware_1_1_cascade_1_1_op_response.html#a1881439ce87efbc0eb5d4f937cc4adeb',1,'Buzzware::Cascade::OpResponse']]],

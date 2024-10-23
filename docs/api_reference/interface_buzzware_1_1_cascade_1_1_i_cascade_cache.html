@@ -127,6 +127,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af3177fbbb9509c5b3292356338661dce"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html#af3177fbbb9509c5b3292356338661dce">ClearAll</a> (bool exceptHeld=true, DateTime? olderThan=null)</td></tr>
 <tr class="memdesc:af3177fbbb9509c5b3292356338661dce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears stored data from the cache. Removes all entries currently held except those that need to be held. Optionally clears entries older than a specified DateTime.  <br /></td></tr>
 <tr class="separator:af3177fbbb9509c5b3292356338661dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7228d3e037aed82833c801c14edb00fd"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_buzzware_1_1_cascade_1_1_i_cascade_cache.html#a7228d3e037aed82833c801c14edb00fd">NotifyBlobIsFresh</a> (string blobPath, long arrivedAtMs)</td></tr>
+<tr class="memdesc:a7228d3e037aed82833c801c14edb00fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the ArrivedAtMs value for the given blobPath to the given value. This is not absolutely necessary but for maximum efficiency should be implemented. It is only used when eTags indicate that a local blob is still fresh.  <br /></td></tr>
+<tr class="separator:a7228d3e037aed82833c801c14edb00fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -204,6 +207,46 @@ Properties</h2></td></tr>
  </p>
 
 <p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_model_cache.html#a75059a176b113a8007ab15c90a677e0d">Buzzware.Cascade.ModelCache</a>.</p>
+
+</div>
+</div>
+<a id="a7228d3e037aed82833c801c14edb00fd" name="a7228d3e037aed82833c801c14edb00fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7228d3e037aed82833c801c14edb00fd">&#9670;&#160;</a></span>NotifyBlobIsFresh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Task Buzzware.Cascade.ICascadeCache.NotifyBlobIsFresh </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>blobPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>arrivedAtMs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the ArrivedAtMs value for the given blobPath to the given value. This is not absolutely necessary but for maximum efficiency should be implemented. It is only used when eTags indicate that a local blob is still fresh. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">blobPath</td><td></td></tr>
+    <tr><td class="paramname">arrivedAtMs</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p>Implemented in <a class="el" href="class_buzzware_1_1_cascade_1_1_model_cache.html#a8ee425d6e34af5772936a1c114be1ecf">Buzzware.Cascade.ModelCache</a>.</p>
 
 </div>
 </div>

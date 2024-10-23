@@ -14,10 +14,14 @@ var hierarchy =
     [ "Buzzware.Cascade.CascadePropertyInfo", "class_buzzware_1_1_cascade_1_1_cascade_property_info.html", null ],
     [ "Buzzware.Cascade.CascadeQueryOptions", "class_buzzware_1_1_cascade_1_1_cascade_query_options.html", null ],
     [ "Buzzware.Cascade.ClassInfo", "class_buzzware_1_1_cascade_1_1_class_info.html", null ],
+    [ "Dictionary", null, [
+      [ "Buzzware.Cascade.Test.FriendlyDictionary< TKey, TValue >", "class_buzzware_1_1_cascade_1_1_test_1_1_friendly_dictionary.html", null ]
+    ] ],
     [ "Exception", null, [
       [ "Buzzware.Cascade.MutationAttemptException", "class_buzzware_1_1_cascade_1_1_mutation_attempt_exception.html", null ]
     ] ],
     [ "Buzzware.Cascade.FNVHash", "class_buzzware_1_1_cascade_1_1_f_n_v_hash.html", null ],
+    [ "Buzzware.Cascade.Test.FriendlyDictionary< string, string >", "class_buzzware_1_1_cascade_1_1_test_1_1_friendly_dictionary.html", null ],
     [ "Buzzware.Cascade.IBlobCache", "interface_buzzware_1_1_cascade_1_1_i_blob_cache.html", [
       [ "Buzzware.Cascade.FileBlobCache", "class_buzzware_1_1_cascade_1_1_file_blob_cache.html", null ]
     ] ],
@@ -49,6 +53,7 @@ var hierarchy =
       [ "Buzzware.Cascade.CascadeDataLayer", "class_buzzware_1_1_cascade_1_1_cascade_data_layer.html", null ],
       [ "Buzzware.Cascade.SuperModel", "class_buzzware_1_1_cascade_1_1_super_model.html", [
         [ "Buzzware.Cascade.Testing.Child", "class_buzzware_1_1_cascade_1_1_testing_1_1_child.html", null ],
+        [ "Buzzware.Cascade.Testing.ChildDetail", "class_buzzware_1_1_cascade_1_1_testing_1_1_child_detail.html", null ],
         [ "Buzzware.Cascade.Testing.Parent", "class_buzzware_1_1_cascade_1_1_testing_1_1_parent.html", null ],
         [ "Buzzware.Cascade.Testing.Thing", "class_buzzware_1_1_cascade_1_1_testing_1_1_thing.html", null ]
       ] ]

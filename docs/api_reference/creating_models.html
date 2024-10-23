@@ -93,7 +93,7 @@ $(document).ready(function(){initNavTree('creating_models.html',''); initResizab
   <div class="headertitle"><div class="title">Creating Models</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2><a class="anchor" id="autotoc_md43"></a>
+<div class="textblock"><h2><a class="anchor" id="autotoc_md66"></a>
 Instantiating Model Instances in Application Memory</h2>
 <p>Cascade provides a straightforward method to create new models in your Origin. Cascade model classes, which inherit from SuperModel, can be used like regular C# classes while providing additional functionality for data binding and change tracking. Here's how you can work with them:</p>
 <ol type="1">
@@ -136,25 +136,25 @@ Instantiating Model Instances in Application Memory</h2>
 </div><!-- fragment --></li>
 </ol>
 <p>This approach allows you to work with your model classes in a familiar object-oriented manner while leveraging Cascade's features for data persistence and UI integration. The separation between model instantiation/modification and the actual creation on the server provides flexibility in how you structure your application logic and user interactions.</p>
-<h2><a class="anchor" id="autotoc_md44"></a>
+<h2><a class="anchor" id="autotoc_md67"></a>
 Creating Models in Cascade Caches and Origin</h2>
-<h3><a class="anchor" id="autotoc_md45"></a>
+<h3><a class="anchor" id="autotoc_md68"></a>
 The Create Method</h3>
 <p>The primary method for creating a new model is the <code>Create</code> method:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;M&gt; Create&lt;M&gt;(M model) where M : <span class="keyword">class</span></div>
-</div><!-- fragment --><h4><a class="anchor" id="autotoc_md46"></a>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md69"></a>
 Parameters</h4>
 <ul>
 <li><code>M</code>: The type of model you're creating.</li>
 <li><code>model</code>: An instance of the model with the properties you want to set.</li>
 </ul>
-<h4><a class="anchor" id="autotoc_md47"></a>
+<h4><a class="anchor" id="autotoc_md70"></a>
 Return Value</h4>
 <p>The method returns a <code>Task&lt;M&gt;</code>, where <code>M</code> is the type of model you're creating. The returned model typically includes any server-generated fields, such as the ID.</p>
-<h3><a class="anchor" id="autotoc_md48"></a>
+<h3><a class="anchor" id="autotoc_md71"></a>
 Handling IDs</h3>
 <p>Setting the ID is optional when creating a new model, depending on the Origin. Servers will typically generates the id automatically.</p>
-<h3><a class="anchor" id="autotoc_md49"></a>
+<h3><a class="anchor" id="autotoc_md72"></a>
 Basic Usage</h3>
 <p>Here's a simple example of how to use the <code>Create</code> method to create a new Docket:</p>
 <div class="fragment"><div class="line"><span class="keyword">public</span> async Task&lt;Docket&gt; CreateDocket(Docket newDocket)</div>
@@ -162,7 +162,10 @@ Basic Usage</h3>
 <div class="line">    Docket createdDocket = await AppCommon.Cascade.Create(newDocket);</div>
 <div class="line">    <span class="keywordflow">return</span> createdDocket;</div>
 <div class="line">}</div>
-</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md73"></a>
+Creating Models with Association</h2>
+<p>When creating a model, only the </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->

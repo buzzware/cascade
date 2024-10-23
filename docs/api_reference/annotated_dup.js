@@ -2,8 +2,12 @@ var annotated_dup =
 [
     [ "Buzzware", "namespace_buzzware.html", [
       [ "Cascade", "namespace_buzzware_1_1_cascade.html", [
+        [ "Test", "namespace_buzzware_1_1_cascade_1_1_test.html", [
+          [ "FriendlyDictionary", "class_buzzware_1_1_cascade_1_1_test_1_1_friendly_dictionary.html", null ]
+        ] ],
         [ "Testing", "namespace_buzzware_1_1_cascade_1_1_testing.html", [
           [ "Child", "class_buzzware_1_1_cascade_1_1_testing_1_1_child.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_child" ],
+          [ "ChildDetail", "class_buzzware_1_1_cascade_1_1_testing_1_1_child_detail.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_child_detail" ],
           [ "MockCascadePlatform", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform" ],
           [ "MockModelClassOrigin", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin" ],
           [ "MockOrigin", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin" ],

@@ -24,6 +24,7 @@ var searchData=
   ['destroy_3c_20m_20_3e_21',['Destroy&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#a014f301c283e11b45a151dd42ddb6646',1,'Buzzware::Cascade::CascadeDataLayer']]],
   ['destroyop_3c_20model_20_3e_22',['DestroyOp&lt; Model &gt;',['../class_buzzware_1_1_cascade_1_1_request_op.html#a19049439f5539cb3e519925ae0e91f51',1,'Buzzware::Cascade::RequestOp']]],
   ['destroyresponse_3c_20m_20_3e_23',['DestroyResponse&lt; M &gt;',['../class_buzzware_1_1_cascade_1_1_cascade_data_layer.html#ae3be3ce8b8ae619c93b59aaa0be85ddf',1,'Buzzware::Cascade::CascadeDataLayer']]],
-  ['dictionary_24',['Dictionary',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a3beb75d1563ebc22253341be4ce57f44',1,'Easy::Common::Extensions']]],
-  ['dictionaryjsonconverter_25',['DictionaryJsonConverter',['../class_buzzware_1_1_cascade_1_1_dictionary_json_converter.html',1,'Buzzware::Cascade']]]
+  ['detail_24',['Detail',['../class_buzzware_1_1_cascade_1_1_testing_1_1_child.html#a6cbcc222e2e255b54f116e6ed1649d71',1,'Buzzware::Cascade::Testing::Child']]],
+  ['dictionary_25',['Dictionary',['../namespace_easy_1_1_common_1_1_extensions.html#ae398b2c73642caabffdcc43c8591e706a3beb75d1563ebc22253341be4ce57f44',1,'Easy::Common::Extensions']]],
+  ['dictionaryjsonconverter_26',['DictionaryJsonConverter',['../class_buzzware_1_1_cascade_1_1_dictionary_json_converter.html',1,'Buzzware::Cascade']]]
 ];

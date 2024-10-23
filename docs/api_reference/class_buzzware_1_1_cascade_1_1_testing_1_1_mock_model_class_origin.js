@@ -9,8 +9,8 @@ var class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin =
     [ "GetBlob", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a74f23b35970b3b486b2393d433ca064d", null ],
     [ "PutBlob", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a7ffa1c2a940694dccf1ebfe23f93e468", null ],
     [ "Query", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a0e519108e7e96d5676b87f7ab9f02e8c", null ],
-    [ "Replace", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a476a5f3ab6bd5b332f8f33dc552ed336", null ],
+    [ "Replace", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a060f4e315037e5445a7ab3211529e172", null ],
     [ "Store", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a6e34d141de0ae3777c44a7235deea658", null ],
-    [ "Update", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a1a044f7bff70265bcbcb77eed3e78d98", null ],
+    [ "Update", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a6fabc44c1faa7e205c63ee353b0ebde2", null ],
     [ "Origin", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_model_class_origin.html#a43d5f35245746e041aeb8922e40f6093", null ]
 ];

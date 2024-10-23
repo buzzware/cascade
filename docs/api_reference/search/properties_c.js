@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['source_0',['Source',['../class_buzzware_1_1_cascade_1_1_enumerable_adapter.html#aacfb76bc2d70e65cc88462227320cbec',1,'Buzzware::Cascade::EnumerableAdapter']]],
-  ['sourcepropertyname_1',['SourcePropertyName',['../class_buzzware_1_1_cascade_1_1_from_property_attribute.html#a6466303475773f524055563a168c6aae',1,'Buzzware::Cascade::FromPropertyAttribute']]]
+  ['requestcount_0',['RequestCount',['../class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin2.html#a5c37c96e12a6288e30228081e33f8ecb',1,'Buzzware::Cascade::Testing::MockOrigin2']]],
+  ['resultids_1',['ResultIds',['../class_buzzware_1_1_cascade_1_1_op_response.html#ab2b09cf20895c93e6ca0c4283652daf4',1,'Buzzware::Cascade::OpResponse']]],
+  ['results_2',['Results',['../class_buzzware_1_1_cascade_1_1_op_response.html#a9dd24d0386856805eaa48b9163fe6858',1,'Buzzware::Cascade::OpResponse']]]
 ];
