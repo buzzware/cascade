@@ -140,32 +140,23 @@ namespace Buzzware.Cascade {
       long? sequenceBeganMs = null
     ) {
       var timeMsFixed = sequenceBeganMs ?? NowMs;
-      const int MaxParallelRequests = 8;
       var ids = iids.Cast<object>().ToImmutableArray();
       Log.Debug("BEGIN GetModelsForIds");
       var profiler = new TimingProfiler("GetModelsForIds "+type.Name);
       profiler.Start();
-      OpResponse[] allResponses = new OpResponse[ids.Count()];
-      for (var i = 0; i < ids.Count(); i += MaxParallelRequests) {
-        var someIds = ids.Skip(i).Take(MaxParallelRequests).ToImmutableArray();
-
-        var tasks = someIds.Select(id => {
-          return Task.Run(() => ProcessRequest( // map each id to a get request and process it
-            new RequestOp(
-              timeMsFixed,
-              type,
-              RequestVerb.Get,
-              id,
-              freshnessSeconds: freshnessSeconds,
-              fallbackFreshnessSeconds: fallbackFreshnessSeconds,
-              hold: hold
-            )
-          ));
-        }).ToImmutableArray();
-        var someGetResponses = await Task.WhenAll(tasks); // wait on all requests in parallel
-        for (int j = 0; j < someGetResponses.Length; j++) // fill allResponses array from responses
-          allResponses[i + j] = someGetResponses[j];
-      }
+      OpResponse[] allResponses = await CascadeUtils.ProcessParallel(ids, Config.MaxParallelRequests, id => 
+        ProcessRequest( // map each id to a get request and process it
+          new RequestOp(
+            timeMsFixed,
+            type,
+            RequestVerb.Get,
+            id,
+            freshnessSeconds: freshnessSeconds,
+            fallbackFreshnessSeconds: fallbackFreshnessSeconds,
+            hold: hold
+          )
+        )
+      );
       profiler.Stop();
       Log.Information(profiler.Report());
       Log.Debug("END GetModelsForIds");

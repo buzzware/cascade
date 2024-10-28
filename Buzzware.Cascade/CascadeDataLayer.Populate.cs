@@ -76,8 +76,45 @@ namespace Buzzware.Cascade {
 					}
 				} else {
 					if (piAssociation?.KindAttribute is FromBlobAttribute fromBlob) {
-						foreach (var model in models2)
-							await processFromBlob(model, modelType, piAssociation!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+						// foreach (var model in models2)
+						// 	await processFromBlob(model, modelType, piAssociation!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+						
+						// construct a dictionary of id values => list of models with that value in IdProperty
+						var valueModelList = new IdKeyDictionary<List<SuperModel>>();
+						foreach (var model in models2) {
+							var path = FastReflection.GetValue(model, fromBlob.PathProperty) as string;
+							var modelList = valueModelList.TryGetValue(path, out var list) ? list : null;
+							if (modelList == null)
+								valueModelList[path] = new List<SuperModel>(new SuperModel[] { model });		// add entry to dictionary
+							else
+								modelList.Add(model);		// add model to list for this id value
+						}
+
+						var modelResponses = await CascadeUtils.ProcessParallel<string, OpResponse>(
+							valueModelList.Keys.Where(k => k != null).Cast<string>(),
+							Config.MaxParallelRequests,
+							(path) => BlobGetResponse(
+								path,
+								freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
+								fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+								hold: hold,
+								sequenceBeganMs ?? NowMs
+							)
+						);
+						var lookup = modelResponses.ToDictionary(r => r.RequestOp.IdAsString, r => r.Result as byte[]);
+						
+						// for each id value and model list
+						foreach (var pair in valueModelList) {
+							var modelsWithIdPropertyValue = pair.Value!; 
+							var blobValue = pair.Key!=null ? lookup[(string)pair.Key] : null;
+							var associationValue = fromBlob.Converter != null ? fromBlob.Converter.Convert(blobValue, piAssociation.NotNullType) : blobValue;
+							// set the association on every model in the list to the lookup value
+							await cascadePlatform.InvokeOnMainThreadNow(() => {
+								foreach (var model in modelsWithIdPropertyValue) {
+									model!.__mutateWith(m => piAssociation.SetValue(m, associationValue));
+								}
+							});
+						}
 					} else if (piAssociation?.KindAttribute is HasManyAttribute hasMany) {
 						foreach (var model in models2)
 							await processHasMany(model, modelType, piAssociation!, hasMany, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);

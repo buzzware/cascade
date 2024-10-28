@@ -6,7 +6,8 @@ namespace Buzzware.Cascade {
   /// User configuration class for the Cascade library
   /// </summary>
   public class CascadeConfig {
-    
+    public int MaxParallelRequests = 8;
+
     /// <summary>
     /// Default duration, in seconds, for which data is considered fresh.
     /// </summary>

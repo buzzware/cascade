@@ -453,5 +453,26 @@ namespace Buzzware.Cascade {
 				return null;
 			return Path.GetDirectoryName(path2);
 		}
+
+    // run a series of tasks with the given limit of parallel threads 
+		public static async Task<Out[]> ProcessParallel<In,Out>(IEnumerable<In> items, int maxDegreeOfParallelism, Func<In, Task<Out>> process) {
+			var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
+			var tasks = new List<Task<Out>>();
+			
+			foreach (var item in items) {
+				await semaphore.WaitAsync();
+
+				tasks.Add(Task.Run(async () => {
+					try {
+						return await process(item);
+					}
+					finally {
+						semaphore.Release();
+					}
+				}));
+			}
+			var results = await Task.WhenAll(tasks);
+			return results;
+		}
 	}
 }
