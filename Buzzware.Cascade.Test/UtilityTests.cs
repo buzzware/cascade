@@ -113,9 +113,9 @@ namespace Buzzware.Cascade.Test {
     }
     
     [Test]
-    public void ValueModelsDictionary_CreateWithComparer_Test() {
+    public void IdKeyDictionaryTest() {
       // Create a dictionary with a custom comparer that treats int 1 and long 1 as equivalent
-      var dictionary = ValueModelsDictionary.CreateWithComparer();
+      var dictionary = new IdKeyDictionary<List<SuperModel>>();
 
       var list1 = new List<SuperModel>(new SuperModel[]{new Child() {id = "1"}});
       var list2 = new List<SuperModel>(new SuperModel[]{new Child() {id = "2"}});
@@ -130,7 +130,7 @@ namespace Buzzware.Cascade.Test {
       dictionary.Add(1, list3); // write with int
       Assert.That(dictionary[1], Is.EqualTo(list3));  // read with int
       Assert.That(dictionary[1L], Is.EqualTo(list3));  // read with long
-      dictionary.Add(1, list4); // write with long
+      dictionary[1] = list4; // write with long
       Assert.That(dictionary[1L], Is.EqualTo(list4));  // read with long
       Assert.That(dictionary[1], Is.EqualTo(list4));  // read with int
 

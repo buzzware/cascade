@@ -39,48 +39,54 @@ namespace Buzzware.Cascade {
 			var first = superModels.First();
 			var modelType = first.GetType();
 			foreach (var association in associations) {
-				var propertyInfo = FastReflection.GetPropertyInfo(modelType,association);
+				var piAssociation = FastReflection.GetPropertyInfo(modelType,association);
 				
-				var models2 = skipIfSet ? superModels.Where(s => propertyInfo!.GetValue(s)==null).ToArray() : superModels;
+				// reduce models according to skipIfSet
+				var models2 = skipIfSet ? superModels.Where(s => piAssociation!.GetValue(s)==null).ToArray() : superModels;
 				if (!models2.Any())
 					continue;
 
-				if (propertyInfo?.KindAttribute is BelongsToAttribute belongsTo) {
-					var valueModelList = ValueModelsDictionary.CreateWithComparer();
+				if (piAssociation?.KindAttribute is BelongsToAttribute belongsTo) {
+					// construct a dictionary of id values => list of models with that value in IdProperty
+					var valueModelList = new IdKeyDictionary<List<SuperModel>>();
 					foreach (var model in models2) {
 						var idValue = FastReflection.GetValue(model, belongsTo.IdProperty);
 						var modelList = valueModelList.TryGetValue(idValue, out var list) ? list : null;
 						if (modelList == null)
-							valueModelList[idValue] = new List<SuperModel>(new SuperModel[] { model });
+							valueModelList[idValue] = new List<SuperModel>(new SuperModel[] { model });		// add entry to dictionary
 						else
-							modelList.Add(model);
+							modelList.Add(model);		// add model to list for this id value
 					}
 
-					var modelResponses = await GetModelsForIds(propertyInfo.Type, valueModelList.Keys.Where(k=>k!=null), freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+					// get referenced association models with the matching ids (except null) 
+					var modelResponses = await GetModelsForIds(piAssociation.Type, valueModelList.Keys.Where(k=>k!=null), freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+					// construct dictionary association id => association model
 					var lookup = modelResponses.ToDictionary(r => r.RequestOp.Id!, r => r.Result as SuperModel);
 					
+					// for each id value and model list
 					foreach (var pair in valueModelList) {
 						var modelsWithIdPropertyValue = pair.Value!; 
 						var associationValue = pair.Key!=null ? lookup[pair.Key] : null;
+						// set the association on every model in the list to the lookup value
 						await cascadePlatform.InvokeOnMainThreadNow(() => {
 							foreach (var model in modelsWithIdPropertyValue) {
-								model!.__mutateWith(m => propertyInfo.SetValue(m, associationValue));
+								model!.__mutateWith(m => piAssociation.SetValue(m, associationValue));
 							}
 						});
 					}
 				} else {
-					if (propertyInfo?.KindAttribute is FromBlobAttribute fromBlob) {
+					if (piAssociation?.KindAttribute is FromBlobAttribute fromBlob) {
 						foreach (var model in models2)
-							await processFromBlob(model, modelType, propertyInfo!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
-					} else if (propertyInfo?.KindAttribute is HasManyAttribute hasMany) {
+							await processFromBlob(model, modelType, piAssociation!, fromBlob, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+					} else if (piAssociation?.KindAttribute is HasManyAttribute hasMany) {
 						foreach (var model in models2)
-							await processHasMany(model, modelType, propertyInfo!, hasMany, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
-					} else if (propertyInfo?.KindAttribute is HasOneAttribute hasOne) {
+							await processHasMany(model, modelType, piAssociation!, hasMany, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+					} else if (piAssociation?.KindAttribute is HasOneAttribute hasOne) {
 						foreach (var model in models2)
-							await processHasOne(model, modelType, propertyInfo!, hasOne, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
-					} else if (propertyInfo?.KindAttribute is FromPropertyAttribute fromProperty) {
+							await processHasOne(model, modelType, piAssociation!, hasOne, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+					} else if (piAssociation?.KindAttribute is FromPropertyAttribute fromProperty) {
 						foreach (var model in models2)
-							await processFromProperty(model, modelType, propertyInfo!, fromProperty);
+							await processFromProperty(model, modelType, piAssociation!, fromProperty);
 					}
 				}
 			}
