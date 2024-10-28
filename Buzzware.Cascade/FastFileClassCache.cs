@@ -401,10 +401,10 @@ namespace Buzzware.Cascade {
           cache.TryRemove(cachePath, out var removed);
         }
       } else {
-        cache.Clear();
-
         // Delete all files in the models directory
-        foreach (var file in Directory.GetFiles(GetModelFilePath())) {
+        var modelFilePath = GetModelFilePath();
+        var files = Directory.GetFiles(modelFilePath);
+        foreach (var file in files) {
           Log.Debug($"FastFileClassCache Clear {typeof(Model).FullName} id {Path.GetFileNameWithoutExtension(file)}");
           CascadeUtils.EnsureFileOperationSync(() => {
             File.Delete(file);
@@ -417,8 +417,8 @@ namespace Buzzware.Cascade {
           CascadeUtils.EnsureFileOperationSync(() => {
             File.Delete(file);
           });
-
         }
+        cache.Clear();
       }
     }
   }

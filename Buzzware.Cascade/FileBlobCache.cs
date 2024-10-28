@@ -39,7 +39,7 @@ namespace Buzzware.Cascade {
       return Cascade.MetaGet(BlobEtagPath(blobPath));
     }
 
-    public void ClearBlobEtags(string blobPath) {
+    public void ClearBlobEtags(string? blobPath = null) {
       Cascade.MetaClearPath(BlobEtagPath(blobPath));
     }
     
@@ -119,12 +119,12 @@ namespace Buzzware.Cascade {
         }
       } else {
         // Delete all files directly within the FullBlobPath
-        foreach (var file in Directory.GetFiles(FullBlobPath)) {
+        foreach (var file in Directory.GetFiles(FullBlobPath,"*",SearchOption.AllDirectories)) {
           CascadeUtils.EnsureFileOperationSync(() => {
             File.Delete(file);
           });
         }
-        ClearBlobEtags(FullBlobPath);
+        ClearBlobEtags();
       }
     }
 
