@@ -37,8 +37,14 @@ var hierarchy =
     [ "Buzzware.Cascade.ICascadePlatform", "interface_buzzware_1_1_cascade_1_1_i_cascade_platform.html", [
       [ "Buzzware.Cascade.Testing.MockCascadePlatform", "class_buzzware_1_1_cascade_1_1_testing_1_1_mock_cascade_platform.html", null ]
     ] ],
+    [ "IDictionary", null, [
+      [ "Buzzware.Cascade.IdKeyDictionary< TValue >", "class_buzzware_1_1_cascade_1_1_id_key_dictionary.html", null ]
+    ] ],
     [ "IEnumerable", null, [
       [ "Buzzware.Cascade.EnumerableAdapter< T >", "class_buzzware_1_1_cascade_1_1_enumerable_adapter.html", null ]
+    ] ],
+    [ "IEqualityComparer", null, [
+      [ "Buzzware.Cascade.MixedTypeComparer", "class_buzzware_1_1_cascade_1_1_mixed_type_comparer.html", null ]
     ] ],
     [ "Buzzware.Cascade.IModelClassCache", "interface_buzzware_1_1_cascade_1_1_i_model_class_cache.html", [
       [ "Buzzware.Cascade.ConcurrentFileSystemClassCache< Model, IdType >", "class_buzzware_1_1_cascade_1_1_concurrent_file_system_class_cache.html", null ],
