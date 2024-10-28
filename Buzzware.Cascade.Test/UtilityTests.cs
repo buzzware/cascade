@@ -111,6 +111,32 @@ namespace Buzzware.Cascade.Test {
       Assert.That(CascadeTypeUtils.InnerType(typeof(int[])),Is.EqualTo(typeof(int)));
       Assert.That(CascadeTypeUtils.InnerType(typeof(int)),Is.EqualTo(null));
     }
+    
+    [Test]
+    public void ValueModelsDictionary_CreateWithComparer_Test() {
+      // Create a dictionary with a custom comparer that treats int 1 and long 1 as equivalent
+      var dictionary = ValueModelsDictionary.CreateWithComparer();
 
+      var list1 = new List<SuperModel>(new SuperModel[]{new Child() {id = "1"}});
+      var list2 = new List<SuperModel>(new SuperModel[]{new Child() {id = "2"}});
+      var list3 = new List<SuperModel>(new SuperModel[]{new Child() {id = "3"}});
+      var list4 = new List<SuperModel>(new SuperModel[]{new Child() {id = "4"}});
+      
+      // Add and read values with various key types including null, string, int, and long
+      dictionary.Add(null, list1);
+      Assert.That(dictionary[null], Is.EqualTo(list1));
+      dictionary.Add("stringKey", list2);
+      Assert.That(dictionary["stringKey"], Is.EqualTo(list2));
+      dictionary.Add(1, list3); // write with int
+      Assert.That(dictionary[1], Is.EqualTo(list3));  // read with int
+      Assert.That(dictionary[1L], Is.EqualTo(list3));  // read with long
+      dictionary.Add(1, list4); // write with long
+      Assert.That(dictionary[1L], Is.EqualTo(list4));  // read with long
+      Assert.That(dictionary[1], Is.EqualTo(list4));  // read with int
+
+      dictionary.Add("1", list2);   // write with stringified int
+      Assert.That(dictionary["1"], Is.EqualTo(list2));  // read with same ok 
+      Assert.That(dictionary[1], Is.EqualTo(list4));    // doesn't affect actual int
+    }
   }
 }
