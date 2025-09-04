@@ -145,12 +145,14 @@ namespace Buzzware.Cascade {
 				// Determine the layer found based on the index
 				if (opResponse.LayerIndex >= 0 && opResponse.LayerIndex < layers.Length)
 					layerFound = layers[opResponse.LayerIndex];
-				var beforeLayer = layerFound == null;
+				var beforeLayer = layerFound == null;		// came from server, so store in all layers
 
 				// Iterate over cache layers in reverse order and store responses in older layers
 				foreach (var layer in CacheLayers.Reverse()) {
-					if (!beforeLayer && layer == layerFound)
-						beforeLayer = true;
+					if (!beforeLayer && layer == layerFound) {	// found layer it came from
+						beforeLayer = true;						// set flag for next iteration to begin storing
+						continue;								// skip this layer
+					}
 					if (!beforeLayer)
 						continue;
 
