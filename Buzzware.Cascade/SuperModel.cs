@@ -139,7 +139,11 @@ namespace Buzzware.Cascade {
     /// Clears all changes made to the model, resetting the property state to the proxy model values.
     /// </summary>
     public void __ClearChanges() {
+      var changedProperties = _propertySet.Where((kv) => kv.Value).Select(kv => kv.Key).ToArray();
       _propertySet.Clear();
+      foreach (var property in changedProperties) {
+        RaisePropertyChanged(property);
+      }
       RaisePropertyChanged(nameof(__HasChanges));
     }
 
@@ -180,19 +184,38 @@ namespace Buzzware.Cascade {
       if (!__mutable)
         throw new MutationAttemptException("Attempted to mutate " + propertyName + " when __mutable = false");
 
-      if (_proxyFor != null)
+      var comparer = EqualityComparer<T>.Default;
+
+      // Fast path: no proxy - avoid dictionary lookups and reflection entirely
+      if (_proxyFor == null)
       {
-        _propertySet[propertyName] = true;
+        if (comparer.Equals(backingStore, value))
+          return false;
+
+        backingStore = value;
+        onChanged?.Invoke();
+        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        return true;
+      } else {
+        // Proxy path: need to compare against effective value and track changes
+        var proxiedValue = (T)FastReflection.GetValue(_proxyFor, propertyName);
+        var effectiveValue = _propertySet.ContainsKey(propertyName) ? backingStore : proxiedValue;
+
+        if (comparer.Equals(effectiveValue, value))
+          return false;
+
+        // Update change tracking: clear if matches proxy, otherwise mark as changed
+        if (comparer.Equals(proxiedValue, value))
+          _propertySet.TryRemove(propertyName, out _);
+        else
+          _propertySet[propertyName] = true;
+
+        backingStore = value;
+        onChanged?.Invoke();
+        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        RaisePropertyChanged(nameof(__HasChanges));
+        return true;
       }
-      
-      if (EqualityComparer<T>.Default.Equals(backingStore, value))
-        return false;
-      
-      backingStore = value;
-      onChanged?.Invoke();
-      OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-      RaisePropertyChanged(nameof(__HasChanges));
-      return true;
     }
 
     /// <summary>

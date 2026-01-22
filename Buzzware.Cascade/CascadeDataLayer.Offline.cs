@@ -107,7 +107,7 @@ namespace Buzzware.Cascade {
 			Enum.TryParse<RequestVerb>(el.GetProperty(nameof(RequestOp.Verb)).GetString(), out var verb);
 			var typeName = el.GetProperty(nameof(RequestOp.Type)).GetString();
 			Type type; // Type.GetType(typeName,true);
-			if (verb == RequestVerb.BlobGet || verb == RequestVerb.BlobPut || verb == RequestVerb.BlobDestroy)
+			if (verb == RequestVerb.BlobGet || verb == RequestVerb.BlobGetFilePath || verb == RequestVerb.BlobPut || verb == RequestVerb.BlobDestroy)
 				type = CascadeTypeUtils.BlobType;
 			else
 				type = Origin.LookupModelType(typeName);
@@ -133,7 +133,7 @@ namespace Buzzware.Cascade {
 					id = CascadeTypeUtils.ConvertTo(idType, idProperty.GetString());
 				else
 					throw new TypeAccessException("Failed to interpret id value in correct type");
-			} else if (verb == RequestVerb.BlobGet || verb == RequestVerb.BlobPut || verb == RequestVerb.BlobDestroy) {
+			} else if (verb == RequestVerb.BlobGet || verb == RequestVerb.BlobGetFilePath || verb == RequestVerb.BlobPut || verb == RequestVerb.BlobDestroy) {
 				id = idProperty.GetString();	// path
 			}
 			

@@ -13,18 +13,18 @@ namespace Buzzware.Cascade {
 	/// </summary>
 	public partial class CascadeDataLayer {
 
-		/// <summary>
-		/// Populates one or more association properties on each of the given models using the association attribute definitions.
-		/// </summary>
-		/// <param name="models">A collection of models to act upon</param>
-		/// <param name="associations">A list of associations to populate for each model</param>
-		/// <param name="freshnessSeconds">Specifies how fresh the data should be by setting the freshness in seconds</param>
-		/// <param name="fallbackFreshnessSeconds">Fallback freshness setting, used if the main requirement cannot be fulfilled. Defaults to FRESHNESS_ANY.</param>
-		/// <param name="sequenceBeganMs">Optional request time (milliseconds since 1970) for optimizing caching when multiple requests share the same time</param>
-		/// <param name="skipIfSet">If set to true, skips any associations where the property is already filled</param>
-		/// <param name="hold">Specifies whether to maintain the acquired data after the method completes</param>
-		/// <returns>A Task that resolves when the operation is complete for all models and associations</returns>
-		public async Task Populate(
+        /// <summary>
+        /// Populates one or more association properties on each of the given models using the association attribute definitions.
+        /// </summary>
+        /// <param name="models">A collection of models to act upon</param>
+        /// <param name="associations">A list of associations to populate for each model</param>
+        /// <param name="freshnessSeconds">Specifies how fresh the data should be by setting the freshness in seconds</param>
+        /// <param name="fallbackFreshnessSeconds">Fallback freshness setting, used if the main requirement cannot be fulfilled. Defaults to FRESHNESS_ANY.</param>
+        /// <param name="sequenceBeganMs">Optional request time (milliseconds since 1970) for optimizing caching when multiple requests share the same time</param>
+        /// <param name="skipIfSet">If set to true, skips any associations where the property is already filled</param>
+        /// <param name="hold">Specifies whether to maintain the acquired data after the method completes</param>
+        /// <returns>A Task that resolves when the operation is complete for all models and associations</returns>
+        public async Task Populate(
 			IEnumerable<SuperModel> models, 
 			IEnumerable<string> associations, 
 			int? freshnessSeconds = null, 
@@ -40,6 +40,8 @@ namespace Buzzware.Cascade {
 			var modelType = first.GetType();
 			foreach (var association in associations) {
 				var piAssociation = FastReflection.GetPropertyInfo(modelType,association);
+				var modelFreshness = freshnessSeconds ?? Config.GetFreshnessSeconds(piAssociation.NotNullType);
+				var modelFallback = Math.Max((int)modelFreshness,Config.GetFallbackFreshnessSeconds(piAssociation.NotNullType));
 				
 				// reduce models according to skipIfSet
 				var models2 = skipIfSet ? superModels.Where(s => piAssociation!.GetValue(s)==null).ToArray() : superModels;
@@ -59,7 +61,7 @@ namespace Buzzware.Cascade {
 					}
 
 					// get referenced association models with the matching ids (except null) 
-					var modelResponses = await GetModelsForIds(piAssociation.Type, valueModelList.Keys.Where(k=>k!=null), freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+					var modelResponses = await GetModelsForIds(piAssociation.Type, valueModelList.Keys.Where(k=>k!=null), modelFreshness, modelFallback, hold, sequenceBeganMs);
 					// construct dictionary association id => association model
 					var lookup = modelResponses.ToDictionary(r => r.RequestOp.Id!, r => r.Result as SuperModel);
 					
@@ -101,8 +103,9 @@ namespace Buzzware.Cascade {
 								sequenceBeganMs ?? NowMs
 							)
 						);
-						var lookup = modelResponses.ToDictionary(r => r.RequestOp.IdAsString, r => r.Result as byte[]);
-						
+
+						var lookup = modelResponses.ToDictionary(r => r.RequestOp.IdAsString, r => GetResponseBytes(r));
+
 						// for each id value and model list
 						foreach (var pair in valueModelList) {
 							var modelsWithIdPropertyValue = pair.Value!; 
@@ -184,5 +187,22 @@ namespace Buzzware.Cascade {
 			await Populate(models, new [] {association}, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, sequenceBeganMs);
 		}
 
-	}
+        private byte[]? GetResponseBytes(OpResponse? response)
+        {
+            if (response == null) return null;
+
+            var bytesResponse = response.Result as byte[];
+
+            if (bytesResponse != null)
+                return bytesResponse;
+
+            if (response.Result is OpResponse resultResponse)
+            {
+                var final = resultResponse.Result as byte[];
+                return final;
+            }
+
+            return null;
+        }
+    }
 }

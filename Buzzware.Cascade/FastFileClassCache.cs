@@ -402,22 +402,20 @@ namespace Buzzware.Cascade {
         }
       } else {
         // Delete all files in the models directory
-        var modelFilePath = GetModelFilePath();
-        var files = Directory.GetFiles(modelFilePath);
-        foreach (var file in files) {
-          Log.Debug($"FastFileClassCache Clear {typeof(Model).FullName} id {Path.GetFileNameWithoutExtension(file)}");
-          CascadeUtils.EnsureFileOperationSync(() => {
-            File.Delete(file);
-          });
-        }
+        CascadeUtils.EnsureFileOperationSync(() => {
+          var path = GetModelFilePath();
+          if (Directory.Exists(path))
+            Directory.Delete(path, true);
+          Directory.CreateDirectory(path);
+        });
         
         // Delete all files in the collections directory
-        foreach (var file in Directory.GetFiles(GetCollectionFilePath())) {
-          Log.Debug($"FastFileClassCache Clear {typeof(Model).FullName} collection {Path.GetFileNameWithoutExtension(file)}");
-          CascadeUtils.EnsureFileOperationSync(() => {
-            File.Delete(file);
-          });
-        }
+        CascadeUtils.EnsureFileOperationSync(() => {
+          var path = GetCollectionFilePath();
+          if (Directory.Exists(path))
+            Directory.Delete(path, true);
+          Directory.CreateDirectory(path);
+        });
         cache.Clear();
       }
     }

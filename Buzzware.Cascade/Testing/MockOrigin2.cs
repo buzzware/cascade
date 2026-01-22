@@ -184,6 +184,12 @@ namespace Buzzware.Cascade.Testing {
       return model;
     }
 
+    public async Task Put<M>(M model) where M : SuperModel {
+      var id = CascadeTypeUtils.GetCascadeId(model);
+      var co = classOrigins[typeof(M)] as MockModelClassOrigin<M>;
+      await co!.Store(id, model);
+    }
+
     // public CascadeDataLayer Buzzware.Cascade { get; set; } 
     //
     // public long NowMs { get; set; }

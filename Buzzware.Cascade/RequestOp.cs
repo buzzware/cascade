@@ -19,6 +19,7 @@ namespace Buzzware.Cascade {
 		Execute,
 		GetCollection,
 		BlobGet,
+		BlobGetFilePath,
 		BlobPut,
 		BlobDestroy
 	};
@@ -32,9 +33,9 @@ namespace Buzzware.Cascade {
 		public const int FRESHNESS_FRESHEST = 0;		// allowing for the period of the request. When arrivedAfter is supported, set this back to 0 
 		public const int FRESHNESS_INSIST = -1;
 		
-		public const int FALLBACK_DEFAULT = 60*60;
 		public const int FALLBACK_NEVER = -1;
-		public const int FALLBACK_ANY = 2147483647;
+		public const int FALLBACK_ANY = FRESHNESS_ANY;
+		public const int FALLBACK_DEFAULT = FALLBACK_ANY;
 
 		/// <summary>
 		/// Constructs a "Get" operation for a specific model type, with optional parameters for population and freshness.
@@ -57,15 +58,18 @@ namespace Buzzware.Cascade {
 			int? fallbackFreshnessSeconds = null, 
 			bool? hold = null
 		) {
+			freshnessSeconds ??= FRESHNESS_DEFAULT;
+			populateFreshnessSeconds = Math.Max((int)freshnessSeconds, populateFreshnessSeconds ?? FRESHNESS_DEFAULT);
+			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? FALLBACK_ANY);
 			return new RequestOp(
 				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
 				typeof(Model),
 				RequestVerb.Get,
 				id,
 				populate: populate,
-				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
-				populateFreshnessSeconds: populateFreshnessSeconds ?? FRESHNESS_DEFAULT,
-				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
+				freshnessSeconds: freshnessSeconds,
+				populateFreshnessSeconds: populateFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds,
 				hold: hold
 			);
 		}
@@ -92,15 +96,18 @@ namespace Buzzware.Cascade {
 			int? fallbackFreshnessSeconds = null, 
 			bool? hold = null
 		) {
+			freshnessSeconds ??= FRESHNESS_DEFAULT;
+			populateFreshnessSeconds = Math.Max((int)freshnessSeconds, populateFreshnessSeconds ?? FRESHNESS_DEFAULT);
+			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? FALLBACK_ANY);
 			return new RequestOp(
 				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
 				modelType,
 				RequestVerb.Get,
 				id,
 				populate: populate,
-				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
-				populateFreshnessSeconds: populateFreshnessSeconds ?? FRESHNESS_DEFAULT,
-				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
+				freshnessSeconds: freshnessSeconds,
+				populateFreshnessSeconds: populateFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds,
 				hold: hold
 			);
 		}
@@ -122,13 +129,46 @@ namespace Buzzware.Cascade {
 			bool? hold = null,
 			string? eTag = null
 		) {
+			freshnessSeconds ??= FRESHNESS_DEFAULT;
+			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? FALLBACK_ANY);
 			return new RequestOp(
 				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
 				typeof(byte[]),		
 				RequestVerb.BlobGet,
 				path,
-				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
-				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
+				freshnessSeconds: freshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds,
+				hold: hold,
+				eTag:	eTag
+			);
+		}
+		
+		/// <summary>
+		/// Constructs a "BlobGetFilePath" operation for retrieving the absolute path to a binary large object at a specified path.
+		/// </summary>
+		/// <param name="path">The path of the blob to be retrieved.</param>
+		/// <param name="timeMs">The timestamp in milliseconds when the request was created. If not specified, the current time is used.</param>
+		/// <param name="freshnessSeconds">Indicates how fresh the blob data should be. Defaults to FRESHNESS_DEFAULT if not provided.</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
+		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
+		/// <returns>A new instance of RequestOp representing a "BlobGet" request.</returns>
+		public static RequestOp BlobGetFilePathOp(
+			string path,
+			long timeMs = -1,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null, 
+			bool? hold = null,
+			string? eTag = null
+		) {
+			freshnessSeconds ??= FRESHNESS_DEFAULT;
+			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? FALLBACK_ANY);
+			return new RequestOp(
+				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
+				typeof(byte[]),		
+				RequestVerb.BlobGetFilePath,
+				path,
+				freshnessSeconds: freshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds,
 				hold: hold,
 				eTag:	eTag
 			);
@@ -222,16 +262,20 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null,
 			int? fallbackFreshnessSeconds = null,
-			bool? hold = null) {
+			bool? hold = null
+		) {
+			freshnessSeconds ??= FRESHNESS_DEFAULT;
+			populateFreshnessSeconds = Math.Max((int)freshnessSeconds, populateFreshnessSeconds ?? FRESHNESS_DEFAULT);
+			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? FALLBACK_ANY);
 			return new RequestOp(
 				timeMs,
 				typeof(Model),
 				RequestVerb.Query,
 				null,
 				populate: populate,
-				freshnessSeconds: freshnessSeconds ?? FRESHNESS_DEFAULT,
-				populateFreshnessSeconds: populateFreshnessSeconds ?? FRESHNESS_DEFAULT,
-				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? FRESHNESS_ANY,
+				freshnessSeconds: freshnessSeconds,
+				populateFreshnessSeconds: populateFreshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds,
 				hold: hold,
 				criteria: criteria, 
 				key: collectionName
@@ -365,15 +409,19 @@ namespace Buzzware.Cascade {
 			object? extra = null,
 			string? eTag = null
 		) {
+			freshnessSeconds ??= FRESHNESS_DEFAULT;
+			populateFreshnessSeconds = Math.Max((int)freshnessSeconds, populateFreshnessSeconds ?? FRESHNESS_DEFAULT);
+			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? FALLBACK_ANY);
+			
 			TimeMs = timeMs;
 			Type = type;
 			Verb = verb;
 			Id = id;
 			Value = value;
 			Populate = populate;
-			FreshnessSeconds = freshnessSeconds ?? FRESHNESS_DEFAULT;
-			PopulateFreshnessSeconds = populateFreshnessSeconds ?? FRESHNESS_DEFAULT;
-			FallbackFreshnessSeconds = fallbackFreshnessSeconds ?? FRESHNESS_ANY;
+			FreshnessSeconds = (int)freshnessSeconds;
+			PopulateFreshnessSeconds = (int)populateFreshnessSeconds;
+			FallbackFreshnessSeconds = (int)fallbackFreshnessSeconds;
 			Hold = hold ?? false;
 			Criteria = criteria;
 			Key = key;
@@ -472,7 +520,7 @@ namespace Buzzware.Cascade {
 		public readonly IEnumerable<string>? Populate;
 		public readonly int FreshnessSeconds = FRESHNESS_DEFAULT;
 		public readonly int PopulateFreshnessSeconds = FRESHNESS_DEFAULT;
-		public readonly int FallbackFreshnessSeconds = FRESHNESS_ANY;
+		public readonly int FallbackFreshnessSeconds = FALLBACK_ANY;
 		public readonly bool Hold;
 		public readonly IDictionary<string, string> Params;	// app specific paramters for the request
 		public readonly long FreshAfterMs;

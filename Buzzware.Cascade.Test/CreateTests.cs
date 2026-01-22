@@ -70,8 +70,8 @@ namespace Buzzware.Cascade.Test {
 			parent = await cascade.Create<Parent>(parent);
 			
 			// Verify the Parent object is created with the expected id and colour.
-			Assert.AreEqual(5,parent!.id);
-			Assert.AreEqual("red",parent!.colour);
+			Assert.That(5,Is.EqualTo(parent!.id));
+			Assert.That("red",Is.EqualTo(parent!.colour));
 		}
 		
 		/// <summary>
@@ -100,8 +100,8 @@ namespace Buzzware.Cascade.Test {
 			parent2 = await cascade.Replace(parent2);
 			
 			// Verify the Parent object is updated with the new color while retaining the same id.
-			Assert.AreEqual(5,parent2.id);
-			Assert.AreEqual("green",parent2!.colour);
+			Assert.That(5,Is.EqualTo(parent2.id));
+			Assert.That("green",Is.EqualTo(parent2!.colour));
 		}
 	}
 }

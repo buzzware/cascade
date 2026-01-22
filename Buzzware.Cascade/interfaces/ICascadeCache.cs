@@ -46,6 +46,18 @@ namespace Buzzware.Cascade {
 		CascadeDataLayer Cascade { get; set; }
 
     /// <summary>
+    // Is this cache setup to hold blobs as files, and can return an absolute file system given a blob path  
+    /// </summary>
+		bool SupportsGetBlobAbsoluteFilePath { get; }
+    
+    /// <summary>
+    /// Given a blob path (always relative) return an absolute local file system path for that blob
+    /// </summary>
+    /// <param name="blobPath"></param>
+    /// <returns></returns>
+		string? GetBlobAbsoluteFilePath(string blobPath);
+
+		/// <summary>
     /// Clears stored data from the cache.
     /// Removes all entries currently held except those that need to be held.
     /// Optionally clears entries older than a specified DateTime.
@@ -53,7 +65,13 @@ namespace Buzzware.Cascade {
     /// <param name="exceptHeld">If true, entries marked to be held will not be cleared.</param>
     /// <param name="olderThan">If specified, only entries older than this date will be cleared.</param>
 		Task ClearAll(bool exceptHeld = true, DateTime? olderThan = null);
-
+    
+    Task ClearByType(Type type, bool exceptHeld = true, DateTime? olderThan = null);
+    
+    Task ClearBlobs(bool exceptHeld = true, DateTime? olderThan = null);
+    
+    Task ClearBlob(string path);
+    
     /// <summary>
     /// Set the ArrivedAtMs value for the given blobPath to the given value.
     /// This is not absolutely necessary but for maximum efficiency should be implemented.

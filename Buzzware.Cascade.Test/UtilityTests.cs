@@ -20,14 +20,14 @@ namespace Buzzware.Cascade.Test {
     public async Task TypeConversion() {
 
       // Test conversion of string literals to integral types.
-      Assert.AreEqual((byte)1, CascadeTypeUtils.ConvertTo(typeof(byte),"1",null));
-      Assert.AreEqual((int)1, CascadeTypeUtils.ConvertTo(typeof(int),"1",null));
-      Assert.AreEqual((long)1, CascadeTypeUtils.ConvertTo(typeof(long),"1",null));
-      
+      Assert.That(CascadeTypeUtils.ConvertTo(typeof(byte),"1",null), Is.EqualTo((byte)1));
+      Assert.That(CascadeTypeUtils.ConvertTo(typeof(int),"1",null), Is.EqualTo((int)1));
+      Assert.That(CascadeTypeUtils.ConvertTo(typeof(long),"1",null), Is.EqualTo((long)1));
+
       // Test conversion from integral types to string.
-      Assert.AreEqual("1", CascadeTypeUtils.ConvertTo(typeof(string),(byte)1,null));
-      Assert.AreEqual("1", CascadeTypeUtils.ConvertTo(typeof(string),(int)1,null));
-      Assert.AreEqual("1", CascadeTypeUtils.ConvertTo(typeof(string),(long)1,null));
+      Assert.That(CascadeTypeUtils.ConvertTo(typeof(string),(byte)1,null), Is.EqualTo("1"));
+      Assert.That(CascadeTypeUtils.ConvertTo(typeof(string),(int)1,null), Is.EqualTo("1"));
+      Assert.That(CascadeTypeUtils.ConvertTo(typeof(string),(long)1,null), Is.EqualTo("1"));
       
       // Test conversion between integral types, ensuring the result maintains expected type and value.
       Assert.That(CascadeTypeUtils.ConvertTo(typeof(byte),(int)1), Is.EqualTo(1).And.InstanceOf<Byte>());
@@ -137,6 +137,15 @@ namespace Buzzware.Cascade.Test {
       dictionary.Add("1", list2);   // write with stringified int
       Assert.That(dictionary["1"], Is.EqualTo(list2));  // read with same ok 
       Assert.That(dictionary[1], Is.EqualTo(list4));    // doesn't affect actual int
+    }
+    
+    
+    
+    [Test]
+    public void GetCascadeIdTypeTest() {
+      var type = typeof(Thing);
+      var idType = CascadeTypeUtils.GetCascadeIdType(type);
+      Assert.That(idType,Is.EqualTo(typeof(int)));
     }
   }
 }

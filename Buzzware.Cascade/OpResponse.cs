@@ -86,7 +86,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <returns>True if the result is a blob.</returns>
     public bool ResultIsBlob() {
-      return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobPut) && Result is byte[];
+      return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobGetFilePath || RequestOp.Verb == RequestVerb.BlobPut) && Result is byte[];
     }
 
     /// <summary>

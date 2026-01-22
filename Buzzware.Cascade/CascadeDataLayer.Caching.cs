@@ -150,8 +150,8 @@ namespace Buzzware.Cascade {
 				// Iterate over cache layers in reverse order and store responses in older layers
 				foreach (var layer in CacheLayers.Reverse()) {
 					if (!beforeLayer && layer == layerFound) {	// found layer it came from
-						beforeLayer = true;						// set flag for next iteration to begin storing
-						continue;								// skip this layer
+						beforeLayer = true;												// set flag for next iteration to begin storing
+						continue;																	// skip this layer
 					}
 					if (!beforeLayer)
 						continue;
@@ -182,6 +182,21 @@ namespace Buzzware.Cascade {
 		public async Task ClearLayers(bool exceptHeld = true, DateTime? olderThan = null) {
 			foreach (var layer in CacheLayers) {
 				await layer.ClearAll(exceptHeld, olderThan);
+			}
+		}
+
+		public async Task ClearCache(
+			IEnumerable<Type>  modelTypes,
+			bool clearBlobs = false,
+			bool exceptHeld = true,
+			DateTime? olderThan = null
+		) {
+			foreach (var layer in CacheLayers) {
+				foreach (var modelType in modelTypes) {
+					await layer.ClearByType(modelType, exceptHeld, olderThan);
+				}
+				if (clearBlobs)
+					await layer.ClearBlobs(exceptHeld, olderThan);
 			}
 		}
 	}

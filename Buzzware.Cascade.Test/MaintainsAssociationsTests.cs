@@ -105,7 +105,7 @@ namespace Buzzware.Cascade.Test {
 		public async Task ReadWithoutCache() {
 			var cascade = new CascadeDataLayer(origin, new ICascadeCache[] { }, new CascadeConfig(), new MockCascadePlatform(), ErrorControl.Instance, new CascadeJsonSerialization());
 			var thing = await cascade.Get<Parent>(2);
-			Assert.AreEqual(2, thing!.id);
+			Assert.That(thing!.id, Is.EqualTo(2));
 		}
 
 		/// <summary>

@@ -129,7 +129,7 @@ namespace Buzzware.Cascade {
                     if (
                         exists && 
                         requestOp.FreshnessSeconds>=0 && 
-                        (requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || (arrivedAtMs >= requestOp.FreshAfterMs))
+                        (requestOp.FreshnessSeconds==RequestOp.FRESHNESS_ANY || (arrivedAtMs >= requestOp.FreshAfterMs))
                     ) {
                         // If the file exists and is fresh, deserialize and return it
                         var loaded = await DeserializeFromPathAsync<Model>(modelFilePath);
@@ -150,7 +150,7 @@ namespace Buzzware.Cascade {
                     if (
                         exists && 
                         requestOp.FreshnessSeconds>=0 && 
-                        (requestOp.FreshnessSeconds==CascadeDataLayer.FRESHNESS_ANY || (arrivedAtMs >= requestOp.FreshAfterMs))
+                        (requestOp.FreshnessSeconds==RequestOp.FRESHNESS_ANY || (arrivedAtMs >= requestOp.FreshAfterMs))
                     ) {
                         // If the collection file exists and is fresh, deserialize and return it
                         var loaded = await DeserializeFromPathAsync<IEnumerable<IdType>>(collectionFilePath);

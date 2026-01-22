@@ -60,7 +60,7 @@ namespace Buzzware.Cascade.Test {
     public async Task ReadWithoutCache() {
       var cascade = new CascadeDataLayer(origin,new ICascadeCache[] {}, new CascadeConfig(), new MockCascadePlatform(), ErrorControl.Instance, new CascadeJsonSerialization());
       var thing = await cascade.Get<Parent>(5);
-      Assert.AreEqual(5,thing!.id);
+      Assert.That(thing!.id, Is.EqualTo(5));
     }
 
     /// <summary>
@@ -89,51 +89,51 @@ namespace Buzzware.Cascade.Test {
       );
       var thing1 = await cascade.Get<Parent>(5);
       
-      Assert.AreEqual(5,thing1!.id);
-      Assert.AreEqual(cascade.NowMs,thing1.updatedAtMs);
-      
+      Assert.That(thing1!.id, Is.EqualTo(5));
+      Assert.That(thing1.updatedAtMs, Is.EqualTo(cascade.NowMs));
+
       // should also be in both caches
       var store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
-      Assert.AreEqual((store1ThingResponse.Result as Parent)!.id,5);
-      Assert.AreEqual(cascade.NowMs,(store1ThingResponse.Result as Parent)!.updatedAtMs);
+      Assert.That((store1ThingResponse.Result as Parent)!.id, Is.EqualTo(5));
+      Assert.That((store1ThingResponse.Result as Parent)!.updatedAtMs, Is.EqualTo(cascade.NowMs));
       var store2ThingResponse = await thingModelStore2.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
-      Assert.AreEqual((store2ThingResponse.Result as Parent)!.id,5);
-      Assert.AreEqual(cascade.NowMs,(store2ThingResponse.Result as Parent)!.updatedAtMs);
+      Assert.That((store2ThingResponse.Result as Parent)!.id, Is.EqualTo(5));
+      Assert.That((store2ThingResponse.Result as Parent)!.updatedAtMs, Is.EqualTo(cascade.NowMs));
 
       origin.IncNowMs();
       
       // freshness=5 allows for cached version 
       var thing2 = (await cascade.Get<Parent>(5,freshnessSeconds: 5))!;
-      Assert.AreEqual(thing1.updatedAtMs,thing2.updatedAtMs);
+      Assert.That(thing2.updatedAtMs, Is.EqualTo(thing1.updatedAtMs));
       
       // freshness=0 doesn't allow for cached version 
       var thing3 = (await cascade.Get<Parent>(5,freshnessSeconds: 0))!;
-      Assert.AreEqual(origin.NowMs,thing3.updatedAtMs);
+      Assert.That(thing3.updatedAtMs, Is.EqualTo(origin.NowMs));
 
       // caches should also be updated
       store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
-      Assert.AreEqual(origin.NowMs,(store1ThingResponse.Result as Parent)!.updatedAtMs);
+      Assert.That((store1ThingResponse.Result as Parent)!.updatedAtMs, Is.EqualTo(origin.NowMs));
       store2ThingResponse = await thingModelStore2.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
-      Assert.AreEqual(origin.NowMs,(store2ThingResponse.Result as Parent)!.updatedAtMs);
+      Assert.That((store2ThingResponse.Result as Parent)!.updatedAtMs, Is.EqualTo(origin.NowMs));
       
       origin.IncNowMs(2000);
       
       // freshness=2 should allow for cached version 
       var thing4 = (await cascade.Get<Parent>(5,freshnessSeconds: 2))!;
-      Assert.AreEqual(thing3.updatedAtMs,thing4.updatedAtMs);
+      Assert.That(thing4.updatedAtMs, Is.EqualTo(thing3.updatedAtMs));
 
-      // freshness=1 should get fresh version 
+      // freshness=1 should get fresh version
       var thing5 = (await cascade.Get<Parent>(5,freshnessSeconds: 1))!;
-      Assert.AreEqual(origin.NowMs,thing5.updatedAtMs);
+      Assert.That(thing5.updatedAtMs, Is.EqualTo(origin.NowMs));
       
       origin.IncNowMs(1000);
       
       // clear cache1, freshnessSeconds=1 should return value from cache2 and update cache1
       await cache1.ClearAll();
       var thing6 = (await cascade.Get<Parent>(thing4.id,freshnessSeconds: 1))!;      // should get cache2 version
-      Assert.AreEqual(thing6.updatedAtMs,thing5.updatedAtMs);
+      Assert.That(thing6.updatedAtMs, Is.EqualTo(thing5.updatedAtMs));
       store1ThingResponse = await thingModelStore1.Fetch(RequestOp.GetOp<Parent>(5,cascade.NowMs));
-      Assert.AreEqual(thing6.updatedAtMs,(store1ThingResponse.Result as Parent)!.updatedAtMs);
+      Assert.That((store1ThingResponse.Result as Parent)!.updatedAtMs, Is.EqualTo(thing6.updatedAtMs));
     }
   }
 }

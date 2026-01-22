@@ -272,8 +272,11 @@ namespace Buzzware.Cascade {
     /// <returns>The property information for the Cascade ID.</returns>
     /// <exception cref="MissingMemberException">Thrown when the Cascade ID property is not found.</exception>
     public static CascadePropertyInfo CascadeIdPropertyRequired(Type cascadeModelType) {
-      return TryGetCascadeIdProperty(cascadeModelType)
-        ?? throw new MissingMemberException("The model is missing [CascadeId] on an id property");
+      var idProperty = TryGetCascadeIdProperty(cascadeModelType);
+      if (idProperty == null) {
+        throw new MissingMemberException("The model is missing [CascadeId] on an id property");
+      }
+      return idProperty;
     }
 
     /// <summary>

@@ -39,7 +39,13 @@ namespace Buzzware.Cascade {
 			}
 		}
 
-    /// <summary>
+		public bool SupportsGetBlobAbsoluteFilePath => blobCache?.SupportsGetAbsoluteFilePath ?? false;
+
+		public string? GetBlobAbsoluteFilePath(string blobPath) {
+			return blobCache?.GetAbsoluteFilePath(blobPath); 
+		}
+
+		/// <summary>
     /// Clears all cached data from class caches and the blob cache if specified. Can optionally protect held data and clear only data older than a certain date.
     /// </summary>
     /// <param name="exceptHeld">Flag indicating whether to exclude held items from being cleared.</param>
@@ -48,8 +54,22 @@ namespace Buzzware.Cascade {
 			foreach (var pair in classCache) {
 				await pair.Value.ClearAll(exceptHeld: exceptHeld, olderThan: olderThan);
 			}
+			await ClearBlobs(exceptHeld, olderThan);
+		}
+
+		public async Task ClearByType(Type type, bool exceptHeld = true, DateTime? olderThan = null) {
+			var pair = classCache.FirstOrDefault(pair => pair.Key == type);
+			if (pair.Value != null)
+				await pair.Value.ClearAll(exceptHeld: exceptHeld, olderThan: olderThan);
+		}
+
+		public async Task ClearBlobs(bool exceptHeld = true, DateTime? olderThan = null) {
 			if (blobCache != null) 
 				await blobCache.ClearAll(exceptHeld: exceptHeld, olderThan: olderThan);
+		}
+
+		public async Task ClearBlob(string path) {
+			blobCache?.Clear(path);
 		}
 
 		public Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs) {
@@ -73,7 +93,7 @@ namespace Buzzware.Cascade {
     /// <returns>OpResponse containing the result of the fetch operation and its metadata.</returns>
 		public async Task<OpResponse> Fetch(RequestOp requestOp) {
 			OpResponse opResponse;
-			if (requestOp.Verb is RequestVerb.BlobGet or RequestVerb.BlobPut) {
+			if (requestOp.Verb is RequestVerb.BlobGet or RequestVerb.BlobPut or RequestVerb.BlobGetFilePath) {
 				if (blobCache != null) {
 					opResponse = await blobCache.Fetch(requestOp);
 					opResponse.SourceName ??= blobCache.GetType().Name;
@@ -180,6 +200,7 @@ namespace Buzzware.Cascade {
 					await cache2.StoreCollection(opResponse.RequestOp.Key!, opResponse.ResultIds, arrivedAt);
 					break;
 				case RequestVerb.BlobGet:
+				case RequestVerb.BlobGetFilePath:
 				case RequestVerb.BlobPut:
 				case RequestVerb.BlobDestroy:
 					if (blobCache == null)

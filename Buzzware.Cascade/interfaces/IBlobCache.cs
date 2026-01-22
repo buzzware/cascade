@@ -13,6 +13,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     CascadeDataLayer Cascade { get; set; }
 
+
     /// <summary>
     /// Clears all entries from the cache, with options to retain certain entries.
     /// </summary>
@@ -34,5 +35,19 @@ namespace Buzzware.Cascade {
     Task Store(OpResponse opResponse);
 
     Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs);
+
+    /// <summary>
+    /// Is this able to provide file paths for blobs ?
+    /// </summary>
+    bool SupportsGetAbsoluteFilePath { get; }
+    
+    /// <summary>
+    /// Get the absolute file system path for a given blob path
+    /// </summary>
+    /// <param name="blobPath"></param>
+    /// <returns></returns>
+    string GetAbsoluteFilePath(string blobPath);
+
+    Task Clear(string blobPath);
   }
 }

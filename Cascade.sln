@@ -1,15 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.0.0
-MinimumVisualStudioVersion = 10.0.0.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buzzware.StandardExceptions", "StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj", "{69239D63-0977-4E61-A438-1FA4376EE514}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buzzware.StandardExceptions", "StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj", "{69239D63-0977-4E61-A438-1FA4376EE514}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buzzware.Cascade", "Buzzware.Cascade\Buzzware.Cascade.csproj", "{86AB870B-F058-48E3-B6F4-1F1C8BA83912}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buzzware.Cascade", "Buzzware.Cascade\Buzzware.Cascade.csproj", "{86AB870B-F058-48E3-B6F4-1F1C8BA83912}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buzzware.Cascade.Test", "Buzzware.Cascade.Test\Buzzware.Cascade.Test.csproj", "{8782718E-DE1C-4FC4-8EE7-768B2C46C967}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buzzware.Cascade.Test", "Buzzware.Cascade.Test\Buzzware.Cascade.Test.csproj", "{8782718E-DE1C-4FC4-8EE7-768B2C46C967}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buzzware.Cascade.RnD", "Buzzware.Cascade.RnD\Buzzware.Cascade.RnD.csproj", "{43CCA7E3-5DF4-44ED-AB20-F66E4327A438}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buzzware.Cascade.RnD", "Buzzware.Cascade.RnD\Buzzware.Cascade.RnD.csproj", "{43CCA7E3-5DF4-44ED-AB20-F66E4327A438}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{87E50AFD-7C0F-4C64-8E6B-CB5F092F01C4}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+		ClonedRepo.txt = ClonedRepo.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +42,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF99D676-E9EA-4F06-8211-73775B59B584}
 	EndGlobalSection
 EndGlobal

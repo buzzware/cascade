@@ -48,7 +48,7 @@ namespace Buzzware.Cascade {
 					Directory.CreateDirectory(folder);
 				if (value == null) {
 					if (File.Exists(path)) {
-						Log.Debug($"MetaSet file {path}");
+						Log.Verbose($"MetaSet file {path}");
 						File.Delete(path);
 					}
 				} else {
@@ -130,12 +130,12 @@ namespace Buzzware.Cascade {
 						foreach (var file in files) {
 							var fileTime = File.GetLastWriteTimeUtc(file);
 							if (olderThan == null) {
-								Log.Debug($"MetaClearPath file {file}");
+								Log.Verbose($"MetaClearPath file {file}");
 								File.Delete(file);
 							}
 							else {
 								if (fileTime <= olderThan.Value) {
-									Log.Debug($"MetaClearPath file {file}");
+									Log.Verbose($"MetaClearPath file {file}");
 									File.Delete(file);
 								}
 							}
@@ -248,7 +248,7 @@ namespace Buzzware.Cascade {
 		/// <param name="modelType">The Type of the model to hold.</param>
 		/// <param name="id">The identifier of the model to hold.</param>
 		public void Hold(Type modelType, object id) {
-			Log.Debug($"CascadeDataLayer Hold {modelType.FullName} id {id}");
+			Log.Verbose($"CascadeDataLayer Hold {modelType.FullName} id {id}");
 			var path = HoldModelPath(modelType,id);
 			MetaSet(path, String.Empty);
 		}
@@ -269,7 +269,7 @@ namespace Buzzware.Cascade {
 		/// <typeparam name="Model">The model type to unhold.</typeparam>
 		/// <param name="id">The identifier of the model to unhold.</param>
 		public void Unhold<Model>(object id) {
-			Log.Debug($"CascadeDataLayer Unhold {nameof(Model)} id {id}");
+			Log.Verbose($"CascadeDataLayer Unhold {nameof(Model)} id {id}");
 			MetaSet(HoldModelPath(typeof(Model),id),null);
 		}
 		
@@ -278,7 +278,7 @@ namespace Buzzware.Cascade {
 		/// </summary>
 		/// <param name="path">The blob path to hold.</param>
 		public void HoldBlob(string path) {
-			Log.Debug($"CascadeDataLayer HoldBlob {CascadeConstants.BLOB} path {path}");
+			Log.Verbose($"CascadeDataLayer HoldBlob {CascadeConstants.BLOB} path {path}");
 			var metaPath = HoldModelPath(CascadeConstants.BLOB,path);
 			MetaSet(metaPath, String.Empty);
 		}
@@ -288,7 +288,7 @@ namespace Buzzware.Cascade {
 		/// </summary>
 		/// <param name="path">The blob path to unhold.</param>
 		public void UnholdBlob(string path) {
-			Log.Debug($"CascadeDataLayer UnholdBlob {CascadeConstants.BLOB} path {path}");
+			Log.Verbose($"CascadeDataLayer UnholdBlob {CascadeConstants.BLOB} path {path}");
 			MetaSet(HoldModelPath(CascadeConstants.BLOB,path),null);
 		}
 		
@@ -388,7 +388,7 @@ namespace Buzzware.Cascade {
 		/// <param name="modelType">The Type of the model collection to hold.</param>
 		/// <param name="name">The name of the collection to hold.</param>
 		public void HoldCollection(Type modelType, string name) {
-			Log.Debug($"CascadeDataLayer HoldCollection {modelType.FullName} collection {name}");
+			Log.Verbose($"CascadeDataLayer HoldCollection {modelType.FullName} collection {name}");
 			var path = HoldCollectionPath(modelType,name);
 			MetaSet(path, String.Empty);
 		}
@@ -399,7 +399,7 @@ namespace Buzzware.Cascade {
 		/// <typeparam name="Model">The model type of the collection to unhold.</typeparam>
 		/// <param name="name">The name of the collection to unhold.</param>
 		public void UnholdCollection<Model>(string name) {
-			Log.Debug($"CascadeDataLayer UnholdCollection {nameof(Model)} collection {name}");
+			Log.Verbose($"CascadeDataLayer UnholdCollection {nameof(Model)} collection {name}");
 			var path = HoldCollectionPath(typeof(Model),name);
 			if (MetaExists(path))
 				MetaSet(path, null);

@@ -74,26 +74,26 @@ namespace Buzzware.Cascade.Test {
 
 			// Fetch the Parent entity and ensure its initial state has been set correctly
 			var parent = await cascade.Get<Parent>(1);
-			Assert.AreEqual(1, parent!.id);
-			Assert.IsNull(parent.Children);
+			Assert.That(1, Is.EqualTo(parent!.id));
+			Assert.That(parent.Children,Is.Null);
 			
 			// Populate the Parent's 'Children' property and verify that it contains correct associations
 			await cascade.Populate(parent, "Children");
-			Assert.AreEqual(2, parent.Children!.Count());
-			Assert.IsTrue(parent.Children!.Any(c => c.id == "5"));
-			Assert.IsTrue(parent.Children!.Any(c => c.id == "6"));
-			Assert.IsFalse(parent.Children!.Any(c => c.id == "7"));
+			Assert.That(parent.Children!.Count(), Is.EqualTo(2));
+			Assert.That(parent.Children!.Any(c => c.id == "5"),Is.True);
+			Assert.That(parent.Children!.Any(c => c.id == "6"),Is.True);
+			Assert.That(parent.Children!.Any(c => c.id == "7"),Is.False);
 
 			// Fetch the first Child and verify its 'Parent' association corresponds to the correct Parent
 			var child = parent.Children!.FirstOrDefault()!;
 			await cascade.Populate(child, "Parent");
-			Assert.AreSame(parent, child.Parent);
+			Assert.That(parent, Is.SameAs(child.Parent));
 			
 			// Re-fetch the Parent entity using population option and ensure the 'Children' associations are correct
 			var parent2 = await cascade.Get<Parent>(1, populate: new string[] { "Children" });
-			Assert.AreEqual(2, parent2.Children!.Count());
-			Assert.IsTrue(parent2.Children!.Any(c => c.id == "5"));
-			Assert.IsTrue(parent2.Children!.Any(c => c.id == "6"));
+			Assert.That(parent2.Children!.Count(), Is.EqualTo(2));
+			Assert.That(parent2.Children!.Any(c => c.id == "5"));
+			Assert.That(parent2.Children!.Any(c => c.id == "6"));
 		}
 	}
 }

@@ -109,6 +109,126 @@ namespace Buzzware.Cascade {
 			await destinationStream.WriteAsync(content, 0, content.Length);
 		}
 
+		public static byte[] BytesFromStream(Stream stream) {
+			if (stream == null)
+				throw new ArgumentNullException(nameof(stream));
+
+			// Fast path 1: MemoryStream - use built-in methods
+			if (stream is MemoryStream memoryStream) {
+				// If we're at the start, ToArray() is optimal
+				if (memoryStream.Position == 0) {
+					return memoryStream.ToArray();
+				}
+
+				// If not at start, read remaining bytes from current position
+				long remaining = memoryStream.Length - memoryStream.Position;
+				if (remaining == 0)
+					return Array.Empty<byte>();
+
+				byte[] buffer = new byte[remaining];
+				int bytesRead = memoryStream.Read(buffer, 0, buffer.Length);
+
+				// Handle case where Read didn't return all bytes (shouldn't happen with MemoryStream)
+				if (bytesRead != buffer.Length)
+					return buffer.AsSpan(0, bytesRead).ToArray();
+
+				return buffer;
+			}
+
+			// Fast path 2: FileStream or other seekable streams with known length
+			if (stream.CanSeek && stream.Length >= 0) {
+				long remaining = stream.Length - stream.Position;
+				if (remaining == 0)
+					return Array.Empty<byte>();
+
+				if (remaining > int.MaxValue)
+					throw new IOException($"Stream is too large ({remaining} bytes). Maximum supported size is {int.MaxValue} bytes.");
+
+				byte[] buffer = new byte[remaining];
+
+#if NET7_0_OR_GREATER
+        // .NET 7+ has ReadExactly which is more efficient
+        stream.ReadExactly(buffer, 0, buffer.Length);
+#else
+				// Read in loop to ensure we get all bytes
+				int totalRead = 0;
+				while (totalRead < buffer.Length) {
+					int bytesRead = stream.Read(buffer, totalRead, buffer.Length - totalRead);
+					if (bytesRead == 0)
+						throw new EndOfStreamException($"Stream ended after reading {totalRead} of {buffer.Length} bytes.");
+
+					totalRead += bytesRead;
+				}
+#endif
+
+				return buffer;
+			}
+
+			// Slow path: Non-seekable stream or unknown length
+			// Copy to MemoryStream then extract bytes
+			using (var ms = new MemoryStream()) {
+				stream.CopyTo(ms);
+				return ms.ToArray();
+			}
+		}    
+    
+		public static async Task<byte[]> BytesFromStreamAsync(Stream stream, CancellationToken cancellationToken = default)
+		{
+			if (stream == null)
+				throw new ArgumentNullException(nameof(stream));
+
+			// MemoryStream - synchronous is fine, it's in-memory
+			if (stream is MemoryStream memoryStream)
+			{
+				if (memoryStream.Position == 0)
+					return memoryStream.ToArray();
+        
+				long remaining = memoryStream.Length - memoryStream.Position;
+				if (remaining == 0)
+					return Array.Empty<byte>();
+        
+				byte[] buffer = new byte[remaining];
+				await memoryStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
+				return buffer;
+			}
+
+			// Seekable streams
+			if (stream.CanSeek && stream.Length >= 0)
+			{
+				long remaining = stream.Length - stream.Position;
+				if (remaining == 0)
+					return Array.Empty<byte>();
+        
+				if (remaining > int.MaxValue)
+					throw new IOException($"Stream is too large ({remaining} bytes).");
+        
+				byte[] buffer = new byte[remaining];
+        
+#if NET7_0_OR_GREATER
+        await stream.ReadExactlyAsync(buffer, 0, buffer.Length, cancellationToken);
+#else
+				int totalRead = 0;
+				while (totalRead < buffer.Length)
+				{
+					int bytesRead = await stream.ReadAsync(buffer, totalRead, buffer.Length - totalRead, cancellationToken);
+					if (bytesRead == 0)
+						throw new EndOfStreamException();
+            
+					totalRead += bytesRead;
+				}
+#endif
+        
+				return buffer;
+			}
+
+			// Non-seekable stream
+			using (var ms = new MemoryStream())
+			{
+				await stream.CopyToAsync(ms, 81920, cancellationToken); // 80KB buffer
+				return ms.ToArray();
+			}
+		}    
+    
     /// <summary>
     /// Writes a string content to a text file asynchronously.
     /// </summary>

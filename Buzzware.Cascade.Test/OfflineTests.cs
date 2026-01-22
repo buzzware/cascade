@@ -124,7 +124,7 @@ namespace Buzzware.Cascade.Test {
 			origin.NowMs += 10*60000;
 			
 			// try to get same thing again with overdue freshness - should return from cache anyway
-			var offlineThing = await cascade.Get<Thing>(cacheThing.id, freshnessSeconds: 5*60, fallbackFreshnessSeconds: RequestOp.FRESHNESS_ANY);
+			var offlineThing = await cascade.Get<Thing>(cacheThing.id, freshnessSeconds: 5*60, fallbackFreshnessSeconds: RequestOp.FALLBACK_ANY);
 			Assert.That(offlineThing,Is.SameAs(cacheThing));
 			Assert.That(cascade.ConnectionOnline,Is.True);	// Ensures connection still considered online
 

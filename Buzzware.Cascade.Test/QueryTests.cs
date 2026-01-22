@@ -77,13 +77,13 @@ namespace Buzzware.Cascade.Test {
 			// Check that the queried Parent objects are correctly cached
 			Parent? thing;
 			thing = await thingModelStore1.Fetch<Parent>(1);
-			Assert.AreEqual(1, thing.id);
-			Assert.AreEqual("red", thing.colour);
+			Assert.That(thing.id, Is.EqualTo(1));
+			Assert.That(thing.colour, Is.EqualTo("red"));
 			thing = await thingModelStore1.Fetch<Parent>(3);
-			Assert.AreEqual(3, thing.id);
-			Assert.AreEqual("red", thing.colour);
+			Assert.That(thing.id, Is.EqualTo(3));
+			Assert.That(thing.colour, Is.EqualTo("red"));
 			thing = await thingModelStore1.Fetch<Parent>(2);
-			Assert.AreEqual(null, thing); // Item not queried/shouldn't exist in cache
+			Assert.That(thing, Is.EqualTo(null)); // Item not queried/shouldn't exist in cache
 
       // Check request count when cache should fulfill query without hitting origin
 			var rcBefore = origin.RequestCount;
@@ -96,7 +96,7 @@ namespace Buzzware.Cascade.Test {
 
       // Verify result consistency and validate no additional origin requests
 			Assert.That(redThings2.Select(t => t.id).ToImmutableArray(), Is.EqualTo(new long[] {1, 3}));	// same response
-			Assert.AreEqual(rcBefore, origin.RequestCount);	// didn't use origin
+			Assert.That(origin.RequestCount, Is.EqualTo(rcBefore));	// didn't use origin
 
       // Validate behavior when freshness imposes a forced origin request
 			rcBefore = origin.RequestCount;
@@ -106,7 +106,7 @@ namespace Buzzware.Cascade.Test {
 				["colour"] = "red"
 			}, freshnessSeconds: 0)).ToImmutableArray();
 			Assert.That(redThings2.Select(t => t.id).ToImmutableArray(), Is.EqualTo(new long[] {1, 3}));	// same response
-			Assert.AreEqual(rcBefore + 1, origin.RequestCount);	// did use origin
+			Assert.That(origin.RequestCount, Is.EqualTo(rcBefore + 1));	// did use origin
 
       // Retrieve cached collection and validate it matches queried ids
 			var red_things_collection = await cascade.GetCollection<Parent>("red_things");

@@ -12,7 +12,6 @@ namespace Buzzware.Cascade {
   /// This would generally only be created once on startup of an application.
   /// </summary>
   public partial class CascadeDataLayer : INotifyPropertyChanged {
-    public const int FRESHNESS_ANY = Int32.MaxValue;
     
     private readonly IEnumerable<ICascadeCache> CacheLayers;
     private readonly ICascadePlatform cascadePlatform;

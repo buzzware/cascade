@@ -232,7 +232,7 @@ namespace Buzzware.Cascade.Test {
       Assert.That(op.Populate, Is.EqualTo(null));
       Assert.That(op.FreshnessSeconds, Is.EqualTo(RequestOp.FRESHNESS_DEFAULT));
       Assert.That(op.PopulateFreshnessSeconds, Is.EqualTo(RequestOp.FRESHNESS_DEFAULT));
-      Assert.That(op.FallbackFreshnessSeconds, Is.EqualTo(RequestOp.FRESHNESS_ANY));
+      Assert.That(op.FallbackFreshnessSeconds, Is.EqualTo(RequestOp.FALLBACK_ANY));
       Assert.That(op.Hold, Is.False);
       Assert.That(op.Criteria, Is.EqualTo(null));
       Assert.That(op.Params, Is.EqualTo(null));

@@ -6,9 +6,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Buzzware.Cascade.Utilities;
 using Buzzware.StandardExceptions;
 using Easy.Common.Extensions;
 using Serilog;
+using Serilog.Core;
 using Serilog.Events;
 
 namespace Buzzware.Cascade {
@@ -52,21 +54,22 @@ namespace Buzzware.Cascade {
 			
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
+			freshnessSeconds ??= Config.GetFreshnessSeconds(foreignType);
+			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds,Config.GetFallbackFreshnessSeconds(foreignType));
 			var requestOp = new RequestOp(
 				sequenceBeganMs ?? NowMs,
 				foreignType,
 				RequestVerb.Query,
 				null,
 				value: null,
-				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,  
+				freshnessSeconds: freshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds,  
 				hold: hold, 
 				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
 				key: key
 			);
-			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
-			await StoreInPreviousCaches(opResponse);
-			await SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
+			var opResponse = await ProcessRequest(requestOp);       
+      await SetModelCollectionProperty(model, propertyInfo, opResponse.Results);
 		}
 
 		/// <summary>
@@ -100,20 +103,21 @@ namespace Buzzware.Cascade {
 			
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
+			freshnessSeconds ??= Config.GetFreshnessSeconds(foreignType);
+			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds,Config.GetFallbackFreshnessSeconds(foreignType));
 			var requestOp = new RequestOp(
 				sequenceBeganMs ?? NowMs,
 				foreignType,
 				RequestVerb.Query,
 				null,
 				value: null,
-				freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+				freshnessSeconds: freshnessSeconds,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds,
 				hold: hold, 
 				criteria: new Dictionary<string, object?>() { [attribute.ForeignIdProperty] = modelId }, 
 				key: key
 			);
-			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
-			await StoreInPreviousCaches(opResponse);
+			var opResponse = await ProcessRequest(requestOp);
 			await SetModelProperty(model, propertyInfo, opResponse.FirstResult);
 		}
 
@@ -130,6 +134,7 @@ namespace Buzzware.Cascade {
 					case RequestVerb.Get:
 					case RequestVerb.Query:
 					case RequestVerb.BlobGet:
+					case RequestVerb.BlobGetFilePath:
 						return ProcessGetOrQuery(requestOp, connectionOnline);
 					case RequestVerb.GetCollection: 
 						return ProcessGetCollection(requestOp, connectionOnline);
@@ -227,7 +232,7 @@ namespace Buzzware.Cascade {
 						if (incomingAssocKeyValue == outgoingAssocKeyValue)
 							await SetModelProperty(outgoingModel, pi, value);
 						else
-							await Populate(outgoingModel, pi.Name, FRESHNESS_ANY);
+							await Populate(outgoingModel, pi.Name, RequestOp.FRESHNESS_ANY);
 						break;
 				}
 			}
@@ -240,23 +245,43 @@ namespace Buzzware.Cascade {
 		/// <param name="requestOp">The operation request detailing the type of operation and data parameters.</param>
 		/// <returns>OpResponse object containing the operation response data.</returns>
 		private async Task<OpResponse> ProcessRequest(RequestOp requestOp) {
-			if (Log.Logger.IsEnabled(LogEventLevel.Debug)) {
-				Log.Debug("ProcessRequest before criteria");
+			TimingProfiler? profiler = null;
+			if (Log.Logger.IsEnabled(LogEventLevel.Verbose)) {
+				profiler = new TimingProfiler($"ProcessRequest {requestOp.Verb} {requestOp.Type.Name} {requestOp.Id}");
+				profiler.Start();
 				var criteria = serialization.Serialize(requestOp.Criteria);
-				Log.Debug("ProcessRequest RequestOp: {@Verb} {@Id} {@Type} {@Key} {@Freshness} {@Criteria}",
-					requestOp.Verb, requestOp.Id, requestOp.Type, requestOp.Key, requestOp.FreshnessSeconds, criteria);
-				Log.Debug("ProcessRequest after criteria");
+				Log.Verbose("ProcessRequest RequestOp: {@Verb} {@Id} {@Type} {@Key} {@Freshness} {@Fallback} {@Criteria}",
+					requestOp.Verb, requestOp.Id, requestOp.Type, requestOp.Key, requestOp.FreshnessSeconds, requestOp.FallbackFreshnessSeconds, criteria);
 			}
 			
 			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
 			
+			
+			
 			await StoreInPreviousCaches(opResponse); // just store ResultIds
 			
-			if (Log.Logger.IsEnabled(LogEventLevel.Debug))
-				Log.Debug("ProcessRequest OpResponse: Exists: {@Exists}", opResponse.Exists);
-			var isBlobVerb = requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobPut;
-			if (Log.Logger.IsEnabled(LogEventLevel.Verbose) && !isBlobVerb)
-				Log.Verbose("ProcessRequest OpResponse: Result: {@Result}",opResponse.Result);
+			
+			if (requestOp.Verb==RequestVerb.BlobGetFilePath &&
+			    requestOp.Id is String blobPath &&
+			    opResponse.LayerIndex==-1 &&
+			    opResponse.Exists && 
+			    opResponse.Result!=null
+			)
+	    {
+		    var blobFileCache = CacheLayers.FirstOrDefault(layer => layer.SupportsGetBlobAbsoluteFilePath);
+		    var blobFilePath = blobFileCache?.GetBlobAbsoluteFilePath(blobPath);
+		    opResponse = opResponse.withChanges(result: blobFilePath);
+	    }
+			
+			var isBlobVerb = requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobGetFilePath || requestOp.Verb == RequestVerb.BlobPut;
+			if (Log.Logger.IsEnabled(LogEventLevel.Verbose)) {
+				if (profiler != null) {
+					profiler.Stop();
+					Log.Verbose(profiler.Report());
+				}
+				if (!isBlobVerb) Log.Verbose("ProcessRequest OpResponse: Result: {@Result}",opResponse.Result);
+			}
+
 			return opResponse;
 		}
 		
@@ -324,7 +349,7 @@ namespace Buzzware.Cascade {
 			// If offline or freshness not zero, proceed with cache retrieval
 			if (requestOp.FreshnessSeconds > RequestOp.FRESHNESS_INSIST) {
 				RequestOp cacheReq;
-				cacheReq = requestOp.CloneWith(freshnessSeconds: FRESHNESS_ANY);										
+				cacheReq = requestOp.CloneWith(freshnessSeconds: RequestOp.FRESHNESS_ANY);										
 
 				var layers = CacheLayers.ToArray();
 				for (var i = 0; i < layers.Length; i++) {
@@ -332,29 +357,28 @@ namespace Buzzware.Cascade {
 					var res = await layer.Fetch(cacheReq);
 					if (res.Exists) {
 						res.LayerIndex = i;
-						var arrivedAt = res.ArrivedAtMs == null ? "" : CascadeUtils.fromUnixMilliseconds((long)res.ArrivedAtMs).ToLocalTime().ToLongTimeString();
-						if (requestOp.Verb == RequestVerb.Get)
-							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
-						else if (requestOp.Verb == RequestVerb.Query)
-							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Key} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
-						else if (requestOp.Verb == RequestVerb.BlobGet)
-							Log.Debug($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
-						
+						LogIf.Verbose(() => {
+							var arrivedAt = res.ArrivedAtMs == null ? "" : CascadeUtils.fromUnixMilliseconds((long)res.ArrivedAtMs).ToLocalTime().ToLongTimeString();
+							if (requestOp.Verb == RequestVerb.Get)
+								Log.Verbose($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+							else if (requestOp.Verb == RequestVerb.Query)
+								Log.Verbose($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Key} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+							else if (requestOp.Verb == RequestVerb.BlobGet)
+								Log.Verbose($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+							else if (requestOp.Verb == RequestVerb.BlobGetFilePath)
+								Log.Verbose($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+						});
 						cacheResponse = res;
 						break;
 					}
 				}
 			}
 
-
-			if (
-				(cacheResponse?.Exists == true) && // in cache
-				(
-					!connectionOnline ||		// offline
-					(requestOp.FreshnessSeconds == RequestOp.FRESHNESS_ANY) ||	// freshness not required 
-					((requestOp.FreshnessSeconds>0) && (cacheResponse.ArrivedAtMs >= requestOp.FreshAfterMs))
-				)
-			) {
+			var gotCacheValue = cacheResponse?.Exists == true; 
+			var withinFreshness = gotCacheValue && ((requestOp.FreshnessSeconds == RequestOp.FRESHNESS_ANY) || ((requestOp.FreshnessSeconds > RequestOp.FRESHNESS_FRESHEST) && (cacheResponse!.ArrivedAtMs >= requestOp.FreshAfterMs))); 
+			var withinFallback = gotCacheValue && ((requestOp.FallbackFreshnessSeconds == RequestOp.FALLBACK_ANY) || ((requestOp.FallbackFreshnessSeconds > RequestOp.FALLBACK_NEVER) && (cacheResponse!.ArrivedAtMs >= requestOp.FallbackFreshAfterMs)));
+			
+			if (gotCacheValue && (connectionOnline ? withinFreshness : withinFallback)) {
 				opResponse = cacheResponse;	// in cache and offline or meets freshness
 			} else {
 				if (!connectionOnline)		// mustn't be in cache and we're offline, so not much we can do
@@ -362,10 +386,11 @@ namespace Buzzware.Cascade {
 				OpResponse originResponse;
 				bool connected = false;
 				try {
-					if (requestOp.Verb == RequestVerb.BlobGet && cacheResponse?.ETag != null) {
+					if ((requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobGetFilePath) && cacheResponse?.ETag != null) {
 						requestOp = requestOp.CloneWith(eTag: cacheResponse.ETag);
 					}
 					originResponse = await Origin.ProcessRequest(requestOp, connectionOnline);
+					
 					connected = connectionOnline;
 				} catch (Exception e) {
 					if (e is NoNetworkException)
@@ -375,10 +400,12 @@ namespace Buzzware.Cascade {
 				}
 				originResponse.LayerIndex = -1;
 				if (connected) {
-					if ( // originResponse indicates matching eTag, so return cacheResponse
-					    requestOp.Verb == RequestVerb.BlobGet &&
+					//bool cacheResponseExists = cacheResponse?.Exists??false;
+
+          if ( // originResponse indicates matching eTag, so return cacheResponse
+					    (requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobGetFilePath) &&
 					    originResponse.Result == null &&
-					    cacheResponse!.Exists &&
+					    gotCacheValue &&
 					    originResponse.ETag != null && originResponse.ETag == cacheResponse!.ETag
 					) {
 						opResponse = cacheResponse.withChanges(arrivedAtMs: originResponse.ArrivedAtMs ?? NowMs);
@@ -387,11 +414,7 @@ namespace Buzzware.Cascade {
 						opResponse = originResponse;
 					}
 				} else {
-					if ( // online but connection failure and meets fallback freshness
-					    cacheResponse?.Exists==true &&
-					    //requestOp.FallbackFreshnessSeconds != null &&
-					    (requestOp.FallbackFreshnessSeconds == RequestOp.FRESHNESS_ANY || ((requestOp.TimeMs - cacheResponse.ArrivedAtMs) <= requestOp.FallbackFreshnessSeconds * 1000))
-					) {
+					if (gotCacheValue && withinFallback) { // online but connection failure and meets fallback freshness
 						Debug.WriteLine("Buzzware.Cascade fallback to cached value");
 						opResponse = cacheResponse;
 					} else {
@@ -403,13 +426,13 @@ namespace Buzzware.Cascade {
 			if (requestOp.Hold && opResponse.LayerIndex!=0 /* We don't want to slow down the first cache layer (probably memory) by setting Hold */ && !(opResponse?.ResultIsEmpty() ?? false)) {
 				if (requestOp.Verb == RequestVerb.Get) {
 					Hold(requestOp.Type, requestOp.Id);
-				} else if (requestOp.Verb == RequestVerb.BlobGet) {
+				} else if (requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobGetFilePath) {
 					HoldBlob(((string)requestOp.Id)!);
 				} else if (requestOp.Verb == RequestVerb.Query) {
 					var isIdResults = opResponse.IsIdResults;
 					var type = requestOp.Type ?? (isIdResults ? null : opResponse.FirstResult?.GetType());
-					if (type != null) {
-						foreach (var r in opResponse.Results) {
+          if (type != null) {
+            foreach (var r in opResponse.Results) {
 							var id = isIdResults ? r : CascadeTypeUtils.GetCascadeId(r);
 							if (id != null)
 								Hold(type, id);

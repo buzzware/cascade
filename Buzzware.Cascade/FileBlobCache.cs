@@ -19,6 +19,7 @@ namespace Buzzware.Cascade {
     public const string BLOB_PATH_ALT_SEPARATOR = "_%_";
 
     public string EncodeBlobEtagPath(string path) {
+      path = path.TrimStart('/', '\\');
       return path.Replace("/", BLOB_PATH_ALT_SEPARATOR);
     }
 
@@ -71,25 +72,41 @@ namespace Buzzware.Cascade {
     /// <param name="path">The relative path to append to the temporary directory base.</param>
     /// <returns>The full file path as a string.</returns>
     protected string ToFilePath(string path) {
+      path = path.TrimStart('/', '\\');
       return Path.Combine(_tempDir, path);
     }
 
+    
     /// <summary>
     /// Constructs a path within the blob storage directory.
     /// </summary>
     /// <param name="path">The path relative to the blob directory.</param>
     /// <returns>The full path to the specified blob as a string.</returns>
-    protected string GetBlobPath(string path) { 
+    protected string GetBlobPath(string path) {
+      path = path.TrimStart('/', '\\');
       return Path.Combine(_blobDirectory, path);
     }
 
+    /// <summary>
+    /// Does support GetAbsoluteFilePath below
+    /// </summary>    
+    public bool SupportsGetAbsoluteFilePath => true;
+    
     /// <summary>
     /// Gets the absolute file path for a model associated with a specified relative path.
     /// </summary>
     /// <param name="path">The relative path to the model file within the blob directory.</param>
     /// <returns>The complete path to the model file as a string.</returns>
-    public string GetModelFilePath(string path) {
+    public string GetAbsoluteFilePath(string path) {
       return ToFilePath(GetBlobPath(path)); 
+    }
+
+    public async Task Clear(string blobPath) {
+      var file = GetAbsoluteFilePath(blobPath);
+      CascadeUtils.EnsureFileOperationSync(() => {
+        File.Delete(file);
+        ClearBlobEtags(blobPath);
+      });
     }
 
     /// <summary>
@@ -134,7 +151,7 @@ namespace Buzzware.Cascade {
     /// <param name="requestOp">The request operation containing the request details including the required freshness.</param>
     /// <returns>An OpResponse indicating the operation's result and associated data if the blob is found and valid.</returns>
     public async Task<OpResponse> Fetch(RequestOp requestOp) {
-      if (requestOp.Verb != RequestVerb.BlobGet)
+      if (requestOp.Verb != RequestVerb.BlobGet && requestOp.Verb != RequestVerb.BlobGetFilePath)
         throw new Exception("requestOp.Verb != Blob");
       bool exists;
       long arrivedAtMs;
@@ -143,25 +160,30 @@ namespace Buzzware.Cascade {
       if (path == null)
         throw new Exception("Id must be a string");
  
-      path = path.TrimStart('/');
+      path = path.TrimStart('/','\\');
       
       // Determine the path and existence of the blob file
-      string blobFilePath = GetModelFilePath(path);
+      string blobFilePath = GetAbsoluteFilePath(path);
       exists = File.Exists(blobFilePath);
       arrivedAtMs = exists ? CascadeUtils.toUnixMilliseconds(File.GetLastWriteTimeUtc(blobFilePath)) : -1;
       if (
         exists && 
         requestOp.FreshnessSeconds >= 0 && 
-        (requestOp.FreshnessSeconds == CascadeDataLayer.FRESHNESS_ANY || (arrivedAtMs >= requestOp.FreshAfterMs))
+        (requestOp.FreshnessSeconds == RequestOp.FRESHNESS_ANY || (arrivedAtMs >= requestOp.FreshAfterMs))
       ) {
-        var loaded = await LoadBlob(blobFilePath);
+        object? result = null;
+        if (requestOp.Verb == RequestVerb.BlobGet) {
+          result = await LoadBlob(blobFilePath);  
+        } else if (requestOp.Verb == RequestVerb.BlobGetFilePath) {
+          result = blobFilePath;
+        }
         var etag = FetchBlobEtag(path);
         return new OpResponse(
           requestOp,
           Cascade?.NowMs ?? 0,
           exists: true,
           arrivedAtMs: arrivedAtMs, 
-          result: loaded,
+          result: result,
           eTag: etag
         ) {
           SourceName = this.GetType().Name
@@ -178,19 +200,19 @@ namespace Buzzware.Cascade {
     /// <param name="opResponse">The response operation which includes the data to be stored or the command to delete.</param>
     public async Task Store(OpResponse opResponse) {
       var path = opResponse.RequestOp.Id as string;
-      path = path?.TrimStart('/');
+      path = path?.TrimStart('/','\\');
       long arrivedAt = opResponse.ArrivedAtMs ?? Cascade.NowMs;
 
       // Validate and process the path for storage
       if (path == null)
         throw new Exception("Bad path");
+      if (!(opResponse.Result is null or byte[]))
+        throw new ArgumentException("Result must be null or byte[]");
       try {
-        string modelFilePath = GetModelFilePath(path)!;
+        string modelFilePath = GetAbsoluteFilePath(path)!;
         if (opResponse.ResultIsEmpty()) {
           File.Delete(modelFilePath);
         } else {
-          if (!(opResponse.Result is byte[]))
-            throw new ArgumentException("Result must be null or byte[]");
           await StoreBlob(modelFilePath, (byte[]) opResponse.Result, arrivedAt);
         }
         StoreBlobEtag(path, opResponse.ETag);
@@ -200,11 +222,11 @@ namespace Buzzware.Cascade {
     }
 
     public async Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs) {
-      var modelFilePath = GetModelFilePath(blobPath);
+      var modelFilePath = GetAbsoluteFilePath(blobPath);
       if (File.Exists(modelFilePath))
         File.SetLastWriteTimeUtc(modelFilePath, CascadeUtils.fromUnixMilliseconds(arrivedAtMs));
     }
-
+    
     /// <summary>
     /// Loads a blob from a file in the file cache, reading it as a byte array.
     /// </summary>

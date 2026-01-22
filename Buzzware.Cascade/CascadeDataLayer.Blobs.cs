@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -48,8 +49,83 @@ namespace Buzzware.Cascade {
 			var req = RequestOp.BlobGetOp(
 				path,
 				sequenceBeganMs ?? NowMs,
-				freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-				fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+				freshnessSeconds ?? Config.GetFreshnessSeconds(typeof(byte[])),
+				fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(typeof(byte[])),
+				hold
+			);
+			
+			// Process the request and return its response
+			return ProcessRequest(req);
+		}
+		
+		/// <summary>
+		/// Retrieve a binary blob identified by the given path as an absolute file path, with optional caching and freshness parameters.
+		/// </summary>
+		/// <param name="path">Identifier for the blob</param>
+		/// <param name="freshnessSeconds">Desired freshness duration in seconds for the cache</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness duration if primary freshness cannot be achieved</param>
+		/// <param name="hold">Indicates if the blob and its associations should be held in cache</param>
+		/// <param name="sequenceBeganMs">The request timestamp in milliseconds since epoch, for caching optimization</param>
+		/// <returns>An absolute file path to the blob file, or null if not found</returns>
+		public async Task<string?> BlobGetFilePath(
+			string path,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null,
+			long? sequenceBeganMs = null
+		) {
+			OpResponse opResponse = await this.BlobGetFilePathResponse(path, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+			return opResponse.Result as string;
+		}
+
+		/// <summary>
+		/// Test whether blob identified by the given path as an absolute file path exists, with optional caching and freshness parameters.
+		/// For now this uses BlobGetFilePath which means it will download the file if it exists, but in future it should be optimised to only detect existence on the origin
+		/// </summary>
+		/// <param name="path">Identifier for the blob</param>
+		/// <param name="freshnessSeconds">Desired freshness duration in seconds for the cache</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness duration if primary freshness cannot be achieved</param>
+		/// <param name="hold">Indicates if the blob and its associations should be held in cache</param>
+		/// <param name="sequenceBeganMs">The request timestamp in milliseconds since epoch, for caching optimization</param>
+		/// <returns>An absolute file path to the blob file, or null if not found</returns>
+		public async Task<bool> BlobExists(
+			string path,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null,
+			long? sequenceBeganMs = null
+		) {
+			return await BlobGetFilePath(
+				path, 
+				freshnessSeconds, 
+				fallbackFreshnessSeconds, 
+				hold, 
+				sequenceBeganMs
+			) != null;
+		}
+		
+		/// <summary>
+		/// Retrieves a response containing a binary blob from the data layer based on the specified path.
+		/// </summary>
+		/// <param name="path">Path of the blob to be retrieved</param>
+		/// <param name="freshnessSeconds">Desired freshness of the blob in seconds</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness in case the primary cannot be achieved</param>
+		/// <param name="hold">Flag to hold the blob in cache for offline availability</param>
+		/// <param name="sequenceBeganMs">Request timestamp in milliseconds since epoch</param>
+		/// <returns>A task representing the operation, with OpResponse as the result</returns>
+		public Task<OpResponse> BlobGetFilePathResponse(
+			string path,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null,
+			long? sequenceBeganMs = null
+		) {
+			// Create a request operation for retrieving a binary blob
+			var req = RequestOp.BlobGetFilePathOp(
+				path,
+				sequenceBeganMs ?? NowMs,
+				freshnessSeconds ?? Config.GetFreshnessSeconds(typeof(byte[])),
+				fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(typeof(byte[])),
 				hold
 			);
 			
@@ -68,6 +144,21 @@ namespace Buzzware.Cascade {
 		) {
 			// Obtain and process the response for putting a binary blob
 			var response = await BlobPutResponse(path,data);
+		}		
+		
+		/// <summary>
+		/// Store a binary blob stream at the specified path.
+		/// One day this could be made more efficient for large blobs.
+		/// </summary>
+		/// <param name="path">Path where the blob will be stored</param>
+		/// <param name="data">The binary data to be stored</param>
+		public async Task BlobPut(
+			string path, 
+			Stream data
+		) {
+			// Obtain and process the response for putting a binary blob
+			var bytes = await CascadeUtils.BytesFromStreamAsync(data);
+			var response = await BlobPutResponse(path,bytes);
 		}		
 		
 		/// <summary>
@@ -123,6 +214,16 @@ namespace Buzzware.Cascade {
 			// Set the property of the model to the converted value
 			await SetModelProperty(model, propertyInfo, propertyValue);
 			return propertyValue;
+		}
+		
+		/// <summary>
+		/// Removes a binary blob of the specified path from the cache (if exists) without affecting the origin
+		/// </summary>
+		/// <param name="blobPath">Path identifying the blob to be cleared from the cache</param>
+		public async Task BlobClear(string blobPath) {
+			foreach (var layer in CacheLayers) {
+				await layer.ClearBlob(blobPath);
+			}
 		}
 	}
 }

@@ -108,14 +108,17 @@ namespace Buzzware.Cascade {
       bool? hold = null,
       long? sequenceBeganMs = null
     ) {
+      freshnessSeconds ??= Config.GetFreshnessSeconds(modelType);
+      populateFreshnessSeconds ??= freshnessSeconds; 
+      fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds,fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(modelType));
       var req = RequestOp.GetOp(
         modelType,
         id,
         sequenceBeganMs ?? NowMs,
         populate,
-        freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-        populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
-        fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+        freshnessSeconds,
+        populateFreshnessSeconds,
+        fallbackFreshnessSeconds,
         hold
       );
       return ProcessRequest(req);
@@ -141,9 +144,8 @@ namespace Buzzware.Cascade {
     ) {
       var timeMsFixed = sequenceBeganMs ?? NowMs;
       var ids = iids.Cast<object>().ToImmutableArray();
-      Log.Debug("BEGIN GetModelsForIds");
-      var profiler = new TimingProfiler("GetModelsForIds "+type.Name);
-      profiler.Start();
+      freshnessSeconds ??= Config.GetFreshnessSeconds(type);
+      fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(type));
       OpResponse[] allResponses = await CascadeUtils.ProcessParallel(ids, Config.MaxParallelRequests, id => 
         ProcessRequest( // map each id to a get request and process it
           new RequestOp(
@@ -157,9 +159,6 @@ namespace Buzzware.Cascade {
           )
         )
       );
-      profiler.Stop();
-      Log.Information(profiler.Report());
-      Log.Debug("END GetModelsForIds");
       return allResponses.ToImmutableArray();
     }
 
@@ -208,15 +207,18 @@ namespace Buzzware.Cascade {
       int? populateFreshnessSeconds = null,
       long? sequenceBeganMs = null
     ) {
-      var key = CascadeUtils.WhereCollectionKey(typeof(Model).Name, propertyName, propertyValue);
+      var type = typeof(Model);
+      var key = CascadeUtils.WhereCollectionKey(type.Name, propertyName, propertyValue);
+      freshnessSeconds ??= Config.GetFreshnessSeconds(type);
+      populateFreshnessSeconds ??= freshnessSeconds;
       var requestOp = new RequestOp(
         sequenceBeganMs ?? NowMs,
         typeof(Model),
         RequestVerb.Query,
         null,
         value: null,
-        freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-        populateFreshnessSeconds: populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
+        freshnessSeconds: freshnessSeconds,
+        populateFreshnessSeconds: populateFreshnessSeconds,
         criteria: new Dictionary<string, object?>() { [propertyName] = propertyValue },
         key: key
       );
@@ -323,14 +325,19 @@ namespace Buzzware.Cascade {
       bool? hold = null,
       long? sequenceBeganMs = null
     ) {
+      var type = typeof(M);
+      freshnessSeconds ??= Config.GetFreshnessSeconds(type);
+      populateFreshnessSeconds ??= freshnessSeconds; 
+      fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds,fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(type));
+      
       var req = RequestOp.QueryOp<M>(
         collectionName,
         criteria,
         sequenceBeganMs ?? NowMs,
         populate: populate,
-        freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-        populateFreshnessSeconds: populateFreshnessSeconds ?? Config.DefaultPopulateFreshnessSeconds,
-        fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+        freshnessSeconds: freshnessSeconds,
+        populateFreshnessSeconds: populateFreshnessSeconds,
+        fallbackFreshnessSeconds: fallbackFreshnessSeconds,
         hold ?? false
       );
       return ProcessRequest(req);

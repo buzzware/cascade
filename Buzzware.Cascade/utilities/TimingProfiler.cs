@@ -67,12 +67,14 @@ namespace Buzzware.Cascade.Utilities
       var sd = Math.Sqrt(_timings.Select(t => Math.Pow(t.TotalMilliseconds - avg, 2)).Average());
 
       // Prepare the report
-      var report = new StringBuilder($"TimingProfiler {_name} Report: Iterations: {_timings.Count}\n");
-      foreach (var timing in _timings)
-        report.AppendLine($"Iteration: {timing.TotalMilliseconds:0.000} ms");
+      var report = new StringBuilder($"TimingProfiler {_name} Report: Iterations: {_timings.Count} ");
 
-      // Append statistical information if there is more than one timing iteration
-      if (_timings.Count > 1) {
+      if (_timings.Count == 1) {
+        report.Append($"{_timings.First().TotalMilliseconds:0.000} ms\n");
+      } else if (_timings.Count > 1) {
+        // Append statistical information if there is more than one timing iteration
+        foreach (var timing in _timings)
+          report.AppendLine($"Iteration: {timing.TotalMilliseconds:0.000} ms");
         report.AppendLine($"Min: {min:0.000} ms");
         report.AppendLine($"Max: {max:0.000} ms");
         report.AppendLine($"Average: {avg:0.000} ms");
