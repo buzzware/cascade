@@ -46,4 +46,10 @@ namespace Buzzware.StandardExceptions {
 		public ReentrantException (string aMessage=DefaultMessage, Exception aInnerException=null, int aStatus = DefaultStatus) : base (aMessage,aInnerException,aStatus) {
 		}
 	}
+	
+	public class InvalidResponseException : StandardException {
+		public new const string DefaultMessage = "The server returned an invalid response.";
+		public InvalidResponseException (string aMessage=DefaultMessage, Exception aInnerException=null, int aStatus = 502) : base (aMessage,aInnerException,aStatus) {
+		}
+	}
 }
