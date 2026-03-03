@@ -65,13 +65,18 @@ namespace Buzzware.Cascade {
 				return;
 
 			foreach (JsonPropertyInfo propertyInfo in typeInfo.Properties) {
-				propertyInfo.ShouldSerialize = (obj, value) => !(
-					ignoreUnderscoreProperties && propertyInfo.Name.StartsWith("_") ||
-					ignoreAssociations && (propertyInfo.AttributeProvider != null && CascadeDataLayer.AssociationAttributes.Any(t => propertyInfo.AttributeProvider.GetCustomAttributes(t, false).Any())) ||
-					(!CascadeTypeUtils.IsSimple(propertyInfo.PropertyType) && propertyInfo.AttributeProvider == null) || // non-primitive values without attributes
-					(propertyInfo.AttributeProvider?.GetCustomAttributes(typeof(FromBlobAttribute), false).Any() ?? false) ||
-					(propertyInfo.AttributeProvider?.GetCustomAttributes(typeof(FromPropertyAttribute), false).Any() ?? false)
-				);
+				propertyInfo.ShouldSerialize = (obj, value) => {
+					var propertyAttribute = propertyInfo.AttributeProvider?.GetCustomAttributes(typeof(CascadePropertyAttribute), false).FirstOrDefault() as CascadePropertyAttribute;
+					if (propertyAttribute!=null && (propertyAttribute.Kind==CascadePropertyKind.None || propertyAttribute.Kind==CascadePropertyKind.Unknown))
+						return false;
+					return !(
+						ignoreUnderscoreProperties && propertyInfo.Name.StartsWith("_") ||
+						ignoreAssociations && (propertyInfo.AttributeProvider != null && CascadeDataLayer.AssociationAttributes.Any(t => propertyInfo.AttributeProvider.GetCustomAttributes(t, false).Any())) ||
+						(!CascadeTypeUtils.IsData(propertyInfo.PropertyType) && propertyInfo.AttributeProvider == null) || // non-primitive values without attributes
+						(propertyInfo.AttributeProvider?.GetCustomAttributes(typeof(FromBlobAttribute), false).Any() ?? false) ||
+						(propertyInfo.AttributeProvider?.GetCustomAttributes(typeof(FromPropertyAttribute), false).Any() ?? false)
+					);
+				};
 			}
 		}
 
