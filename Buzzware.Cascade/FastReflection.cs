@@ -39,7 +39,9 @@ namespace Buzzware.Cascade {
       var attrs = pi.GetCustomAttributes(true).ToArray();
       Attribute? attr;
 
-      if ((attr = attrs.FirstOrDefault(a => a is FromPropertyAttribute) as Attribute) != null) {
+      if ((attr = attrs.FirstOrDefault(a => a is CascadePropertyAttribute) as Attribute) != null) {
+        kind = ((CascadePropertyAttribute)attr).Kind;
+      } else if ((attr = attrs.FirstOrDefault(a => a is FromPropertyAttribute) as Attribute) != null) {
         kind = CascadePropertyKind.FromProperty;
       } else if (pi.Name.StartsWith("_")) {
         kind = CascadePropertyKind.Internal;
