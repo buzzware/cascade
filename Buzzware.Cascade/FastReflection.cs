@@ -43,7 +43,7 @@ namespace Buzzware.Cascade {
         kind = CascadePropertyKind.FromProperty;
       } else if (pi.Name.StartsWith("_")) {
         kind = CascadePropertyKind.Internal;
-      } else if (CascadeTypeUtils.IsSimple(CascadeTypeUtils.DeNullType(pi.PropertyType))) {
+      } else if (CascadeTypeUtils.IsData(CascadeTypeUtils.DeNullType(pi.PropertyType))) {
         if ((attr = attrs.FirstOrDefault(a => a is CascadeIdAttribute) as Attribute) != null) {
           kind = CascadePropertyKind.Id;
         } else {

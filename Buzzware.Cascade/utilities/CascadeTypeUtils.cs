@@ -328,9 +328,25 @@ namespace Buzzware.Cascade {
     public static readonly Type[] SimpleTypes = new Type[] {
       typeof(Byte), typeof(SByte), typeof(Int16), typeof(UInt16), typeof(Int32), typeof(UInt32), 
       typeof(Int64), typeof(UInt64), typeof(Char), typeof(Double), 
-      typeof(Single), typeof(Boolean), typeof(String)
+      typeof(Single), typeof(Boolean), typeof(String), typeof(Decimal)
     };
     
+    /// <summary>
+    /// List of time data types
+    /// </summary>
+    public static readonly Type[] TimeTypes = new Type[] {
+      typeof(DateTime), typeof(DateTimeOffset), typeof(TimeSpan), typeof(TimeZoneInfo)
+    };
+
+    /// <summary>
+    /// List of time data types
+    /// </summary>
+    public static readonly Type[] OtherDataTypes = new Type[] {
+      typeof(Guid)
+    };
+
+    public static readonly Type[] DataTypes = SimpleTypes.Concat(TimeTypes).Concat(OtherDataTypes).ToArray();
+
     /// <summary>
     /// Determines if a given type is a simple type (one of a basic, primitive type).
     /// </summary>
@@ -341,7 +357,18 @@ namespace Buzzware.Cascade {
         return true;
       return SimpleTypes.Contains(type);
     }
-
+    
+    /// <summary>
+    /// Determines if a given type is a data property type (ie a SimpleType or DateTime, DateTimeOffset, Time, Date, Timezone).
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns>True if the type is simple; otherwise, false.</returns>
+    public static bool IsData(Type? type) {
+      if (type == null)
+        return true;
+      return DataTypes.Contains(type);
+    }
+    
     /// <summary>
     /// Compares two objects for equality, accounting for possible numeric conversions and handling nulls.
     /// </summary>
