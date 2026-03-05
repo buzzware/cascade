@@ -97,8 +97,8 @@ namespace Buzzware.Cascade {
 							Config.MaxParallelRequests,
 							(path) => BlobGetResponse(
 								path,
-								freshnessSeconds: freshnessSeconds ?? Config.DefaultFreshnessSeconds,
-								fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.DefaultFallbackFreshnessSeconds,
+								freshnessSeconds: freshnessSeconds ?? Config.BlobFreshnessSeconds,
+								fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.BlobFallbackFreshnessSeconds,
 								hold: hold,
 								sequenceBeganMs ?? NowMs
 							)

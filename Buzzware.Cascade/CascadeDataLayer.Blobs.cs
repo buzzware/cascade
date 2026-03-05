@@ -49,15 +49,15 @@ namespace Buzzware.Cascade {
 			var req = RequestOp.BlobGetOp(
 				path,
 				sequenceBeganMs ?? NowMs,
-				freshnessSeconds ?? Config.GetFreshnessSeconds(typeof(byte[])),
-				fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(typeof(byte[])),
+				freshnessSeconds ?? Config.BlobFreshnessSeconds,
+				fallbackFreshnessSeconds ?? Config.BlobFallbackFreshnessSeconds,
 				hold
 			);
-			
+
 			// Process the request and return its response
 			return ProcessRequest(req);
 		}
-		
+
 		/// <summary>
 		/// Retrieve a binary blob identified by the given path as an absolute file path, with optional caching and freshness parameters.
 		/// </summary>
@@ -124,15 +124,15 @@ namespace Buzzware.Cascade {
 			var req = RequestOp.BlobGetFilePathOp(
 				path,
 				sequenceBeganMs ?? NowMs,
-				freshnessSeconds ?? Config.GetFreshnessSeconds(typeof(byte[])),
-				fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(typeof(byte[])),
+				freshnessSeconds ?? Config.BlobFreshnessSeconds,
+				fallbackFreshnessSeconds ?? Config.BlobFallbackFreshnessSeconds,
 				hold
 			);
-			
+
 			// Process the request and return its response
 			return ProcessRequest(req);
 		}
-		
+
 		/// <summary>
 		/// Store a binary blob at the specified path.
 		/// </summary>

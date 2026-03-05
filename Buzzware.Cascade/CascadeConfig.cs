@@ -36,6 +36,16 @@ namespace Buzzware.Cascade {
     public int DefaultFallbackFreshnessSeconds = RequestOp.FALLBACK_ANY;
 
     /// <summary>
+    /// Default freshness value for blobs
+    /// </summary>
+    public int BlobFreshnessSeconds = RequestOp.FRESHNESS_DEFAULT;
+    
+    /// <summary>
+    /// Default fallback freshness value for blobs
+    /// </summary>
+    public int BlobFallbackFreshnessSeconds = RequestOp.FALLBACK_ANY;
+
+    /// <summary>
     /// Root directory path for all files written by Cascade 
     /// </summary>
     public string StoragePath;
