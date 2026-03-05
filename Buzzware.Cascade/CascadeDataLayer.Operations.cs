@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -255,9 +256,17 @@ namespace Buzzware.Cascade {
 			}
 			
 			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
-			
-			
-			
+
+			// Convert Stream results from origin to byte[] so cache layers (which expect byte[]) can store them
+			if (opResponse.Result is Stream blobStream &&
+			    (requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobGetFilePath)) {
+				using (blobStream) {
+					using var ms = new MemoryStream();
+					await blobStream.CopyToAsync(ms);
+					opResponse = opResponse.withChanges(result: ms.ToArray());
+				}
+			}
+
 			await StoreInPreviousCaches(opResponse); // just store ResultIds
 			
 			

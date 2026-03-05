@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Buzzware.StandardExceptions;
 
 namespace Buzzware.Cascade {
 
@@ -26,9 +27,42 @@ namespace Buzzware.Cascade {
 			bool? hold = null,
 			long? sequenceBeganMs = null
 		) {
-			return (byte[]?)(await this.BlobGetResponse(path, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs)).Result;
+			//return (byte[]?)(await this.BlobGetResponse(path, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs)).Result;
+			var response = await this.BlobGetResponse(path, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+			if (response.Result==null || response.Result is byte[])
+				return response.Result as byte[];
+			if (response.Result is Stream stream) {
+				using (stream) {
+					using var ms = new MemoryStream();
+					await stream.CopyToAsync(ms);
+					return ms.ToArray();
+				}
+			}
+			throw new UnknownException("Invalid Result type: " + response.Result.GetType().FullName);					
 		}
 
+		/// <summary>
+		/// Retrieve a binary blob identified by the given path as a Stream, with optional caching and freshness parameters.
+		/// </summary>
+		/// <param name="path">Identifier for the blob</param>
+		/// <param name="freshnessSeconds">Desired freshness duration in seconds for the cache</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness duration if primary freshness cannot be achieved</param>
+		/// <param name="hold">Indicates if the blob and its associations should be held in cache</param>
+		/// <param name="sequenceBeganMs">The request timestamp in milliseconds since epoch, for caching optimization</param>
+		/// <returns>The blob data as a Stream or null if not found</returns>
+		public async Task<Stream?> BlobGetStream(
+			string path,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null,
+			long? sequenceBeganMs = null
+		) {
+			var response = await this.BlobGetResponse(path, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+			if (response.Result is byte[] bytes)
+				return new MemoryStream(bytes);
+			return response.Result as Stream;
+		}
+		
 		/// <summary>
 		/// Retrieves a response containing a binary blob from the data layer based on the specified path.
 		/// </summary>
@@ -57,7 +91,7 @@ namespace Buzzware.Cascade {
 			// Process the request and return its response
 			return ProcessRequest(req);
 		}
-
+		
 		/// <summary>
 		/// Retrieve a binary blob identified by the given path as an absolute file path, with optional caching and freshness parameters.
 		/// </summary>
