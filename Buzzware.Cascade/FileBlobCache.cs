@@ -198,7 +198,7 @@ namespace Buzzware.Cascade {
     /// If the result is empty, it deletes the corresponding file instead.
     /// </summary>
     /// <param name="opResponse">The response operation which includes the data to be stored or the command to delete.</param>
-    public async Task Store(OpResponse opResponse) {
+    public async Task<OpResponse> Store(OpResponse opResponse) {
       var path = opResponse.RequestOp.Id as string;
       path = path?.TrimStart('/','\\');
       long arrivedAt = opResponse.ArrivedAtMs ?? Cascade.NowMs;
@@ -206,21 +206,29 @@ namespace Buzzware.Cascade {
       // Validate and process the path for storage
       if (path == null)
         throw new Exception("Bad path");
-      if (!(opResponse.Result is null or byte[]))
-        throw new ArgumentException("Result must be null or byte[]");
+      if (!(opResponse.Result is null or byte[] or Stream))
+        throw new ArgumentException("Result must be null, byte[] or Stream");
       try {
         string modelFilePath = GetAbsoluteFilePath(path)!;
         if (opResponse.ResultIsEmpty()) {
           File.Delete(modelFilePath);
         } else {
-          await StoreBlob(modelFilePath, (byte[]) opResponse.Result, arrivedAt);
+          if (opResponse.Result is byte[] bytes) {
+            await StoreBlobBytes(modelFilePath, bytes, arrivedAt);
+          } else if (opResponse.Result is Stream stream) {
+            var newStream = await StoreBlobStream(modelFilePath, stream, arrivedAt);
+            opResponse = opResponse.withChanges(result: newStream);
+          } else {
+            throw new ArgumentException("Result must be byte[] or Stream");
+          }
         }
         StoreBlobEtag(path, opResponse.ETag);
       } catch (Exception e) {
         Log.Debug(e.Message);   // sharing violation exception sometimes happens here
       }
+      return opResponse;
     }
-
+    
     public async Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs) {
       var modelFilePath = GetAbsoluteFilePath(blobPath);
       if (File.Exists(modelFilePath))
@@ -247,7 +255,7 @@ namespace Buzzware.Cascade {
     /// <param name="path">The path of the file to be written to.</param>
     /// <param name="blob">The byte array data to be stored in the file.</param>
     /// <param name="arrivedAt">The timestamp to set as the file's last modification time.</param>
-    private async Task StoreBlob(string path, byte[] blob, long arrivedAt) {
+    private async Task StoreBlobBytes(string path, byte[] blob, long arrivedAt) {
       await Task.Run(async () => {
         if (!Directory.Exists(Path.GetDirectoryName(path)))
           Directory.CreateDirectory(Path.GetDirectoryName(path)!);
@@ -257,6 +265,28 @@ namespace Buzzware.Cascade {
         });
         File.SetLastWriteTimeUtc(path, CascadeUtils.fromUnixMilliseconds(arrivedAt));
       });
+    }
+    
+    /// <summary>
+    /// Writes a byte array to a relative path and updates the file's modification timestamp.
+    /// </summary>
+    /// <param name="path">The path of the file to be written to.</param>
+    /// <param name="blob">The byte array data to be stored in the file.</param>
+    /// <param name="arrivedAt">The timestamp to set as the file's last modification time.</param>
+    private async Task<Stream> StoreBlobStream(string path, Stream blob, long arrivedAt) {
+      Stream? result = null;
+      await Task.Run(async () => {
+        if (!Directory.Exists(Path.GetDirectoryName(path)))
+          Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+
+        await CascadeUtils.EnsureFileOperation(async () => {
+          using var destinationStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 64*1024, useAsync: true);
+          await blob.CopyToAsync(destinationStream);
+        });
+        File.SetLastWriteTimeUtc(path, CascadeUtils.fromUnixMilliseconds(arrivedAt));
+        result = new FileStream(path,FileMode.Open);
+      });
+      return result!;
     }
   }
 }

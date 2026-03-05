@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Buzzware.StandardExceptions;
@@ -191,15 +192,21 @@ namespace Buzzware.Cascade {
         {
             if (response == null) return null;
 
-            var bytesResponse = response.Result as byte[];
-
-            if (bytesResponse != null)
+            if (response.Result is byte[] bytesResponse)
                 return bytesResponse;
+
+            if (response.Result is Stream stream)
+            {
+                using (stream) {
+                    using var ms = new MemoryStream();
+                    stream.CopyTo(ms);
+                    return ms.ToArray();
+                }
+            }
 
             if (response.Result is OpResponse resultResponse)
             {
-                var final = resultResponse.Result as byte[];
-                return final;
+                return GetResponseBytes(resultResponse);
             }
 
             return null;

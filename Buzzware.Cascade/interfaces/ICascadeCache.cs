@@ -20,7 +20,7 @@ namespace Buzzware.Cascade {
     /// Stores the given operation response in the cache.
     /// </summary>
     /// <param name="opResponse">The response from an operation that includes data to be cached.</param>
-		Task Store(OpResponse opResponse);
+		Task<OpResponse> Store(OpResponse opResponse);
 		
     /// <summary>
     /// Stores a model in the cache.

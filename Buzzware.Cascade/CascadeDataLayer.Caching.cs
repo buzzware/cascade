@@ -134,9 +134,9 @@ namespace Buzzware.Cascade {
 		/// Store data in all previous cache layers that come before the current layer where the operation was found.
 		/// </summary>
 		/// <param name="opResponse">The response containing operation details, results, and layer information.</param>
-		private async Task StoreInPreviousCaches(OpResponse opResponse) {
+		private async Task<OpResponse> StoreInPreviousCaches(OpResponse opResponse) {
 			if (opResponse.LayerIndex == 0)
-				return;
+				return opResponse;
 
 			//await errorControl.FilterGuard(async () => {
 				ICascadeCache? layerFound = null;
@@ -160,9 +160,10 @@ namespace Buzzware.Cascade {
 					if (opResponse.RequestOp.Verb == RequestVerb.GetCollection)
 						await layer.StoreCollection(opResponse.RequestOp.Type, opResponse.RequestOp.Key!, opResponse.Results, opResponse.TimeMs);
 					else
-						await layer.Store(opResponse);
+						opResponse = await layer.Store(opResponse);
 				}
 			//});
+			return opResponse;
 		}
 
 		/// <summary>

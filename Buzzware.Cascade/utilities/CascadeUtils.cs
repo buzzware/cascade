@@ -574,7 +574,7 @@ namespace Buzzware.Cascade {
 			return Path.GetDirectoryName(path2);
 		}
 
-    // run a series of tasks with the given limit of parallel threads 
+		// run a series of tasks with the given limit of parallel threads 
 		public static async Task<Out[]> ProcessParallel<In,Out>(IEnumerable<In> items, int maxDegreeOfParallelism, Func<In, Task<Out>> process) {
 			var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
 			var tasks = new List<Task<Out>>();

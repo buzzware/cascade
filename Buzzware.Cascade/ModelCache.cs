@@ -151,7 +151,7 @@ namespace Buzzware.Cascade {
     /// Manages storage differently depending on whether it's a Blob operation, single model, or a query collection.
     /// </summary>
     /// <param name="opResponse">The response of an operation that provides details about what to store.</param>
-		public async Task Store(OpResponse opResponse) {
+		public async Task<OpResponse> Store(OpResponse opResponse) {
 			long arrivedAt = opResponse.ArrivedAtMs ?? Cascade.NowMs;
 
       // Decide on storage action based on the verb of the request operation
@@ -165,15 +165,15 @@ namespace Buzzware.Cascade {
 						throw new Exception("Type cannot be null");
 					if (!classCache.ContainsKey(opResponse.RequestOp.Type)) {
 						Log.Debug($"ModelCache: No type store for that type. Consider registering a IModelClassCache for the type {opResponse.RequestOp.Type.Name}");
-						return;
+						return opResponse;
 					}
 					var cache1 = classCache[opResponse.RequestOp.Type];
-					
+
           // Determine model ID, and decide whether to store or remove based on the response verb and presence flag
 					object? id = opResponse.RequestOp.Id ?? CascadeTypeUtils.TryGetCascadeId(opResponse.Result);
 					if (id == null) {
 						Log.Warning("ModelCache.Store: Unable to get valid Id - not caching this");
-						return;
+						return opResponse;
 					}
 					if (opResponse.RequestOp.Verb==RequestVerb.Destroy || !opResponse.Exists) {
 						await cache1.Remove(id);
@@ -188,7 +188,7 @@ namespace Buzzware.Cascade {
 						throw new Exception("Type cannot be null");
 					if (!classCache.ContainsKey(opResponse.RequestOp.Type)) {
 						Log.Debug($"ModelCache: No type store for that type. Consider registering a IModelClassCache for the type {opResponse.RequestOp.Type.Name}");
-						return;
+						return opResponse;
 					}
 					var cache2 = classCache[opResponse.RequestOp.Type];
 					if (opResponse.IsModelResults) {
@@ -204,12 +204,13 @@ namespace Buzzware.Cascade {
 				case RequestVerb.BlobPut:
 				case RequestVerb.BlobDestroy:
 					if (blobCache == null)
-						return;
-					await blobCache.Store(opResponse);
+						return opResponse;
+					opResponse = await blobCache.Store(opResponse);
 					break;
 				default:
 					break;
 			}
+			return opResponse;
 		}
 	}
 }
