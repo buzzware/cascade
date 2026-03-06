@@ -398,6 +398,16 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
+    /// Use this to distinguish a Linq Enumerable expression from a normal Array/List/Collection
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static bool IsMaterializedCollectionType(Type type) {
+      return typeof(ICollection).IsAssignableFrom(type) || 
+             type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>));
+    }
+    
+    /// <summary>
     /// Compares two enumerables for equality, checking individual elements for equality.
     /// </summary>
     /// <param name="a">The first enumerable to compare.</param>

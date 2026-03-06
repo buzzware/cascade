@@ -60,7 +60,6 @@ namespace Buzzware.Cascade {
 		public async Task SetModelCollectionProperty(object target, CascadePropertyInfo propertyInfo, object value) {
 			if (!propertyInfo.IsTypeEnumerable)
 				throw new ArgumentException("Property type should be IEnumerable");
-			
 			var singularType = propertyInfo.InnerType ?? propertyInfo.NotNullType;
 			if (CascadeTypeUtils.IsNullableType(singularType))
 				throw new ArgumentException("Singular type cannot be nullable");
@@ -77,16 +76,19 @@ namespace Buzzware.Cascade {
 					var valueSingularIsUntyped = valueSingularType == typeof(object);
 					var isAssignable = singularType.IsAssignableFrom(valueSingularType);
 					if (isAssignable || valueSingularIsUntyped) {
-						newValue = CascadeTypeUtils.ImmutableArrayOfType(singularType, (IEnumerable)value);
-					}
-					else {
+						newValue = CascadeTypeUtils.ImmutableArrayOfType(singularType, (IEnumerable)newValue);
+					} else {
 						throw new ArgumentException($"Singular type of value {valueType.FullName} must match property singular type {singularType.FullName}");
 					}
 				}
+			} else {
+				// ensure collection is materialized or make it an immutable array
+				if (!CascadeTypeUtils.IsMaterializedCollectionType(valueType)) {
+					newValue = CascadeTypeUtils.ImmutableArrayOfType(singularType, (IEnumerable)newValue);
+				}
 			}
-
 			await SetModelProperty(target, propertyInfo, newValue);
-		}
+	}
 		
 		/// <summary>
 		/// Replaces the value of the given HasMany property with the given IEnumerable of models and updates the caches appropriately.
