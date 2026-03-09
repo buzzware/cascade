@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Serilog;
 
 namespace Buzzware.Cascade.Utilities
 {
@@ -67,11 +69,13 @@ namespace Buzzware.Cascade.Utilities
       var sd = Math.Sqrt(_timings.Select(t => Math.Pow(t.TotalMilliseconds - avg, 2)).Average());
 
       // Prepare the report
-      var report = new StringBuilder($"TimingProfiler {_name} Report: Iterations: {_timings.Count} ");
+      var report = new StringBuilder();
 
       if (_timings.Count == 1) {
+        report.Append($"TimingProfiler {_name} ");
         report.Append($"{_timings.First().TotalMilliseconds:0.000} ms\n");
       } else if (_timings.Count > 1) {
+        report.Append($"TimingProfiler {_name} Report: Iterations: {_timings.Count} ");
         // Append statistical information if there is more than one timing iteration
         foreach (var timing in _timings)
           report.AppendLine($"Iteration: {timing.TotalMilliseconds:0.000} ms");
@@ -81,6 +85,16 @@ namespace Buzzware.Cascade.Utilities
         report.AppendLine($"Standard deviation: {sd:0.000} ms");
       }
       return report.ToString();
+    }
+
+    public static async Task LogTask(string name, Func<Task> task)
+    {
+      var tp = new TimingProfiler(name);
+      tp.Start();
+      Log.Debug($"TimingProfiler Start LogTask {name}");
+      await task();
+      tp.Stop();
+      Log.Debug(tp.Report());
     }
   }
 }
