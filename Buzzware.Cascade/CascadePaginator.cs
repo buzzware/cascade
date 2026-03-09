@@ -141,8 +141,9 @@ namespace Buzzware.Cascade {
             hold: this.Hold
           );
         }
+        // Smother DataNotAvailableOffline exception and return null so no further page loading occurs
         catch (DataNotAvailableOffline e) {
-          Console.WriteLine($"DataNotAvailableOffline page {page}");
+          Log.Debug($"DataNotAvailableOffline page {page}");
         }
 
         // Update the state depending on whether results were returned
