@@ -34,9 +34,10 @@ namespace Buzzware.Cascade {
       int? populateFreshnessSeconds = null,
       int? fallbackFreshnessSeconds = null,
       bool? hold = null,
-      long? sequenceBeganMs = null
+      long? sequenceBeganMs = null,
+      object? criteria = null
     ) where M : class {
-      return (await this.GetResponse(typeof(M),id, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs)).Result as M;
+      return (await this.GetResponse(typeof(M),id, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs, criteria: criteria)).Result as M;
     }
 
     /// <summary>
@@ -90,6 +91,7 @@ namespace Buzzware.Cascade {
     /// <summary>
     /// Retrieves a model instance of the given model type and ID with a full detail OpResponse object.
     /// </summary>
+    /// <param name="modelType"></param>
     /// <param name="id">ID of model to retrieve.</param>
     /// <param name="populate">Enumerable association property names to set with data for convenience.</param>
     /// <param name="freshnessSeconds">Freshness duration for the main object.</param>
@@ -97,6 +99,7 @@ namespace Buzzware.Cascade {
     /// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
     /// <param name="hold">Indicates whether to mark the main object and populated associations to be held in cache.</param>
     /// <param name="sequenceBeganMs">(Optional) Request time represented as milliseconds since 1970.</param>
+    /// <param name="criteria"></param>
     /// <returns>OpResponse containing the response details.</returns>
     public Task<OpResponse> GetResponse(
       Type modelType,
@@ -106,7 +109,8 @@ namespace Buzzware.Cascade {
       int? populateFreshnessSeconds = null,
       int? fallbackFreshnessSeconds = null,
       bool? hold = null,
-      long? sequenceBeganMs = null
+      long? sequenceBeganMs = null,
+      object? criteria = null
     ) {
       freshnessSeconds ??= Config.GetFreshnessSeconds(modelType);
       populateFreshnessSeconds ??= freshnessSeconds; 
@@ -119,7 +123,8 @@ namespace Buzzware.Cascade {
         freshnessSeconds,
         populateFreshnessSeconds,
         fallbackFreshnessSeconds,
-        hold
+        hold,
+        criteria: criteria
       );
       return ProcessRequest(req);
     }

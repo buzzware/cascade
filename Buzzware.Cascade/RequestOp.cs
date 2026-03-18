@@ -48,6 +48,7 @@ namespace Buzzware.Cascade {
 		/// <param name="populateFreshnessSeconds">Specific freshness requirement for populated relations. Defaults to FRESHNESS_DEFAULT if not provided.</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
+		/// <param name="criteria"></param>
 		/// <returns>A new instance of RequestOp representing a "Get" request.</returns>
 		public static RequestOp GetOp<Model>(
 			object id,
@@ -56,7 +57,8 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null, 
 			int? fallbackFreshnessSeconds = null, 
-			bool? hold = null
+			bool? hold = null,
+			object? criteria = null
 		) {
 			freshnessSeconds ??= FRESHNESS_DEFAULT;
 			populateFreshnessSeconds = Math.Max((int)freshnessSeconds, populateFreshnessSeconds ?? FRESHNESS_DEFAULT);
@@ -70,7 +72,8 @@ namespace Buzzware.Cascade {
 				freshnessSeconds: freshnessSeconds,
 				populateFreshnessSeconds: populateFreshnessSeconds,
 				fallbackFreshnessSeconds: fallbackFreshnessSeconds,
-				hold: hold
+				hold: hold,
+				criteria: criteria
 			);
 		}
 
@@ -94,7 +97,8 @@ namespace Buzzware.Cascade {
 			int? freshnessSeconds = null,
 			int? populateFreshnessSeconds = null, 
 			int? fallbackFreshnessSeconds = null, 
-			bool? hold = null
+			bool? hold = null,
+			object? criteria = null
 		) {
 			freshnessSeconds ??= FRESHNESS_DEFAULT;
 			populateFreshnessSeconds = Math.Max((int)freshnessSeconds, populateFreshnessSeconds ?? FRESHNESS_DEFAULT);
@@ -108,7 +112,8 @@ namespace Buzzware.Cascade {
 				freshnessSeconds: freshnessSeconds,
 				populateFreshnessSeconds: populateFreshnessSeconds,
 				fallbackFreshnessSeconds: fallbackFreshnessSeconds,
-				hold: hold
+				hold: hold,
+				criteria: criteria
 			);
 		}
 		
@@ -186,7 +191,8 @@ namespace Buzzware.Cascade {
 			string path,
 			long timeMs,
 			byte[] data, 
-			bool? hold = null
+			bool? hold = null,
+			object? criteria = null
 		) {
 			return new RequestOp(
 				timeMs,
@@ -194,7 +200,8 @@ namespace Buzzware.Cascade {
 				RequestVerb.BlobPut,
 				path,
 				value: data,
-				hold: hold
+				hold: hold,
+				criteria: criteria
 			);
 		}
 
@@ -206,13 +213,15 @@ namespace Buzzware.Cascade {
 		/// <returns>A new instance of RequestOp representing a "BlobDestroy" request.</returns>
 		public static RequestOp BlobDestroyOp(
 			string path, 
-			long timeMs
+			long timeMs,
+			object? criteria = null
 		) {
 			return new RequestOp(
 				timeMs,
 				typeof(byte[]),
 				RequestVerb.BlobDestroy,
-				path
+				path,
+				criteria: criteria
 			);
 		}
 		
@@ -292,7 +301,8 @@ namespace Buzzware.Cascade {
 		public static RequestOp CreateOp(
 			object model,
 			long timeMs,
-			bool hold = false
+			bool hold = false,
+			object? criteria = null
 		) {
 			return new RequestOp(
 				timeMs,
@@ -300,7 +310,8 @@ namespace Buzzware.Cascade {
 				RequestVerb.Create,
 				CascadeTypeUtils.GetCascadeId(model),
 				value: model,
-				hold: hold
+				hold: hold,
+				criteria: criteria
 			);
 		}
 		
@@ -311,13 +322,18 @@ namespace Buzzware.Cascade {
 		/// <param name="model">The model instance to be deleted.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
 		/// <returns>A new instance of RequestOp representing a "Destroy" request.</returns>
-		public static RequestOp DestroyOp<Model>(Model model, long timeMs) {
+		public static RequestOp DestroyOp<Model>(
+			Model model, 
+			long timeMs,
+			object? criteria = null
+		) {
 			return new RequestOp(
 				timeMs,
 				typeof(Model),
 				RequestVerb.Destroy,
 				CascadeTypeUtils.GetCascadeId(model),
-				value: model
+				value: model,
+				criteria: criteria
 			);
 		}
 		
@@ -328,13 +344,14 @@ namespace Buzzware.Cascade {
 		/// <param name="model">The model instance to be replaced.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
 		/// <returns>A new instance of RequestOp representing a "Replace" request.</returns>
-		public static RequestOp ReplaceOp<Model>(Model model, long timeMs) {
+		public static RequestOp ReplaceOp<Model>(Model model, long timeMs, object? criteria = null) {
 			return new RequestOp(
 				timeMs,
 				typeof(Model),
 				RequestVerb.Replace,
 				CascadeTypeUtils.GetCascadeId(model),
-				value: model
+				value: model,
+				criteria: criteria
 			);
 		}
 		
@@ -346,14 +363,15 @@ namespace Buzzware.Cascade {
 		/// <param name="changes">A dictionary containing the changes to be applied to the model.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
 		/// <returns>A new instance of RequestOp representing an "Update" request.</returns>
-		public static RequestOp UpdateOp<Model>(Model model, IDictionary<string, object?> changes, long timeMs) {
+		public static RequestOp UpdateOp<Model>(Model model, IDictionary<string, object?> changes, long timeMs, object? criteria = null) {
 			return new RequestOp(
 				timeMs,
 				typeof(Model),
 				RequestVerb.Update,
 				CascadeTypeUtils.GetCascadeId(model),
 				value: changes,
-				extra: model
+				extra: model,
+				criteria: criteria
 			);
 		}
 		
