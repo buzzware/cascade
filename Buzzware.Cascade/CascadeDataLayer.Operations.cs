@@ -210,7 +210,8 @@ namespace Buzzware.Cascade {
 			var changes = requestOp.Verb==RequestVerb.Update ? requestOp.Value as IDictionary<string, object?> : null;
 			foreach (var pi in classInfo.Associationinfos.Values) {
 				object? value = null;
-				if (changes?.TryGetValue(pi.Name, out var change) ?? false)
+				object? change = null;
+				if (changes?.TryGetValue(pi.Name, out change) ?? false)
 					value = change;
 				else
 					value = pi.GetValue(incomingModel);
