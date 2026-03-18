@@ -15,28 +15,31 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="criteria">The search criteria used to filter data</param>
     /// <returns>A collection of model objects that meet the specified criteria</returns>
-		Task<IEnumerable> Query(object criteria);
+		Task<IEnumerable> Query(object criteria, RequestOp requestOp);
 
     /// <summary>
     /// Retrieves a model object by its unique identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the model object</param>
+    /// <param name="requestOp">The request operation</param>
     /// <returns>The model object if found, otherwise null</returns>
-		Task<object?> Get(object id);
+		Task<object?> Get(object id, RequestOp requestOp);
 
     /// <summary>
     /// Creates a new model object with the provided initial values.
     /// </summary>
     /// <param name="value">The initial values for creating the new model object</param>
+    /// <param name="requestOp">The request operation</param>
     /// <returns>The newly created model object</returns>
-		Task<object> Create(object value);
+		Task<object> Create(object value, RequestOp requestOp);
 
     /// <summary>
     /// Replaces an existing model object with a new version.
     /// </summary>
     /// <param name="value">The new model object to replace the existing one</param>
+    /// <param name="requestOp">The request operation</param>
     /// <returns>The replaced model object</returns>
-		Task<object> Replace(object value);
+		Task<object> Replace(object value, RequestOp requestOp);
 
     /// <summary>
     /// Updates specific fields of an existing model object.
@@ -44,14 +47,16 @@ namespace Buzzware.Cascade {
     /// <param name="id">The unique identifier of the model object to be updated</param>
     /// <param name="changes">Dictionary of field names with their corresponding new values</param>
     /// <param name="model">The current instance of the model object being updated</param>
+    /// <param name="requestOp">The request operation</param>
     /// <returns>The updated model object</returns>
-		Task<object> Update(object id, IDictionary<string, object?> changes, object? model);
+		Task<object> Update(object id, IDictionary<string, object?> changes, object? model, RequestOp requestOp);
 
     /// <summary>
     /// Destroys the specified model object, removing it from the underlying data store.
     /// </summary>
     /// <param name="model">The model object to be destroyed</param>
-		Task Destroy(object model);
+    /// <param name="requestOp">The request operation</param>
+		Task Destroy(object model, RequestOp requestOp);
 
     /// <summary>
     /// Ensures that the caller is authenticated before proceeding with any operations.

@@ -87,27 +87,28 @@ namespace Buzzware.Cascade.Testing {
         var co = classOrigins[request.Type];
         switch (request.Verb) {
           case RequestVerb.Query:
-            result = await co.Query(request.Criteria);
+            result = await co.Query(request.Criteria, request);
             break;
           case RequestVerb.Get:
-            result = await co.Get(request.Id);
+            result = await co.Get(request.Id, request);
             break;
           case RequestVerb.Create:
-            result = await co.Create(request.Value!);
+            result = await co.Create(request.Value!, request);
             break;
           case RequestVerb.Update:
             if (request != null)
               result = await co.Update(
                 request.Id,
                 ((IDictionary<string, object?>)request.Value)!,
-                request.Extra
+                request.Extra,
+                request
               );
             break;
           case RequestVerb.Replace:
-            result = await co.Replace(request.Value!);
+            result = await co.Replace(request.Value!, request);
             break;
           case RequestVerb.Destroy:
-            await co.Destroy(request.Value!);
+            await co.Destroy(request.Value!, request);
             break;
           default:
             throw new NotImplementedException();
@@ -180,7 +181,7 @@ namespace Buzzware.Cascade.Testing {
     /// <returns>An instance of type M if found, otherwise null.</returns>
     public async Task<M?> Get<M>(object id) where M : SuperModel {
       var co = classOrigins[typeof(M)] as MockModelClassOrigin<M>;
-      var model = (await co?.Get(id)) as M;
+      var model = (await co?.Get(id, null)) as M;
       return model;
     }
 

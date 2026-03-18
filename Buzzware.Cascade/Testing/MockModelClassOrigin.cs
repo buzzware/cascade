@@ -62,7 +62,7 @@ namespace Buzzware.Cascade.Testing {
     /// </summary>
     /// <param name="criteria">The criteria used to filter the models.</param>
     /// <returns>An enumerable of models that match the given criteria.</returns>
-    public async Task<IEnumerable> Query(object criteria) {
+    public async Task<IEnumerable> Query(object criteria, RequestOp requestOp) {
       JsonElement? crit = criteria as JsonElement?;
       if (crit == null)
         crit = JsonSerializer.SerializeToElement(criteria);
@@ -88,7 +88,7 @@ namespace Buzzware.Cascade.Testing {
     /// </summary>
     /// <param name="id">The identifier of the model to retrieve.</param>
     /// <returns>The model associated with the given id, or null if not found.</returns>
-    public async Task<object?> Get(object id) {
+    public async Task<object?> Get(object id, RequestOp requestOp) {
       var idType = CascadeTypeUtils.GetCascadeIdType(typeof(M));
       var id2 = CascadeTypeUtils.ConvertTo(idType!, id);
       models.TryGetValue(id2!, out var result);
@@ -124,7 +124,7 @@ namespace Buzzware.Cascade.Testing {
     /// </summary>
     /// <param name="value">The initial data for the new model.</param>
     /// <returns>The created model object.</returns>
-    public async Task<object> Create(object value) {
+    public async Task<object> Create(object value, RequestOp requestOp) {
       var result = OfflineUtils.CreateOffline((SuperModel)value, Origin.NewGuid);
       var id = CascadeTypeUtils.GetCascadeId(result);
       models[id] = (M)result;
@@ -132,7 +132,7 @@ namespace Buzzware.Cascade.Testing {
     }
 
     /// <summary></summary>
-    public async Task<object> Replace(object model) {
+    public async Task<object> Replace(object model, RequestOp requestOp) {
       var classInfo = FastReflection.GetClassInfo(model);
       var blank = (Activator.CreateInstance(classInfo.Type) as SuperModel)!;
       FastReflection.CopyProperties(model, blank, classInfo.DataAndIdNames);
@@ -140,7 +140,7 @@ namespace Buzzware.Cascade.Testing {
     }
 
     /// <summary></summary>
-    public async Task<object> Update(object id, IDictionary<string, object?> changes, object? model) {
+    public async Task<object> Update(object id, IDictionary<string, object?> changes, object? model, RequestOp requestOp) {
       var classInfo = FastReflection.GetClassInfo(model);
       var blank = (Activator.CreateInstance(classInfo.Type) as SuperModel)!;
       FastReflection.CopyProperties(model, blank, classInfo.DataAndIdNames);
@@ -149,7 +149,7 @@ namespace Buzzware.Cascade.Testing {
     }
 
     /// <summary></summary>
-    public Task Destroy(object model) {
+    public Task Destroy(object model, RequestOp requestOp) {
       throw new System.NotImplementedException();
     }
 
