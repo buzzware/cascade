@@ -268,8 +268,9 @@ namespace Buzzware.Cascade {
 			// 	}
 			// }
 
-			opResponse = await StoreInPreviousCaches(opResponse); // just store ResultIds
-			
+			if (requestOp.Verb!=RequestVerb.Execute)
+				opResponse = await StoreInPreviousCaches(opResponse); // just store ResultIds
+
 			
 			if (requestOp.Verb==RequestVerb.BlobGetFilePath &&
 			    requestOp.Id is String blobPath &&

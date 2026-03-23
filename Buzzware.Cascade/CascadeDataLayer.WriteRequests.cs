@@ -137,14 +137,16 @@ namespace Buzzware.Cascade {
     /// <param name="action">The action to execute.</param>
     /// <param name="parameters">Parameters required for executing the action.</param>
     /// <returns>Result of type ReturnType after executing the action.</returns>
-    public async Task<ReturnType> Execute<ModelType, ReturnType>(string action, IDictionary<string, object?> parameters) {
+    public async Task<ReturnType?> Execute<ModelType, ReturnType>(string action, IDictionary<string, object?> parameters) {
       var response = await ExecuteResponse<ModelType, ReturnType>(
         action,
         parameters
       );
+      if (response.Result == null)
+        return default;
       if (response.Result is not ReturnType result)
         throw new AssumptionException($"Should be of type {typeof(ReturnType).Name}");
-      return (ReturnType)response.Result;
+      return result;
     }
 
     /// <summary>
@@ -163,6 +165,5 @@ namespace Buzzware.Cascade {
       );
       return ProcessRequest(req);
     }
-
   }
 }

@@ -74,7 +74,7 @@ namespace Buzzware.Cascade {
     /// <param name="request">The operation to be executed on the model</param>
     /// <param name="connectionOnline">A boolean indicating whether the connection is online</param>
     /// <returns>The result of the executed operation</returns>
-		Task<object> Execute(RequestOp request, bool connectionOnline);
+		Task<object?> Execute(RequestOp request, bool connectionOnline);
 
     /// <summary>
     /// Reference of the parent origin
