@@ -267,10 +267,15 @@ namespace Buzzware.Cascade {
 			// 		opResponse = opResponse.withChanges(result: ms.ToArray());
 			// 	}
 			// }
+			var resultType = opResponse.Result?.GetType();
+			var attemptToStoreInCache = resultType == null ||
+			                            CascadeTypeUtils.IsEnumerableType(resultType) ||
+			                            CascadeTypeUtils.IsModelType(resultType) ||
+			                            CascadeTypeUtils.IsEnumerableModelType(resultType) ||
+			                            opResponse.ResultIsBlob();
 
-			if (requestOp.Verb!=RequestVerb.Execute)
+			if (attemptToStoreInCache)
 				opResponse = await StoreInPreviousCaches(opResponse); // just store ResultIds
-
 			
 			if (requestOp.Verb==RequestVerb.BlobGetFilePath &&
 			    requestOp.Id is String blobPath &&

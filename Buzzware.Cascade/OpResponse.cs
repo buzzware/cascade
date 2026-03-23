@@ -87,7 +87,8 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <returns>True if the result is a blob.</returns>
     public bool ResultIsBlob() {
-      return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobGetFilePath || RequestOp.Verb == RequestVerb.BlobPut) && Result is byte[] or Stream;
+      return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobGetFilePath || RequestOp.Verb == RequestVerb.BlobPut) 
+             && Result is byte[] or Stream;
     }
 
     /// <summary>
@@ -138,7 +139,14 @@ namespace Buzzware.Cascade {
     /// <summary>
     /// Indicates if the results are a collection that is not a blob.
     /// </summary>
-    public bool IsEnumerableResults => (Result is IEnumerable) && !ResultIsBlob(); 
+    public bool IsEnumerableResults {
+      get {
+        var type = Result?.GetType();
+        if (type == null)
+          return false;
+        return CascadeTypeUtils.IsEnumerableType(type) && !ResultIsBlob();
+      }
+    }
 
     /// <summary>
     /// Indicates if the results are a model type.
