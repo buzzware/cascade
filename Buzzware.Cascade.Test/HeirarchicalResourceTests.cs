@@ -35,10 +35,6 @@ namespace Buzzware.Cascade.Test {
       return $"/parent/{parentId}/child/{childId}";
     }
 
-    private string PrefixForParent(string parentId) {
-      return $"/parent/{parentId}/child/";
-    }
-
     public async Task<IEnumerable> Query(object criteria, RequestOp requestOp) {
       // criteria should contain parentId for filtering
       JsonElement? crit = criteria as JsonElement?;
@@ -50,9 +46,8 @@ namespace Buzzware.Cascade.Test {
 
       if (parentId.Value.ValueKind != JsonValueKind.Undefined) {
         var pid = parentId.Value.GetString();
-        var prefix = PrefixForParent(pid!);
         return Store
-          .Where(kv => kv.Key.StartsWith(prefix))
+          .Where(kv => kv.Key.StartsWith($"/parent/{pid!}/child/"))
           .Select(kv => kv.Value)
           .ToImmutableArray();
       }
@@ -78,7 +73,8 @@ namespace Buzzware.Cascade.Test {
 
     public async Task<object> Create(object value, RequestOp requestOp) {
       var child = (Child2)value;
-      var created = new Child2 { id = child.id, parentId = child.parentId, name = child.name };
+      var id = child.id ?? Origin.NewGuid();
+      var created = new Child2 { id = id, parentId = child.parentId, name = child.name };
       var url = UrlForChild(created);
       Store[url] = created;
       return created;
@@ -260,7 +256,7 @@ namespace Buzzware.Cascade.Test {
       )).ToImmutableArray();
 
       // Populate Children association on all parents
-      await cascade.Populate(parents.Cast<SuperModel>(), new[] { "Children" }, freshnessSeconds: 0);
+      await cascade.Populate(parents, new[] { "Children" }, freshnessSeconds: 0);
 
       var p1 = parents.First(p => p.id == "p1");
       var p2 = parents.First(p => p.id == "p2");
@@ -397,7 +393,7 @@ namespace Buzzware.Cascade.Test {
       Assert.That(parent.Children!.Count, Is.EqualTo(2));
 
       // Populate Toys on all children
-      await cascade.Populate(parent.Children.Cast<SuperModel>(), "Toys", freshnessSeconds: 0);
+      await cascade.Populate(parent.Children, "Toys", freshnessSeconds: 0);
 
       var c1 = parent.Children.First(c => c.id == "c1");
       var c2 = parent.Children.First(c => c.id == "c2");
@@ -407,6 +403,43 @@ namespace Buzzware.Cascade.Test {
 
       Assert.That(c2.Toys, Is.Not.Null);
       Assert.That(c2.Toys!.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public async Task CreateChildAndEnsureInParentChildren() {
+      SeedData();
+
+      // Get parent and populate its Children
+      var parent = await cascade.Get<Parent2>("p1", freshnessSeconds: 0);
+      Assert.That(parent, Is.Not.Null);
+      await cascade.Populate(parent!, new[] { "Children" }, freshnessSeconds: 0);
+      Assert.That(parent!.Children!.Count, Is.EqualTo(2));
+
+      // Create a new child via cascade - id should be assigned by the origin
+      var newChild = await cascade.Create(new Child2 { parentId = "p1", name = "Child Four" });
+      Assert.That(newChild, Is.Not.Null);
+      Assert.That(newChild!.id, Is.Not.Null.And.Not.Empty);
+      Assert.That(newChild.parentId, Is.EqualTo("p1"));
+      Assert.That(newChild.name, Is.EqualTo("Child Four"));
+
+      // Ensure the new child is in the parent's Children collection
+      await cascade.HasManyEnsureItem(parent, nameof(Parent2.Children), newChild);
+
+      Assert.That(parent.Children, Is.Not.Null);
+      Assert.That(parent.Children!.Count, Is.EqualTo(3));
+      Assert.That(parent.Children.Any(c => c.id == newChild.id && c.name == "Child Four"), Is.True);
+      
+      parent.__mutateWith(p => ((Parent2)p).Children = null);
+
+    // Populate Children again with zero freshness to force re-fetch from origin
+      await cascade.Populate(parent, new[] { "Children" }, freshnessSeconds: 0);
+
+      Assert.That(parent.Children, Is.Not.Null);
+      Assert.That(parent.Children!.Count, Is.EqualTo(3));
+      Assert.That(parent.Children.Any(c => c.id == newChild.id && c.name == "Child Four"), Is.True);
+      // Original children should still be there
+      Assert.That(parent.Children.Any(c => c.id == "c1"), Is.True);
+      Assert.That(parent.Children.Any(c => c.id == "c2"), Is.True);
     }
   }
 }
