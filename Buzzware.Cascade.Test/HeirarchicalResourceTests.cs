@@ -224,6 +224,14 @@ namespace Buzzware.Cascade.Test {
       childOrigin.Store[$"/parent/p1/child/c1"] = c1;
       childOrigin.Store[$"/parent/p1/child/c2"] = c2;
       childOrigin.Store[$"/parent/p2/child/c3"] = c3;
+
+      // Seed toys - childId uses Child2's compound CascadeKey
+      var t1 = new Toy { id = "t1", childId = "p1__c1", name = "Ball" };
+      var t2 = new Toy { id = "t2", childId = "p1__c1", name = "Doll" };
+      var t3 = new Toy { id = "t3", childId = "p2__c3", name = "Car" };
+      toyOrigin.Store("t1", t1).Wait();
+      toyOrigin.Store("t2", t2).Wait();
+      toyOrigin.Store("t3", t3).Wait();
     }
 
     [Test]
@@ -330,6 +338,75 @@ namespace Buzzware.Cascade.Test {
 
       Assert.That(children.Count(), Is.EqualTo(2));
       Assert.That(children.All(c => c.parentId == "p1"), Is.True);
+    }
+
+    [Test]
+    public async Task PopulateToysOnChild() {
+      SeedData();
+
+      var child = await cascade.Get<Child2>("p1__c1", freshnessSeconds: 0);
+      Assert.That(child, Is.Not.Null);
+
+      await cascade.Populate(child!, new[] { "Toys" }, freshnessSeconds: 0);
+
+      Assert.That(child!.Toys, Is.Not.Null);
+      Assert.That(child.Toys!.Count, Is.EqualTo(2));
+      Assert.That(child.Toys.Any(t => t.id == "t1" && t.name == "Ball"), Is.True);
+      Assert.That(child.Toys.Any(t => t.id == "t2" && t.name == "Doll"), Is.True);
+    }
+
+    [Test]
+    public async Task PopulateToysOnChildWithNoToys() {
+      SeedData();
+
+      var child = await cascade.Get<Child2>("p1__c2", freshnessSeconds: 0);
+      Assert.That(child, Is.Not.Null);
+
+      await cascade.Populate(child!, new[] { "Toys" }, freshnessSeconds: 0);
+
+      Assert.That(child!.Toys, Is.Not.Null);
+      Assert.That(child.Toys!.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public async Task PopulateChildOnToy() {
+      SeedData();
+
+      var toy = await cascade.Get<Toy>("t1", freshnessSeconds: 0);
+      Assert.That(toy, Is.Not.Null);
+      Assert.That(toy!.childId, Is.EqualTo("p1__c1"));
+
+      await cascade.Populate(toy, new[] { "Child" }, freshnessSeconds: 0);
+
+      Assert.That(toy.Child, Is.Not.Null);
+      Assert.That(toy.Child.id, Is.EqualTo("c1"));
+      Assert.That(toy.Child.parentId, Is.EqualTo("p1"));
+      Assert.That(toy.Child.name, Is.EqualTo("Child One"));
+    }
+
+    [Test]
+    public async Task PopulateFullHierarchy() {
+      SeedData();
+
+      // Get parent, populate children, then populate toys on each child
+      var parent = await cascade.Get<Parent2>("p1", freshnessSeconds: 0);
+      Assert.That(parent, Is.Not.Null);
+
+      await cascade.Populate(parent!, new[] { "Children" }, freshnessSeconds: 0);
+      Assert.That(parent!.Children, Is.Not.Null);
+      Assert.That(parent.Children!.Count, Is.EqualTo(2));
+
+      // Populate Toys on all children
+      await cascade.Populate(parent.Children.Cast<SuperModel>(), "Toys", freshnessSeconds: 0);
+
+      var c1 = parent.Children.First(c => c.id == "c1");
+      var c2 = parent.Children.First(c => c.id == "c2");
+
+      Assert.That(c1.Toys, Is.Not.Null);
+      Assert.That(c1.Toys!.Count, Is.EqualTo(2));
+
+      Assert.That(c2.Toys, Is.Not.Null);
+      Assert.That(c2.Toys!.Count, Is.EqualTo(0));
     }
   }
 }
