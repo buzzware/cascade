@@ -63,7 +63,7 @@ namespace Buzzware.Cascade {
 		) {
 			var dic = new Dictionary<string, object?>();
 			dic[nameof(op.Verb)] = op.Verb.ToString();
-			dic[nameof(op.Type)] = op.Type.FullName;
+			dic[nameof(op.Type)] = op.Type?.FullName;
 			dic[nameof(op.Id)] = op.Id;
 			dic[nameof(op.TimeMs)] = op.TimeMs;
 
@@ -106,9 +106,9 @@ namespace Buzzware.Cascade {
 			var el = serialization.DeserializeElement(s);
 			Enum.TryParse<RequestVerb>(el.GetProperty(nameof(RequestOp.Verb)).GetString(), out var verb);
 			var typeName = el.GetProperty(nameof(RequestOp.Type)).GetString();
-			Type type; // Type.GetType(typeName,true);
+			Type? type; // Type.GetType(typeName,true);
 			if (verb == RequestVerb.BlobGet || verb == RequestVerb.BlobGetFilePath || verb == RequestVerb.BlobPut || verb == RequestVerb.BlobDestroy)
-				type = CascadeTypeUtils.BlobType;
+				type = null;
 			else
 				type = Origin.LookupModelType(typeName);
 
@@ -143,7 +143,7 @@ namespace Buzzware.Cascade {
 			} else if (verb == RequestVerb.Execute) {
 				value = el.GetProperty(nameof(RequestOp.Value)).ToString();
 				criteria = serialization.DeserializeDictionaryOfNormalTypes(el.GetProperty(nameof(RequestOp.Criteria)));
-			} else if (type.IsSubclassOf(typeof(SuperModel))) {
+			} else if (type?.IsSubclassOf(typeof(SuperModel)) ?? false) {
 				value = serialization.DeserializeType(type, el.GetProperty(nameof(RequestOp.Value)));
 			}
 			return new RequestOp(
@@ -167,7 +167,6 @@ namespace Buzzware.Cascade {
 		/// <param name="op">The RequestOp representing the change</param>
 		/// <returns>string representing the file path where the operation was saved</returns>
 		public async Task<string> AddPendingChange(RequestOp op) {
-			var typeStr = op.Type.Name;
 			var folder = Config.PendingChangesPath; //Path.Combine(Config.PendingChangesPath, typeStr);
 			if (!Directory.Exists(folder))
 				Directory.CreateDirectory(folder);

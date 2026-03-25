@@ -226,7 +226,7 @@ namespace Buzzware.Cascade.Test {
       // Assert initial properties of the BlobPut operation.
       Assert.That(op.Verb, Is.EqualTo(RequestVerb.BlobPut));
       Assert.That(op.Id, Is.EqualTo("first/second/happy_snap"));
-      Assert.That(op.Type, Is.EqualTo(typeof(byte[])));
+      Assert.That(op.Type, Is.Null);
       Assert.That(op.TimeMs, Is.EqualTo(cascade.NowMs));
       Assert.That(op.Value, Is.EqualTo(image));
       Assert.That(op.Populate, Is.EqualTo(null));
@@ -243,7 +243,7 @@ namespace Buzzware.Cascade.Test {
       Log.Debug(sz);
 
       // Validate the serialized JSON string.
-      const string expected = "{\"Verb\":\"BlobPut\",\"Type\":\"System.Byte[]\",\"Id\":\"first/second/happy_snap\",\"TimeMs\":1000,\"Value\":null}";
+      const string expected = "{\"Verb\":\"BlobPut\",\"Type\":null,\"Id\":\"first/second/happy_snap\",\"TimeMs\":1000,\"Value\":null}";
       Assert.That(sz, Is.EqualTo(expected));
       Assert.That(externalContent.Count, Is.EqualTo(1));
       Assert.That(externalContent[nameof(RequestOp.Value)], Is.EqualTo(image));
@@ -275,7 +275,7 @@ namespace Buzzware.Cascade.Test {
       // Assert properties of the BlobDestroy operation.
       Assert.That(op.Verb, Is.EqualTo(RequestVerb.BlobDestroy));
       Assert.That(op.Id, Is.EqualTo(blobId));
-      Assert.That(op.Type, Is.EqualTo(typeof(byte[]))); // Type is typically byte[] for blob operations.
+      Assert.That(op.Type, Is.Null); 
       Assert.That(op.TimeMs, Is.EqualTo(cascade.NowMs));
       Assert.That(op.Value, Is.EqualTo(null));
 
@@ -285,7 +285,7 @@ namespace Buzzware.Cascade.Test {
       Log.Debug(sz);
 
       // Validate the serialized JSON string.
-      const string expected = "{\"Verb\":\"BlobDestroy\",\"Type\":\"System.Byte[]\",\"Id\":\"first/second/happy_snap_deleted\",\"TimeMs\":1000,\"Value\":null}";
+      const string expected = "{\"Verb\":\"BlobDestroy\",\"Type\":null,\"Id\":\"first/second/happy_snap_deleted\",\"TimeMs\":1000,\"Value\":null}";
       Assert.That(sz, Is.EqualTo(expected));
 
       // Deserialize the operation and verify it matches the original.

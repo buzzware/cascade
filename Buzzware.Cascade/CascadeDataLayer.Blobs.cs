@@ -179,6 +179,20 @@ namespace Buzzware.Cascade {
 			// Obtain and process the response for putting a binary blob
 			var response = await BlobPutResponse(path,data);
 		}		
+
+		/// <summary>
+		/// Store a binary blob at the specified path, returning the OpResponse
+		/// </summary>
+		/// <param name="path">Path to store the blob data</param>
+		/// <param name="data">Binary data to be stored</param>
+		/// <returns>Operation response with details of the put operation</returns>
+		public Task<OpResponse> BlobPutResponse(string path, byte[] data) {
+			// Create a request operation for storing a binary blob
+			var req = RequestOp.BlobPutOp(path, NowMs, data);
+			
+			// Process the request and return its response
+			return ProcessRequest(req);
+		}
 		
 		/// <summary>
 		/// Store a binary blob stream at the specified path.
@@ -201,7 +215,7 @@ namespace Buzzware.Cascade {
 		/// <param name="path">Path to store the blob data</param>
 		/// <param name="data">Binary data to be stored</param>
 		/// <returns>Operation response with details of the put operation</returns>
-		public Task<OpResponse> BlobPutResponse(string path, byte[] data) {
+		public Task<OpResponse> BlobPutResponse(string path, Stream data) {
 			// Create a request operation for storing a binary blob
 			var req = RequestOp.BlobPutOp(path, NowMs, data);
 			

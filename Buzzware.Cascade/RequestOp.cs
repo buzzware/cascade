@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Text.Json;
 
 namespace Buzzware.Cascade {
@@ -138,7 +137,7 @@ namespace Buzzware.Cascade {
 			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? FALLBACK_ANY);
 			return new RequestOp(
 				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
-				typeof(byte[]),		
+				null,		
 				RequestVerb.BlobGet,
 				path,
 				freshnessSeconds: freshnessSeconds,
@@ -169,7 +168,7 @@ namespace Buzzware.Cascade {
 			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? FALLBACK_ANY);
 			return new RequestOp(
 				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
-				typeof(byte[]),		
+				null,		
 				RequestVerb.BlobGetFilePath,
 				path,
 				freshnessSeconds: freshnessSeconds,
@@ -184,19 +183,19 @@ namespace Buzzware.Cascade {
 		/// </summary>
 		/// <param name="path">The path where the blob will be stored.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
-		/// <param name="data">The byte array representing the blob data to be stored.</param>
+		/// <param name="data">The byte array or stream representing the blob data to be stored.</param>
 		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
 		/// <returns>A new instance of RequestOp representing a "BlobPut" request.</returns>
 		public static RequestOp BlobPutOp(
 			string path,
 			long timeMs,
-			byte[] data, 
+			object? data, 
 			bool? hold = null,
 			object? criteria = null
 		) {
 			return new RequestOp(
 				timeMs,
-				typeof(byte[]),
+				null,
 				RequestVerb.BlobPut,
 				path,
 				value: data,
@@ -218,7 +217,7 @@ namespace Buzzware.Cascade {
 		) {
 			return new RequestOp(
 				timeMs,
-				typeof(byte[]),
+				null,
 				RequestVerb.BlobDestroy,
 				path,
 				criteria: criteria
@@ -413,7 +412,7 @@ namespace Buzzware.Cascade {
 		/// <param name="extra">Any additional data required by the request.</param>
 		public RequestOp(
 			long timeMs,
-			Type type,
+			Type? type,
 			RequestVerb verb,
 			object? id,
 			object? value = null,
@@ -526,7 +525,7 @@ namespace Buzzware.Cascade {
 		}
 
 		public readonly long TimeMs;
-		public readonly Type Type;
+		public readonly Type? Type;
 		public readonly RequestVerb Verb;		// what we are doing
 		public readonly object? Id;			// eg. 34
 		public readonly object? Value;
