@@ -113,6 +113,25 @@ namespace Buzzware.Cascade {
 		}
 
 		/// <summary>
+		/// Download a binary blob identified by the given path to a local cache. Does not return the data. Use BlobGet/BlobGetStream to get the data.
+		/// </summary>
+		/// <param name="path">Identifier for the blob</param>
+		/// <param name="freshnessSeconds">Desired freshness duration in seconds for the cache</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness duration if primary freshness cannot be achieved</param>
+		/// <param name="hold">Indicates if the blob and its associations should be held in cache</param>
+		/// <param name="sequenceBeganMs">The request timestamp in milliseconds since epoch, for caching optimization</param>
+		public async Task BlobDownload(
+			string path,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null,
+			bool? hold = null,
+			long? sequenceBeganMs = null
+		) {
+			// currently syntactic sugar for BlobGetFilePath but one day might work even when there is no cache that can provide an absolute path
+			await BlobGetFilePath(path, freshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+		}
+		
+		/// <summary>
 		/// Test whether blob identified by the given path as an absolute file path exists, with optional caching and freshness parameters.
 		/// For now this uses BlobGetFilePath which means it will download the file if it exists, but in future it should be optimised to only detect existence on the origin
 		/// </summary>

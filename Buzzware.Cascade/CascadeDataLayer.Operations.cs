@@ -276,19 +276,22 @@ namespace Buzzware.Cascade {
 
 			if (attemptToStoreInCache)
 				opResponse = await StoreInPreviousCaches(opResponse); // just store ResultIds
-			
-			if (requestOp.Verb==RequestVerb.BlobGetFilePath &&
-			    requestOp.Id is String blobPath &&
-			    opResponse.LayerIndex==-1 &&
-			    opResponse.Exists && 
-			    opResponse.Result!=null
-			)
-	    {
-		    var blobFileCache = CacheLayers.FirstOrDefault(layer => layer.SupportsGetBlobAbsoluteFilePath);
-		    var blobFilePath = blobFileCache?.GetBlobAbsoluteFilePath(blobPath);
-		    opResponse = opResponse.withChanges(result: blobFilePath);
-	    }
-			
+
+			if (requestOp.Verb == RequestVerb.BlobGetFilePath) {
+				var blobFileCache = CacheLayers.LastOrDefault(layer => layer.SupportsGetBlobAbsoluteFilePath);
+				if (blobFileCache == null)
+					throw new AssumptionException("No cache registered can store a blob. To use BlobGetFilePath or BlobDownload you must register a cache with SupportsGetBlobAbsoluteFilePath=true");
+
+				if (requestOp.Id is String blobPath &&
+				    opResponse.LayerIndex == -1 &&
+				    opResponse.Exists &&
+				    opResponse.Result != null
+				   ) {
+					var blobFilePath = blobFileCache.GetBlobAbsoluteFilePath(blobPath);
+					opResponse = opResponse.withChanges(result: blobFilePath);
+				}
+			}
+
 			var isBlobVerb = requestOp.Verb == RequestVerb.BlobGet || requestOp.Verb == RequestVerb.BlobGetFilePath || requestOp.Verb == RequestVerb.BlobPut;
 			if (Log.Logger.IsEnabled(LogEventLevel.Verbose)) {
 				if (profiler != null) {

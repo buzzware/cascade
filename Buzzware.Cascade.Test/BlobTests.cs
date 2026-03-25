@@ -361,6 +361,42 @@ namespace Buzzware.Cascade.Test {
         Assert.That(resultBytes, Is.EquivalentTo(originalBytes));
       }
     }
+
+    async Task<bool> CacheHasBlob1() => (await blobCache.Fetch(RequestOp.BlobGetOp(BLOB1_PATH))).Exists;
+    async Task<bool> OriginHasBlob1() => (await origin.ProcessRequest(RequestOp.BlobGetOp(BLOB1_PATH),true)).Exists;
+    
+    /// <summary>
+    /// Tests the ability to store and retrieve a blob using the Cascade Blob storage methods.
+    /// Validates that a blob can be stored and then correctly retrieved, confirming the integrity of data.
+    /// </summary>
+    [Test]
+    public async Task DownloadTest() {
+      
+      Assert.That(await CacheHasBlob1(), Is.False);
+      Assert.That(await OriginHasBlob1(), Is.False);
+      
+      // Creates a bitmap image and converts it to a blob
+      var bitmap1 = new Bitmap(10,10);
+      var image = TestUtils.BlobFromBitmap(bitmap1,ImageFormat.Png);
+      // put blob into origin
+      await origin.ProcessRequest(RequestOp.BlobPutOp(BLOB1_PATH, 0, image),true);
+
+      Assert.That(OriginHasBlob1(), Is.True);
+      Assert.That(CacheHasBlob1(), Is.False);
+
+      await cascade.BlobDownload(BLOB1_PATH);
+
+      var cacheResponse = await blobCache.Fetch(RequestOp.BlobGetOp(BLOB1_PATH));
+      Assert.That(cacheResponse.Exists, Is.True);
+      
+      
+      // Retrieves the blob and converts it back to a bitmap
+      var blob = (byte[])cacheResponse.Result!;
+      var bitmap2 = TestUtils.BitmapFromBlob(blob);
+      // Asserts that the retrieved bitmap dimensions are the same as the original
+      Assert.That(bitmap2.Width,Is.EqualTo(bitmap1.Width));
+    }
+    
   }
 }
 
