@@ -218,6 +218,18 @@ namespace Buzzware.Cascade.Test {
 
     
     
+    private static byte[]? BytesFromResult(object? result) {
+      if (result is byte[] bytes) return bytes;
+      if (result is Stream stream) {
+        using (stream) {
+          using var ms = new MemoryStream();
+          stream.CopyTo(ms);
+          return ms.ToArray();
+        }
+      }
+      return null;
+    }
+
     [Test]
     public async Task EtagTest() {
       OpResponse? response = null;
@@ -239,34 +251,115 @@ namespace Buzzware.Cascade.Test {
 
       // any freshness, so should come from cache as normal
       response = await cascade.BlobGetResponse(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_ANY);
-      Assert.That(response.Result, Is.EquivalentTo(blob11));
+      Assert.That(BytesFromResult(response.Result), Is.EquivalentTo(blob11));
       Assert.That(response.SourceName, Is.EqualTo("FileBlobCache"));
-      
+
       // freshest, but etag should match and we still get cache version
       response = await cascade.BlobGetResponse(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_FRESHEST);
-      Assert.That(response.Result, Is.EquivalentTo(blob11));
+      Assert.That(BytesFromResult(response.Result), Is.EquivalentTo(blob11));
       Assert.That(response.SourceName, Is.EqualTo("FileBlobCache"));
       // check cache ArrivedAtMs has been updated
       response = await blobCache.Fetch(RequestOp.BlobGetOp(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_ANY));
       Assert.That(response.ArrivedAtMs, Is.EqualTo(origin.NowMs));
-      
+
       // change origin version
       var blob12 = TestUtils.NewBlob(12,100);
       response = await origin.ProcessRequest(RequestOp.BlobPutOp(BLOB1_PATH, cascade.NowMs, blob12).CloneWith(eTag: "12"), true);
 
       origin.NowMs += 1000;
-      
+
       // origin changed but with freshness any we still get cache version
       response = await cascade.BlobGetResponse(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_ANY);
-      Assert.That(response.Result, Is.EquivalentTo(blob11));
+      Assert.That(BytesFromResult(response.Result), Is.EquivalentTo(blob11));
       Assert.That(response.SourceName, Is.EqualTo("FileBlobCache"));
-      
+
       origin.NowMs += 1000;
-      
+
       // freshest, and etag has changed so get origin version
       response = await cascade.BlobGetResponse(BLOB1_PATH, freshnessSeconds: RequestOp.FRESHNESS_FRESHEST);
-      Assert.That(response.Result, Is.EquivalentTo(blob12));
+      Assert.That(BytesFromResult(response.Result), Is.EquivalentTo(blob12));
       Assert.That(response.SourceName, Is.EqualTo("MockOrigin2"));
+    }
+
+    /// <summary>
+    /// Tests that BlobGetStream returns a readable stream with the correct content after BlobPut with byte[].
+    /// </summary>
+    [Test]
+    public async Task BlobGetStream_ReturnsReadableStream() {
+      var originalBytes = TestUtils.NewBlob(42, 256);
+      await cascade.BlobPut(BLOB1_PATH, originalBytes);
+
+      var stream = await cascade.BlobGetStream(BLOB1_PATH);
+      Assert.That(stream, Is.Not.Null);
+
+      using (stream!) {
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        var result = ms.ToArray();
+        Assert.That(result, Is.EquivalentTo(originalBytes));
+      }
+    }
+
+    /// <summary>
+    /// Tests that a blob stored via BlobPut(path, Stream) can be retrieved as byte[] via BlobGet.
+    /// </summary>
+    [Test]
+    public async Task BlobPutStream_ThenGetBytes() {
+      var originalBytes = TestUtils.NewBlob(77, 512);
+      using var inputStream = new MemoryStream(originalBytes);
+
+      await cascade.BlobPut(BLOB1_PATH, inputStream);
+
+      var result = await cascade.BlobGet(BLOB1_PATH);
+      Assert.That(result, Is.Not.Null);
+      Assert.That(result, Is.EquivalentTo(originalBytes));
+    }
+
+    /// <summary>
+    /// Tests that BlobGetFilePath returns a valid file path whose contents match the stored blob.
+    /// </summary>
+    [Test]
+    public async Task BlobGetFilePath_ReturnsValidPath() {
+      var originalBytes = TestUtils.NewBlob(99, 128);
+      using var inputStream = new MemoryStream(originalBytes);
+      await cascade.BlobPut(BLOB1_PATH, inputStream);
+
+      var filePath = await cascade.BlobGetFilePath(BLOB1_PATH);
+      Assert.That(filePath, Is.Not.Null);
+      Assert.That(File.Exists(filePath), Is.True);
+
+      var fileBytes = await CascadeUtils.ReadBinaryFile(filePath!);
+      Assert.That(fileBytes, Is.EquivalentTo(originalBytes));
+    }
+
+    /// <summary>
+    /// Tests that storing and retrieving an empty byte array works correctly.
+    /// </summary>
+    [Test]
+    public async Task BlobPut_EmptyByteArray() {
+      var emptyBytes = new byte[0];
+      await cascade.BlobPut(BLOB1_PATH, emptyBytes);
+
+      var result = await cascade.BlobGet(BLOB1_PATH);
+      Assert.That(result, Is.Not.Null);
+      Assert.That(result!.Length, Is.EqualTo(0));
+    }
+
+    /// <summary>
+    /// Tests BlobPut with byte[] followed by BlobGetStream, verifying stream content matches.
+    /// </summary>
+    [Test]
+    public async Task BlobPutBytes_BlobGetStream() {
+      var originalBytes = TestUtils.NewBlob(55, 1024);
+      await cascade.BlobPut(BLOB1_PATH, originalBytes);
+
+      var stream = await cascade.BlobGetStream(BLOB1_PATH);
+      Assert.That(stream, Is.Not.Null);
+
+      using (stream!) {
+        var resultBytes = await CascadeUtils.BytesFromStreamAsync(stream);
+        Assert.That(resultBytes, Is.EquivalentTo(originalBytes));
+      }
     }
   }
 }

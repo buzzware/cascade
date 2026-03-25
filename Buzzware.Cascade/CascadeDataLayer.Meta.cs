@@ -206,8 +206,9 @@ namespace Buzzware.Cascade {
 		/// <param name="type">The Type of the model to hold.</param>
 		/// <returns>The generated hold model path.</returns>
 		private string HoldModelPath(Type type) {
-			var folderName = CascadeTypeUtils.IsBlobType(type) ? CascadeConstants.BLOB : type.FullName!;
-			return HoldModelPath(folderName); 
+			if (CascadeTypeUtils.IsBlobType(type))
+				throw new ArgumentException("Don't use HoldModelPath with a Blob type anymore - use HoldModelPath(CascadeConstants.BLOB)");
+			return HoldModelPath(type.FullName!); 
 		}
 		
 		/// <summary>
@@ -221,8 +222,9 @@ namespace Buzzware.Cascade {
 		private string HoldModelPath(Type type,object id) {
 			if (id is null or "" or 0)
 				throw new ArgumentException("Id Cannot be null or empty string or 0");
-			var folderName = CascadeTypeUtils.IsBlobType(type) ? CascadeConstants.BLOB : type.FullName!;
-			return HoldModelPath(folderName,id);
+			if (CascadeTypeUtils.IsBlobType(type))
+				throw new ArgumentException("Don't use HoldModelPath with a Blob type anymore - use HoldModelPath(CascadeConstants.BLOB)");
+			return HoldModelPath(type.FullName!,id);
 		}
 		
 		/// <summary>
@@ -318,7 +320,7 @@ namespace Buzzware.Cascade {
 		/// <returns>An enumerable of held identifiers.</returns>
 		public IEnumerable<object> ListHeldIds(Type type) {
 			if (CascadeTypeUtils.IsBlobType(type))
-				return ListHeldBlobPaths();
+				throw new ArgumentException("Don't use ListHeldIds with a Blob type anymore - use ListHeldBlobPaths()");
 			
 			var path = HoldModelPath(type);
 			var idType = CascadeTypeUtils.GetCascadeIdType(type);
@@ -356,7 +358,7 @@ namespace Buzzware.Cascade {
 		/// <param name="modelType">The Type of the model collection to hold.</param>
 		/// <returns>The hold collection path.</returns>
 		private string HoldCollectionPath(Type modelType) {
-			return Path.Combine(CascadeConstants.HOLD, "Collection", modelType.FullName);
+			return Path.Combine(CascadeConstants.HOLD, "Collection", modelType.FullName!);
 		}
 
 		/// <summary>
@@ -370,7 +372,7 @@ namespace Buzzware.Cascade {
 		private string HoldCollectionPath(Type modelType,string key) {
 			if (key is null or "")
 				throw new ArgumentException("name Cannot be null or empty string");
-			return Path.Combine(CascadeConstants.HOLD, "Collection", modelType.FullName, key);
+			return Path.Combine(CascadeConstants.HOLD, "Collection", modelType.FullName!, key);
 		}
 
 		/// <summary>
@@ -431,17 +433,24 @@ namespace Buzzware.Cascade {
 		/// <param name="modelType">The Type of the model to clear holds for.</param>
 		/// <param name="olderThan">Optional DateTime to filter which holds should be cleared.</param>
 		public void UnholdAll(Type modelType, DateTime? olderThan=null) {
+			if (CascadeTypeUtils.IsBlobType(modelType))
+				throw new ArgumentException("Don't use UnholdAll with a Blob type anymore - use UnholdAllBlobs()");
+			
 			if (!CascadeTypeUtils.IsBlobType(modelType))
 				MetaClearPath(HoldCollectionPath(modelType),olderThan);
 			MetaClearPath(HoldModelPath(modelType),olderThan);
 		}
 
+		public void UnholdAllBlobs(DateTime? olderThan=null) {
+			MetaClearPath(HoldModelPath(CascadeConstants.HOLD),olderThan);
+		}
+		
 		/// <summary>
 		/// Unholds all models and collections, clearing all associated metadata.
 		/// Can target only metadata entries older than a specified date.
 		/// </summary>
 		/// <param name="olderThan">Optional DateTime to filter which holds should be cleared.</param>
-		public void UnholdAll(DateTime? olderThan=null) {
+		public void UnholdAll(DateTime? olderThan) {
 			MetaClearPath(CascadeConstants.HOLD, olderThan, true);
 		}
 

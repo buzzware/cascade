@@ -56,8 +56,6 @@ namespace Buzzware.Cascade.Testing {
         return typeof(Parent);
       else if (typeName == typeof(Child).FullName)
         return typeof(Child);
-      else if (typeName == "System.Byte[]")
-        return typeof(System.Byte[]);
       else {
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()) {
           var type = assembly.GetType(typeName);

@@ -173,7 +173,7 @@ namespace Buzzware.Cascade {
       ) {
         object? result = null;
         if (requestOp.Verb == RequestVerb.BlobGet) {
-          result = await LoadBlob(blobFilePath);  
+          result = new FileStream(blobFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         } else if (requestOp.Verb == RequestVerb.BlobGetFilePath) {
           result = blobFilePath;
         }

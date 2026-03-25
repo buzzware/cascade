@@ -110,7 +110,7 @@ namespace Buzzware.Cascade {
 			if (verb == RequestVerb.BlobGet || verb == RequestVerb.BlobGetFilePath || verb == RequestVerb.BlobPut || verb == RequestVerb.BlobDestroy)
 				type = null;
 			else
-				type = Origin.LookupModelType(typeName);
+				type = Origin.LookupModelType(typeName!);
 
 			if (el.HasProperty("externals")) {
 				var dic = serialization.DeserializeDictionaryOfNormalTypes(el.GetProperty("externals")); 
