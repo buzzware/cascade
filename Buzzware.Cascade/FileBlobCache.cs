@@ -280,6 +280,7 @@ namespace Buzzware.Cascade {
           Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 
         await CascadeUtils.EnsureFileOperation(async () => {
+          blob.Position = 0;
           using var destinationStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 64*1024, useAsync: true);
           await blob.CopyToAsync(destinationStream);
         });

@@ -113,25 +113,38 @@ namespace Buzzware.Cascade {
 			if (stream == null)
 				throw new ArgumentNullException(nameof(stream));
 
+			var beforePosition = stream.CanSeek ? stream.Position : -1;
+			
 			// Fast path 1: MemoryStream - use built-in methods
 			if (stream is MemoryStream memoryStream) {
 				// If we're at the start, ToArray() is optimal
 				if (memoryStream.Position == 0) {
-					return memoryStream.ToArray();
+					var array = memoryStream.ToArray();
+					if (beforePosition >= 0)
+						memoryStream.Position = beforePosition;
+					return array;
 				}
 
 				// If not at start, read remaining bytes from current position
 				long remaining = memoryStream.Length - memoryStream.Position;
-				if (remaining == 0)
+				if (remaining == 0) {
+					if (beforePosition >= 0)
+						memoryStream.Position = beforePosition;
 					return Array.Empty<byte>();
+				}
 
 				byte[] buffer = new byte[remaining];
 				int bytesRead = memoryStream.Read(buffer, 0, buffer.Length);
 
 				// Handle case where Read didn't return all bytes (shouldn't happen with MemoryStream)
-				if (bytesRead != buffer.Length)
-					return buffer.AsSpan(0, bytesRead).ToArray();
-
+				if (bytesRead != buffer.Length) {
+					var array = buffer.AsSpan(0, bytesRead).ToArray();
+					if (beforePosition >= 0)
+						memoryStream.Position = beforePosition;
+					return array;
+				}
+				if (beforePosition >= 0)
+					memoryStream.Position = beforePosition;
 				return buffer;
 			}
 

@@ -345,13 +345,19 @@ namespace Buzzware.Cascade.Test {
       change = changes[0].Item2;
       Assert.That(filename, Does.Match("^[0-9]+\\.json$"));
       AssertRequestOpsMatch(imageOp, change, checkValue: false);
-      Assert.That((byte[])change.Value!, Is.EqualTo((byte[])imageOp.Value!).AsCollection);
-      
+      Assert.That(change.Value, Is.InstanceOf<Stream>());
+      var changeStream0 = (Stream)change.Value!;
+      var changeBytes0 = CascadeUtils.BytesFromStream(changeStream0);
+      Assert.That(changeBytes0, Is.EqualTo((byte[])imageOp.Value!).AsCollection);
+
       filename = changes[1].Item1;
       change = changes[1].Item2;
       Assert.That(filename, Does.Match("^[0-9]+\\.json$"));
       AssertRequestOpsMatch(thumbnailOp, change, checkValue: false);
-      Assert.That((byte[])change.Value!, Is.EqualTo((byte[])thumbnailOp.Value!).AsCollection);
+      Assert.That(change.Value, Is.InstanceOf<Stream>());
+      var changeStream1 = (Stream)change.Value!;
+      var changeBytes1 = CascadeUtils.BytesFromStream(changeStream1);
+      Assert.That(changeBytes1, Is.EqualTo((byte[])thumbnailOp.Value!).AsCollection);
       
       filename = changes[2].Item1;
       change = changes[2].Item2;
@@ -367,6 +373,131 @@ namespace Buzzware.Cascade.Test {
       Assert.That(items.Length, Is.Zero);
     }
     
+    /// <summary>
+    /// Tests that SerializeRequestOp handles a BlobPut with a Stream value, extracting the stream content
+    /// as external binary content just like it does for byte[].
+    /// </summary>
+    [Test]
+    public async Task BlobPutStreamOpSerialisation() {
+      var originalBytes = TestUtils.NewBlob(42, 256);
+      var stream = new MemoryStream(originalBytes);
+      var op = RequestOp.BlobPutOp("photos/stream_test.png", cascade.NowMs, stream);
+
+      // Assert initial properties
+      Assert.That(op.Verb, Is.EqualTo(RequestVerb.BlobPut));
+      Assert.That(op.Id, Is.EqualTo("photos/stream_test.png"));
+      Assert.That(op.Value, Is.InstanceOf<MemoryStream>());
+
+      // Serialize the BlobPut operation
+      var szn = cascade.SerializeRequestOp(op, out var externalContent);
+      var sz = szn.ToJsonString();
+      Log.Debug(sz);
+
+      // Value should be null in JSON (extracted as external binary)
+      const string expected = "{\"Verb\":\"BlobPut\",\"Type\":null,\"Id\":\"photos/stream_test.png\",\"TimeMs\":1000,\"Value\":null}";
+      Assert.That(sz, Is.EqualTo(expected));
+      Assert.That(externalContent.Count, Is.EqualTo(1));
+      Assert.That(externalContent[nameof(RequestOp.Value)], Is.EquivalentTo(originalBytes));
+
+      // Stream position should be reset after serialization
+      Assert.That(stream.Position, Is.EqualTo(0));
+
+      // Deserialize with external path
+      const string mainFilename = "00000000001000.json";
+      var externals = new JsonObject();
+      externals["Value"] = cascade.ExternalBinaryPathFromPendingChangePath(mainFilename, "Value");
+      szn["externals"] = externals;
+      var op2 = cascade.DeserializeRequestOp(szn.ToJsonString(), out var dzexternals);
+
+      // Deserialized op should match original except Value is null (loaded separately)
+      AssertRequestOpsMatch(op, op2, checkValue: false);
+      Assert.That(op2.Value, Is.Null);
+      Assert.That(dzexternals, Has.Count.EqualTo(1));
+      Assert.That(dzexternals["Value"], Is.EqualTo("00000000001000__Value.bin"));
+
+      stream.Dispose();
+    }
+
+    /// <summary>
+    /// Tests the full pending changes round-trip for BlobPut with a Stream value:
+    /// serialize, store to disk, retrieve, and verify the deserialized value is a Stream with correct content.
+    /// </summary>
+    [Test]
+    public async Task BlobPutStreamPendingChangesSerialisation() {
+      cascade.ConnectionOnline = false;
+      if (!Directory.Exists(cascade.Config.PendingChangesPath))
+        Directory.CreateDirectory(cascade.Config.PendingChangesPath);
+
+      var originalBytes = TestUtils.NewBlob(77, 512);
+      var stream = new MemoryStream(originalBytes);
+      var blobPath = "photos/stream_pending.png";
+      var op = RequestOp.BlobPutOp(blobPath, cascade.NowMs, stream);
+      await cascade.AddPendingChange(op);
+      stream.Dispose();
+
+      // Retrieve pending changes
+      var changes = await cascade.GetChangesPending();
+      Assert.That(changes.Count, Is.EqualTo(1));
+
+      var change = changes[0].Item2;
+      Assert.That(change.Verb, Is.EqualTo(RequestVerb.BlobPut));
+      Assert.That(change.Id, Is.EqualTo(blobPath));
+
+      // Value should be deserialized as a Stream
+      Assert.That(change.Value, Is.InstanceOf<Stream>());
+      var resultStream = (Stream)change.Value!;
+      var resultBytes = CascadeUtils.BytesFromStream(resultStream);
+      Assert.That(resultBytes, Is.EquivalentTo(originalBytes));
+
+      // Clean up
+      foreach (var ch in changes) {
+        // Dispose the stream before removing the file
+        if (ch.Item2.Value is Stream s)
+          s.Dispose();
+        await cascade.RemoveChangePending(ch.Item1, ch.Item3?.Values);
+      }
+      var items = Directory.GetFiles(cascade.Config.PendingChangesPath);
+      Assert.That(items.Length, Is.Zero);
+    }
+
+    /// <summary>
+    /// Tests that BlobPut with byte[] still serialises as external binary and deserialises as a Stream.
+    /// </summary>
+    [Test]
+    public async Task BlobPutBytesPendingChangesDeserialisesAsStream() {
+      cascade.ConnectionOnline = false;
+      if (!Directory.Exists(cascade.Config.PendingChangesPath))
+        Directory.CreateDirectory(cascade.Config.PendingChangesPath);
+
+      var originalBytes = TestUtils.NewBlob(99, 128);
+      var blobPath = "photos/bytes_to_stream.png";
+      var op = RequestOp.BlobPutOp(blobPath, cascade.NowMs, originalBytes);
+      await cascade.AddPendingChange(op);
+
+      // Retrieve pending changes
+      var changes = await cascade.GetChangesPending();
+      Assert.That(changes.Count, Is.EqualTo(1));
+
+      var change = changes[0].Item2;
+      Assert.That(change.Verb, Is.EqualTo(RequestVerb.BlobPut));
+      Assert.That(change.Id, Is.EqualTo(blobPath));
+
+      // Value should be deserialized as a Stream even though it was stored as byte[]
+      Assert.That(change.Value, Is.InstanceOf<Stream>());
+      var resultStream = (Stream)change.Value!;
+      var resultBytes = CascadeUtils.BytesFromStream(resultStream);
+      Assert.That(resultBytes, Is.EquivalentTo(originalBytes));
+
+      // Clean up
+      foreach (var ch in changes) {
+        if (ch.Item2.Value is Stream s)
+          s.Dispose();
+        await cascade.RemoveChangePending(ch.Item1, ch.Item3?.Values);
+      }
+      var items = Directory.GetFiles(cascade.Config.PendingChangesPath);
+      Assert.That(items.Length, Is.Zero);
+    }
+
     /// <summary>
     /// Tests enqueuing multiple create and update operations into the pending changes.
     /// Ensures that changes are correctly serialized, stored, retrieved, and identifiable by filenames.

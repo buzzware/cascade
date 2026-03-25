@@ -77,6 +77,12 @@ namespace Buzzware.Cascade {
 					externalContentWorking[nameof(op.Value)] = bytes;
 					value = null;
 					break;
+				case Stream stream:
+					var streamBytes = CascadeUtils.BytesFromStream(stream);
+					externalFiles[nameof(op.Value)] = nameof(op.Value);
+					externalContentWorking[nameof(op.Value)] = streamBytes;
+					value = null;
+					break;
 				default:
 				case null:
 					// do nothing
@@ -234,14 +240,14 @@ namespace Buzzware.Cascade {
 				var requestOp = DeserializeRequestOp(content, out var externals);
 				foreach (var external in externals) {
 					var exfile = Path.Combine(Config.PendingChangesPath,external.Value);
-					var blob = await CascadeUtils.ReadBinaryFile(exfile);
+					Stream stream = new FileStream(exfile, FileMode.Open, FileAccess.Read, FileShare.Read);
 					var propertyName = external.Key;
 					if (propertyName.Contains("."))
 						throw new StandardException("sub properties not implemented");
 					var property = typeof(RequestOp).GetField(propertyName);	// typically Value which is a field
 					if (property==null)
 						throw new StandardException($"property {propertyName} unknown");
-					property.SetValue(requestOp,blob);
+					property.SetValue(requestOp,stream);
 				}
 				changes.Add(new Tuple<string, RequestOp,  IReadOnlyDictionary<string,string>?>(filename,requestOp,externals));
 			}

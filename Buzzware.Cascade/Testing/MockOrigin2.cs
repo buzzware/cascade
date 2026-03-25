@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Threading.Tasks;
 using Buzzware.Cascade.Test;
 using Buzzware.StandardExceptions;
@@ -75,7 +76,14 @@ namespace Buzzware.Cascade.Testing {
         }
       } else if (request.Verb == RequestVerb.BlobPut) {
         var path = (string)request.Id!;
-        result = await BlobPut(path,(request.Value as byte[]));
+        byte[]? bytes;
+        if (request.Value is byte[] b)
+          bytes = b;
+        else if (request.Value is Stream stream)
+          bytes = await CascadeUtils.BytesFromStreamAsync(stream);
+        else
+          bytes = null;
+        result = await BlobPut(path, bytes);
         etag = ETags[path] = request.ETag;
       } else if (request.Verb == RequestVerb.BlobDestroy) {
         var path = (string)request.Id!;
