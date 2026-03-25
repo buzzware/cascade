@@ -64,11 +64,12 @@ namespace Buzzware.Cascade.Testing {
       string? etag = null;
 
       // Handling blob operations
-      
-      if (request.Verb == RequestVerb.BlobGet) {
+      bool? exists = null;
+      if (request.Verb == RequestVerb.BlobGet || request.Verb == RequestVerb.BlobGetFilePath) {
         var path = (string)request.Id!;
         if (request.ETag != null && (request.ETag == ETags[path])) {
           result = null;
+          exists = true;
           etag = ETags[path];
         } else {
           result = await BlobGet(path);
@@ -122,10 +123,11 @@ namespace Buzzware.Cascade.Testing {
             throw new NotImplementedException();
         }
       }
+      exists ??= result!=null;
       return new OpResponse(
-        request,
+        request!,
         NowMs,
-        true,
+        exists!.Value,
         NowMs,
         result,
         eTag: etag

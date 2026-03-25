@@ -64,7 +64,7 @@ namespace Buzzware.Cascade.Test {
           { typeof(Thing), thingOrigin },
           { typeof(ThingPhoto), photoOrigin }
         },
-        1000
+        0
       );
       thingFileCache = new FastFileClassCache<Thing, int>(cascadeDir);
       photoFileCache = new FastFileClassCache<ThingPhoto, int>(cascadeDir);
@@ -381,17 +381,17 @@ namespace Buzzware.Cascade.Test {
       // put blob into origin
       await origin.ProcessRequest(RequestOp.BlobPutOp(BLOB1_PATH, 0, image),true);
 
-      Assert.That(OriginHasBlob1(), Is.True);
-      Assert.That(CacheHasBlob1(), Is.False);
+      Assert.That(await OriginHasBlob1(), Is.True);
+      Assert.That(await CacheHasBlob1(), Is.False);
 
       await cascade.BlobDownload(BLOB1_PATH);
 
-      var cacheResponse = await blobCache.Fetch(RequestOp.BlobGetOp(BLOB1_PATH));
+      var cacheResponse = await blobCache.Fetch(RequestOp.BlobGetOp(BLOB1_PATH,0,0));
       Assert.That(cacheResponse.Exists, Is.True);
       
       
       // Retrieves the blob and converts it back to a bitmap
-      var blob = (byte[])cacheResponse.Result!;
+      var blob = await CascadeUtils.BytesFromStreamAsync((Stream)cacheResponse.Result!);
       var bitmap2 = TestUtils.BitmapFromBlob(blob);
       // Asserts that the retrieved bitmap dimensions are the same as the original
       Assert.That(bitmap2.Width,Is.EqualTo(bitmap1.Width));
