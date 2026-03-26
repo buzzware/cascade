@@ -316,6 +316,31 @@ namespace Buzzware.Cascade {
 				}
 			}
 		}
+    
+    
+		public static async Task<Stream> StreamToFileAndNewStream(Stream sourceStream, string filePath) {
+			try {
+				// 1. Create the file and copy the source data into it
+				using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None)) {
+					await sourceStream.CopyToAsync(fileStream);
+				}
+				// 2. Return a new stream for reading. 
+				// FileShare.Read allows others to read, but not write/delete while this stream is open.
+				return new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+			} catch (Exception) {
+				// 3. Robust Cleanup: If anything failed above, delete the partial/locked file
+				if (File.Exists(filePath)) {
+					try { 
+						File.Delete(filePath); 
+					} catch { 
+						// We swallow exceptions during deletion to ensure the 
+						// original I/O exception is what the caller sees.
+					}
+				}
+				// Re-throw so the exception escapes the function as requested
+				throw;
+			}
+		}
 		
 		private const int MAX_WRITE_ATTEMPTS = 5;
 

@@ -279,13 +279,8 @@ namespace Buzzware.Cascade {
         if (!Directory.Exists(Path.GetDirectoryName(path)))
           Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 
-        await CascadeUtils.EnsureFileOperation(async () => {
-          blob.Position = 0;
-          using var destinationStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 64*1024, useAsync: true);
-          await blob.CopyToAsync(destinationStream);
-        });
+        result = await CascadeUtils.StreamToFileAndNewStream(blob, path);
         File.SetLastWriteTimeUtc(path, CascadeUtils.fromUnixMilliseconds(arrivedAt));
-        result = new FileStream(path,FileMode.Open);
       });
       return result!;
     }
