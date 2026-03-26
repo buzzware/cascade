@@ -158,7 +158,7 @@ namespace Buzzware.Cascade {
 
 					// Store collections or full operation response based on the request type
 					if (opResponse.RequestOp.Verb == RequestVerb.GetCollection)
-						await layer.StoreCollection(opResponse.RequestOp.Type, opResponse.RequestOp.Key!, opResponse.Results, opResponse.TimeMs);
+						await layer.StoreCollection(opResponse.RequestOp.Type!, opResponse.RequestOp.Key!, opResponse.Results, opResponse.TimeMs);
 					else
 						opResponse = await layer.Store(opResponse);
 				}

@@ -164,7 +164,7 @@ namespace Buzzware.Cascade {
 				var populate = requestOp.Populate?.ToArray() ?? new string[] { };
 				if (requestOp.Verb == RequestVerb.Query && opResponse.IsIdResults) {
 					var modelResponses = await GetModelsForIds(
-						requestOp.Type,
+						requestOp.Type!,
 						opResponse.ResultIds,
 						requestOp.FreshnessSeconds,
 						fallbackFreshnessSeconds: requestOp.FallbackFreshnessSeconds,
@@ -249,7 +249,7 @@ namespace Buzzware.Cascade {
 		private async Task<OpResponse> ProcessRequest(RequestOp requestOp) {
 			TimingProfiler? profiler = null;
 			if (Log.Logger.IsEnabled(LogEventLevel.Verbose)) {
-				profiler = new TimingProfiler($"ProcessRequest {requestOp.Verb} {requestOp.Type.Name} {requestOp.Id}");
+				profiler = new TimingProfiler($"ProcessRequest {requestOp.Verb} {requestOp.Type?.Name} {requestOp.Id}");
 				profiler.Start();
 				var criteria = serialization.Serialize(requestOp.Criteria);
 				Log.Verbose("ProcessRequest RequestOp: {@Verb} {@Id} {@Type} {@Key} {@Freshness} {@Fallback} {@Criteria}",
@@ -379,9 +379,9 @@ namespace Buzzware.Cascade {
 						LogIf.Verbose(() => {
 							var arrivedAt = res.ArrivedAtMs == null ? "" : CascadeUtils.fromUnixMilliseconds((long)res.ArrivedAtMs).ToLocalTime().ToLongTimeString();
 							if (requestOp.Verb == RequestVerb.Get)
-								Log.Verbose($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+								Log.Verbose($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type?.Name} {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
 							else if (requestOp.Verb == RequestVerb.Query)
-								Log.Verbose($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type.Name} {requestOp.Key} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
+								Log.Verbose($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Type?.Name} {requestOp.Key} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
 							else if (requestOp.Verb == RequestVerb.BlobGet)
 								Log.Verbose($"Buzzware.Cascade {requestOp.Verb} Returning: {requestOp.Id} (layer {res.SourceName} freshness {requestOp.FreshnessSeconds} ArrivedAtMs {arrivedAt})");
 							else if (requestOp.Verb == RequestVerb.BlobGetFilePath)
