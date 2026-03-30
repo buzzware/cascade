@@ -83,7 +83,7 @@ namespace Buzzware.Cascade {
 			var req = RequestOp.BlobGetOp(
 				path,
 				sequenceBeganMs ?? NowMs,
-				freshnessSeconds ?? Config.BlobFreshnessSeconds,
+				Config.GetBlobFreshnessSeconds(freshnessSeconds),
 				fallbackFreshnessSeconds ?? Config.BlobFallbackFreshnessSeconds,
 				hold
 			);
@@ -177,7 +177,7 @@ namespace Buzzware.Cascade {
 			var req = RequestOp.BlobGetFilePathOp(
 				path,
 				sequenceBeganMs ?? NowMs,
-				freshnessSeconds ?? Config.BlobFreshnessSeconds,
+				Config.GetBlobFreshnessSeconds(freshnessSeconds),
 				fallbackFreshnessSeconds ?? Config.BlobFallbackFreshnessSeconds,
 				hold
 			);

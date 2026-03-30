@@ -450,7 +450,6 @@ namespace Buzzware.Cascade {
 			FallbackFreshAfterMs = TimeMs - (FallbackFreshnessSeconds * 1000);
 		}
 
-		
 
 		/// <summary>
 		/// Creates a new instance of RequestOp by cloning the current instance and optionally modifying its properties.
@@ -468,6 +467,7 @@ namespace Buzzware.Cascade {
 		/// <param name="criteria">Optional new criteria.</param>
 		/// <param name="key">Optional new key for collection operations.</param>
 		/// <param name="extra">Optional new extra data.</param>
+		/// <param name="eTag"></param>
 		/// <returns>A cloned instance of RequestOp with optional modifications.</returns>
 		public RequestOp CloneWith(
 			long? timeMs = null,

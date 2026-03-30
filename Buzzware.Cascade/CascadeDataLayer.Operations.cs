@@ -55,7 +55,7 @@ namespace Buzzware.Cascade {
 			
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
-			freshnessSeconds ??= Config.GetFreshnessSeconds(foreignType);
+			freshnessSeconds = Config.GetFreshnessSeconds(foreignType,freshnessSeconds);
 			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds,Config.GetFallbackFreshnessSeconds(foreignType));
 			var requestOp = new RequestOp(
 				sequenceBeganMs ?? NowMs,
@@ -104,7 +104,7 @@ namespace Buzzware.Cascade {
 			
 			object modelId = CascadeTypeUtils.GetCascadeId(model);
 			var key = CascadeUtils.WhereCollectionKey(foreignType.Name, attribute.ForeignIdProperty, modelId.ToString());
-			freshnessSeconds ??= Config.GetFreshnessSeconds(foreignType);
+			freshnessSeconds = Config.GetFreshnessSeconds(foreignType,freshnessSeconds);
 			fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds,Config.GetFallbackFreshnessSeconds(foreignType));
 			var requestOp = new RequestOp(
 				sequenceBeganMs ?? NowMs,
@@ -247,6 +247,17 @@ namespace Buzzware.Cascade {
 		/// <param name="requestOp">The operation request detailing the type of operation and data parameters.</param>
 		/// <returns>OpResponse object containing the operation response data.</returns>
 		private async Task<OpResponse> ProcessRequest(RequestOp requestOp) {
+
+			// if (Config.GlobalMaximumFreshnessSeconds != null) {
+			// 	var maximumFreshness = Config.ModelConfig[requestOp.Type!].MaximumFreshnessSeconds;
+			// 	
+			// 	
+			// 	requestOp = requestOp.CloneWith(
+			// 		freshnessSeconds: Math.Min(requestOp.FreshnessSeconds, Config.GlobalMaximumFreshnessSeconds.Value),
+			// 		populateFreshnessSeconds: Math.Min(requestOp.PopulateFreshnessSeconds, Config.GlobalMaximumFreshnessSeconds.Value)
+			// 	);
+			// }
+			
 			TimingProfiler? profiler = null;
 			if (Log.Logger.IsEnabled(LogEventLevel.Verbose)) {
 				profiler = new TimingProfiler($"ProcessRequest {requestOp.Verb} {requestOp.Type?.Name} {requestOp.Id}");

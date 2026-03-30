@@ -41,7 +41,7 @@ namespace Buzzware.Cascade {
 			var modelType = first.GetType();
 			foreach (var association in associations) {
 				var piAssociation = FastReflection.GetPropertyInfo(modelType,association);
-				var modelFreshness = freshnessSeconds ?? Config.GetFreshnessSeconds(piAssociation.NotNullType);
+				var modelFreshness = Config.GetFreshnessSeconds(piAssociation!.NotNullType,freshnessSeconds);
 				var modelFallback = Math.Max((int)modelFreshness,Config.GetFallbackFreshnessSeconds(piAssociation.NotNullType));
 				
 				// reduce models according to skipIfSet
@@ -98,7 +98,7 @@ namespace Buzzware.Cascade {
 							Config.MaxParallelRequests,
 							(path) => BlobGetResponse(
 								path,
-								freshnessSeconds: freshnessSeconds ?? Config.BlobFreshnessSeconds,
+								freshnessSeconds: Config.GetBlobFreshnessSeconds(freshnessSeconds),
 								fallbackFreshnessSeconds: fallbackFreshnessSeconds ?? Config.BlobFallbackFreshnessSeconds,
 								hold: hold,
 								sequenceBeganMs ?? NowMs

@@ -112,7 +112,7 @@ namespace Buzzware.Cascade {
       long? sequenceBeganMs = null,
       object? criteria = null
     ) {
-      freshnessSeconds ??= Config.GetFreshnessSeconds(modelType);
+      freshnessSeconds = Config.GetFreshnessSeconds(modelType,freshnessSeconds);
       populateFreshnessSeconds ??= freshnessSeconds; 
       fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds,fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(modelType));
       var req = RequestOp.GetOp(
@@ -149,7 +149,7 @@ namespace Buzzware.Cascade {
     ) {
       var timeMsFixed = sequenceBeganMs ?? NowMs;
       var ids = iids.Cast<object>().ToImmutableArray();
-      freshnessSeconds ??= Config.GetFreshnessSeconds(type);
+      freshnessSeconds = Config.GetFreshnessSeconds(type,freshnessSeconds);
       fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(type));
       OpResponse[] allResponses = await CascadeUtils.ProcessParallel(ids, Config.MaxParallelRequests, id => 
         ProcessRequest( // map each id to a get request and process it
@@ -214,7 +214,7 @@ namespace Buzzware.Cascade {
     ) {
       var type = typeof(Model);
       var key = CascadeUtils.WhereCollectionKey(type.Name, propertyName, propertyValue);
-      freshnessSeconds ??= Config.GetFreshnessSeconds(type);
+      freshnessSeconds = Config.GetFreshnessSeconds(type,freshnessSeconds);
       populateFreshnessSeconds ??= freshnessSeconds;
       var requestOp = new RequestOp(
         sequenceBeganMs ?? NowMs,
@@ -331,7 +331,7 @@ namespace Buzzware.Cascade {
       long? sequenceBeganMs = null
     ) {
       var type = typeof(M);
-      freshnessSeconds ??= Config.GetFreshnessSeconds(type);
+      freshnessSeconds = Config.GetFreshnessSeconds(type,freshnessSeconds);
       populateFreshnessSeconds ??= freshnessSeconds; 
       fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds,fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(type));
       
