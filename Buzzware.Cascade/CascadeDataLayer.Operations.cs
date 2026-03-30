@@ -252,8 +252,8 @@ namespace Buzzware.Cascade {
 				profiler = new TimingProfiler($"ProcessRequest {requestOp.Verb} {requestOp.Type?.Name} {requestOp.Id}");
 				profiler.Start();
 				var criteria = serialization.Serialize(requestOp.Criteria);
-				Log.Verbose("ProcessRequest RequestOp: {@Verb} {@Id} {@Type} {@Key} {@Freshness} {@Fallback} {@Criteria}",
-					requestOp.Verb, requestOp.Id, requestOp.Type, requestOp.Key, requestOp.FreshnessSeconds, requestOp.FallbackFreshnessSeconds, criteria);
+				Log.Verbose("ProcessRequest: {@Type} {@Verb} {@Id} {@Freshness} {@Fallback} {@Criteria} {@Key}",
+					requestOp.Type?.Name, requestOp.Verb, requestOp.Id, requestOp.FreshnessSeconds, requestOp.FallbackFreshnessSeconds, criteria, requestOp.Key);
 			}
 			
 			var opResponse = await InnerProcess(requestOp, this.ConnectionOnline);
