@@ -448,7 +448,7 @@ namespace Buzzware.Cascade {
 						Debug.WriteLine("Buzzware.Cascade fallback to cached value");
 						opResponse = cacheResponse;
 					} else {
-						throw new DataNotAvailableOffline();
+						throw new OriginAccessFailure();
 					}
 				}
 			}

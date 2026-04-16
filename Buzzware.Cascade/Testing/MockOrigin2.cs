@@ -58,7 +58,7 @@ namespace Buzzware.Cascade.Testing {
       RequestCount += 1;
 
       if (ActLikeOffline)
-        throw new NoNetworkException();
+        throw new DataNotAvailableOffline();
       
       object? result = null;
       string? etag = null;

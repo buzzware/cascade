@@ -30,7 +30,7 @@ namespace Buzzware.StandardExceptions {
 	
 	public class NoNetworkException : HttpException {
 		public new const string DefaultMessage = "The server could not be reached or did not respond. You could be out of network range.";
-		public const int DefaultStatus = 410;
+		public const int DefaultStatus = 504;
 		public NoNetworkException (string aMessage=DefaultMessage, Exception aInnerException=null, int aStatus = DefaultStatus) : base (aMessage,aInnerException,aStatus) {
 		}
 	}

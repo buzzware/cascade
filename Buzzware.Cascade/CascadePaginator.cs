@@ -130,7 +130,7 @@ namespace Buzzware.Cascade {
         // Add pagination information to the criteria
         var criteriaWithPagination = AddPaginationToCriteria(Criteria, page);
         IEnumerable<Model> results = null;
-        try {
+        // try {
           // Perform the query using the CascadeDataLayer
           results = await Cascade.Query<Model>(
             collectionName(page), 
@@ -140,11 +140,11 @@ namespace Buzzware.Cascade {
             populateFreshnessSeconds: this.PopulateFreshnessSeconds,
             hold: this.Hold
           );
-        }
+        // }
         // Smother DataNotAvailableOffline exception and return null so no further page loading occurs
-        catch (DataNotAvailableOffline e) {
-          Log.Debug($"DataNotAvailableOffline page {page}");
-        }
+        // catch (DataNotAvailableOffline e) {
+        //   Log.Debug($"DataNotAvailableOffline page {page}");
+        // }
 
         // Update the state depending on whether results were returned
         if (results == null) {
