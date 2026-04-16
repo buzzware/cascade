@@ -165,8 +165,8 @@ namespace Buzzware.Cascade.Test {
       
       origin.NowMs = testEndTime;
       origin.ActLikeOffline = true;
-      // ConnectionOnline=true and cached version arrived older than fallback and failed to reach origin => Should throw DataNotAvailableOffline exception.
-      Assert.ThrowsAsync<DataNotAvailableOffline>(async () => response = await cascade.GetResponse(typeof(Thing),testThingId));
+      // ConnectionOnline=true and cached version arrived older than fallback and failed to reach origin => Should throw OriginAccessFailure exception.
+      Assert.ThrowsAsync<OriginAccessFailure>(async () => response = await cascade.GetResponse(typeof(Thing),testThingId));
       
       var thing1_2 = new Thing() {id = testThingId, name = $"thing1_2 @ {origin.NowMs}"};
       await thingOrigin.Store(testThingId,thing1_2);
