@@ -35,6 +35,9 @@ namespace Buzzware.Cascade {
       
     }
     
+    public async Task Setup() {
+    }
+    
     /// <summary>
     /// Fetches the requested model or collection from the cache if available and fresh enough;
     /// otherwise returns a none response to indicate a miss.
@@ -104,7 +107,7 @@ namespace Buzzware.Cascade {
       var response = await Fetch(RequestOp.GetOp<Model>(id, Cascade.NowMs, freshnessSeconds: freshnessSeconds));
       return response.Result as Model;
     }
-
+    
     /// <summary>
     /// Stores a model instance in the cache with the arrived timestamp.
     /// </summary>

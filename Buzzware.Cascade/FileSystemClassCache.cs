@@ -167,6 +167,9 @@ namespace Buzzware.Cascade {
             }
         }
 
+        public async Task Setup() {
+        }
+
         /// <summary>
         /// Stores a model instance asynchronously to the file system based on its id.
         /// </summary>

@@ -15,6 +15,12 @@ namespace Buzzware.Cascade {
     CascadeDataLayer Cascade { get; set; }
 
     /// <summary>
+    /// Implement this for any setup required
+    /// </summary>
+    /// <returns></returns>
+    Task Setup();
+    
+    /// <summary>
     /// Caches a model instance with a specific id
     /// </summary>
     /// <param name="id">The identifier for the model to be stored in the cache.</param>

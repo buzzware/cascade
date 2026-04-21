@@ -31,6 +31,9 @@ namespace Buzzware.Cascade {
             this.Serialization = serialization ?? new CascadeJsonSerialization();
         }
 
+        public async Task Setup() {
+        }
+        
         private string GetModelFilePath(object? id = null) { 
           return id==null ? Path.Combine(_fileDir, _modelsDirectory) : Path.Combine(_fileDir, _modelsDirectory, id.ToString() + ".json");
         }
@@ -141,7 +144,8 @@ namespace Buzzware.Cascade {
         //     var response = await Fetch(RequestOp.GetOp<Model>(id, Buzzware.Cascade!.NowMs, freshnessSeconds: freshnessSeconds));
         //     return response.Result as Model;
         // }
-        
+
+
         public async Task Store(object id, object model, long arrivedAt) {
             var idTyped = (IdType?)CascadeTypeUtils.ConvertTo(typeof(IdType), id);
             if (idTyped == null)

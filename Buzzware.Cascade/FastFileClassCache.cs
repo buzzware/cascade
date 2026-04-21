@@ -308,6 +308,9 @@ namespace Buzzware.Cascade {
       }
     }
 
+    public async Task Setup() {
+    }
+
     /// <summary>
     /// Stores a given model object identified by a specific id with a timestamp.
     /// </summary>
