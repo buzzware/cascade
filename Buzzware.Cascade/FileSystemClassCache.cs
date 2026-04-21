@@ -188,7 +188,12 @@ namespace Buzzware.Cascade {
                 Log.Debug(e.Message);   // sharing violation exception sometimes happens here
             }
         }
-
+        
+        public async Task StoreAll(IReadOnlyList<object> results, long arrivedAt) {
+            foreach (var result in results)
+                await Store(CascadeTypeUtils.GetCascadeId(result), result, arrivedAt);
+        }
+        
         /// <summary>
         /// Stores a collection of model ids to the file system under a specific key.
         /// </summary>

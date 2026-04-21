@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -120,7 +121,12 @@ namespace Buzzware.Cascade {
         throw new Exception("Bad id");
       models[idTyped] = new Tuple<Model, long>((Model)model, arrivedAt);
     }
-    
+
+    public async Task StoreAll(IReadOnlyList<object> results, long arrivedAt) {
+      foreach (var result in results)
+        await Store(CascadeTypeUtils.GetCascadeId(result), result, arrivedAt);
+    }
+
     /// <summary>
     /// Stores a collection of ids in the cache with the specified name key and arrived timestamp.
     /// </summary>

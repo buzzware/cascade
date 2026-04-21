@@ -326,6 +326,11 @@ namespace Buzzware.Cascade {
       await SerializeToPathAsync(modelPath, model, arrivedAt);
     }
 
+    public async Task StoreAll(IReadOnlyList<object> results, long arrivedAt) {
+      foreach (var result in results)
+        await Store(CascadeTypeUtils.GetCascadeId(result), result, arrivedAt);
+    }
+    
     /// <summary>
     /// Stores a collection of ids identified by a specific key with a timestamp.
     /// </summary>

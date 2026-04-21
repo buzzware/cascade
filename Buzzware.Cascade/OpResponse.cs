@@ -116,15 +116,15 @@ namespace Buzzware.Cascade {
     /// <summary>
     /// Provides an IEnumerable interface for the results.
     /// </summary>
-    public IEnumerable Results {
+    public IReadOnlyList<object> Results {
       get {
         if (Result == null)
           return ImmutableArray<object>.Empty;
         if (ResultIsBlob()) {
-          ImmutableArray.Create(Result); // put blob into an array
+          return (IReadOnlyList<object>)ImmutableArray.Create(Result); // put blob into an array
         } if (CascadeTypeUtils.IsEnumerableType(Result.GetType())) {
           // Convert the result to an immutable array of type object
-          return (IEnumerable)CascadeTypeUtils.ImmutableArrayOfType(typeof(object), (IEnumerable) Result);
+          return (IReadOnlyList<object>)CascadeTypeUtils.ImmutableArrayOfType(typeof(object), (IEnumerable) Result);
         } else {
           return ImmutableArray.Create(Result);
         }

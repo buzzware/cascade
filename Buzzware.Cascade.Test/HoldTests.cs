@@ -180,8 +180,8 @@ namespace Buzzware.Cascade.Test {
 			Assert.That(cascade.IsCollectionHeld<Thing>(collBName),Is.False);
 			
 			// Ensure both models and collections exist in memory
-			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
-			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, timeMs: origin.NowMs, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, timeMs: origin.NowMs, freshnessSeconds: 0))).Exists,Is.True);
 
 			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName, timeMs: origin.NowMs))).Exists,Is.True);
 			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName, timeMs: origin.NowMs))).Exists,Is.True);
@@ -190,8 +190,8 @@ namespace Buzzware.Cascade.Test {
 			await memoryCache.ClearAll(exceptHeld: true);
 
 			// Verify held model and collection persist, while others are cleared
-			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
-			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.False);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, timeMs: origin.NowMs, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await memoryCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, timeMs: origin.NowMs, freshnessSeconds: 0))).Exists,Is.False);
 			
 			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collAName, timeMs: origin.NowMs))).Exists,Is.True);
 			Assert.That((await memoryCache.Fetch(RequestOp.GetCollectionOp<Thing>(collBName, timeMs: origin.NowMs))).Exists,Is.False);

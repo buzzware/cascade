@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Buzzware.Cascade {
@@ -29,6 +30,8 @@ namespace Buzzware.Cascade {
     /// <returns>bool indicating success of the store operation.</returns>
     Task Store(object id, object model, long arrivedAt);
 
+    Task StoreAll(IReadOnlyList<object> results, long arrivedAt);
+    
     /// <summary>
     /// Stores a collection of model ids under a specific key.
     /// </summary>

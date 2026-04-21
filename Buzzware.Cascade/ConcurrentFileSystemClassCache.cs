@@ -158,6 +158,11 @@ namespace Buzzware.Cascade {
             }
         }
 
+        public async Task StoreAll(IReadOnlyList<object> results, long arrivedAt) {
+            foreach (var result in results)
+                await Store(CascadeTypeUtils.GetCascadeId(result), result, arrivedAt);
+        }
+        
         public async Task StoreCollection(string key, IEnumerable ids, long arrivedAt) {
             string collectionFilePath = GetCollectionFilePath(key);
             await SerializeToPathAsync(collectionFilePath, ids, arrivedAt);

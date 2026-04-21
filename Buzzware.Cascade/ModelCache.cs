@@ -193,8 +193,9 @@ namespace Buzzware.Cascade {
 					var cache2 = classCache[opResponse.RequestOp.Type];
 					if (opResponse.IsModelResults) {
 						// Store each individual model in the list of results
-						foreach (var model in opResponse.Results)
-							await cache2.Store(CascadeTypeUtils.GetCascadeId(model), model, arrivedAt);
+						// foreach (var model in opResponse.Results)
+						// 	await cache2.Store(CascadeTypeUtils.GetCascadeId(model), model, arrivedAt);
+						await cache2.StoreAll(opResponse.Results, arrivedAt);
 					}
 					// Store the collection of model IDs associated with the query
 					await cache2.StoreCollection(opResponse.RequestOp.Key!, opResponse.ResultIds, arrivedAt);

@@ -173,9 +173,9 @@ namespace Buzzware.Cascade.Test {
 			OpResponse opResponse;
 
 			// Verify that all objects and collections exist in the cache
-			opResponse = await modelCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0, timeMs: origin.NowMs));
+			opResponse = await modelCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, timeMs: origin.NowMs, freshnessSeconds: 0));
 			Assert.That(opResponse.Exists,Is.True);
-			opResponse = await modelCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0, timeMs: origin.NowMs));
+			opResponse = await modelCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, timeMs: origin.NowMs, freshnessSeconds: 0));
 			Assert.That(opResponse.Exists,Is.True);
 			
 			Assert.That((await modelCache.Fetch(RequestOp.GetCollectionOp<Thing>(coll1Name, timeMs: origin.NowMs))).Exists,Is.True);
@@ -185,8 +185,8 @@ namespace Buzzware.Cascade.Test {
 			await modelCache.ClearAll(exceptHeld: true);
 
 			// Verify held items still exist while others do not
-			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.True);
-			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, freshnessSeconds: 0, timeMs: origin.NowMs))).Exists,Is.False);
+			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing1.id, timeMs: origin.NowMs, freshnessSeconds: 0))).Exists,Is.True);
+			Assert.That((await modelCache.Fetch(RequestOp.GetOp<Thing>(thing2.id, timeMs: origin.NowMs, freshnessSeconds: 0))).Exists,Is.False);
 			
 			Assert.That((await modelCache.Fetch(RequestOp.GetCollectionOp<Thing>(coll1Name, timeMs: origin.NowMs))).Exists,Is.True);
 			Assert.That((await modelCache.Fetch(RequestOp.GetCollectionOp<Thing>(coll2Name, timeMs: origin.NowMs))).Exists,Is.False);
