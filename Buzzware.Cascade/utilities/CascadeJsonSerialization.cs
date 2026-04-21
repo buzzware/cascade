@@ -223,7 +223,7 @@ namespace Buzzware.Cascade {
     /// <returns>A JSON string representation of the object.</returns>
 		public string? Serialize(object value) {
 			try {
-				return JsonSerializer.Serialize(SerializeToNode(value), dictionaryNormalizedOptions);
+				return JsonSerializer.Serialize(value, dictionaryNormalizedOptions);
 			} catch (Exception e) {
 				Log.Warning($"Failed Serialize model: "+e.Message);
 				throw;
