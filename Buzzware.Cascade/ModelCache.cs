@@ -198,7 +198,8 @@ namespace Buzzware.Cascade {
 						await cache2.StoreAll(opResponse.Results, arrivedAt);
 					}
 					// Store the collection of model IDs associated with the query
-					await cache2.StoreCollection(opResponse.RequestOp.Key!, opResponse.ResultIds, arrivedAt);
+					if (opResponse.RequestOp.Key!=null)
+						await cache2.StoreCollection(opResponse.RequestOp.Key!, opResponse.ResultIds, arrivedAt);
 					break;
 				case RequestVerb.BlobGet:
 				case RequestVerb.BlobGetFilePath:

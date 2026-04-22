@@ -377,7 +377,7 @@ namespace Buzzware.Cascade {
 			OpResponse? cacheResponse = null;
 
 			// If offline or freshness not zero, proceed with cache retrieval
-			if (requestOp.FreshnessSeconds > RequestOp.FRESHNESS_INSIST) {
+			if (requestOp.FreshnessSeconds > RequestOp.FRESHNESS_INSIST && !(requestOp.Verb==RequestVerb.Query && requestOp.Key==null)) {
 				RequestOp cacheReq;
 				cacheReq = requestOp.CloneWith(freshnessSeconds: RequestOp.FRESHNESS_ANY);										
 
@@ -411,7 +411,7 @@ namespace Buzzware.Cascade {
 			if (gotCacheValue && (connectionOnline ? withinFreshness : withinFallback)) {
 				opResponse = cacheResponse;	// in cache and offline or meets freshness
 			} else {
-				if (!connectionOnline)		// mustn't be in cache and we're offline, so not much we can do
+				if (!connectionOnline && requestOp.LocalOnly!=true)		// mustn't be in cache and we're offline, so not much we can do
 					throw new DataNotAvailableOffline();
 				OpResponse originResponse;
 				bool connected = false;
@@ -421,7 +421,7 @@ namespace Buzzware.Cascade {
 					}
 					originResponse = await Origin.ProcessRequest(requestOp, connectionOnline);
 					
-					connected = connectionOnline;
+					connected = connectionOnline || requestOp.LocalOnly==true;
 				} catch (Exception e) {
 					if (e is NoNetworkException)
 						originResponse = OpResponse.ConnectionFailure(requestOp,requestOp.TimeMs,Origin.GetType().Name);

@@ -243,17 +243,22 @@ namespace Buzzware.Cascade {
 				criteria: criteria
 			);
 		}
-		
+
 		/// <summary>
 		/// Constructs a "GetCollection" operation for retrieving a collection of model ids.
 		/// </summary>
 		/// <typeparam name="Model">The type of the model</typeparam>
 		/// <param name="collectionName">The name of the collection to be retrieved.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created. If not specified, the current time is used.</param>
+		/// <param name="freshnessSeconds"></param>
+		/// <param name="populateFreshnessSeconds"></param>
+		/// <param name="fallbackFreshnessSeconds"></param>
 		/// <returns>A new instance of RequestOp representing a "GetCollection" request.</returns>
 		public static RequestOp GetCollectionOp<Model>(
 			string collectionName, 
-			long timeMs = -1
+			long timeMs = -1,
+			int? freshnessSeconds = null,
+			int? fallbackFreshnessSeconds = null
 		) {
 			return new RequestOp(
 				timeMs==-1 ? CascadeUtils.NowMs : timeMs,
@@ -262,9 +267,9 @@ namespace Buzzware.Cascade {
 				null,
 				value: null,
 				populate: null,
-				freshnessSeconds: null,
+				freshnessSeconds: freshnessSeconds,
 				populateFreshnessSeconds: null,
-				fallbackFreshnessSeconds: null,
+				fallbackFreshnessSeconds: fallbackFreshnessSeconds,
 				criteria: null,
 				key: collectionName
 			);
@@ -284,8 +289,9 @@ namespace Buzzware.Cascade {
 		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
 		/// <param name="localOnly"></param>
 		/// <returns>A new instance of RequestOp representing a "Query" request.</returns>
-		public static RequestOp QueryOp<Model>(string collectionName,
-			object criteria,
+		public static RequestOp QueryOp<Model>(
+			string? collectionName,
+			object? criteria,
 			long timeMs,
 			IEnumerable<string>? populate = null,
 			int? freshnessSeconds = null,

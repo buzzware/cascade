@@ -171,13 +171,23 @@ namespace Buzzware.Cascade {
     /// Gets a collection literally, i.e., an enumerable of IDs.
     /// </summary>
     /// <param name="collectionName">User-defined name for the collection.</param>
+    /// <param name="sequenceBeganMs"></param>
+    /// <param name="freshnessSeconds"></param>
+    /// <param name="fallbackFreshnessSeconds"></param>
     /// <typeparam name="M">The type of the collection.</typeparam>
     /// <returns>An enumerable of IDs.</returns>
     public async Task<IEnumerable<object>?> GetCollection<M>(
       string collectionName,
-      long? sequenceBeganMs = null
+      long? sequenceBeganMs = null,
+      int? freshnessSeconds = null,
+      int? fallbackFreshnessSeconds = null
     ) where M : class {
-      return (await this.GetCollectionResponse<M>(collectionName,sequenceBeganMs)).Result as IEnumerable<object>;
+      return (await this.GetCollectionResponse<M>(
+        collectionName,
+        sequenceBeganMs,
+        freshnessSeconds,
+        fallbackFreshnessSeconds
+      )).Result as IEnumerable<object>;
     }
 
     /// <summary>
@@ -185,12 +195,21 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="collectionName">User-defined name for the collection.</param>
     /// <param name="sequenceBeganMs">(Optional) Request time represented as milliseconds since 1970.</param>
+    /// <param name="freshnessSeconds"></param>
+    /// <param name="fallbackFreshnessSeconds"></param>
     /// <typeparam name="M">The type of the collection.</typeparam>
     /// <returns>OpResponse with Results as an enumerable of IDs.</returns>
-    public Task<OpResponse> GetCollectionResponse<M>(string collectionName, long? sequenceBeganMs = null) {
+    public Task<OpResponse> GetCollectionResponse<M>(
+      string collectionName, 
+      long? sequenceBeganMs = null,
+      int? freshnessSeconds = null,
+      int? fallbackFreshnessSeconds = null
+    ) {
       var req = RequestOp.GetCollectionOp<M>(
         collectionName,
-        sequenceBeganMs ?? NowMs
+        sequenceBeganMs ?? NowMs,
+        freshnessSeconds: freshnessSeconds,
+        fallbackFreshnessSeconds: fallbackFreshnessSeconds
       );
       return ProcessRequest(req);
     }
@@ -264,6 +283,7 @@ namespace Buzzware.Cascade {
     /// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if main requirement is not met.</param>
     /// <param name="hold">Whether to hold objects in cache.</param>
     /// <param name="sequenceBeganMs">(Optional) Request time as milliseconds since 1970 for optimized caching.</param>
+    /// <param name="localOnly"></param>
     /// <typeparam name="M">Model type to query.</typeparam>
     /// <returns>IEnumerable<M> containing the query results.</returns>
     public async Task<IEnumerable<M>> Query<M>(
@@ -274,9 +294,10 @@ namespace Buzzware.Cascade {
       int? populateFreshnessSeconds = null,
       int? fallbackFreshnessSeconds = null,
       bool? hold = null,
-      long? sequenceBeganMs = null
+      long? sequenceBeganMs = null,
+      bool? localOnly = null
     ) {
-      var response = await QueryResponse<M>(collectionKey, criteria, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs);
+      var response = await QueryResponse<M>(collectionKey, criteria, populate, freshnessSeconds, populateFreshnessSeconds, fallbackFreshnessSeconds, hold, sequenceBeganMs, localOnly);
       var results = response.Results.Cast<M>().ToImmutableArray();
       return results;
     }
@@ -293,6 +314,7 @@ namespace Buzzware.Cascade {
     /// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if main requirement is not met.</param>
     /// <param name="hold">Whether to hold objects in cache.</param>
     /// <param name="sequenceBeganMs">(Optional) Request time as milliseconds since 1970 for optimized caching.</param>
+    /// <param name="localOnly"></param>
     /// <typeparam name="M">Model type to query.</typeparam>
     /// <returns>Single model of type M if found, otherwise null.</returns>
     public async Task<M?> QueryOne<M>(
@@ -303,15 +325,16 @@ namespace Buzzware.Cascade {
       int? populateFreshnessSeconds = null,
       int? fallbackFreshnessSeconds = null,
       bool? hold = null,
-      long? sequenceBeganMs = null
+      long? sequenceBeganMs = null,
+      bool? localOnly = null
     ) {
-      return (await this.Query<M>(collectionKey, criteria, populate, freshnessSeconds: freshnessSeconds, populateFreshnessSeconds: populateFreshnessSeconds, fallbackFreshnessSeconds: fallbackFreshnessSeconds, hold: hold, sequenceBeganMs: sequenceBeganMs)).FirstOrDefault();
+      return (await this.Query<M>(collectionKey, criteria, populate, freshnessSeconds: freshnessSeconds, populateFreshnessSeconds: populateFreshnessSeconds, fallbackFreshnessSeconds: fallbackFreshnessSeconds, hold: hold, sequenceBeganMs: sequenceBeganMs,localOnly:localOnly)).FirstOrDefault();
     }
 
     /// <summary>
     /// Performs a query on the origin with the given model and criteria, caching the resulting collection under collectionKey and returns a full detail OpResponse.
     /// </summary>
-    /// <param name="collectionKey">Key under which collection will be cached.</param>
+    /// <param name="collectionName"></param>
     /// <param name="criteria">Filtering criteria for the query.</param>
     /// <param name="populate">Association names to populate with data.</param>
     /// <param name="freshnessSeconds">Freshness duration for main objects.</param>
@@ -319,16 +342,20 @@ namespace Buzzware.Cascade {
     /// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if main requirement is not met.</param>
     /// <param name="hold">Whether to hold objects in cache.</param>
     /// <param name="sequenceBeganMs">(Optional) Request time as milliseconds since 1970 for optimized caching.</param>
+    /// <param name="localOnly"></param>
+    /// <param name="collectionKey">Key under which collection will be cached.</param>
     /// <typeparam name="M">Model type to query.</typeparam>
     /// <returns>OpResponse with query details.</returns>
-    public Task<OpResponse> QueryResponse<M>(string collectionName,
-      object criteria,
+    public Task<OpResponse> QueryResponse<M>(
+      string? collectionName,
+      object? criteria,
       IEnumerable<string>? populate = null,
       int? freshnessSeconds = null,
       int? populateFreshnessSeconds = null,
       int? fallbackFreshnessSeconds = null,
       bool? hold = null,
-      long? sequenceBeganMs = null
+      long? sequenceBeganMs = null,
+      bool? localOnly = null
     ) {
       var type = typeof(M);
       freshnessSeconds = Config.GetFreshnessSeconds(type,freshnessSeconds);
@@ -343,7 +370,8 @@ namespace Buzzware.Cascade {
         freshnessSeconds: freshnessSeconds,
         populateFreshnessSeconds: populateFreshnessSeconds,
         fallbackFreshnessSeconds: fallbackFreshnessSeconds,
-        hold ?? false
+        hold ?? false,
+        localOnly: localOnly
       );
       return ProcessRequest(req);
     }

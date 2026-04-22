@@ -74,9 +74,10 @@ namespace Buzzware.Cascade {
 
         case RequestVerb.Query:
         case RequestVerb.GetCollection:
-          
-          collections.TryGetValue(requestOp.Key!, out var collEntry);
-          
+
+          Tuple<IEnumerable, long>? collEntry = null;
+          if (requestOp.Key!=null)
+            collections.TryGetValue(requestOp.Key!, out collEntry);
           if (
             collEntry != null && 
             (requestOp.FreshnessSeconds>=0) && 
