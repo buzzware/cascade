@@ -83,6 +83,20 @@ namespace Buzzware.StandardExceptions {
 			}
 		}
 
+		public async Task FilterGuard(Func<Task> f) {
+			try {                                                                      
+				await f();
+			} catch (Exception e) {                                                    
+				var filtered_e = this.Filter(e);
+				if (filtered_e != null) {
+					if (filtered_e == e)
+						throw;                                                         
+					else
+						throw filtered_e;                                              
+				}       
+			}
+		}		
+		
 		public async Task<T> FilterGuard<T>(Func<Task<T>> f) {
 			try {
 				return await f();
@@ -109,6 +123,38 @@ namespace Buzzware.StandardExceptions {
 					else
 						throw filtered_e;
 				} 
+			}
+			return default;
+		}
+		
+		public async Task GuardAndReport(Func<Task> f) {
+			try {                                                                      
+				await f();
+			} catch (Exception e) {                                                    
+				var filtered_e = this.Filter(e);
+				if (filtered_e != null)
+					await Report(filtered_e);
+			}
+		}		
+		
+		public async Task<T> GuardAndReport<T>(Func<Task<T>> f) {
+			try {
+				return await f();
+			} catch(Exception e) {
+				var filtered_e = this.Filter(e);
+				if (filtered_e != null)
+					await Report(filtered_e);
+			}
+			return default;
+		}
+		
+		public T GuardAndReport<T>(Func<T> f) {
+			try {
+				return f();
+			} catch(Exception e) {
+				var filtered_e = this.Filter(e);
+				if (filtered_e != null)
+					Report(filtered_e);
 			}
 			return default;
 		}
