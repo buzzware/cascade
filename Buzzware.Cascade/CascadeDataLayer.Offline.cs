@@ -285,13 +285,23 @@ namespace Buzzware.Cascade {
 			for (var index = 0; index < changes.Length; index++) {
 				var change = changes[index];
 				progressMessage?.Invoke($"Uploading Changes");
-				await InnerProcess(change.Item2, true);
-				await RemoveChangePending(change.Item1,change.Item3?.Values);
+				await ProcessAndRemovePendingChange(change);
 				progressCount?.Invoke(changes.Length - index - 1);
 			}
 			// Update Home Screen Pending Count after Uploading Changes
 			RaisePropertyChanged(nameof(PendingCount));
 			progressMessage?.Invoke("Changes Uploaded.");
+		}
+
+		/// <summary>
+		/// Process a single change from GetChangesPending() and remove it from the ChangesPending store
+		/// </summary>
+		/// <param name="change"></param>
+		public async Task ProcessAndRemovePendingChange(
+			Tuple<string, RequestOp, IReadOnlyDictionary<string, string>?> change
+		) {
+			await InnerProcess(change.Item2, true);
+			await RemoveChangePending(change.Item1,change.Item3?.Values);
 		}
 
 		/// <summary>
