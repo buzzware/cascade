@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Buzzware.StandardExceptions" Version="2.0.0" />
     <PackageReference Include="NUnit" Version="4.4.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
@@ -18,7 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Buzzware.Cascade.Test\Buzzware.Cascade.Test.csproj" />
     <ProjectReference Include="..\Buzzware.Cascade\Buzzware.Cascade.csproj" />
-    <ProjectReference Include="..\StandardExceptionsDotNet\Buzzware.StandardExceptions\Buzzware.StandardExceptions.csproj" />
   </ItemGroup>
 
 </Project>
