@@ -151,7 +151,7 @@ namespace Buzzware.Cascade {
       var ids = iids.Cast<object>().ToImmutableArray();
       freshnessSeconds = Config.GetFreshnessSeconds(type,freshnessSeconds);
       fallbackFreshnessSeconds = Math.Max((int)freshnessSeconds, fallbackFreshnessSeconds ?? Config.GetFallbackFreshnessSeconds(type));
-      OpResponse[] allResponses = await CascadeUtils.ProcessParallel(ids, Config.MaxParallelRequests, id => 
+      OpResponse[] allResponses = await CascadeUtils.ProcessParallel<object,OpResponse>(ids, Config.MaxParallelRequests, id => 
         ProcessRequest( // map each id to a get request and process it
           new RequestOp(
             timeMsFixed,

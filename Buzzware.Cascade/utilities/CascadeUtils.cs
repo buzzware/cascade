@@ -632,5 +632,24 @@ namespace Buzzware.Cascade {
 			var results = await Task.WhenAll(tasks);
 			return results;
 		}
+		
+		public static async Task ProcessParallel<In>(IReadOnlyList<In> items, int maxDegreeOfParallelism, Func<In, Task> process) {
+			var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
+			var tasks = new List<Task>();
+			
+			foreach (var item in items) {
+				await semaphore.WaitAsync();
+
+				tasks.Add(Task.Run(async () => {
+					try {
+						await process(item);
+					}
+					finally {
+						semaphore.Release();
+					}
+				}));
+			}
+			await Task.WhenAll(tasks);
+		}
 	}
 }
