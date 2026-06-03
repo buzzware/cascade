@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9</LangVersion>
-    <Version>2.7.5</Version>
+    <Version>2.7.6</Version>
     <Title>StandardExceptions</Title>
     <Authors>Gary McGhee, Buzzware Solutions</Authors>
     <Description>Standard Exceptions for use by any library or application</Description>
