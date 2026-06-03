@@ -158,5 +158,9 @@ namespace Buzzware.StandardExceptions {
 			}
 			return default;
 		}
+
+		public async void CallAsync(Func<Task> func) {
+			await GuardAndReport(func);
+		}
 	}
 }
