@@ -71,15 +71,17 @@ namespace Buzzware.Cascade {
     /// <param name="freshnessSeconds">Optional; time in seconds for data freshness consideration.</param>
     /// <param name="populateFreshnessSeconds">Optional; time in seconds for population data freshness.</param>
     /// <param name="hold">Optional; indicator to hold paginator operations.</param>
+    /// <param name="localOnly">Optional; when true, queries are answered only from the local cache.</param>
     public CascadePaginator(
-      CascadeDataLayer cascade, 
-      object criteria, 
-      string collectionPrefix, 
+      CascadeDataLayer cascade,
+      object criteria,
+      string collectionPrefix,
       int perPage,
-      IEnumerable<string>? populate = null, 
+      IEnumerable<string>? populate = null,
       int? freshnessSeconds = null,
       int? populateFreshnessSeconds = null,
-      bool? hold = null
+      bool? hold = null,
+      bool localOnly = false
     ) {
       Cascade = cascade;
       Criteria = criteria;
@@ -89,7 +91,13 @@ namespace Buzzware.Cascade {
       FreshnessSeconds = freshnessSeconds;
       PopulateFreshnessSeconds = populateFreshnessSeconds;
       Hold = hold;
+      LocalOnly = localOnly;
     }
+
+    /// <summary>
+    /// When true, queries are answered only from the local cache (no origin request).
+    /// </summary>
+    public bool LocalOnly { get; protected set; }
 
     /// <summary>
     /// Time in seconds for considering the freshness of the data queried.
@@ -133,12 +141,13 @@ namespace Buzzware.Cascade {
         // try {
           // Perform the query using the CascadeDataLayer
           results = await Cascade.Query<Model>(
-            collectionName(page), 
-            criteriaWithPagination, 
-            populate: this.Populate, 
+            collectionName(page),
+            criteriaWithPagination,
+            populate: this.Populate,
             freshnessSeconds: this.FreshnessSeconds,
             populateFreshnessSeconds: this.PopulateFreshnessSeconds,
-            hold: this.Hold
+            hold: this.Hold,
+            localOnly: this.LocalOnly
           );
         // }
         // Smother DataNotAvailableOffline exception and return null so no further page loading occurs
