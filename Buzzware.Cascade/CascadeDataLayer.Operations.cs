@@ -163,11 +163,12 @@ namespace Buzzware.Cascade {
 				// Begin to handle populate operations on the response
 				var populate = requestOp.Populate?.ToArray() ?? new string[] { };
 				if (requestOp.Verb == RequestVerb.Query && opResponse.IsIdResults) {
+					var isCachedCollection = opResponse.LayerIndex >= 0;	// if query collection came from cache, then we'll accept any cached models ie avoid server requests because we're probably offline or network failed
 					var modelResponses = await GetModelsForIds(
 						requestOp.Type!,
 						opResponse.ResultIds,
-						requestOp.FreshnessSeconds,
-						fallbackFreshnessSeconds: requestOp.FallbackFreshnessSeconds,
+						freshnessSeconds: isCachedCollection ? RequestOp.FRESHNESS_ANY : requestOp.FreshnessSeconds,
+						fallbackFreshnessSeconds: isCachedCollection ? RequestOp.FALLBACK_ANY : requestOp.FallbackFreshnessSeconds,
 						hold: requestOp.Hold,
 						sequenceBeganMs: requestOp.TimeMs
 					);
