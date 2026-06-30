@@ -633,6 +633,101 @@ namespace Buzzware.Cascade {
 			return results;
 		}
 		
+    /// <summary>
+    /// Escapes a string so that it is safe for use both within a URL and as a
+    /// unix or windows filename. Unsafe characters are URL-style percent-encoded
+    /// (%XX of their UTF-8 bytes, uppercase hex).
+    ///
+    /// A character is considered safe only if it is alphanumeric, '-' or '.'.
+    /// Every other character is escaped, which covers all characters considered
+    /// unsafe in a URL or on the unix or windows filesystem.
+    ///
+    /// Underscores ('_') are kept unescaped except when they are leading, trailing
+    /// or consecutive, in which case they are also escaped (as %5F).
+    /// </summary>
+    /// <param name="value">The string to escape.</param>
+    /// <returns>The escaped string.</returns>
+    public static string SafeKeyEncode(string value) {
+      if (value == null)
+        throw new ArgumentNullException(nameof(value));
+
+      var sb = new System.Text.StringBuilder(value.Length * 2);
+      for (int i = 0; i < value.Length; i++) {
+        char c = value[i];
+
+        bool isSafe = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+                      (c >= '0' && c <= '9') || c == '-' || c == '.';
+        if (isSafe) {
+          sb.Append(c);
+          continue;
+        }
+
+        if (c == '_') {
+          bool leading = i == 0;
+          bool trailing = i == value.Length - 1;
+          bool consecutive = (i > 0 && value[i - 1] == '_') ||
+                             (i < value.Length - 1 && value[i + 1] == '_');
+          if (!leading && !trailing && !consecutive) {
+            sb.Append('_');
+            continue;
+          }
+          // otherwise fall through and escape the underscore
+        }
+
+        // Percent-encode the UTF-8 bytes of this character (handling surrogate pairs).
+        string s;
+        if (char.IsHighSurrogate(c) && i + 1 < value.Length && char.IsLowSurrogate(value[i + 1])) {
+          s = value.Substring(i, 2);
+          i++;
+        } else {
+          s = c.ToString();
+        }
+        foreach (var b in System.Text.Encoding.UTF8.GetBytes(s)) {
+          sb.Append('%');
+          sb.Append(b.ToString("X2"));
+        }
+      }
+      return sb.ToString();
+    }
+
+    /// <summary>
+    /// Decodes a string previously encoded with <see cref="SafeKeyEncode"/>,
+    /// reversing the URL-style percent-encoding. Each "%XX" sequence is converted
+    /// back to its byte value, and the resulting bytes are decoded as UTF-8.
+    /// Characters that were not encoded are passed through unchanged.
+    /// </summary>
+    /// <param name="value">The string to decode.</param>
+    /// <returns>The decoded string.</returns>
+    public static string SafeKeyDecode(string value) {
+      if (value == null)
+        throw new ArgumentNullException(nameof(value));
+
+      var bytes = new List<byte>(value.Length);
+      for (int i = 0; i < value.Length; i++) {
+        char c = value[i];
+        if (c == '%' && i + 2 < value.Length &&
+            IsHexDigit(value[i + 1]) && IsHexDigit(value[i + 2])) {
+          bytes.Add((byte)((HexValue(value[i + 1]) << 4) | HexValue(value[i + 2])));
+          i += 2;
+        } else {
+          // Pass unencoded characters through as their UTF-8 bytes.
+          foreach (var b in System.Text.Encoding.UTF8.GetBytes(c.ToString()))
+            bytes.Add(b);
+        }
+      }
+      return System.Text.Encoding.UTF8.GetString(bytes.ToArray());
+    }
+
+    private static bool IsHexDigit(char c) {
+      return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
+    }
+
+    private static int HexValue(char c) {
+      if (c >= '0' && c <= '9') return c - '0';
+      if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+      return c - 'a' + 10;
+    }
+
 		public static async Task ProcessParallel<In>(IReadOnlyList<In> items, int maxDegreeOfParallelism, Func<In, Task> process) {
 			var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
 			var tasks = new List<Task>();
