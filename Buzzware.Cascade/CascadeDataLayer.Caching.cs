@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -82,6 +83,64 @@ namespace Buzzware.Cascade {
 			return newCollection;
 		}
 
+
+		/// <summary>
+		/// Utility method to either replace or remove an item from a HasMany association while optionally ensuring the item is present.
+		/// </summary>
+		/// <param name="collectionName">the name of the collection to modify</param>
+		/// <param name="item">the item - can be a string (eg. a collection name for a collection of collections) or number - doesn't have to be a valid id in the collection</param>
+		/// <param name="remove">Specifies whether to remove the item from the association.</param>
+		/// <param name="ensureItem">Indicates if the item should be ensured in the association, avoiding duplicates.</param>
+		protected async Task<IReadOnlyList<object>> CollectionReplaceRemoveItem<Model>(string collectionName, object item, bool remove = false, bool ensureItem = false) where Model : class {
+			var collection = (await GetCollection<Model>(collectionName) ?? ImmutableArray<Model>.Empty).ToImmutableArray() ;
+			
+			var modified = false;
+			for (var i = 0; i < collection.Length; i++) {
+				var existing = collection[i];
+				if (EqualityComparer<object>.Default.Equals(existing,item)) {
+					collection = collection.RemoveAt(i);
+					if (!remove)
+						collection = collection.Insert(i, item);
+					modified = true;
+					break;
+				}
+			}
+			if (modified) {
+				await SetCollection<Model>(collectionName, collection);
+			} else if (ensureItem) {
+				collection = collection.Add(item);
+				await SetCollection<Model>(collectionName, collection);
+			}
+			return collection;
+		}
+		
+		/// <summary>
+		/// Replaces an item in the collection only if it already exists
+		/// </summary>
+		/// <param name="collectionName"></param>
+		/// <param name="item"></param>
+		public Task<IReadOnlyList<object>> CollectionReplaceItem<Model>(string collectionName, object item) where Model : class {
+			return CollectionReplaceRemoveItem<Model>(collectionName, item, remove: false);
+		}
+
+		/// <summary>
+		/// Removes an item from the collection if it exists
+		/// </summary>
+		/// <param name="collectionName"></param>
+		/// <param name="item"></param>
+		public Task<IReadOnlyList<object>> CollectionRemoveItem<Model>(string collectionName, object item) where Model : class {
+			return CollectionReplaceRemoveItem<Model>(collectionName, item, remove: true);
+		}
+
+		/// <summary>
+		/// Ensures that an item exists in the collection - by replacing or adding
+		/// </summary>
+		/// <param name="collectionName"></param>
+		/// <param name="item"></param>
+		public Task<IReadOnlyList<object>> CollectionEnsureItem<Model>(string collectionName, object item) where Model : class {
+			return CollectionReplaceRemoveItem<Model>(collectionName, item, remove: false, ensureItem: true);
+		}
+		
 		/// <summary>
 		/// Replaces the cached values for HasMany/HasOne type associations (not typically used)
 		/// Updates all cache layers with the provided association collection.
