@@ -120,7 +120,17 @@ namespace Buzzware.Cascade {
     /// <param name="page">The page number for which the collection name is being constructed.</param>
     /// <returns>The constructed collection name including the page number formatted with leading zeros.</returns>
     string collectionName(int page) {
-      return CollectionPrefix + "__" + page.ToString("D3");
+      return CollectionNameForPage(CollectionPrefix, page);
+    }
+
+    /// <summary>
+    /// Constructs the collection name for a given prefix and page number, matching the format used internally per page.
+    /// </summary>
+    /// <param name="collectionPrefix">The collection prefix.</param>
+    /// <param name="page">The page number.</param>
+    /// <returns>The collection name including the page number formatted with leading zeros.</returns>
+    public static string CollectionNameForPage(string collectionPrefix, int page) {
+      return collectionPrefix + "__" + page.ToString("D3");
     }
 
     /// <summary>
