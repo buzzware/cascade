@@ -74,6 +74,19 @@ namespace Buzzware.Cascade {
 			});
 		}
 
+		public T? MetaJsonGet<T>(string key) {
+			var list_s = MetaGet(key);
+			if (String.IsNullOrWhiteSpace(list_s))
+				return default;
+			var result = serialization.DeserializeType<T>(list_s);
+			return result;
+		}        
+        
+		public void MetaJsonSet<T>(string key,  T? value) {
+			var value_s = value!=null ? serialization.Serialize(value) : null;
+			MetaSet(key, value_s);
+		}        
+		
 		/// <summary>
 		/// Checks whether a key exists in the metadata store for the given path.
 		/// </summary>
