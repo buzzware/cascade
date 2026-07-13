@@ -39,6 +39,7 @@ namespace Buzzware.Cascade {
 			}
 		}
 
+		public bool SupportsBlobs => blobCache != null;
 		public bool SupportsGetBlobAbsoluteFilePath => blobCache?.SupportsGetAbsoluteFilePath ?? false;
 
 		public string? GetBlobAbsoluteFilePath(string blobPath) {

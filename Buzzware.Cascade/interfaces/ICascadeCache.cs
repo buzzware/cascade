@@ -45,6 +45,9 @@ namespace Buzzware.Cascade {
     /// </summary>
 		CascadeDataLayer Cascade { get; set; }
 
+    
+		public bool SupportsBlobs { get; }
+    
     /// <summary>
     // Is this cache setup to hold blobs as files, and can return an absolute file system given a blob path  
     /// </summary>

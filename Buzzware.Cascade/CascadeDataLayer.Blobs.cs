@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Buzzware.StandardExceptions;
@@ -288,8 +290,16 @@ namespace Buzzware.Cascade {
 		/// <param name="blobPath">Path identifying the blob to be cleared from the cache</param>
 		public async Task BlobClear(string blobPath) {
 			foreach (var layer in CacheLayers) {
+				if (!layer.SupportsBlobs)
+					continue;
 				await layer.ClearBlob(blobPath);
 			}
 		}
+
+		public async Task ClearBlobs(bool exceptHeld = true, DateTime? olderThan = null) {
+			foreach (var layer in CacheLayers) {
+				await layer.ClearBlobs(exceptHeld, olderThan);
+			}
+		}		
 	}
 }
