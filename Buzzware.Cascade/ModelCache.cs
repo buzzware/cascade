@@ -192,12 +192,14 @@ namespace Buzzware.Cascade {
 						return opResponse;
 					}
 					var cache2 = classCache[opResponse.RequestOp.Type];
-					if (opResponse.IsModelResults) {
-						// Store each individual model in the list of results
-						// foreach (var model in opResponse.Results)
-						// 	await cache2.Store(CascadeTypeUtils.GetCascadeId(model), model, arrivedAt);
+					
+					// Don't cache individual records for localOnly queries because it upsets the arrivalTime which is not new and nor are the records
+					// If the arrivalTime is wrongly set to the currentTime this would make old data appear fresh and may prevent fresh data being retrieved from the origin
+					var localOnly = opResponse.RequestOp.LocalOnly ?? false;
+					if (opResponse.IsModelResults && !localOnly) {
 						await cache2.StoreAll(opResponse.Results, arrivedAt);
 					}
+					
 					// Store the collection of model IDs associated with the query
 					if (opResponse.RequestOp.Key!=null)
 						await cache2.StoreCollection(opResponse.RequestOp.Key!, opResponse.ResultIds, arrivedAt);
