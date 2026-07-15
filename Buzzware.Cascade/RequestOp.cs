@@ -504,9 +504,9 @@ namespace Buzzware.Cascade {
 			ETag = eTag;
 			LocalOnly = localOnly;
 
-			FreshAfterMs = TimeMs - (FreshnessSeconds * 1000);
-			PopulateFreshAfterMs = TimeMs - (PopulateFreshnessSeconds * 1000);
-			FallbackFreshAfterMs = TimeMs - (FallbackFreshnessSeconds * 1000);
+			FreshAfterMs = TimeMs - (FreshnessSeconds * 1000L);
+			PopulateFreshAfterMs = TimeMs - (PopulateFreshnessSeconds * 1000L);
+			FallbackFreshAfterMs = TimeMs - (FallbackFreshnessSeconds * 1000L);
 		}
 
 		/// <summary>
