@@ -190,6 +190,38 @@ namespace Buzzware.Cascade {
 		}
 		
 		/// <summary>
+		/// Get the arrivedAt timestamp of a cached record, from the nearest cache layer holding it.
+		/// </summary>
+		/// <param name="id">The unique identifier of the model.</param>
+		/// <typeparam name="Model">Specifies the model type of the record.</typeparam>
+		/// <returns>The arrivedAt time in milliseconds since 1970, or -1 if not present in any cache layer.</returns>
+		public async Task<long?> GetArrivedAt<Model>(object id) where Model : class {
+			var req = RequestOp.GetOp<Model>(id, NowMs);
+			foreach (var layer in CacheLayers) {
+				var response = await layer.Fetch(req);
+				if (response.Exists && response.ArrivedAtMs != null)
+					return response.ArrivedAtMs.Value;
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Get the arrivedAt timestamp of a cached collection, from the nearest cache layer holding it.
+		/// </summary>
+		/// <param name="name">The name of the collection.</param>
+		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
+		/// <returns>The arrivedAt time in milliseconds since 1970, or -1 if not present in any cache layer.</returns>
+		public async Task<long?> GetCollectionArrivedAt<Model>(string name) where Model : class {
+			var req = RequestOp.GetCollectionOp<Model>(name, NowMs);
+			foreach (var layer in CacheLayers) {
+				var response = await layer.Fetch(req);
+				if (response.Exists && response.ArrivedAtMs != null)
+					return response.ArrivedAtMs.Value;
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// Store data in all previous cache layers that come before the current layer where the operation was found.
 		/// </summary>
 		/// <param name="opResponse">The response containing operation details, results, and layer information.</param>
