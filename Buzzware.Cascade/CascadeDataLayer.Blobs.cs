@@ -189,12 +189,34 @@ namespace Buzzware.Cascade {
 		}
 
 		/// <summary>
+		/// Get the arrivedAt timestamp of a cached blob, from the nearest cache layer holding it.
+		/// Never contacts the origin. Where the cache layer can give an absolute file path, this
+		/// is just a file stat - no streams are opened and no RequestOp is processed.
+		/// </summary>
+		/// <param name="path">Identifier for the blob</param>
+		/// <returns>The arrivedAt time in milliseconds since 1970, or null if not present in any cache layer</returns>
+		public async Task<long?> BlobGetArrivedAt(string path) {
+			if (path is null)
+				return null;
+			RequestOp? req = null;
+			foreach (var layer in CacheLayers.Reverse()) {
+				if (!layer.SupportsBlobs)
+					continue;
+				req ??= RequestOp.BlobGetOp(path, NowMs, RequestOp.FRESHNESS_ANY);
+				var response = await layer.Fetch(req);
+				if (response.Exists && response.ArrivedAtMs != null)
+					return response.ArrivedAtMs.Value;
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// Store a binary blob at the specified path.
 		/// </summary>
 		/// <param name="path">Path where the blob will be stored</param>
 		/// <param name="data">The binary data to be stored</param>
 		public async Task BlobPut(
-			string path, 
+			string path,
 			byte[] data
 		) {
 			// Obtain and process the response for putting a binary blob
