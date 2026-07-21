@@ -196,10 +196,8 @@ namespace Buzzware.Cascade {
 		/// <param name="path">Identifier for the blob</param>
 		/// <returns>The arrivedAt time in milliseconds since 1970, or null if not present in any cache layer</returns>
 		public async Task<long?> BlobGetArrivedAt(string path) {
-			if (path is null)
-				return null;
 			RequestOp? req = null;
-			foreach (var layer in CacheLayers.Reverse()) {
+			foreach (var layer in CacheLayers) {
 				if (!layer.SupportsBlobs)
 					continue;
 				req ??= RequestOp.BlobGetOp(path, NowMs, RequestOp.FRESHNESS_ANY);

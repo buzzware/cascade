@@ -412,8 +412,10 @@ namespace Buzzware.Cascade {
 			if (gotCacheValue && (connectionOnline ? withinFreshness : withinFallback)) {
 				opResponse = cacheResponse;	// in cache and offline or meets freshness
 			} else {
-				if (!connectionOnline && requestOp.LocalOnly!=true)		// mustn't be in cache and we're offline, so not much we can do
+				if (!connectionOnline && requestOp.LocalOnly != true) {			// mustn't be in cache and we're offline, so not much we can do
+					Log.Verbose($"ProcessGetOrQuery: DataNotAvailableOffline gotCacheValue {gotCacheValue} withinFreshness {withinFreshness} withinFallback {withinFallback}");	
 					throw new DataNotAvailableOffline();
+				}
 				OpResponse originResponse;
 				bool connected = false;
 				try {

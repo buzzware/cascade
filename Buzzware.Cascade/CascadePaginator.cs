@@ -147,35 +147,21 @@ namespace Buzzware.Cascade {
 
         // Add pagination information to the criteria
         var criteriaWithPagination = AddPaginationToCriteria(Criteria, page);
-        IEnumerable<Model> results = null;
-        // try {
-          // Perform the query using the CascadeDataLayer
-          results = await Cascade.Query<Model>(
-            collectionName(page),
-            criteriaWithPagination,
-            populate: this.Populate,
-            freshnessSeconds: this.FreshnessSeconds,
-            populateFreshnessSeconds: this.PopulateFreshnessSeconds,
-            hold: this.Hold,
-            localOnly: this.LocalOnly
-          );
-        // }
-        // Smother DataNotAvailableOffline exception and return null so no further page loading occurs
-        // catch (DataNotAvailableOffline e) {
-        //   Log.Debug($"DataNotAvailableOffline page {page}");
-        // }
-
-        // Update the state depending on whether results were returned
-        if (results == null) {
-          LastPageLoaded = true;
-        } else {
-          queriedPages.Add(page);
-          if (!LastPageLoaded && page > HighestPage) {
-            HighestPage = page;
-            LastPageLoaded = results.Count() < PerPage;
-          }
+        var results = (await Cascade.Query<Model>(
+          collectionName(page),
+          criteriaWithPagination,
+          populate: this.Populate,
+          freshnessSeconds: this.FreshnessSeconds,
+          populateFreshnessSeconds: this.PopulateFreshnessSeconds,
+          hold: this.Hold,
+          localOnly: this.LocalOnly
+        )).ToImmutableArray();
+        queriedPages.Add(page);
+        if (!LastPageLoaded && page > HighestPage) {
+          HighestPage = page;
+          LastPageLoaded = results.Length < PerPage;
         }
-        Log.Debug($"END Paginator Query page {page} returning {results?.Count()}");
+        Log.Debug($"END Paginator Query page {page} returning {results.Length}");
         return results;
       }
       finally {

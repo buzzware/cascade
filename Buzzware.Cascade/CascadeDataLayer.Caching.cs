@@ -196,7 +196,7 @@ namespace Buzzware.Cascade {
 		/// <typeparam name="Model">Specifies the model type of the record.</typeparam>
 		/// <returns>The arrivedAt time in milliseconds since 1970, or -1 if not present in any cache layer.</returns>
 		public async Task<long?> GetArrivedAt<Model>(object id) where Model : class {
-			var req = RequestOp.GetOp<Model>(id, NowMs);
+			var req = RequestOp.GetOp<Model>(id, NowMs, freshnessSeconds: RequestOp.FRESHNESS_ANY);
 			foreach (var layer in CacheLayers) {
 				var response = await layer.Fetch(req);
 				if (response.Exists && response.ArrivedAtMs != null)
