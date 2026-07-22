@@ -208,6 +208,19 @@ namespace Buzzware.Cascade {
 			return null;
 		}
 
+		public async Task<bool> BlobHasExpired(string path, int? fallbackSeconds = null) {
+			var arrivedAtMs = await BlobGetArrivedAt(path);
+			if (arrivedAtMs == null)
+				return false;		// not in cache so hasn't expired
+			// is in cache
+			fallbackSeconds ??= Config.BlobFallbackFreshnessSeconds;
+			if (fallbackSeconds==RequestOp.FALLBACK_NEVER)	// always expired
+				return true;
+			if (fallbackSeconds == RequestOp.FALLBACK_ANY)	// never expires
+				return false;
+			return arrivedAtMs < (NowMs-fallbackSeconds*1000L);
+		}
+		
 		/// <summary>
 		/// Store a binary blob at the specified path.
 		/// </summary>

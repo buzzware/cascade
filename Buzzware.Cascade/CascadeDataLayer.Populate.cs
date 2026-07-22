@@ -62,7 +62,7 @@ namespace Buzzware.Cascade {
 					}
 
 					// get referenced association models with the matching ids (except null) 
-					var modelResponses = await GetModelsForIds(piAssociation.Type, valueModelList.Keys.Where(k=>k!=null), modelFreshness, modelFallback, hold, sequenceBeganMs);
+					var modelResponses = await GetModelResponsesForIds(piAssociation.Type, valueModelList.Keys.Where(k=>k!=null), modelFreshness, modelFallback, hold, sequenceBeganMs);
 					// construct dictionary association id => association model
 					var lookup = modelResponses.ToDictionary(r => r.RequestOp.Id!, r => r.Result as SuperModel);
 					

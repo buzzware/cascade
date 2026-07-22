@@ -205,6 +205,19 @@ namespace Buzzware.Cascade {
 			return null;
 		}
 
+		public async Task<bool> HasExpired<Model>(object id, int? fallbackSeconds = null) where Model : class {
+			var arrivedAtMs = await GetArrivedAt<Model>(id);
+			if (arrivedAtMs == null)
+				return false;		// not in cache so hasn't expired
+			// is in cache
+			fallbackSeconds ??= Config.GetFallbackFreshnessSeconds(typeof(Model));
+			if (fallbackSeconds==RequestOp.FALLBACK_NEVER)	// always expired
+				return true;
+			if (fallbackSeconds == RequestOp.FALLBACK_ANY)	// never expires
+				return false;	
+			return arrivedAtMs < (NowMs-fallbackSeconds*1000L); 	
+		}
+		
 		/// <summary>
 		/// Get the arrivedAt timestamp of a cached collection, from the nearest cache layer holding it.
 		/// </summary>
@@ -212,13 +225,22 @@ namespace Buzzware.Cascade {
 		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
 		/// <returns>The arrivedAt time in milliseconds since 1970, or -1 if not present in any cache layer.</returns>
 		public async Task<long?> GetCollectionArrivedAt<Model>(string name) where Model : class {
-			var req = RequestOp.GetCollectionOp<Model>(name, NowMs);
+			var req = RequestOp.GetCollectionOp<Model>(name, NowMs, freshnessSeconds: RequestOp.FRESHNESS_ANY);
 			foreach (var layer in CacheLayers) {
 				var response = await layer.Fetch(req);
 				if (response.Exists && response.ArrivedAtMs != null)
 					return response.ArrivedAtMs.Value;
 			}
 			return null;
+		}
+
+		public async Task<bool> HasCollectionExpired<Model>(string name, int? fallbackSeconds = null) where Model : class {
+			var arrivedAtMs = await GetCollectionArrivedAt<Model>(name);
+			if (arrivedAtMs == null)
+				return false;		// not in cache so hasn't expired
+			// is in cache
+			fallbackSeconds ??= Config.GetFallbackFreshnessSeconds(typeof(Model));
+			return CascadeUtils.HasArrivedAtExpired(NowMs, fallbackSeconds.Value, arrivedAtMs.Value);
 		}
 
 		/// <summary>

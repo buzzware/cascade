@@ -746,5 +746,48 @@ namespace Buzzware.Cascade {
 			}
 			await Task.WhenAll(tasks);
 		}
+
+		public static bool HasArrivedAtExpired(long nowMs, long fallbackSeconds, long arrivedAtMs) {
+			if (fallbackSeconds==RequestOp.FALLBACK_NEVER)	// always expired
+				return true;
+			if (fallbackSeconds == RequestOp.FALLBACK_ANY)	// never expires
+				return false;
+			return arrivedAtMs < (nowMs-fallbackSeconds*1000L);
+		}
+
+		public static FreshnessState CalcFreshnessState(long nowMs, long arrivedAtMs, long freshnessSeconds, long fallbackSeconds) {
+			var freshAfterMs = nowMs - freshnessSeconds * 1000L;
+			var withinFreshness = freshnessSeconds == RequestOp.FRESHNESS_ANY || (freshnessSeconds > RequestOp.FRESHNESS_FRESHEST && arrivedAtMs >= freshAfterMs); 
+			if (withinFreshness)
+				return FreshnessState.Fresh;
+			var fallbackAfterMs = nowMs - fallbackSeconds * 1000L;
+			var withinFallback = fallbackSeconds == RequestOp.FALLBACK_ANY || (fallbackSeconds > RequestOp.FALLBACK_NEVER && arrivedAtMs >= fallbackAfterMs);
+			return withinFallback ? FreshnessState.Stale : FreshnessState.Expired;
+		}
+
+		public static FreshnessState? FreshnessStateMax(FreshnessState? state1, FreshnessState? state2) {
+			if (state1 == null || state2 == null) {
+				if (state1 == null)
+					return state2;
+				else
+					return state1;
+			} else {
+				if (state1==state2)
+					return state1;
+				else if (state1>state2)
+					return state1;
+				else
+					return state2;
+			}
+		}
+		
+		public static FreshnessState FreshnessStateMax(FreshnessState state1, FreshnessState state2) {
+			if (state1==state2)
+				return state1;
+			else if (state1>state2)
+				return state1;
+			else
+				return state2;
+		}
 	}
 }

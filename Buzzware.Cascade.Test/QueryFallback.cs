@@ -113,10 +113,12 @@ namespace Buzzware.Cascade.Test {
       Assert.That(thing!.id, Is.EqualTo(1));
       Assert.That(thing.name, Is.EqualTo("Thing 1"));
       Assert.That(thing.colour, Is.EqualTo("red"));
+      Assert.That(await cascade.HasExpired<Thing>(1), Is.False);
 
       var redThings = (await cascade.Query<Thing>(RedThingsKey, new JsonObject { ["colour"] = "red" })).ToImmutableArray();
       Assert.That(redThings.Select(t => t.id), Is.EqualTo(new[] { 1, 3 }));
       Assert.That(redThings.Select(t => t.colour), Is.All.EqualTo("red"));
+      Assert.That(await cascade.HasCollectionExpired<Thing>(RedThingsKey), Is.False);
 
       var collection = await cascade.GetCollection<Thing>(RedThingsKey, freshnessSeconds: RequestOp.FRESHNESS_ANY);
       Assert.That(collection, Is.EqualTo(new[] { 1, 3 }));
@@ -176,6 +178,9 @@ namespace Buzzware.Cascade.Test {
       origin.ActLikeOffline = true;
       Assert.That(cascade.ConnectionOnline, Is.True);
 
+      Assert.That(await cascade.HasExpired<Thing>(1), Is.True);
+      Assert.That(await cascade.HasCollectionExpired<Thing>(RedThingsKey), Is.True);
+      
       Assert.ThrowsAsync<OriginAccessFailure>(async () => await cascade.Get<Thing>(1));
       Assert.ThrowsAsync<OriginAccessFailure>(async () => await cascade.Query<Thing>(RedThingsKey, new JsonObject { ["colour"] = "red" }));
     }
@@ -192,6 +197,9 @@ namespace Buzzware.Cascade.Test {
       origin.ActLikeOffline = true;
       cascade.ConnectionOnline = false;
 
+      Assert.That(await cascade.HasExpired<Thing>(1), Is.True);
+      Assert.That(await cascade.HasCollectionExpired<Thing>(RedThingsKey), Is.True);
+      
       Assert.ThrowsAsync<DataNotAvailableOffline>(async () => await cascade.Get<Thing>(1));
       Assert.ThrowsAsync<DataNotAvailableOffline>(async () => await cascade.Query<Thing>(RedThingsKey, new JsonObject { ["colour"] = "red" }));
     }

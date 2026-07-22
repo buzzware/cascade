@@ -139,7 +139,7 @@ namespace Buzzware.Cascade {
     /// <param name="hold">Indicates whether to mark the retrieved objects to be held in cache.</param>
     /// <param name="sequenceBeganMs">(Optional) Request time represented as milliseconds since 1970.</param>
     /// <returns>An enumerable of OpResponse containing the retrieved models.</returns>
-    public async Task<IEnumerable<OpResponse>> GetModelsForIds(
+    public async Task<IEnumerable<OpResponse>> GetModelResponsesForIds(
       Type type,
       IEnumerable iids,
       int? freshnessSeconds = null,
@@ -165,6 +165,24 @@ namespace Buzzware.Cascade {
         )
       );
       return allResponses.ToImmutableArray();
+    }
+
+    public async Task<IEnumerable<Model>> GetModelsForIds<Model>(
+      IEnumerable iids,
+      int? freshnessSeconds = null,
+      int? fallbackFreshnessSeconds = null,
+      bool? hold = null,
+      long? sequenceBeganMs = null
+    ) {
+      var results = await GetModelResponsesForIds(
+        typeof(Model),
+        iids, 
+        freshnessSeconds, 
+        fallbackFreshnessSeconds, 
+        hold,
+        sequenceBeganMs
+      );
+      return results.Select(r => r.Result).Cast<Model>().ToImmutableArray();
     }
 
     /// <summary>

@@ -1,5 +1,11 @@
 namespace Buzzware.Cascade {
 
+  public enum FreshnessState {
+    Fresh,
+    Stale,
+    Expired
+  }  
+  
   /// <summary>
   /// Provides constant values used throughout the Cascade library.
   /// </summary>

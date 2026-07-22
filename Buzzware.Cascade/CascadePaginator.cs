@@ -119,10 +119,24 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="page">The page number for which the collection name is being constructed.</param>
     /// <returns>The constructed collection name including the page number formatted with leading zeros.</returns>
-    string collectionName(int page) {
+    public string CollectionName(int page) {
       return CollectionNameForPage(CollectionPrefix, page);
     }
 
+    public async Task<bool> HasAnyPageExpired() {
+      var fallbackSeconds = Cascade.Config.GetFallbackFreshnessSeconds(typeof(Model));
+      var nowMs = Cascade.NowMs;
+      var i = 0;
+      do {
+        var arrivedAtMs = await Cascade.GetCollectionArrivedAt<Model>(CollectionName(i++));
+        if (arrivedAtMs == null)
+          return false;
+        if (CascadeUtils.HasArrivedAtExpired(nowMs, arrivedAtMs.Value, fallbackSeconds))
+          return true;
+      } while (true);
+      return false;
+    }
+    
     /// <summary>
     /// Constructs the collection name for a given prefix and page number, matching the format used internally per page.
     /// </summary>
@@ -148,7 +162,7 @@ namespace Buzzware.Cascade {
         // Add pagination information to the criteria
         var criteriaWithPagination = AddPaginationToCriteria(Criteria, page);
         var results = (await Cascade.Query<Model>(
-          collectionName(page),
+          CollectionName(page),
           criteriaWithPagination,
           populate: this.Populate,
           freshnessSeconds: this.FreshnessSeconds,
@@ -170,6 +184,36 @@ namespace Buzzware.Cascade {
       }
     }
 
+    public async Task<IReadOnlyList<IReadOnlyList<Model>>> QueryAllPages() {
+      var results = new List<IReadOnlyList<Model>>();
+      var i = 0;
+      while (true) {
+        var items = (await Query(i)).ToArray();
+        if (items.Length == 0)
+          break;
+        results.Add(items);
+        if (LastPageLoaded && i==HighestPage)
+          break;
+        i++;
+      }
+      return results;
+    }
+
+    public async Task<IReadOnlyList<IReadOnlyList<Model>>> GetAllCached() {
+      var results = new List<IReadOnlyList<Model>>();
+      var i = 0;
+      while (true) {
+        var ids = (await Cascade.GetCollection<Model>(CollectionName(i++),freshnessSeconds: RequestOp.FRESHNESS_ANY))?.ToArray();
+        if (ids?.Any() ?? false) {
+          var models = (await Cascade.GetModelsForIds<Model>(ids, freshnessSeconds: RequestOp.FRESHNESS_ANY)).ToImmutableArray(); 
+          results.Add(models);          
+        } else {
+          break;
+        }
+      }
+      return results;
+    }
+
     /// <summary>
     /// Adds pagination parameters to the criteria to filter query operations.
     /// Must be implemented by derived classes.
@@ -185,7 +229,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     public async Task Clear() {
       foreach (var page in queriedPages) {
-        await Cascade.ClearCollection<Model>(collectionName(page));
+        await Cascade.ClearCollection<Model>(CollectionName(page));
       }
       HighestPage = -1;
       LastPageLoaded = false;
@@ -208,7 +252,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="newDocket">The new instance of Model to be prepended to the collection.</param>
     public async Task Prepend(Model newDocket) {
-      var collection0Name = collectionName(0);
+      var collection0Name = CollectionName(0);
       var collection0 = await Cascade.GetCollection<Model>(collection0Name);
       if (collection0 == null)
         return;
