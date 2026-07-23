@@ -755,7 +755,9 @@ namespace Buzzware.Cascade {
 			return arrivedAtMs < (nowMs-fallbackSeconds*1000L);
 		}
 
-		public static FreshnessState CalcFreshnessState(long nowMs, long arrivedAtMs, long freshnessSeconds, long fallbackSeconds) {
+		public static FreshnessState CalcFreshnessState(long nowMs, long? arrivedAtMs, long freshnessSeconds, long fallbackSeconds) {
+			if (!arrivedAtMs.HasValue)
+				return FreshnessState.Absent;
 			var freshAfterMs = nowMs - freshnessSeconds * 1000L;
 			var withinFreshness = freshnessSeconds == RequestOp.FRESHNESS_ANY || (freshnessSeconds > RequestOp.FRESHNESS_FRESHEST && arrivedAtMs >= freshAfterMs); 
 			if (withinFreshness)
@@ -788,6 +790,19 @@ namespace Buzzware.Cascade {
 				return state1;
 			else
 				return state2;
+		}
+
+		public static string HashDictionaryStable(IDictionary<string, object> mainListCriteria) {
+			var ordered =  new SortedDictionary<string, object>(mainListCriteria, StringComparer.Ordinal);  
+			var str = JsonSerializer.Serialize(ordered);
+			return StringHexHash(str);
+		}
+
+		public static string StringHexHash(string str)
+		{
+			var hash = (long)FNVHash.GetHash(str, 64);
+			var result = hash.ToString("X");
+			return result;
 		}
 	}
 }

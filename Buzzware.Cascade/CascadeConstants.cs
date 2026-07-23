@@ -3,7 +3,8 @@ namespace Buzzware.Cascade {
   public enum FreshnessState {
     Fresh,
     Stale,
-    Expired
+    Expired,
+    Absent
   }  
   
   /// <summary>
