@@ -152,7 +152,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="page">The page number of the data to be queried.</param>
     /// <returns>An IEnumerable of Model containing the data for the specified page.</returns>
-    public async Task<IEnumerable<Model>> Query(int page) {
+    public async Task<IEnumerable<Model>> Query(int page, int? freshnessSeconds = null) {
       Log.Debug($"BEGIN Paginator Query page {page}");
       if (Loading)
         throw new ConstraintException("CascadePaginator Query cannot be re-entered when it has not completed");
@@ -165,7 +165,7 @@ namespace Buzzware.Cascade {
           CollectionName(page),
           criteriaWithPagination,
           populate: this.Populate,
-          freshnessSeconds: this.FreshnessSeconds,
+          freshnessSeconds: freshnessSeconds ?? this.FreshnessSeconds,
           populateFreshnessSeconds: this.PopulateFreshnessSeconds,
           hold: this.Hold,
           localOnly: this.LocalOnly
@@ -184,11 +184,11 @@ namespace Buzzware.Cascade {
       }
     }
 
-    public async Task<IReadOnlyList<IReadOnlyList<Model>>> QueryAllPages() {
+    public async Task<IReadOnlyList<IReadOnlyList<Model>>> QueryAllPages(int? freshnessSeconds = null) {
       var results = new List<IReadOnlyList<Model>>();
       var i = 0;
       while (true) {
-        var items = (await Query(i)).ToArray();
+        var items = (await Query(i,freshnessSeconds)).ToArray();
         if (items.Length == 0)
           break;
         results.Add(items);
@@ -212,6 +212,21 @@ namespace Buzzware.Cascade {
         }
       }
       return results;
+    }
+
+    public async Task<int?> HighestPageNumberInCache() {
+      var i = 0;
+      int? highest = null;
+      while (true) {
+        var collectionName = CollectionName(i);
+        var collectionExists = (await Cascade.GetArrivedAt<Model>(collectionName))!=null;
+        if (collectionExists)
+          highest = i;
+        else
+          break;
+        i++;
+      }
+      return highest;
     }
 
     /// <summary>
