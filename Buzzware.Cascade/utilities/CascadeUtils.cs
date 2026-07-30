@@ -762,13 +762,13 @@ namespace Buzzware.Cascade {
     /// <param name="items">The items to process.</param>
     /// <param name="maxDegreeOfParallelism">Maximum number of items processed concurrently.</param>
     /// <param name="process">The operation to run for each item. It should observe the given token.</param>
-    /// <param name="perItemTimeout">Optional hard timeout applied to each item individually.</param>
+    /// <param name="timeout">Optional hard timeout applied to each item individually.</param>
     /// <param name="outerToken">Optional token cancelling the whole operation.</param>
 		public static async Task ProcessParallelFailFast<In>(
 			IReadOnlyList<In> items,
 			int maxDegreeOfParallelism,
 			Func<In, CancellationToken, Task> process,
-			TimeSpan perItemTimeout = default,
+			TimeSpan timeout = default,
 			CancellationToken outerToken = default
 		) {
 			if (items == null)
@@ -813,16 +813,16 @@ namespace Buzzware.Cascade {
 						var disposeItemCts = true;
 						try {
 							var itemTask = process(item, itemCts.Token);
-							if (perItemTimeout > TimeSpan.Zero) {
+							if (timeout != default) {
 								var timerCts = new CancellationTokenSource();
 								try {
-									var timer = Task.Delay(perItemTimeout, timerCts.Token);
+									var timer = Task.Delay(timeout, timerCts.Token);
 									var completed = await Task.WhenAny(itemTask, timer).ConfigureAwait(false);
 									if (completed == timer && !itemTask.IsCompleted) {
 										itemCts.Cancel();				// signal the abandoned process to stop
 										disposeItemCts = false;	// it may still be using the token; the link is freed with failFastCts
 										ObserveAbandoned(itemTask);
-										throw new TimeoutException($"Operation exceeded {perItemTimeout.TotalSeconds:0.#}s and was abandoned.");
+										throw new TimeoutException($"Operation exceeded {timeout.TotalSeconds:0.#}s and was abandoned.");
 									}
 									timerCts.Cancel();
 								} finally {
@@ -869,6 +869,47 @@ namespace Buzzware.Cascade {
 				failFastCts.Dispose();
 				throttle.Dispose();
 			}
+		}
+
+    /// <summary>
+    /// Like ProcessParallelFailFast above, but for a process that returns a result.
+    /// Returns the results in the same order as the given items, regardless of the order of
+    /// completion. On any failure, timeout or cancellation the same exception behaviour as
+    /// the Task overload applies and no results are returned.
+    /// </summary>
+    /// <typeparam name="In">The type of the items to process.</typeparam>
+    /// <typeparam name="Out">The type returned by process for each item.</typeparam>
+    /// <param name="items">The items to process.</param>
+    /// <param name="maxDegreeOfParallelism">Maximum number of items processed concurrently.</param>
+    /// <param name="process">The operation to run for each item. It should observe the given token.</param>
+    /// <param name="timeout">Optional hard timeout applied to each item individually.</param>
+    /// <param name="outerToken">Optional token cancelling the whole operation.</param>
+    /// <returns>The result of process for each item, in item order.</returns>
+		public static async Task<Out[]> ProcessParallelFailFast<In, Out>(
+			IEnumerable<In> items,
+			int maxDegreeOfParallelism,
+			Func<In, CancellationToken, Task<Out>> process,
+			TimeSpan timeout = default,
+			CancellationToken outerToken = default
+		) {
+			if (items == null)
+				throw new ArgumentNullException(nameof(items));
+			if (process == null)
+				throw new ArgumentNullException(nameof(process));
+
+			var list = items as IReadOnlyList<In> ?? items.ToArray();
+			var results = new Out[list.Count];
+			var indexes = Enumerable.Range(0, list.Count).ToArray();
+			// Each index writes only its own slot, and the WhenAll inside the void overload
+			// establishes the ordering that makes those writes safe to read afterwards.
+			await ProcessParallelFailFast(
+				indexes,
+				maxDegreeOfParallelism,
+				async (i, ct) => { results[i] = await process(list[i], ct).ConfigureAwait(false); },
+				timeout,
+				outerToken
+			).ConfigureAwait(false);
+			return results;
 		}
 
     /// <summary>
