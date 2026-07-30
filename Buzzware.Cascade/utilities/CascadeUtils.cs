@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -731,7 +732,7 @@ namespace Buzzware.Cascade {
 		public static async Task ProcessParallel<In>(IReadOnlyList<In> items, int maxDegreeOfParallelism, Func<In, Task> process) {
 			var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
 			var tasks = new List<Task>();
-			
+
 			foreach (var item in items) {
 				await semaphore.WaitAsync();
 
@@ -745,6 +746,141 @@ namespace Buzzware.Cascade {
 				}));
 			}
 			await Task.WhenAll(tasks);
+		}
+
+    /// <summary>
+    /// Like ProcessParallel, but with a per item timeout and fail fast behaviour - the first
+    /// failure stops new items from starting, cancels in-flight items via their token, and its
+    /// exception is rethrown to the caller once the in-flight items have finished.
+    /// The per item timeout is hard: a timed out item has its token cancelled, surfaces as
+    /// TimeoutException and is abandoned, so a process that never observes its token cannot
+    /// hang the loop. If outerToken is cancelled, OperationCanceledException is thrown in
+    /// preference to any concurrent item failure (matching Parallel.ForEachAsync semantics).
+    /// This code effectively implements Parallel.ForEachAsync which isn't available to this dotnetstandard 2.0 library
+    /// </summary>
+    /// <typeparam name="In">The type of the items to process.</typeparam>
+    /// <param name="items">The items to process.</param>
+    /// <param name="maxDegreeOfParallelism">Maximum number of items processed concurrently.</param>
+    /// <param name="process">The operation to run for each item. It should observe the given token.</param>
+    /// <param name="perItemTimeout">Optional hard timeout applied to each item individually.</param>
+    /// <param name="outerToken">Optional token cancelling the whole operation.</param>
+		public static async Task ProcessParallelFailFast<In>(
+			IReadOnlyList<In> items,
+			int maxDegreeOfParallelism,
+			Func<In, CancellationToken, Task> process,
+			TimeSpan perItemTimeout = default,
+			CancellationToken outerToken = default
+		) {
+			if (items == null)
+				throw new ArgumentNullException(nameof(items));
+			if (process == null)
+				throw new ArgumentNullException(nameof(process));
+			if (maxDegreeOfParallelism < 1)
+				throw new ArgumentOutOfRangeException(nameof(maxDegreeOfParallelism));
+			outerToken.ThrowIfCancellationRequested();
+			if (items.Count == 0)
+				return;
+
+			Exception? firstException = null;			// first failure of any kind, in order of occurrence
+			Exception? firstRealException = null;	// first failure that is not a cancellation ripple
+			var recordLock = new object();
+			var failFastCts = CancellationTokenSource.CreateLinkedTokenSource(outerToken);
+			var throttle = new SemaphoreSlim(maxDegreeOfParallelism);
+			try {
+				var ct = failFastCts.Token;		// outerToken + fail fast
+
+				// Record before cancelling, so the root cause is always recorded ahead of the
+				// OperationCanceledExceptions that cancellation then ripples through other items.
+				void RecordFailure(Exception e) {
+					lock (recordLock) {
+						if (firstException == null)
+							firstException = e;
+						if (firstRealException == null && !(e is OperationCanceledException))
+							firstRealException = e;
+					}
+					try {
+						failFastCts.Cancel();
+					} catch (AggregateException) {
+						// a throwing cancellation callback must not obscure the recorded failure
+					}
+				}
+
+				// Runs one item. Never throws - failures are recorded so that WhenAll below cannot
+				// throw an arbitrarily ordered exception; the throttle is always released exactly once.
+				async Task RunItem(In item) {
+					try {
+						var itemCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+						var disposeItemCts = true;
+						try {
+							var itemTask = process(item, itemCts.Token);
+							if (perItemTimeout > TimeSpan.Zero) {
+								var timerCts = new CancellationTokenSource();
+								try {
+									var timer = Task.Delay(perItemTimeout, timerCts.Token);
+									var completed = await Task.WhenAny(itemTask, timer).ConfigureAwait(false);
+									if (completed == timer && !itemTask.IsCompleted) {
+										itemCts.Cancel();				// signal the abandoned process to stop
+										disposeItemCts = false;	// it may still be using the token; the link is freed with failFastCts
+										ObserveAbandoned(itemTask);
+										throw new TimeoutException($"Operation exceeded {perItemTimeout.TotalSeconds:0.#}s and was abandoned.");
+									}
+									timerCts.Cancel();
+								} finally {
+									timerCts.Dispose();
+								}
+							}
+							await itemTask.ConfigureAwait(false);
+						} finally {
+							if (disposeItemCts)
+								itemCts.Dispose();
+						}
+					} catch (Exception e) {
+						RecordFailure(e);
+					} finally {
+						throttle.Release();
+					}
+				}
+
+				var tasks = new List<Task>(items.Count);
+				foreach (var item in items) {
+					try {
+						await throttle.WaitAsync(ct).ConfigureAwait(false);
+					} catch (OperationCanceledException) {
+						break;	// fail fast - stop starting new items; started ones are awaited below
+					}
+					if (ct.IsCancellationRequested) {	// check again now that a slot is held
+						throttle.Release();
+						break;
+					}
+					tasks.Add(Task.Run(() => RunItem(item)));
+				}
+
+				// Item tasks record failures rather than throwing, so this returns once every started
+				// item has completed or been abandoned by its timeout - it cannot hang or throw.
+				await Task.WhenAll(tasks).ConfigureAwait(false);
+
+				// external cancellation takes precedence over item failures
+				outerToken.ThrowIfCancellationRequested();
+
+				var failure = firstRealException ?? firstException;
+				if (failure != null)
+					ExceptionDispatchInfo.Capture(failure).Throw();
+			} finally {
+				failFastCts.Dispose();
+				throttle.Dispose();
+			}
+		}
+
+    /// <summary>
+    /// Observes the eventual fault of an abandoned task so it cannot surface as an
+    /// UnobservedTaskException, logging it for diagnostics.
+    /// </summary>
+		private static void ObserveAbandoned(Task task) {
+			task.ContinueWith(
+				t => Log.Debug(t.Exception, "ProcessParallelFailFast: abandoned item later faulted"),
+				CancellationToken.None,
+				TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
+				TaskScheduler.Default);
 		}
 
 		public static bool HasArrivedAtExpired(long nowMs, long fallbackSeconds, long arrivedAtMs) {
