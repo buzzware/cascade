@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Buzzware.StandardExceptions {
@@ -79,13 +81,13 @@ namespace Buzzware.StandardExceptions {
 		
 		public async Task Report(Exception exception) {
 			foreach (var r in reporters) {
-				await r.Report(exception);
+				await r.Report(exception).ConfigureAwait(false);
 			}
 		}
 
 		public async Task FilterGuard(Func<Task> f) {
-			try {                                                                      
-				await f();
+			try {
+				await f().ConfigureAwait(false);
 			} catch (Exception e) {                                                    
 				var filtered_e = this.Filter(e);
 				if (filtered_e != null) {
@@ -99,7 +101,7 @@ namespace Buzzware.StandardExceptions {
 		
 		public async Task<T> FilterGuard<T>(Func<Task<T>> f) {
 			try {
-				return await f();
+				return await f().ConfigureAwait(false);
 			} catch(Exception e) {
 				var filtered_e = this.Filter(e);
 				if (filtered_e != null) {
@@ -107,11 +109,11 @@ namespace Buzzware.StandardExceptions {
 						throw;
 					else
 						throw filtered_e;
-				} 
+				}
 			}
 			return default;
 		}
-		
+
 		public T FilterGuard<T>(Func<T> f) {
 			try {
 				return f();
@@ -128,39 +130,73 @@ namespace Buzzware.StandardExceptions {
 		}
 		
 		public async Task GuardAndReport(Func<Task> f) {
-			try {                                                                      
-				await f();
-			} catch (Exception e) {                                                    
+			try {
+				await f().ConfigureAwait(false);
+			} catch (Exception e) {
 				var filtered_e = this.Filter(e);
 				if (filtered_e != null)
-					await Report(filtered_e);
+					await Report(filtered_e).ConfigureAwait(false);
 			}
-		}		
-		
+		}
+
 		public async Task<T> GuardAndReport<T>(Func<Task<T>> f) {
 			try {
-				return await f();
+				return await f().ConfigureAwait(false);
 			} catch(Exception e) {
 				var filtered_e = this.Filter(e);
 				if (filtered_e != null)
-					await Report(filtered_e);
+					await Report(filtered_e).ConfigureAwait(false);
 			}
 			return default;
 		}
-		
+
 		public T GuardAndReport<T>(Func<T> f) {
 			try {
 				return f();
 			} catch(Exception e) {
 				var filtered_e = this.Filter(e);
 				if (filtered_e != null)
-					Report(filtered_e);
+					Report(filtered_e).GetAwaiter().GetResult();
 			}
 			return default;
 		}
 
-		public async void CallAsync(Func<Task> func) {
-			await GuardAndReport(func);
+		// Fire-and-forget launcher : replaces "async void" methods.
+		// Never throws, so it is safe to call from constructors, event handlers and commands.
+		public void CallAsync(
+			Func<Task> func,
+			[CallerMemberName] string caller = null,
+			[CallerFilePath] string filePath = null,
+			[CallerLineNumber] int lineNumber = 0
+		) {
+			_ = CallAsyncCore(func, caller, filePath, lineNumber);
+		}
+
+		public void CallAsync<T>(
+			Func<Task<T>> func,
+			[CallerMemberName] string caller = null,
+			[CallerFilePath] string filePath = null,
+			[CallerLineNumber] int lineNumber = 0
+		) {
+			_ = CallAsyncCore(async () => { await func().ConfigureAwait(false); }, caller, filePath, lineNumber);
+		}
+
+		private async Task CallAsyncCore(Func<Task> func, string caller, string filePath, int lineNumber) {
+			try {
+				await GuardAndReport(func).ConfigureAwait(false);
+			} catch (Exception e) {
+				// Filter() or a reporter itself threw. Last resort - this must not escape.
+				try {
+					OnCatastrophicFailure(e, caller, filePath, lineNumber);
+				} catch {
+					// nothing left to do
+				}
+			}
+		}
+
+		// Override to log elsewhere. Implementations must not throw.
+		protected virtual void OnCatastrophicFailure(Exception e, string caller, string filePath, int lineNumber) {
+			Debug.WriteLine($"ErrorControl.CallAsync failure at {caller} ({filePath}:{lineNumber}): {e}");
 		}
 	}
 }
