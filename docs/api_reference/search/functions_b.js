@@ -14,5 +14,5 @@ var searchData=
   ['mockorigin_11',['MockOrigin',['../class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin.html#a34109820aa89693d9775aa4882459d0f',1,'Buzzware::Cascade::Testing::MockOrigin']]],
   ['mockorigin2_12',['MockOrigin2',['../class_buzzware_1_1_cascade_1_1_testing_1_1_mock_origin2.html#aefa6a44698ea5ecb2c17dd14dd31885c',1,'Buzzware::Cascade::Testing::MockOrigin2']]],
   ['modelcache_13',['ModelCache',['../class_buzzware_1_1_cascade_1_1_model_cache.html#ae63db8cfe3ed677e72ab81c56806853f',1,'Buzzware::Cascade::ModelCache']]],
-  ['modelclasscache_14',['ModelClassCache',['../class_buzzware_1_1_cascade_1_1_model_class_cache.html#a563f97cea5fccfae0227782e59c51679',1,'Buzzware::Cascade::ModelClassCache']]]
+  ['modelclasscache_14',['ModelClassCache',['../class_buzzware_1_1_cascade_1_1_model_class_cache-2-g.html#a563f97cea5fccfae0227782e59c51679',1,'Buzzware::Cascade::ModelClassCache-2-g']]]
 ];

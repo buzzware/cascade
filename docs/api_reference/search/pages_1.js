@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['binary_20blob_20handling_0',['Binary Blob Handling',['../binary_blob_handling.html',1,'']]],
-  ['blobs_20in_20depth_1',['Blobs In Depth',['../blobs_in_depth.html',1,'']]]
+  ['2_20basic_20class_20origin_20structure_0',['2. Basic Class Origin Structure',['../md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md38',1,'']]],
+  ['2_20implementing_20core_20methods_1',['2. Implementing Core Methods',['../md_api__docs_2using__cascade_2in__depth_2implementing__origin.html#autotoc_md39',1,'']]]
 ];

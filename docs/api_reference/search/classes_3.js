@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['enumerableadapter_0',['EnumerableAdapter',['../class_buzzware_1_1_cascade_1_1_enumerable_adapter.html',1,'Buzzware::Cascade']]]
+  ['enumerableadapter_2d1_2dg_0',['EnumerableAdapter-1-g',['../class_buzzware_1_1_cascade_1_1_enumerable_adapter-1-g.html',1,'Buzzware::Cascade']]]
 ];

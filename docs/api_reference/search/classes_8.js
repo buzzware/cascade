@@ -1,5 +1,6 @@
 var searchData=
 [
   ['operationnotavailableoffline_0',['OperationNotAvailableOffline',['../class_operation_not_available_offline.html',1,'']]],
-  ['opresponse_1',['OpResponse',['../class_buzzware_1_1_cascade_1_1_op_response.html',1,'Buzzware::Cascade']]]
+  ['opresponse_1',['OpResponse',['../class_buzzware_1_1_cascade_1_1_op_response.html',1,'Buzzware::Cascade']]],
+  ['originaccessfailure_2',['OriginAccessFailure',['../class_origin_access_failure.html',1,'']]]
 ];

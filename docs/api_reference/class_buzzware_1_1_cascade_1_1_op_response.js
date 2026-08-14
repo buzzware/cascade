@@ -10,5 +10,5 @@ var class_buzzware_1_1_cascade_1_1_op_response =
     [ "IsIdResults", "class_buzzware_1_1_cascade_1_1_op_response.html#aa0b8fcb94daa1702867d5d4d4cb270a3", null ],
     [ "IsModelResults", "class_buzzware_1_1_cascade_1_1_op_response.html#af039068097db9118a77db0945a676a23", null ],
     [ "ResultIds", "class_buzzware_1_1_cascade_1_1_op_response.html#ab2b09cf20895c93e6ca0c4283652daf4", null ],
-    [ "Results", "class_buzzware_1_1_cascade_1_1_op_response.html#a9dd24d0386856805eaa48b9163fe6858", null ]
+    [ "Results", "class_buzzware_1_1_cascade_1_1_op_response.html#a20ab33b9801cdaac7fe239aa7a93fde3", null ]
 ];
