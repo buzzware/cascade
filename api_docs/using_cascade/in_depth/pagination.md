@@ -23,8 +23,9 @@ public class MyAppPaginator<Model> : CascadePaginator<Model> where Model : class
         IEnumerable<string> populate = null, 
         int? freshnessSeconds = null,
         int? populateFreshnessSeconds = null,
-        bool? hold = null
-    ) : base(cascade, criteria, collectionPrefix, perPage, populate, freshnessSeconds, populateFreshnessSeconds, hold) {
+        bool? hold = null,
+        bool localOnly = false
+    ) : base(cascade, criteria, collectionPrefix, perPage, populate, freshnessSeconds, populateFreshnessSeconds, hold, localOnly) {
     }
 
     protected override object AddPaginationToCriteria(object criteria, int page)
@@ -41,7 +42,7 @@ public class MyAppPaginator<Model> : CascadePaginator<Model> where Model : class
 
 1. **Initialization**: When you create a `MyAppPaginator` instance, you provide the necessary parameters including the `CascadeDataLayer`, criteria, collection prefix, and items per page.
 
-2. **Collection Naming**: For each page, a unique collection name is generated using the format: `CollectionPrefix + "__" + page.ToString("D3")`. For example, "UserList__001" for the first page.
+2. **Collection Naming**: For each page, a unique collection name is generated using the format: `CollectionPrefix + "__" + page.ToString("D3")`. Pages are numbered from 0, so the first page of "UserList" is "UserList__000".
 
 3. **Querying**: When you call the `Query` method with a page number:
     - It checks if the query is already in progress to prevent re-entrancy.
@@ -58,10 +59,15 @@ public class MyAppPaginator<Model> : CascadePaginator<Model> where Model : class
 
 ## Key Methods
 
-- `Query(int page)`: Retrieves a specific page of data.
-- `Clear()`: Clears all cached page data.
-- `Refresh(int freshnessSeconds)`: Refreshes cached data (implementation left to the user).
-- `Prepend(Model newItem)`: Adds a new item to the beginning of the first page's collection.
+- `Query(int page, int? freshnessSeconds = null)`: Retrieves a specific page of data.
+- `QueryAllPages(int? freshnessSeconds = null)`: Queries pages from 0 upward until the last page is reached, returning a list of pages.
+- `GetAllCached()`: Returns all pages currently available in the caches (freshness ANY), without any origin requests.
+- `HighestPageNumberInCache()`: Returns the highest consecutive page number found in the caches, or null when none.
+- `HasAnyPageExpired()`: Returns true when any cached page has passed the configured fallback freshness for the model type.
+- `Clear()`: Clears all cached page collections and resets the paginator state.
+- `Refresh(int freshnessSeconds)`: Currently a placeholder that does nothing - clear and re-query instead.
+- `Prepend(Model newItem)`: Adds a new item's id to the beginning of the first page's collection.
+- `CollectionNameForPage(string collectionPrefix, int page)` (static): Constructs the collection name used for a given page.
 
 ## Customizing for Your Application
 
@@ -76,7 +82,7 @@ To adapt `CascadePaginator` for your specific needs:
 ```csharp
 var paginator = new MyAppPaginator<User>(
     AppCommon.Cascade,
-    new { Department = "Sales" },
+    new Dictionary<string,object> { ["Department"] = "Sales" },
     "UserList",
     perPage: 20,
     populate: new[] { "Profile", "Roles" },
@@ -88,4 +94,3 @@ var secondPageUsers = await paginator.Query(1);
 ```
 
 In this example, `MyAppPaginator` will create collections named "UserList__000", "UserList__001", etc., each containing up to 20 users from the Sales department.
-

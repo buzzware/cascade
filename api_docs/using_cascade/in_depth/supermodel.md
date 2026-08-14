@@ -17,17 +17,19 @@ their properties (properly implemented using GetProperty/SetProperty) will throw
 Forms are intended to be implemented using the "editable proxy" feature of SuperModel :
 
 ```csharp
-var serverThing = Cascade.Get<Thing>(1);
+var serverThing = await Cascade.Get<Thing>(1);
 // serverThing.colour == "red"
 var editableThing = new Thing(serverThing);
 // editableThing.colour == "red"
 editableThing.colour = "blue";
 // editableThing.colour == "blue"
-// Dictionary<string,object?> changes = editableThing.__GetChanges();
+// IDictionary<string,object?> changes = editableThing.__GetChanges();
 // changes == { ["colour"] = "blue" }
 ```
 
 `editableThing` can be used like any other model in dotnet applications eg. can be bound to UI controls, even with TwoWay binding.
+It reads through to the proxied instance for properties that have not been changed, stores any changed values itself,
+and raises PropertyChanged events as normal.
 
 As shown above, __GetChanges() then returns a dictionary of changes to be sent to the server like so :
 
@@ -39,6 +41,15 @@ editableThing = new Thing(serverThing);
 ```
 
 This means that the data properties of models returned by Cascade remain unmodified from when they arrived from the server. 
+
+### Useful Proxy Members
+
+- `__HasChanges` : true when any property has been changed relative to the proxied instance. Raises PropertyChanged so it can be bound eg. to enable a Save button.
+- `__GetChanges()` : returns a dictionary of the changed property names and values.
+- `__ClearChanges()` : discards changes, reverting the proxy to the values of the proxied instance.
+- `__SetProxyFor(value, keepChanges, raiseIncoming)` : switch the proxy to wrap a different (eg. newly arrived) instance, optionally keeping the user's uncommitted changes.
+- `__mutateWith(action)` : perform a mutation on a model regardless of __mutable (used internally by Cascade eg. to set association properties).
+- `Clone(changes)` : create a shallow copy, optionally with the given changes applied.
 
 ### Updating Association Properties
 

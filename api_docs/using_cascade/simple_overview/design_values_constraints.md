@@ -8,7 +8,7 @@
 4. Transparency - it is better to require the developer to be more involved in details than to build abstractions that don't work in every scenario  
 5. No "magic" - when magic doesn't work, it is very difficult to do anything about it since you didn't know what it was doing in the first place
 6. Providing both extremes (simple and full featured) is better than providing a single compromise method
-7. Keep models simple and not asynchronous - 
+7. Keep models simple and synchronous - the asynchronous complexity lives in CascadeDataLayer and the origin, not in the models
 
 ## Constraints
 

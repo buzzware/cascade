@@ -13,91 +13,90 @@ In any case, models passed in are not modified, and a new instance is always ret
 
 ## Rules for Maintaining Associations
 
-1. HasMany and HasOne: association property values are simply copied from incoming model 
-properties to the matching outgoing properties. If they are null on the incoming, 
-they will be null on the outgoing.
-2. BelongsTo and FromBlob: In general, association property values are copied from incoming model
-properties to the matching outgoing properties. If they are null on the incoming,
-   they will be null on the outgoing.<br/>
-However in the special case that the association property value is no longer correct because their named 
-idProperty/imagePath property has changed, then Populate will be used to set the
-association correctly. This most commonly occurs when Update modifies the named idProperty.   
+For each association property, the "incoming" value considered is the value from the changes dictionary
+(for Update, when the association property name occurs in the changes), otherwise the value of the property
+on the model instance passed in. Incoming values that are null are ignored, leaving the returned instance's
+property null.
+
+1. HasMany and HasOne: incoming association property values are simply copied to the matching property
+on the returned instance. If they are null on the incoming, they will be null on the outgoing.
+2. BelongsTo and FromBlob: these associations are derived from a named key property (idProperty for BelongsTo,
+pathProperty for FromBlob). When the key property value is unchanged between the input model and the result,
+the incoming association value is maintained. However in the special case that the association value would no
+longer be correct because the named idProperty/pathProperty value has changed (most commonly when Update
+modifies the named idProperty), Cascade instead re-populates the association property on the returned instance
+(using freshness ANY ie. from cache when possible) so that it matches the new key value.
+
+> Note: it is the application's responsibility to keep the foreign key property and the association property
+> consistent when setting both, eg. `employee.departmentId` should equal `employee.Department.id`.
 
 ## Create Examples
 
 ```csharp
-   department = new Department { id = 1, name = "HR" };
+   department = await cascade.Create(new Department { id = 1, name = "HR" });
    
-   employee = new Employee {
+   employee = await cascade.Create(new Employee {
       departmentId = department.id,
       Department = department
-   };
-   createdEmployee = await cascade.Create(employee);
-   // createdEmployee.Department == department  // maintained
-   // createdEmployee.Photo == null
+   });
+   // employee.departmentId == 1
+   // employee.Department.id == 1  // maintained
+   // employee.Photo == null       // was null incoming, so null outgoing
    
-   employee = new Employee {
+   employee = await cascade.Create(new Employee {
       departmentId = department.id,
-   };
-   createdEmployee = await cascade.Create(employee);
-   // createdEmployee.departmentId == 1
-   // createdEmployee.Department == null    // not automatically populated
-
-   employee = new Employee {
-      Department = department
-   };
-   createdEmployee = await cascade.Create(employee);
-   // createdEmployee.Department == null  // not maintained because departmentId != Department.id 
+   });
+   // employee.departmentId == 1
+   // employee.Department == null  // not automatically populated
 ```
 
 ## Update Examples
 
 ```csharp
-   var department1 = new Department { id = 1, name = "HR" };
-   var department2 = new Department { id = 2, name = "Science" };
+   var department1 = await cascade.Create(new Department { id = 1, name = "HR" });
+   var department2 = await cascade.Create(new Department { id = 2, name = "Science" });
    
    var employee = await cascade.Create(
       new Employee {
-         departmentId = department.id,
-         Department = department
+         departmentId = department1.id,
+         Department = department1
       }
    );
    
+   // change that doesn't touch the association or its key :
+   updated = await cascade.Update(employee, new Dictionary<string, object?> {
+     { "name", "Fred" }
+   });
+   // updated.name == "Fred"
+   // updated.Department.id == 1   // maintained
+   
+   // change the foreign key :
    updated = await cascade.Update(employee, new Dictionary<string, object?> {
      { "departmentId", 2 }
    });
    // updated.departmentId == 2
-   // updated.Department == null    // not automatically populated
+   // updated.Department.id == 2   // re-populated to match the new departmentId
    
+   // change the foreign key and provide the association value :
    updated = await cascade.Update(employee, new Dictionary<string, object?> {
      { "departmentId", 2 },
      { "Department", department2 }
    });
    // updated.departmentId == 2
-   // updated.Department == department2    // maintained
+   // updated.Department.id == 2   // re-populated because departmentId changed
    
-   updated = await cascade.Update(employee, new Dictionary<string, object?> {
-     { "departmentId", 2 },
-     { "Department", department1 }
-   });
-   // updated.departmentId == 2
-   // updated.Department == department2    // corrected to match departmentId 
-   
-   updated = await cascade.Update(employee, new Dictionary<string, object?> {
-     { "Department", department2 }
-   });
-   // updated.Department == null    // not maintained because departmentId == null
-   
+   // HasMany values in changes are simply copied :
    employees = new Employee[] {
      new Employee { id = 1, name = "Fred" },
      new Employee { id = 2, name = "Sally" }
    };
    
-   updateDepartment = await cascade.Update(department1, new Dictionary<string, object?> {
-     { "name", "Jane" },
+   updatedDepartment = await cascade.Update(department1, new Dictionary<string, object?> {
+     { "name", "Engineering" },
      { "Employees", employees },
    });
-   // updateDepartment.name == "Jane"
-   // updateDepartment.Employees == employees
-   
+   // updatedDepartment.name == "Engineering"
+   // updatedDepartment.Employees == employees   // maintained
 ```
+
+See MaintainsAssociationsTests.cs for working examples of this behaviour.

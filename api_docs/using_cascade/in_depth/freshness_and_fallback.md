@@ -9,7 +9,7 @@ CascadeDataLayer has a NowMs property to provide a consistent and controlled ref
 the present time should use NowMs.
 This time is a 64 bit long in milliseconds since 1/1/1970 00:00:00 UTC (it is too big for 32 bits)
 This time actually comes from the provided ICascadeOrigin implementation NowMs property.
-In production it would probably be calculated from DateTime.Now.
+In production it would normally be calculated from the current UTC time eg. `DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()`.
 In testing it can be a simple writable long property. This means that Cascade's concept of time can be controlled in unit tests.
 
 ## What is Freshness?
@@ -27,6 +27,15 @@ while a high value arrived long ago and is more stale.
 When application code requests data from Cascade with a higher freshness value it means the application is willing to accept older data, 
 and will likely use the cache more often and perform less origin requests; while a lower requirement insists on more recent data.
 
+Useful constant values on RequestOp :
+
+- `FRESHNESS_FRESHEST` (0) : the value must come from the origin (or have arrived at or after the request time, see sequenceBeganMs below)
+- `FRESHNESS_ANY` (int.MaxValue) : any cached value is acceptable, no matter how old
+- `FRESHNESS_DEFAULT` (5 minutes) : the default when none is given, unless configured otherwise via CascadeConfig
+
+Defaults can be configured application-wide and per model type using CascadeConfig `DefaultFreshnessSeconds`,
+`DefaultFallbackFreshnessSeconds` and `ModelConfig`.
+
 ## What is Fallback Freshness?
 
 In Cascade "fallback" means to return a cached value when an attempt to get the value from the origin fails. This means an app can continue without alerting the user or prompting them to retry or cancel the action they were performing.
@@ -42,23 +51,27 @@ Fallback Freshness is a freshness value that is only used when
 > using its Inner property. 
 > It is good practice to catch the various network failure exceptions of DotNet and the mobile platform and `throw new NoNetworkException(aInnerException: exception)`      
 
-Fallback Freshness is only a parameter for **read** requests ie Get, Query, Populate, GetCollection or BlobGet requests.
-
+Fallback Freshness is only a parameter for **read** requests ie Get, Query, Populate, GetCollection or BlobGet requests. The default is `FALLBACK_ANY` ie. when the origin cannot be reached, any cached value will be returned rather than failing.
 
 ## Freshness and Fallback together
 
 The combination of freshnessSeconds and fallbackFreshnessSeconds parameters means that most application data requirements can be met in online, semi-online and offline scenarios. An application can specify how fresh it would like requested data to be when it has a network connection; and also how old it will tolerate data when offline or the network connection fails.
 
-| Scenario                                                       | ConnectionOnline==True          | ConnectionOnline==False          |
-|----------------------------------------------------------------|---------------------------------|----------------------------------|
-| Each cache: no value exists                                    | => try next cache               | => try next cache                |
-| Each cache: cache value freshness <= request freshness         | => return cache value           | => return cache value            |
-| Each cache: cache value freshness > request freshness          | => try next cache               | => return cache value            |
-| No value in any cache                                          | => try origin                   | => throw DataNotAvailableOffline |
-| Origin value returned                                          | => return origin value          | => throw DataNotAvailableOffline |
-| Origin connection exception, cache value freshness <= fallback | => return cache value           |                                  |
-| Origin connection exception, cache value freshness > fallback  | => rethrow connection exception |                                  |
+A read request proceeds like this :
 
+1. The cache layers are checked in order, and the first layer holding the value (of any age) supplies the "cached value" considered below. Because arriving data is stored in all cache layers, the first layer holding a value normally has the most recent copy.
+2. Then, depending on the scenario :
+
+| Scenario                                                                 | Outcome                                            |
+|--------------------------------------------------------------------------|----------------------------------------------------|
+| Online, cached value within request freshness                            | => return cached value                             |
+| Online, no cached value or cached value too old                          | => request from origin, return and cache result    |
+| Online, origin throws NoNetworkException, cached value within fallback   | => return cached value                             |
+| Online, origin throws NoNetworkException, no cached value or too old     | => throw OriginAccessFailure                       |
+| Offline, cached value within fallback freshness                          | => return cached value                             |
+| Offline, no cached value (or older than fallback freshness)              | => throw DataNotAvailableOffline                   |
+
+With the default fallbackFreshnessSeconds of FALLBACK_ANY, any cached value will be returned when offline or when the origin cannot be reached.
 
 > At the time of writing, freshnessSeconds = RequestOp.FRESHNESS_INSIST (-1) was used to insist that the response data must either come immediately from the origin,
 > or a DataNotAvailableOffline should be thrown.
@@ -78,8 +91,8 @@ and a DiaryItem belongs to an Area.
 We could write a static function like this :
 
 ```csharp
-public static Task<Diary> GetDiary(CascadeDataLayer cascade, int diaryId, int freshnessSeconds) {
-    var diary = cascade.Get<Diary>(id, freshnessSeconds: freshnessSeconds, populate: new [] {nameof(Diary.DiaryItems)});
+public static async Task<Diary> GetDiary(CascadeDataLayer cascade, int diaryId, int freshnessSeconds) {
+    var diary = await cascade.Get<Diary>(diaryId, freshnessSeconds: freshnessSeconds, populate: new [] {nameof(Diary.DiaryItems)});
     await cascade.Populate(diary.DiaryItems,nameof(DiaryItem.Diary),freshnessSeconds: freshnessSeconds);
     return diary;
 }
@@ -95,7 +108,7 @@ however if we called it like this :
 
 `var diary = await GetDiary(cascade,diaryId,RequestOp.FRESHNESS_FRESHEST);   // 0 freshness`
 
-and not cause any real problems, except for the following possible surprises :
+it would still work and not cause any real problems, except for the following possible surprises :
 
 1. the Diary property of each DiaryItem will be populated with a different Diary instance having the same id as the diary variable
 2. none of the Diary instances will be the same as the diary variable instance
@@ -107,9 +120,9 @@ Conversely, when freshnessSeconds == 3600 the Get<Diary> request will be served 
 The solution to this is the sequenceBeganMs parameter on all read request methods. We use it like this :
 
 ```csharp
-public static Task<Diary> GetDiary(CascadeDataLayer cascade, int diaryId, int freshnessSeconds) {
+public static async Task<Diary> GetDiary(CascadeDataLayer cascade, int diaryId, int freshnessSeconds) {
     var sequenceBeganMs = cascade.NowMs;
-    var diary = cascade.Get<Diary>(id,freshnessSeconds: freshnessSeconds, sequenceBeganMs: sequenceBeganMs, populate: new [] {nameof(Diary.DiaryItems)});
+    var diary = await cascade.Get<Diary>(diaryId, freshnessSeconds: freshnessSeconds, sequenceBeganMs: sequenceBeganMs, populate: new [] {nameof(Diary.DiaryItems)});
     await cascade.Populate(diary.DiaryItems,nameof(DiaryItem.Diary),freshnessSeconds: freshnessSeconds, sequenceBeganMs: sequenceBeganMs);
     return diary;
 }
@@ -123,5 +136,5 @@ Internally, CascadeDataLayer captures NowMs and passes it into all requests, and
 > One day it might be possible to replace that whole method with the following line, but as of this writing the populate option only supports properties on the main object.
 > 
 > ```csharp
-> var diary = cascade.Get<Diary>(id,freshnessSeconds: freshnessSeconds, populate: new [] {nameof(Diary.DiaryItems),nameof(Diary.DiaryItems)+"."+nameof(DiaryItem.Diary)});
+> var diary = await cascade.Get<Diary>(diaryId,freshnessSeconds: freshnessSeconds, populate: new [] {nameof(Diary.DiaryItems),nameof(Diary.DiaryItems)+"."+nameof(DiaryItem.Diary)});
 > ```

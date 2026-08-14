@@ -9,8 +9,8 @@ unnecessary transfers of files that have already been transferred, and enable ef
 comparison of large files.
 
 The Cascade "freshness" method reduces server requests by using cached values when the time since the last request is
-less than the "freshness" seconds. Ths means there will still be server requests when serverside values have not changed,
-which is hard or possible to avoid, and isn't normally a great cost considering the reduction achieved by caching.
+less than the "freshness" seconds. This means there will still be server requests when serverside values have not changed,
+which is hard or impossible to avoid, and isn't normally a great cost considering the reduction achieved by caching.
 However it is different for blobs because they can be of a very large size.
 ETags provide an effective method to eliminate repeat binary downloads of the same file content. 
 
@@ -28,7 +28,7 @@ The sequence for ETag support in Cascade goes like this :
 3. The origin passes the request to the blob server eg. Azure storage  
 4. Blob server returns the binary data and the OpResponse.ETag to Cascade
 5. Cascade stores the blob binary and ETag in the cache
-6. The application calls BlobGet again with the same path and 0 freshness
+6. The application later calls BlobGet again with the same path and a freshness requirement the cached blob does not meet (eg. 0)
 7. Cascade finds the cache version of the blob and its ETag
 8. Cascade copies the cached ETag into the new RequestOp.Etag
 9. Cascade passes the RequestOp to the Origin

@@ -144,3 +144,32 @@ public class ThingPhoto : SuperModel
     private Bitmap? _Image;
 }
 ```
+
+## FromProperty
+
+FromProperty declares a property whose value is derived from another property on the same model, converted by a
+supplied `IPropertyConverter` implementation, optionally with arguments. Like the other association attributes,
+the property is set when populated (it is not serialized).
+
+```csharp
+public class ThingPhoto : SuperModel
+{
+    [FromBlob(nameof(imagePath),typeof(DotNetBitmapConverter))]
+    public Bitmap? Image {
+      get => GetProperty(ref _Image);
+      set => SetProperty(ref _Image, value);
+    }
+    private Bitmap? _Image;
+
+    [FromProperty(nameof(Image),typeof(DotNetThumbnailConverter),100,100)]
+    public Bitmap? Thumbnail {
+      get => GetProperty(ref _Thumbnail);
+      set => SetProperty(ref _Thumbnail, value);
+    }
+    private Bitmap? _Thumbnail;
+}
+```
+
+Here `DotNetThumbnailConverter` implements `IPropertyConverter.Convert(input, destinationType, args)` and returns
+a 100x100 thumbnail of Image when `Populate(photo, nameof(ThingPhoto.Thumbnail))` is called (after Image itself
+has been populated).

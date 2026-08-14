@@ -44,12 +44,17 @@ classDiagram
         +RequestVerb Verb
         +object Id
         +object Value
+        +object Criteria
+        +string Key
+        +int FreshnessSeconds
+        +int FallbackFreshnessSeconds
     }
     
     class OpResponse {
-        +bool Connected
         +bool Exists
         +object Result
+        +long ArrivedAtMs
+        +string ETag
     }
 
     CascadeDataLayer --> "1" ICascadeOrigin : Origin

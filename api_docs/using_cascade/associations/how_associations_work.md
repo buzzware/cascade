@@ -37,3 +37,7 @@ Its important to note the following intentional limitations (by design) :
 3. Models are also not automatically removed from associations eg. when changes on the origin mean they no longer belong  
 4. Model instances held in a HasMany association array are the current instances as of when the property was last populated. They are not automatically refreshed when new instances arrive from the origin.
 
+The [association helper methods](#association_helpers) exist to address many of these limitations, and the
+Create/Update/Replace methods maintain association property values from their input model to their result -
+see [maintained associations](#maintained_associations).
+

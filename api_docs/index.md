@@ -8,7 +8,7 @@ Cascade enables developers to write the user interface in a consistent and meani
 
 By providing a robust data layer, Cascade shields the front 
 end from any changes or updates made to the backend. CascadeDataLayer and your ICascadeOrigin implementation handle 
-all the asynchronous complexity and manage back-end inconsistencies so that the models can kept simple and synchronous.  
+all the asynchronous complexity and manage back-end inconsistencies so that the models can be kept simple and synchronous.  
 
 ### Usage
 
@@ -25,11 +25,11 @@ As a quick introduction, here are some examples of using the main methods provid
 
 1. ```var product = await cascade.Create<Product>(new Product() { colour = "Red" });```
 2. ```var product = await cascade.Get<Product>(25, populate: new string[] { nameof(Product.Manufacturer) });```
-3. ```var redThings = await cascade.Query<Product>("red_products",new JsonObject { ["colour"] = "red" });```
-4. ```var updated = await cascade.Update(product, new JsonObject { ["colour"] = "red" });```
+3. ```var redThings = await cascade.Query<Product>("red_products",new Dictionary<string, object?> { ["colour"] = "red" });```
+4. ```var updated = await cascade.Update(product, new Dictionary<string, object?> { ["colour"] = "blue" });```
 5. ```await cascade.Destroy(product);```
-6. ```var promoted = await cascade.Execute("PROMOTE",new JsonObject { ["product_id"] = 25 })```
-7. ```await cascade.Populate(product,new string[] { nameof(Product.Manufacturer),nameof(Product.Category) })```
+6. ```var promoted = await cascade.Execute<Product,Product>("PROMOTE",new Dictionary<string, object?> { ["product_id"] = 25 });```
+7. ```await cascade.Populate(product,new string[] { nameof(Product.Manufacturer),nameof(Product.Category) });```
 
 ### Application Requirements :
 
@@ -42,5 +42,7 @@ As a quick introduction, here are some examples of using the main methods provid
 ### Features
 
 1. "freshness" option to determine whether to get data from either a cache or the server
-2. "fallback freshness" option to silently fallback to a cached data when unable to reach the server
-3. "hold" option to mark retrieved records for downloading and preservation offline even when caches are cleared  
+2. "fallback freshness" option to silently fall back to cached data when unable to reach the server
+3. "hold" option to mark retrieved records for downloading and preservation offline even when caches are cleared
+4. binary blob (image/file) handling with the same caching, freshness and offline benefits as models
+5. offline creation, updating and deletion of records, queued as pending changes and uploaded when back online  
