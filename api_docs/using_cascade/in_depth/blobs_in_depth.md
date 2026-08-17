@@ -44,3 +44,29 @@ For ETags to work :
 1) the blob cache must store and return OpResponse.ETag (FileBlobCache does) 
 2) the ICascadeOrigin implementation must pass RequestOp.ETag to the blob server, and return the ETag from the blob server in OpResponse.ETag correctly
 
+## Best Practices for Blob Handling eg. Images
+
+Let's consider the case where an app needs to provide a photo gallery like feature, with photo taking, uploading and downloading, online and offline.
+
+Initially it was tried storing binary blobs on model properties that were populated using a path string property, a 
+Bitmap or similar property with the `[FromBlob]` attribute, a converter and the `cascade.Populate` method.
+
+An image must be stored in at least 2 formats and places :
+
+1. in JPEG format in a file and/or on the server
+2. in the internal memory structures of the component displaying it
+
+and through experimentation it has been decided that storing the blob in memory on the model, a third place, 
+is an unproductive waste of memory.
+
+A better approach is to keep the path on a model, set up `BlobFileCache`, and use 
+`cascade.BlobGetFilePath(model.image_path)` 
+to get a file system path that can be handed to UI components to load and show that blob. 
+See [Blobs In Depth](../blobs_in_depth.md)
+
+Beware that the absolute file system path returned by `cascade.BlobGetFilePath` should not be persisted long term because 
+mobile platform such as iOS and Android provide ethereal container paths to apps, which are unstable and should only be 
+used only for short term operations. Instead, store relative image paths on the model, and combine them with operating 
+system root paths at runtime.  
+
+

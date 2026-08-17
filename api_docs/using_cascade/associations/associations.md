@@ -151,6 +151,10 @@ FromProperty declares a property whose value is derived from another property on
 supplied `IPropertyConverter` implementation, optionally with arguments. Like the other association attributes,
 the property is set when populated (it is not serialized).
 
+> Note: This pattern below is no longer recommended because it probably means keeping blobs in memory long-term. 
+> See [Blobs In Depth](../blobs_in_depth.md)
+
+
 ```csharp
 public class ThingPhoto : SuperModel
 {

@@ -47,4 +47,4 @@ Ensures that an item occurs in the association property and cached collection, m
 
 `UpdateHasOne(SuperModel model, string property, object value)`
 
-Replaces the value of the given HasOne property with the given model.
+Replaces the value of the given HasOne property with the given model value.
