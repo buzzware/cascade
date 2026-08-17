@@ -15,9 +15,15 @@ namespace Buzzware.Cascade {
     
     private readonly IEnumerable<ICascadeCache> CacheLayers;
     private readonly ICascadePlatform cascadePlatform;
+    /// <summary>
+    /// Configuration settings for this CascadeDataLayer instance
+    /// </summary>
     public readonly CascadeConfig Config;
     private readonly ErrorControl errorControl;
     private readonly object lockObject;
+    /// <summary>
+    /// The origin, normally representing a remote server that is the authoritative source of data
+    /// </summary>
     public readonly ICascadeOrigin Origin;
     private readonly CascadeJsonSerialization serialization;
 
@@ -63,7 +69,7 @@ namespace Buzzware.Cascade {
     /// <summary>
     /// This property determines whether the framework acts in online (true) or offline (false) mode.
     /// It can be set to offline at any time, but should not be set to online unless the changes pending list is empty.
-    /// <see cref="ReconnectOnline">ReconnectOnline() uploads changes and sets ConnectionOnline=true for you.</see>  
+    /// <see cref="UploadChangesPending">UploadChangesPending() uploads the pending changes; then ConnectionOnline can be set to true.</see>
     /// </summary>
     public bool ConnectionOnline {
       get => _connectionOnline;
@@ -81,6 +87,10 @@ namespace Buzzware.Cascade {
     /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
     
+    /// <summary>
+    /// Raises the PropertyChanged event for the given property name.
+    /// </summary>
+    /// <param name="propertyName">Name of the changed property. Provided automatically by the compiler when omitted.</param>
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
@@ -112,11 +122,9 @@ namespace Buzzware.Cascade {
     }
     
     /// <summary>
-    /// Ensures that the user is authenticated. If not, it will attempt to authenticate
-    /// the user based on the provided type.
+    /// Asks the Origin to ensure the user is authenticated, attempting authentication if necessary.
     /// </summary>
-    /// <param name="type">The type used for authentication, can be null.</param>
-    /// <returns><c>true</c> if the user is authenticated; otherwise, <c>false</c>.</returns>
+    /// <param name="type">Optional model type for which authentication is required, can be null.</param>
     public async Task EnsureAuthenticated(Type? type = null) {
       await Origin.EnsureAuthenticated(type);
     }

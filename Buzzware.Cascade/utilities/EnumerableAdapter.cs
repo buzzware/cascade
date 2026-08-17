@@ -8,14 +8,15 @@ using System.Reflection;
 namespace Buzzware.Cascade {
 
   /// <summary>
-  /// This class implements IEnumerable<T> to adapt a non-generic IEnumerable 
-  /// to work with a specified type T by casting the elements of the source 
+  /// This class implements <c>IEnumerable&lt;T&gt;</c> to adapt a non-generic IEnumerable
+  /// to work with a specified type T by casting the elements of the source
   /// enumeration to type T.
   /// </summary>
+  /// <typeparam name="T">The element type exposed by the adapted enumeration.</typeparam>
 	public class EnumerableAdapter<T> : IEnumerable<T> {
     
     /// <summary>
-    /// The non-generic source enumeration that will be adapted to IEnumerable<T>
+    /// The non-generic source enumeration that will be adapted to <c>IEnumerable&lt;T&gt;</c>
     /// </summary>
 		public IEnumerable Source { get; }
 
@@ -48,7 +49,7 @@ namespace Buzzware.Cascade {
 		}
 
     /// <summary>
-    /// Converts the sequence of type T elements to an ImmutableArray<T>.
+    /// Converts the sequence of type T elements to an <c>ImmutableArray&lt;T&gt;</c>.
     /// </summary>
     /// <returns>An ImmutableArray containing the elements of the sequence.</returns>
 		ImmutableArray<T> ToImmutableArray() {

@@ -12,6 +12,10 @@ namespace Buzzware.Cascade {
   /// Custom exception thrown when a mutation attempt is made on an immutable property.
   /// </summary>
   public class MutationAttemptException : Exception {
+    /// <summary>
+    /// MutationAttemptException Constructor
+    /// </summary>
+    /// <param name="message">The message describing the attempted mutation.</param>
     public MutationAttemptException(string message) : base(message) {
     }
   }
@@ -21,7 +25,13 @@ namespace Buzzware.Cascade {
   /// </summary>
   public class SuperModel : INotifyPropertyChanged {
     
+    /// <summary>
+    /// The underlying model this instance is acting as a proxy for, if any.
+    /// </summary>
     protected SuperModel? _proxyFor;
+    /// <summary>
+    /// Tracks, by property name, which properties have been set on this instance while proxying.
+    /// </summary>
     protected readonly ConcurrentDictionary<string, bool> _propertySet = new ConcurrentDictionary<string, bool>();
 
     /// <summary>
@@ -45,14 +55,14 @@ namespace Buzzware.Cascade {
     private bool ___mutable = true;
 
     /// <summary>
-    /// The proxy model that this model is currently proxying for, if any.
+    /// The underlying model that this model is currently acting as a proxy for, if any.
     /// </summary>
     public SuperModel? __ProxyFor => _proxyFor;
 
     /// <summary>
-    /// Sets a new proxy model and optionally retains changes or raises property change events.
+    /// Sets a new underlying model to proxy for, and optionally retains changes or raises property change events.
     /// </summary>
-    /// <param name="value">The new proxy model to set.</param>
+    /// <param name="value">The new underlying model to proxy for.</param>
     /// <param name="keepChanges">maintain property changes while changing proxied instance</param>
     /// <param name="raiseIncoming">raise PropertyChanged events for differing values in new proxy instance</param>
     public void __SetProxyFor(
@@ -224,7 +234,7 @@ namespace Buzzware.Cascade {
     /// <typeparam name="T">The type of the property.</typeparam>
     /// <param name="backingStore">The reference to the private backing field of the property.</param>
     /// <param name="propertyName">The name of the property, automatically filled in by the compiler.</param>
-    /// <param name="onChanged">An optional action to perform when the property value is accessed.</param>
+    /// <param name="onChanged">Unused by this method; no action is invoked.</param>
     /// <returns>The current value of the property.</returns>
     protected T GetProperty<T>(ref T backingStore,
       [CallerMemberName] string propertyName = "",
@@ -251,6 +261,9 @@ namespace Buzzware.Cascade {
     }
 
     #region INotifyPropertyChanged
+    /// <summary>
+    /// Raised when a property value of this model changes.
+    /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>

@@ -4,7 +4,7 @@ using System;
 namespace Buzzware.Cascade
 {
   /// <summary>
-  /// Provides extension methods for any type implementing IComparable<T> to simplify comparison logic.
+  /// Provides extension methods for any type implementing <c>IComparable&lt;T&gt;</c> to simplify comparison logic.
   /// </summary>
   public static class ComparableExtensions
   {

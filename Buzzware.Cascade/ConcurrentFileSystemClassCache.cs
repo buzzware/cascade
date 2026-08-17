@@ -13,6 +13,13 @@ using Serilog;
 
 namespace Buzzware.Cascade {
     
+    /// <summary>
+    /// A file system-based cache for model instances and collections of ids that wraps its file
+    /// reads and writes in retrying operations so concurrent access to the same files does not fail.
+    /// Implements IModelClassCache using JSON serialization.
+    /// </summary>
+    /// <typeparam name="Model">The model class stored by this cache</typeparam>
+    /// <typeparam name="IdType">The type of the model id</typeparam>
     public class ConcurrentFileSystemClassCache<Model, IdType> : IModelClassCache
         where Model : class {
         private const string ValueKey = "Value";
@@ -22,8 +29,17 @@ namespace Buzzware.Cascade {
         private readonly CascadeJsonSerialization Serialization;
         private ConcurrentDictionary<string,bool> writingFlags = new ConcurrentDictionary<string,bool>();
 
+        /// <summary>
+        /// Reference to the CascadeDataLayer that uses this cache
+        /// </summary>
         public CascadeDataLayer? Cascade { get; set; }
 
+        /// <summary>
+        /// ConcurrentFileSystemClassCache Constructor
+        /// Creates the model and collection directories and initializes the JSON serialization mechanism.
+        /// </summary>
+        /// <param name="fileDir">The base directory for storing model and collection files.</param>
+        /// <param name="serialization">Optional JSON serialization object; uses default if not specified.</param>
         public ConcurrentFileSystemClassCache(string fileDir, CascadeJsonSerialization? serialization = null) {
             _fileDir = fileDir;
             Directory.CreateDirectory(GetModelFilePath());
@@ -31,18 +47,38 @@ namespace Buzzware.Cascade {
             this.Serialization = serialization ?? new CascadeJsonSerialization();
         }
 
+        /// <summary>
+        /// Performs any setup required by the cache. This implementation requires none.
+        /// </summary>
         public async Task Setup() {
         }
         
+        /// <summary>
+        /// Gets the file path for storing a specific model instance, or the models directory when id is null.
+        /// </summary>
+        /// <param name="id">Optional identifier for which the model path is generated, null if retrieving the directory path.</param>
+        /// <returns>The full path for model storage.</returns>
         private string GetModelFilePath(object? id = null) { 
           return id==null ? Path.Combine(_fileDir, _modelsDirectory) : Path.Combine(_fileDir, _modelsDirectory, id.ToString() + ".json");
         }
 
+        /// <summary>
+        /// Gets the file path for storing a specific collection, or the collections directory when key is null.
+        /// </summary>
+        /// <param name="key">Optional collection key for which the path is generated, null if retrieving the directory path.</param>
+        /// <returns>The full path for collection storage.</returns>
         private string GetCollectionFilePath(string? key = null) {
           return key==null ? Path.Combine(_fileDir, _collectionsDirectory) : Path.Combine(_fileDir, _collectionsDirectory, key.ToString() + ".json");
         }
 
 
+        /// <summary>
+        /// Serializes an object to the given file path within a retrying file operation,
+        /// and sets the file's last write time from the given timestamp.
+        /// </summary>
+        /// <param name="aPath">The target file path for serialized output.</param>
+        /// <param name="aObject">The object to serialize.</param>
+        /// <param name="timeMs">The timestamp in milliseconds to set as the file's last write time.</param>
         protected Task SerializeToPathAsync(string aPath, object aObject, long timeMs) {
             return Task.Run(() => {
                 return CascadeUtils.EnsureFileOperation(async () => {
@@ -63,6 +99,12 @@ namespace Buzzware.Cascade {
 
         
 
+        /// <summary>
+        /// Deserializes an object from the given file path within a retrying file operation.
+        /// </summary>
+        /// <typeparam name="T">The type of the object to deserialize.</typeparam>
+        /// <param name="aPath">The path of the file from which to deserialize the object.</param>
+        /// <returns>The deserialized object of type T, or default when the file content is missing or empty.</returns>
         protected async Task<T?> DeserializeFromPathAsync<T>(string aPath) {
             return await Task.Run(() => {
                 return CascadeUtils.EnsureFileOperationSync(() => {
@@ -93,6 +135,12 @@ namespace Buzzware.Cascade {
         //     });
         // }
 
+        /// <summary>
+        /// Fetches a model by id (Get) or a collection of ids by key (Query/GetCollection) from the file system.
+        /// Freshness requirements are not checked - any existing file is returned.
+        /// </summary>
+        /// <param name="requestOp">The operation that specifies what to fetch.</param>
+        /// <returns>An OpResponse containing the fetched value, or a none response when the file does not exist.</returns>
         public async Task<OpResponse> Fetch(RequestOp requestOp) {
             if (requestOp.Type != typeof(Model))
                 throw new Exception("requestOp.Type != typeof(Model)");
@@ -146,6 +194,12 @@ namespace Buzzware.Cascade {
         // }
 
 
+        /// <summary>
+        /// Stores a model instance to the file system based on its id. File exceptions are logged and swallowed.
+        /// </summary>
+        /// <param name="id">Identifier of the model instance.</param>
+        /// <param name="model">The model object to store.</param>
+        /// <param name="arrivedAt">Timestamp of when the model arrived, used for file timestamping.</param>
         public async Task Store(object id, object model, long arrivedAt) {
             var idTyped = (IdType?)CascadeTypeUtils.ConvertTo(typeof(IdType), id);
             if (idTyped == null)
@@ -158,16 +212,31 @@ namespace Buzzware.Cascade {
             }
         }
 
+        /// <summary>
+        /// Stores each of the given models using its cascade id.
+        /// </summary>
+        /// <param name="results">The model objects to store.</param>
+        /// <param name="arrivedAt">Timestamp of when the models arrived, used for file timestamping.</param>
         public async Task StoreAll(IReadOnlyList<object> results, long arrivedAt) {
             foreach (var result in results)
                 await Store(CascadeTypeUtils.GetCascadeId(result), result, arrivedAt);
         }
         
+        /// <summary>
+        /// Stores a collection of model ids to the file system under a specific key.
+        /// </summary>
+        /// <param name="key">The key under which the collection is stored.</param>
+        /// <param name="ids">The collection of identifiers to store.</param>
+        /// <param name="arrivedAt">Timestamp of when the collection arrived, used for file timestamping.</param>
         public async Task StoreCollection(string key, IEnumerable ids, long arrivedAt) {
             string collectionFilePath = GetCollectionFilePath(key);
             await SerializeToPathAsync(collectionFilePath, ids, arrivedAt);
         }
 
+        /// <summary>
+        /// Removes a model instance's file from the file system based on its identifier, if it exists.
+        /// </summary>
+        /// <param name="id">The identifier of the model instance to remove.</param>
         public async Task Remove(object id) {
             string modelFilePath = GetModelFilePath(id);
             if (File.Exists(modelFilePath)) {
@@ -187,6 +256,12 @@ namespace Buzzware.Cascade {
         //     }
         // }
         
+        /// <summary>
+        /// Clears all stored models and collections from the file system, optionally preserving
+        /// held items and files modified on or after a given time.
+        /// </summary>
+        /// <param name="exceptHeld">If true, retains models and collections held by the Cascade layer.</param>
+        /// <param name="olderThan">Optional DateTime; only files last modified before this time are deleted.</param>
         public async Task ClearAll(bool exceptHeld, DateTime? olderThan = null) {
             if (exceptHeld || olderThan!=null) {
                 // models

@@ -37,9 +37,10 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Generates a random non-negative integer that is less than 0xFFFFFF.
+    /// Generates a random integer between 0xFFFFFF (inclusive) and int.MaxValue (exclusive) for use as a
+    /// placeholder id. Note that despite the name, the returned value is positive.
     /// </summary>
-    /// <returns>A random integer less than 0xFFFFFF.</returns>
+    /// <returns>A random integer from 0xFFFFFF up to (but excluding) int.MaxValue.</returns>
     public static int IntNegativeId() {
       // Generate and return a random integer within the specified range.
       var result = NewInt(0xFFFFFF);
@@ -47,9 +48,9 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Generates a random negative long (Int64) value.
+    /// Generates a random non-positive long (Int64) value by negating any positive random value.
     /// </summary>
-    /// <returns>A random negative long value.</returns>
+    /// <returns>A random long value that is zero or negative.</returns>
     public static long LongNegativeId() {
       // Generate a new random long value.
       var result = NewLong();

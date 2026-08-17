@@ -15,14 +15,31 @@ namespace Buzzware.Cascade {
   public class FileBlobCache : IBlobCache {
     private readonly string _tempDir;
 
+    /// <summary>
+    /// Name of the meta collection used to store blob etags.
+    /// </summary>
     public const string BLOB_ETAGS = "BlobEtags";
+
+    /// <summary>
+    /// Separator substituted for '/' when encoding a blob path into a single etag file name.
+    /// </summary>
     public const string BLOB_PATH_ALT_SEPARATOR = "_%_";
 
+    /// <summary>
+    /// Encodes a blob path into a flat name by trimming leading slashes and replacing '/' with BLOB_PATH_ALT_SEPARATOR.
+    /// </summary>
+    /// <param name="path">The blob path to encode.</param>
+    /// <returns>The encoded path as a single flat name.</returns>
     public string EncodeBlobEtagPath(string path) {
       path = path.TrimStart('/', '\\');
       return path.Replace("/", BLOB_PATH_ALT_SEPARATOR);
     }
 
+    /// <summary>
+    /// Returns the meta path where the etag for the given blob path is stored.
+    /// </summary>
+    /// <param name="blobPath">The blob path, or null for the root etags collection path.</param>
+    /// <returns>The BLOB_ETAGS collection path when blobPath is null, otherwise the path of the etag text file for the blob.</returns>
     public string BlobEtagPath(string? blobPath) {
       if (blobPath == null) {
         return BLOB_ETAGS;
@@ -32,14 +49,28 @@ namespace Buzzware.Cascade {
       }
     }
 
+    /// <summary>
+    /// Stores the etag for the given blob path using the Cascade meta store.
+    /// </summary>
+    /// <param name="blobPath">The blob path whose etag is being stored.</param>
+    /// <param name="etag">The etag value to store, or null to clear it.</param>
     public void StoreBlobEtag(string blobPath, string? etag) {
       Cascade.MetaSet(BlobEtagPath(blobPath), etag);
     }
 
+    /// <summary>
+    /// Fetches the stored etag for the given blob path from the Cascade meta store.
+    /// </summary>
+    /// <param name="blobPath">The blob path whose etag is requested.</param>
+    /// <returns>The stored etag string, or null if none is stored.</returns>
     public string? FetchBlobEtag(string blobPath) {
       return Cascade.MetaGet(BlobEtagPath(blobPath));
     }
 
+    /// <summary>
+    /// Clears the stored etag for the given blob path, or all stored blob etags when blobPath is null.
+    /// </summary>
+    /// <param name="blobPath">The blob path whose etag should be cleared, or null to clear all blob etags.</param>
     public void ClearBlobEtags(string? blobPath = null) {
       Cascade.MetaClearPath(BlobEtagPath(blobPath));
     }
@@ -81,7 +112,7 @@ namespace Buzzware.Cascade {
     /// Constructs a path within the blob storage directory.
     /// </summary>
     /// <param name="path">The path relative to the blob directory.</param>
-    /// <returns>The full path to the specified blob as a string.</returns>
+    /// <returns>The path of the blob relative to the cache root (blob directory name plus the given path).</returns>
     protected string GetBlobPath(string path) {
       path = path.TrimStart('/', '\\');
       return Path.Combine(_blobDirectory, path);
@@ -93,14 +124,18 @@ namespace Buzzware.Cascade {
     public bool SupportsGetAbsoluteFilePath => true;
     
     /// <summary>
-    /// Gets the absolute file path for a model associated with a specified relative path.
+    /// Gets the absolute file path for a blob at the specified relative path.
     /// </summary>
-    /// <param name="path">The relative path to the model file within the blob directory.</param>
-    /// <returns>The complete path to the model file as a string.</returns>
+    /// <param name="path">The relative path of the blob within the blob directory.</param>
+    /// <returns>The complete file system path to the blob file as a string.</returns>
     public string GetAbsoluteFilePath(string path) {
       return ToFilePath(GetBlobPath(path)); 
     }
 
+    /// <summary>
+    /// Deletes the cached file for the given blob path and clears its stored etag.
+    /// </summary>
+    /// <param name="blobPath">The relative path of the blob to remove from the cache.</param>
     public async Task Clear(string blobPath) {
       var file = GetAbsoluteFilePath(blobPath);
       CascadeUtils.EnsureFileOperationSync(() => {
@@ -198,6 +233,7 @@ namespace Buzzware.Cascade {
     /// If the result is empty, it deletes the corresponding file instead.
     /// </summary>
     /// <param name="opResponse">The response operation which includes the data to be stored or the command to delete.</param>
+    /// <returns>The given opResponse, with the result replaced by a new stream over the stored file when a Stream was stored.</returns>
     public async Task<OpResponse> Store(OpResponse opResponse) {
       var path = opResponse.RequestOp.Id as string;
       path = path?.TrimStart('/','\\');
@@ -229,6 +265,11 @@ namespace Buzzware.Cascade {
       return opResponse;
     }
     
+    /// <summary>
+    /// Marks the cached blob file as fresh by setting its last write time to the given arrival timestamp, if the file exists.
+    /// </summary>
+    /// <param name="blobPath">The relative path of the blob to mark as fresh.</param>
+    /// <param name="arrivedAtMs">The arrival time to set, in ms since 1970.</param>
     public async Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs) {
       var modelFilePath = GetAbsoluteFilePath(blobPath);
       if (File.Exists(modelFilePath))
@@ -250,11 +291,11 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Writes a byte array to a relative path and updates the file's modification timestamp.
+    /// Writes a byte array to the given absolute file path, creating the directory if needed, and sets the file's modification timestamp.
     /// </summary>
-    /// <param name="path">The path of the file to be written to.</param>
+    /// <param name="path">The absolute path of the file to be written to.</param>
     /// <param name="blob">The byte array data to be stored in the file.</param>
-    /// <param name="arrivedAt">The timestamp to set as the file's last modification time.</param>
+    /// <param name="arrivedAt">The timestamp to set as the file's last modification time, in ms since 1970.</param>
     private async Task StoreBlobBytes(string path, byte[] blob, long arrivedAt) {
       await Task.Run(async () => {
         if (!Directory.Exists(Path.GetDirectoryName(path)))
@@ -268,11 +309,12 @@ namespace Buzzware.Cascade {
     }
     
     /// <summary>
-    /// Writes a byte array to a relative path and updates the file's modification timestamp.
+    /// Writes a stream to the given absolute file path, creating the directory if needed, and sets the file's modification timestamp.
     /// </summary>
-    /// <param name="path">The path of the file to be written to.</param>
-    /// <param name="blob">The byte array data to be stored in the file.</param>
-    /// <param name="arrivedAt">The timestamp to set as the file's last modification time.</param>
+    /// <param name="path">The absolute path of the file to be written to.</param>
+    /// <param name="blob">The stream of data to be stored in the file.</param>
+    /// <param name="arrivedAt">The timestamp to set as the file's last modification time, in ms since 1970.</param>
+    /// <returns>A new readable stream over the stored file.</returns>
     private async Task<Stream> StoreBlobStream(string path, Stream blob, long arrivedAt) {
       Stream? result = null;
       await Task.Run(async () => {

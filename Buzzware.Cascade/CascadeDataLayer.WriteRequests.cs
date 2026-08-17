@@ -21,7 +21,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <typeparam name="M">The type of the model to be created.</typeparam>
     /// <param name="model">The model instance containing values to create a new entry from.</param>
-    /// <param name="hold">Indicates whether to hold the operation.</param>
+    /// <param name="hold">Indicates whether to mark the created model to be held in cache.</param>
     /// <returns>Model of type M</returns>
     public async Task<M> Create<M>(M model, bool hold = false) {
       var response = await CreateResponse<M>(model,hold: hold);
@@ -38,7 +38,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <typeparam name="M">The type of the model to be created.</typeparam>
     /// <param name="model">The model instance containing values to create a new entry from.</param>
-    /// <param name="hold">Indicates whether to hold the operation.</param>
+    /// <param name="hold">Indicates whether to mark the created model to be held in cache.</param>
     /// <returns>OpResponse with full detail of operation, including Result of type M</returns>
     public Task<OpResponse> CreateResponse<M>(M model, bool hold = false) {
       var req = RequestOp.CreateOp(
@@ -50,10 +50,10 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Replaces the given model with a new instance. 
+    /// Replaces the stored record with the values of the given model, and returns the resulting instance from the origin.
     /// </summary>
     /// <typeparam name="M">The type of the model to be replaced.</typeparam>
-    /// <param name="model">The model instance to replace.</param>
+    /// <param name="model">The model instance whose values replace the stored record.</param>
     /// <returns>Model of type M after replacement.</returns>
     public async Task<M> Replace<M>(M model) {
       var response = await ReplaceResponse<M>(model);
@@ -63,10 +63,10 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Generates a response for replacing the given model with a new instance.
+    /// Replaces the stored record with the values of the given model, returning a full detail OpResponse.
     /// </summary>
     /// <typeparam name="M">The type of the model to be replaced.</typeparam>
-    /// <param name="model">The model instance to replace.</param>
+    /// <param name="model">The model instance whose values replace the stored record.</param>
     /// <returns>OpResponse with operation details, including Result of type M.</returns>
     public Task<OpResponse> ReplaceResponse<M>(M model) {
       var req = RequestOp.ReplaceOp(
@@ -136,7 +136,7 @@ namespace Buzzware.Cascade {
     /// <typeparam name="ReturnType">The type that will be returned after execution, could be the same or different from ModelType.</typeparam>
     /// <param name="action">The action to execute.</param>
     /// <param name="parameters">Parameters required for executing the action.</param>
-    /// <returns>Result of type ReturnType after executing the action.</returns>
+    /// <returns>Result of type ReturnType after executing the action, or default when the response result is null.</returns>
     public async Task<ReturnType?> Execute<ModelType, ReturnType>(string action, IDictionary<string, object?> parameters) {
       var response = await ExecuteResponse<ModelType, ReturnType>(
         action,

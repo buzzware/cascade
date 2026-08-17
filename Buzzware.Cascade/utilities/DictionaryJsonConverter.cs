@@ -8,13 +8,13 @@ using System.Text.Json.Serialization;
 namespace Buzzware.Cascade {
 
     /// <summary>
-    /// Custom JSON converter for handling serialization and deserialization of 
-    /// Dictionary<string, object?> using System.Text.Json.
+    /// Custom JSON converter for handling serialization and deserialization of
+    /// <c>Dictionary&lt;string, object?&gt;</c> using System.Text.Json.
     /// </summary>
     public class DictionaryJsonConverter : JsonConverter<Dictionary<string, object?>> {
 
         /// <summary>
-        /// Reads JSON data and converts it into a Dictionary<string, object?>.
+        /// Reads JSON data and converts it into a <c>Dictionary&lt;string, object?&gt;</c>.
         /// </summary>
         /// <param name="reader">The reader that reads the JSON data.</param>
         /// <param name="typeToConvert">The type that is being converted (unused in this implementation).</param>
@@ -76,7 +76,7 @@ namespace Buzzware.Cascade {
         }
 
         /// <summary>
-        /// Writes a Dictionary<string, object?> to JSON format.
+        /// Writes a <c>Dictionary&lt;string, object?&gt;</c> to JSON format.
         /// </summary>
         /// <param name="writer">The writer that writes the JSON data.</param>
         /// <param name="value">The dictionary to be serialized.</param>

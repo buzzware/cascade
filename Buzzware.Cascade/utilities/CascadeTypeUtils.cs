@@ -18,10 +18,11 @@ namespace Buzzware.Cascade {
   public static class CascadeTypeUtils {
 
     /// <summary>
-    /// Retrieves a hierarchy of types for the given type, considering generic type arguments if present.
+    /// Returns the given type followed by the chain of successive first generic type
+    /// arguments, e.g. an enumerable of models yields the enumerable type then the model type.
     /// </summary>
-    /// <param name="type">The type for which to retrieve the hierarchy.</param>
-    /// <returns>An array of types representing the hierarchy of the given type.</returns>
+    /// <param name="type">The type for which to retrieve the layers.</param>
+    /// <returns>An array beginning with the given type, followed by each nested first generic type argument.</returns>
     public static Type[] GetTypeLayers(Type type) {
       List<Type>? result = new List<Type>();
       Type? curr = type;
@@ -63,10 +64,10 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Retrieves the inner type of a given generic type.
+    /// Retrieves the item type of an array or the first generic type argument of a generic type.
     /// </summary>
     /// <param name="type">The type to evaluate.</param>
-    /// <returns>The inner type of the generic type; otherwise, null.</returns>
+    /// <returns>The array element type or first generic type argument; null if the type is neither an array nor generic.</returns>
     public static Type? InnerType(Type type) {
       if (type.IsArray)
         return type.GetElementType();
@@ -92,6 +93,11 @@ namespace Buzzware.Cascade {
       return (type?.Implements<IEnumerable>() ?? false) && type != typeof(string);
     }
 
+    /// <summary>
+    /// Checks if the specified type is a model type, i.e. derives from SuperModel.
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns>True if the type derives from SuperModel; otherwise, false.</returns>
     public static bool IsModelType(Type type) {
       return type.Implements<SuperModel>();
     }
@@ -100,7 +106,7 @@ namespace Buzzware.Cascade {
     /// Checks if the specified type is an enumerable Model type
     /// </summary>
     /// <param name="type">The type to check.</param>
-    /// <returns>True if the type is enumerable and not a string; otherwise, false.</returns>
+    /// <returns>True if the type is enumerable and its item type derives from SuperModel; otherwise, false.</returns>
     public static bool IsEnumerableModelType(Type type) {
       if (!IsEnumerableType(type))
         return false;
@@ -135,7 +141,7 @@ namespace Buzzware.Cascade {
     /// For lists or arrays, retrieves the single type of the item. Handles nullable, generic, and enumerable types.
     /// </summary>
     /// <param name="type">The type to evaluate.</param>
-    /// <returns>The singular type for the given enumerable type.</returns>
+    /// <returns>The item type for an enumerable type; otherwise the original type.</returns>
     public static Type GetSingularType(Type type) {
       var nonNullableTargetType = DeNullType(type);
       var isEnumerable = IsEnumerableType(nonNullableTargetType);
@@ -165,7 +171,7 @@ namespace Buzzware.Cascade {
     /// Determines if a given property on a model is considered an association.
     /// </summary>
     /// <param name="modelType">The type of the model containing the property.</param>
-    /// <param name="model">The actual model instance.</param>
+    /// <param name="model">The actual model instance (not used by the implementation).</param>
     /// <param name="propertyName">The name of the property to be checked.</param>
     /// <returns>True if the property is an association, otherwise false.</returns>
     public static bool IsAssociation(Type modelType, object model, string propertyName) {
@@ -177,12 +183,12 @@ namespace Buzzware.Cascade {
     
     /// <summary>
     /// Attempts to convert a given value to a specified type using type converters or direct conversion.
-    /// Returns a default value if the conversion fails.
+    /// Returns the default value if the value is null or DBNull, or if the conversion fails.
     /// </summary>
     /// <param name="type">The target type to convert the value to.</param>
     /// <param name="value">The value to convert.</param>
-    /// <param name="defaultValue">Optional default value to return in case of conversion failure.</param>
-    /// <returns>The converted value or the default value if conversion fails.</returns>
+    /// <param name="defaultValue">Optional default value to return when the value is null/DBNull or conversion fails.</param>
+    /// <returns>The converted value, or the default value if the value is null/DBNull or conversion fails.</returns>
     public static object? ConvertTo(Type type, object? value, object? defaultValue = null) {
       if (value == null || value == DBNull.Value)
         return defaultValue;
@@ -339,19 +345,22 @@ namespace Buzzware.Cascade {
     };
 
     /// <summary>
-    /// List of time data types
+    /// List of other data types (currently only Guid) that are neither simple nor time types.
     /// </summary>
     public static readonly Type[] OtherDataTypes = new Type[] {
       typeof(Guid)
     };
 
+    /// <summary>
+    /// Combined list of all data property types: SimpleTypes, TimeTypes and OtherDataTypes.
+    /// </summary>
     public static readonly Type[] DataTypes = SimpleTypes.Concat(TimeTypes).Concat(OtherDataTypes).ToArray();
 
     /// <summary>
     /// Determines if a given type is a simple type (one of a basic, primitive type).
     /// </summary>
     /// <param name="type">The type to check.</param>
-    /// <returns>True if the type is simple; otherwise, false.</returns>
+    /// <returns>True if the type is simple or null; otherwise, false.</returns>
     public static bool IsSimple(Type? type) {
       if (type == null)
         return true;
@@ -362,7 +371,7 @@ namespace Buzzware.Cascade {
     /// Determines if a given type is a data property type (ie a SimpleType or DateTime, DateTimeOffset, Time, Date, Timezone).
     /// </summary>
     /// <param name="type">The type to check.</param>
-    /// <returns>True if the type is simple; otherwise, false.</returns>
+    /// <returns>True if the type is a data type or null; otherwise, false.</returns>
     public static bool IsData(Type? type) {
       if (type == null)
         return true;
@@ -371,6 +380,7 @@ namespace Buzzware.Cascade {
     
     /// <summary>
     /// Compares two objects for equality, accounting for possible numeric conversions and handling nulls.
+    /// Numeric values are compared by magnitude; floating point comparisons use a small tolerance.
     /// </summary>
     /// <param name="a">The first object to compare.</param>
     /// <param name="b">The second object to compare.</param>
@@ -400,8 +410,8 @@ namespace Buzzware.Cascade {
     /// <summary>
     /// Use this to distinguish a Linq Enumerable expression from a normal Array/List/Collection
     /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
+    /// <param name="type">The type to check.</param>
+    /// <returns>True if the type implements ICollection or a generic ICollection interface; otherwise, false.</returns>
     public static bool IsMaterializedCollectionType(Type type) {
       return typeof(ICollection).IsAssignableFrom(type) || 
              type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICollection<>));
@@ -450,11 +460,13 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Determines if the binary representation of a given integer value can fit within the size of the destination type.
+    /// Determines if an integer value's type is no larger than the destination type,
+    /// by comparing the marshalled sizes of the two types. The actual value and
+    /// signedness are not considered.
     /// </summary>
-    /// <param name="value">The integer value to check.</param>
+    /// <param name="value">The integer value whose type size is checked.</param>
     /// <param name="destinationType">The destination type to check against.</param>
-    /// <returns>True if the integer will fit in the destination type; otherwise, false.</returns>
+    /// <returns>True if the value's type size is less than or equal to the destination type size; otherwise, false.</returns>
     public static bool IntegerWillFit(object value, Type destinationType) {
       var valueType = value.GetType();
       return Marshal.SizeOf(valueType) <= Marshal.SizeOf(destinationType);
@@ -492,7 +504,7 @@ namespace Buzzware.Cascade {
     }
     
     /// <summary>
-    /// Gets the default value for given type eg. the value a variable of this type will contain if not intiialized
+    /// Gets the default value for given type eg. the value a variable of this type will contain if not initialized
     /// </summary>
     /// <param name="type">The Type</param>
     /// <returns>A value, often null</returns>

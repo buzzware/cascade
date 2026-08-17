@@ -20,6 +20,7 @@ namespace Buzzware.Cascade {
     /// Stores the given operation response in the cache.
     /// </summary>
     /// <param name="opResponse">The response from an operation that includes data to be cached.</param>
+    /// <returns>The given opResponse, possibly modified by the cache.</returns>
 		Task<OpResponse> Store(OpResponse opResponse);
 		
     /// <summary>
@@ -46,18 +47,21 @@ namespace Buzzware.Cascade {
 		CascadeDataLayer Cascade { get; set; }
 
     
+    /// <summary>
+    /// Is this cache able to store and retrieve blobs ?
+    /// </summary>
 		public bool SupportsBlobs { get; }
     
     /// <summary>
-    // Is this cache setup to hold blobs as files, and can return an absolute file system given a blob path  
+    /// Is this cache setup to hold blobs as files, and can return an absolute file system path given a blob path
     /// </summary>
 		bool SupportsGetBlobAbsoluteFilePath { get; }
     
     /// <summary>
     /// Given a blob path (always relative) return an absolute local file system path for that blob
     /// </summary>
-    /// <param name="blobPath"></param>
-    /// <returns></returns>
+    /// <param name="blobPath">The relative path of the blob.</param>
+    /// <returns>The absolute local file system path for the blob, or null if unsupported.</returns>
 		string? GetBlobAbsoluteFilePath(string blobPath);
 
 		/// <summary>
@@ -69,20 +73,34 @@ namespace Buzzware.Cascade {
     /// <param name="olderThan">If specified, only entries older than this date will be cleared.</param>
 		Task ClearAll(bool exceptHeld = true, DateTime? olderThan = null);
     
+    /// <summary>
+    /// Clears cached data for the given model type only.
+    /// </summary>
+    /// <param name="type">The model type whose cached data should be cleared.</param>
+    /// <param name="exceptHeld">If true, entries marked to be held will not be cleared.</param>
+    /// <param name="olderThan">If specified, only entries older than this date will be cleared.</param>
     Task ClearByType(Type type, bool exceptHeld = true, DateTime? olderThan = null);
     
+    /// <summary>
+    /// Clears all blobs from the cache.
+    /// </summary>
+    /// <param name="exceptHeld">If true, blobs marked to be held will not be cleared.</param>
+    /// <param name="olderThan">If specified, only blobs older than this date will be cleared.</param>
     Task ClearBlobs(bool exceptHeld = true, DateTime? olderThan = null);
     
+    /// <summary>
+    /// Clears the blob at the given path from the cache.
+    /// </summary>
+    /// <param name="path">The relative path of the blob to clear.</param>
     Task ClearBlob(string path);
     
     /// <summary>
     /// Set the ArrivedAtMs value for the given blobPath to the given value.
     /// This is not absolutely necessary but for maximum efficiency should be implemented.
-    /// It is only used when eTags indicate that a local blob is still fresh. 
+    /// It is only used when eTags indicate that a local blob is still fresh.
     /// </summary>
-    /// <param name="blobPath"></param>
-    /// <param name="arrivedAtMs"></param>
-    /// <returns></returns>
+    /// <param name="blobPath">The relative path of the blob to mark as fresh.</param>
+    /// <param name="arrivedAtMs">The arrival time to set, in ms since 1970.</param>
 		Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs);
 	}
 }

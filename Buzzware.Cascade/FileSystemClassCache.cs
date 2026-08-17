@@ -12,6 +12,8 @@ namespace Buzzware.Cascade {
     /// A simple file system-based cache for storing and retrieving instances of a model class with specified ID type.
     /// Implements IModelClassCache to fetch, store, and remove model instances and collections using JSON serialization.
     /// </summary>
+    /// <typeparam name="Model">The model class stored by this cache</typeparam>
+    /// <typeparam name="IdType">The type of the model id</typeparam>
     public class FileSystemClassCache<Model, IdType> : IModelClassCache
         where Model : class {
         
@@ -89,7 +91,7 @@ namespace Buzzware.Cascade {
         /// </summary>
         /// <typeparam name="T">The type of the object to deserialize.</typeparam>
         /// <param name="aPath">The path of the file from which to deserialize the object.</param>
-        /// <returns>The deserialized object of type T, or null if deserialization fails.</returns>
+        /// <returns>The deserialized object of type T, which may be null.</returns>
         protected async Task<T?> DeserializeFromPathAsync<T>(string aPath) {
             return await Task.Run(() => {
                 // Load file content as string
@@ -105,10 +107,11 @@ namespace Buzzware.Cascade {
         }
 
         /// <summary>
-        /// Fetches a model or collection from the file system based on the specified request operation.
+        /// Fetches a model by id (Get) or a collection of ids by key (Query/GetCollection) from the file system,
+        /// honouring the freshness requirements of the request.
         /// </summary>
         /// <param name="requestOp">The operation that specifies what to fetch.</param>
-        /// <returns>Operation response containing the fetched object or a failed status if not found.</returns>
+        /// <returns>An OpResponse containing the fetched value, or a none response when the file is missing or not fresh enough.</returns>
         public async Task<OpResponse> Fetch(RequestOp requestOp) {
             if (requestOp.Type != typeof(Model))
                 throw new Exception("requestOp.Type != typeof(Model)");
@@ -167,6 +170,9 @@ namespace Buzzware.Cascade {
             }
         }
 
+        /// <summary>
+        /// Performs any setup required by the cache. This implementation requires none.
+        /// </summary>
         public async Task Setup() {
         }
 
@@ -189,6 +195,11 @@ namespace Buzzware.Cascade {
             }
         }
         
+        /// <summary>
+        /// Stores each of the given models using its cascade id.
+        /// </summary>
+        /// <param name="results">The model objects to store.</param>
+        /// <param name="arrivedAt">Timestamp of when the models arrived, used for file timestamping.</param>
         public async Task StoreAll(IReadOnlyList<object> results, long arrivedAt) {
             foreach (var result in results)
                 await Store(CascadeTypeUtils.GetCascadeId(result), result, arrivedAt);

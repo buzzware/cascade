@@ -11,6 +11,8 @@ namespace Buzzware.Cascade {
   /// A memory based cache for a given model type designed to store and retrieve instances of models and collections of ids
   /// with associated arrival timestamps
   /// </summary>
+  /// <typeparam name="Model">The model class stored by this cache</typeparam>
+  /// <typeparam name="IdType">The type of the model id</typeparam>
   public class ModelClassCache<Model, IdType> : IModelClassCache 
     where Model : class {
 
@@ -36,6 +38,9 @@ namespace Buzzware.Cascade {
       
     }
     
+    /// <summary>
+    /// Performs any setup required by the cache. This implementation requires none.
+    /// </summary>
     public async Task Setup() {
     }
     
@@ -123,6 +128,11 @@ namespace Buzzware.Cascade {
       models[idTyped] = new Tuple<Model, long>((Model)model, arrivedAt);
     }
 
+    /// <summary>
+    /// Stores each of the given models using its cascade id.
+    /// </summary>
+    /// <param name="results">The model objects to store.</param>
+    /// <param name="arrivedAt">The timestamp when the models were obtained.</param>
     public async Task StoreAll(IReadOnlyList<object> results, long arrivedAt) {
       foreach (var result in results)
         await Store(CascadeTypeUtils.GetCascadeId(result), result, arrivedAt);
@@ -142,7 +152,6 @@ namespace Buzzware.Cascade {
     /// Removes a model instance from the cache based on the given id
     /// </summary>
     /// <param name="id">The identifier of the model to remove.</param>
-    /// <returns></returns>
     public Task Remove(object id) {
       return Remove((IdType)id);
     }
@@ -156,11 +165,11 @@ namespace Buzzware.Cascade {
     }
     
     /// <summary>
-    /// Clears all models and collections from the cache, 
-    /// optionally holding certain elements if specified.
+    /// Clears models and collections from the cache. When exceptHeld is true or olderThan is given,
+    /// models and collections held by the Cascade layer are preserved; otherwise everything is cleared.
     /// </summary>
-    /// <param name="exceptHeld">Indicates whether to exclude certain held items from clearing.</param>
-    /// <param name="olderThan">Optionally specifies a date threshold to restrict which items are cleared.</param>
+    /// <param name="exceptHeld">If true, items held by the Cascade layer are preserved.</param>
+    /// <param name="olderThan">When given, triggers the held-preserving path; this implementation does not filter items by age.</param>
     public async Task ClearAll(bool exceptHeld, DateTime? olderThan = null) {
       if (exceptHeld || olderThan!=null) {
         

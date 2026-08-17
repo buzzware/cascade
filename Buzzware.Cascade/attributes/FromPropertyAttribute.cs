@@ -54,7 +54,7 @@ namespace Buzzware.Cascade {
     /// <exception cref="ArgumentException">Thrown when converterClass does not implement IPropertyConverter.</exception>
     public FromPropertyAttribute(string sourcePropertyName, Type converterClass, params object[] args) {
       if (!converterClass.Implements<IPropertyConverter>())
-        throw new ArgumentException("Converter must implement IBlobConverter");
+        throw new ArgumentException("Converter must implement IPropertyConverter");
       SourcePropertyName = sourcePropertyName;
       Converter = Activator.CreateInstance(converterClass) as IPropertyConverter;
       Arguments = args;

@@ -10,20 +10,36 @@ using Easy.Common.Extensions;
 namespace Buzzware.Cascade {
 
   // Enum for classifying properties
+  /// <summary>
+  /// Classifies the role of a property on a Cascade model class.
+  /// </summary>
   public enum CascadePropertyKind {
+    /// <summary>No kind.</summary>
     None,
+    /// <summary>The property could not be classified.</summary>
     Unknown,
+    /// <summary>An internal property (name begins with an underscore), not treated as model data.</summary>
     Internal,
+    /// <summary>The primary id property, marked with CascadeIdAttribute.</summary>
     Id,
+    /// <summary>A simple data value property of the model.</summary>
     Data,
+    /// <summary>An association property marked with HasOneAttribute.</summary>
     HasOne,
+    /// <summary>An association property marked with HasManyAttribute.</summary>
     HasMany,
+    /// <summary>An association property marked with BelongsToAttribute.</summary>
     BelongsTo,
+    /// <summary>A property populated from a blob, marked with FromBlobAttribute.</summary>
     FromBlob,
+    /// <summary>A property populated from another property, marked with FromPropertyAttribute.</summary>
     FromProperty
   }
 
   // This class holds metadata and utility methods for a property of a Cascade model class
+  /// <summary>
+  /// Holds metadata and utility methods for a property of a Cascade model class.
+  /// </summary>
   public class CascadePropertyInfo {
     
     /// <summary>
@@ -73,34 +89,64 @@ namespace Buzzware.Cascade {
     private readonly PropertyInfo propertyInfo;
 
     // Name of the property
+    /// <summary>
+    /// Name of the property.
+    /// </summary>
     public string Name => propertyInfo.Name;
 
     // Type of the property
+    /// <summary>
+    /// Type of the property.
+    /// </summary>
     public Type Type => propertyInfo.PropertyType;
 
     // Denulled Type of the property
+    /// <summary>
+    /// The property type with any Nullable wrapper removed.
+    /// </summary>
     public Type NotNullType => notNullType;
     private Type notNullType;
 
     // Inner type of enumerable properties, if applicable
+    /// <summary>
+    /// Inner element type of enumerable properties, if applicable.
+    /// </summary>
     public Type? InnerType { get; }
 
     // Inner Denulled type of enumerable properties, if applicable
+    /// <summary>
+    /// Inner element type of enumerable properties with any Nullable wrapper removed, if applicable.
+    /// </summary>
     public Type? InnerNotNullType { get; }
 
     // True if the property type is enumerable, excluding strings
+    /// <summary>
+    /// True if the property type is enumerable, excluding strings.
+    /// </summary>
     public bool IsTypeEnumerable { get; }
 
     // The key Attribute for this kind of Cascade property, if any
+    /// <summary>
+    /// The key Attribute determining the kind of this Cascade property, if any.
+    /// </summary>
     public Attribute? KindAttribute { get; }
 
     // If this property can be read
+    /// <summary>
+    /// True if this property can be read.
+    /// </summary>
     public bool CanRead => propertyInfo.CanRead;
 
     // If this property can be written to
+    /// <summary>
+    /// True if this property can be written to.
+    /// </summary>
     public bool CanWrite => propertyInfo.CanWrite;
 
     // the classified kind of this property
+    /// <summary>
+    /// The classified kind of this property.
+    /// </summary>
     public readonly CascadePropertyKind Kind;
     
     /// <summary>
@@ -144,40 +190,64 @@ namespace Buzzware.Cascade {
   }
   
   // ClassInfo encapsulates details about a class and its properties within the Cascade framework.
+  /// <summary>
+  /// Encapsulates details about a class and its properties within the Cascade framework.
+  /// </summary>
   public class ClassInfo {
     private ImmutableDictionary<String,CascadePropertyInfo> allPropertyInfos;
   
     // All properties contained in the class.
+    /// <summary>
+    /// All readable properties of the class, keyed by name.
+    /// </summary>
     public ImmutableDictionary<string, CascadePropertyInfo> AllPropertyInfos => allPropertyInfos;
   
     private ImmutableDictionary<String,CascadePropertyInfo> dataAndIdPropertyInfos;
   
     // Subset of properties containing 'Data' and 'Id' kinds.
+    /// <summary>
+    /// Subset of properties of the 'Data' and 'Id' kinds, keyed by name.
+    /// </summary>
     public ImmutableDictionary<string, CascadePropertyInfo> DataAndIdPropertyInfos => dataAndIdPropertyInfos;
   
     private ImmutableArray<string> dataAndIdNames;
     
     // The names of all properties marked as 'Data' or 'Id' kinds.
+    /// <summary>
+    /// The names of all properties of the 'Data' or 'Id' kinds.
+    /// </summary>
     public ImmutableArray<string> DataAndIdNames => dataAndIdNames; 
   
     private ImmutableDictionary<String,CascadePropertyInfo> associationinfos;
   
     // Properties involved as associations (HasOne, HasMany, etc.).
+    /// <summary>
+    /// Association properties (HasOne, HasMany, BelongsTo, FromBlob, FromProperty), keyed by name.
+    /// </summary>
     public ImmutableDictionary<string, CascadePropertyInfo> Associationinfos => associationinfos;
   
     private ImmutableDictionary<string, CascadePropertyInfo> dataAndAssociationInfos;
   
     // Combined data, id and associations properties
+    /// <summary>
+    /// Combined data, id and association properties, keyed by name.
+    /// </summary>
     public ImmutableDictionary<string, CascadePropertyInfo> DataAndAssociationInfos => dataAndAssociationInfos; 
     
     private CascadePropertyInfo? idProperty;
   
     // The primary 'Id' property of the class, if available.
+    /// <summary>
+    /// The primary 'Id' property of the class, if available.
+    /// </summary>
     public CascadePropertyInfo? IdProperty => idProperty;
     
     private Type type;
     
     // Type of the class.
+    /// <summary>
+    /// Type of the class.
+    /// </summary>
     public Type Type => type;
 
     /// <summary>
@@ -257,6 +327,9 @@ namespace Buzzware.Cascade {
   }
 
   // FastReflection provides optimized, cached reflection utilities for interacting with object types & properties.
+  /// <summary>
+  /// Provides cached reflection utilities for interacting with object types and properties.
+  /// </summary>
   public static class FastReflection {
 
     static Dictionary<Type, ClassInfo>? classInfos = null;
@@ -268,6 +341,11 @@ namespace Buzzware.Cascade {
       classInfos = null;
     }
 
+    /// <summary>
+    /// Retrieves or constructs ClassInfo for the type given as the type parameter.
+    /// </summary>
+    /// <typeparam name="T">The class/type to get ClassInfo for.</typeparam>
+    /// <returns>ClassInfo containing metadata and properties of the class.</returns>
     public static ClassInfo GetClassInfo<T>() {
       return GetClassInfo(typeof(T));
     }
@@ -301,9 +379,10 @@ namespace Buzzware.Cascade {
     }
     
     /// <summary>
-    /// Gets all properties (name and CascadePropertyInfo) of a specified type.
+    /// Gets properties (name and CascadePropertyInfo) of a specified type, optionally filtered by name.
     /// </summary>
     /// <param name="aType">The class/type to extract properties from.</param>
+    /// <param name="propertyNames">Optional property names to filter the result by; when null all properties are returned.</param>
     /// <returns>A dictionary of property names and their corresponding CascadePropertyInfo.</returns>
     public static IReadOnlyDictionary<String,CascadePropertyInfo> GetPropertyInfos(Type aType, IEnumerable<string>? propertyNames = null) {
       var ci = GetClassInfo(aType);
@@ -450,6 +529,14 @@ namespace Buzzware.Cascade {
       }
     }
 
+    /// <summary>
+    /// Copies property values from a source object to a destination object.
+    /// When propertyNames is null, both objects must be of the same type and all properties are copied,
+    /// otherwise a NotImplementedException is thrown.
+    /// </summary>
+    /// <param name="source">The object to read property values from.</param>
+    /// <param name="destination">The object to write property values to.</param>
+    /// <param name="propertyNames">Optional names of the properties to copy; when null all properties are copied.</param>
     public static void CopyProperties(object source, object destination, IEnumerable<string>? propertyNames = null) {
       var sourceInfo = GetClassInfo(source);
       var destInfo = GetClassInfo(destination);

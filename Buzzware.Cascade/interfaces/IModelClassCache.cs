@@ -18,7 +18,6 @@ namespace Buzzware.Cascade {
     /// <summary>
     /// Implement this for any setup required
     /// </summary>
-    /// <returns></returns>
     Task Setup();
     
     /// <summary>
@@ -27,9 +26,13 @@ namespace Buzzware.Cascade {
     /// <param name="id">The identifier for the model to be stored in the cache.</param>
     /// <param name="model">The actual model instance to cache.</param>
     /// <param name="arrivedAt">Timestamp indicating when the model was fetched or created.</param>
-    /// <returns>bool indicating success of the store operation.</returns>
     Task Store(object id, object model, long arrivedAt);
 
+    /// <summary>
+    /// Caches multiple model instances, each keyed by its own id.
+    /// </summary>
+    /// <param name="results">The model instances to cache.</param>
+    /// <param name="arrivedAt">Timestamp indicating when the models were fetched or created.</param>
     Task StoreAll(IReadOnlyList<object> results, long arrivedAt);
     
     /// <summary>
@@ -38,7 +41,6 @@ namespace Buzzware.Cascade {
     /// <param name="key">String key under which the collection of ids will be stored.</param>
     /// <param name="ids">The collection of identifiers to store.</param>
     /// <param name="aArrivedAt">Timestamp indicating when the collection was fetched or created.</param>
-    /// <returns>bool indicating success of the store operation.</returns>
     Task StoreCollection(string key, IEnumerable ids, long aArrivedAt);
 
     /// <summary>
@@ -52,7 +54,6 @@ namespace Buzzware.Cascade {
     /// Removes a model instance from the cache for a given id
     /// </summary>
     /// <param name="id">The identifier of the model to be removed from the cache.</param>
-    /// <returns>bool indicating success of the remove operation.</returns>
     Task Remove(object id);
 
     /// <summary>
@@ -60,7 +61,6 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="exceptHeld">If true, items marked as 'held' will not be cleared.</param>
     /// <param name="olderThan">Optional: if provided, only items older than this date will be cleared.</param>
-    /// <returns>bool indicating success of the clear operation.</returns>
     Task ClearAll(bool exceptHeld, DateTime? olderThan = null);
   }
 }

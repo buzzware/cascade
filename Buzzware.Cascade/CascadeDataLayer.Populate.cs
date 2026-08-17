@@ -24,7 +24,6 @@ namespace Buzzware.Cascade {
         /// <param name="sequenceBeganMs">Optional request time (milliseconds since 1970) for optimizing caching when multiple requests share the same time</param>
         /// <param name="skipIfSet">If set to true, skips any associations where the property is already filled</param>
         /// <param name="hold">Specifies whether to maintain the acquired data after the method completes</param>
-        /// <returns>A Task that resolves when the operation is complete for all models and associations</returns>
         public async Task Populate(
 			IEnumerable<SuperModel> models, 
 			IEnumerable<string> associations, 
@@ -134,7 +133,7 @@ namespace Buzzware.Cascade {
 		}
 		
 		/// <summary>
-		/// Populates a specified association property on a given model based on its association attribute definition (BelongsTo/HasMany/HasOne).
+		/// Populates a specified association property on a given model based on its association attribute definition (BelongsTo/HasMany/HasOne/FromBlob/FromProperty).
 		/// </summary>
 		/// <param name="model">The model to apply the association on</param>
 		/// <param name="association">The property name on the model that is to be populated</param>
@@ -143,7 +142,6 @@ namespace Buzzware.Cascade {
 		/// <param name="skipIfSet">If true and the property is already set, the operation will be skipped for performance reasons</param>
 		/// <param name="hold">Determines whether to hold the data or not during the operation</param>
 		/// <param name="sequenceBeganMs">Optional request time (milliseconds since 1970) used for optimizing caching when a group of requests share the same time</param>
-		/// <returns>A Task that resolves when the operation has completed</returns>
 		public async Task Populate(
 			SuperModel model, 
 			string association, 
@@ -166,7 +164,6 @@ namespace Buzzware.Cascade {
 		/// <param name="skipIfSet">If true, skips all associations for which the properties are already set</param>
 		/// <param name="hold">Determines whether to hold the data during the operation</param>
 		/// <param name="sequenceBeganMs">Optional request time (milliseconds since 1970) for optimizing caching</param>
-		/// <returns>A Task that resolves when the operation has completed</returns>
 		public async Task Populate(SuperModel model, IEnumerable<string> associations, int? freshnessSeconds = null, int? fallbackFreshnessSeconds = null, bool skipIfSet = false, bool? hold = null, long? sequenceBeganMs = null) {
 			await Populate(new [] {model}, associations, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, sequenceBeganMs);
 		}
@@ -176,18 +173,22 @@ namespace Buzzware.Cascade {
 		/// Populates a specific association property on each of the provided models using its association attribute definition.
 		/// </summary>
 		/// <param name="models">The collection of models to be populated</param>
-		/// <param name="property">The property name that each model should populate based on its association attribute definition</param>
-		/// <param name="association">The association to populate for each given model</param>
+		/// <param name="association">The name of the association property to populate on each given model</param>
 		/// <param name="freshnessSeconds">The maximum age in seconds for the data to be considered fresh</param>
 		/// <param name="fallbackFreshnessSeconds">Defines a fallback freshness if the main constraint cannot be met. Defaults to FRESHNESS_ANY.</param>
 		/// <param name="skipIfSet">Skip the operation for properties that have already been set, improving performance</param>
 		/// <param name="hold">Determines if the data will persist after execution</param>
 		/// <param name="sequenceBeganMs">An optional time in milliseconds since 1970 to be applied to optimize caching for grouped requests</param>
-		/// <returns>A Task that resolves when the operation is complete across all models and associations specified</returns>
 		public async Task Populate(IEnumerable<SuperModel> models, string association, int? freshnessSeconds = null,int? fallbackFreshnessSeconds = null,  bool skipIfSet = false, bool? hold = null, long? sequenceBeganMs = null) {
 			await Populate(models, new [] {association}, freshnessSeconds, fallbackFreshnessSeconds, skipIfSet, hold, sequenceBeganMs);
 		}
 
+        /// <summary>
+        /// Extracts the result of an OpResponse as a byte array. Returns a byte[] result directly,
+        /// reads a Stream result fully into memory, and recurses when the result is a nested OpResponse.
+        /// </summary>
+        /// <param name="response">The response whose Result is to be converted, may be null</param>
+        /// <returns>The result as a byte array, or null if the response is null or its result is not convertible</returns>
         private byte[]? GetResponseBytes(OpResponse? response)
         {
             if (response == null) return null;

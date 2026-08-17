@@ -87,6 +87,12 @@ namespace Buzzware.Cascade.Utilities
       return report.ToString();
     }
 
+    /// <summary>
+    /// Times the execution of the given async task using a new TimingProfiler,
+    /// logging a start message and then the timing report at Debug level.
+    /// </summary>
+    /// <param name="name">The name identifying the task in log output.</param>
+    /// <param name="task">The async task to execute and time.</param>
     public static async Task LogTask(string name, Func<Task> task)
     {
       var tp = new TimingProfiler(name);

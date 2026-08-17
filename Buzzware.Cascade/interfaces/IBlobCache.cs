@@ -25,15 +25,21 @@ namespace Buzzware.Cascade {
     /// Attempts to retrieve an operation response from the cache based on a request operation.
     /// </summary>
     /// <param name="requestOp">The request operation used to query the cache.</param>
-    /// <returns>An OpResponse if found in the cache; otherwise, may generate a cache miss.</returns>
+    /// <returns>An OpResponse containing the blob data when found and fresh enough, otherwise a none/empty response indicating a cache miss.</returns>
     Task<OpResponse> Fetch(RequestOp requestOp);
 
     /// <summary>
     /// Stores a specific operation response in the cache.
     /// </summary>
     /// <param name="opResponse">The operation response to store in the cache.</param>
+    /// <returns>The given opResponse, possibly with a modified result reflecting how it was stored.</returns>
     Task<OpResponse> Store(OpResponse opResponse);
 
+    /// <summary>
+    /// Notifies the cache that the blob at the given path is fresh as of the given arrival time, so its arrival time should be updated.
+    /// </summary>
+    /// <param name="blobPath">The relative path of the blob to mark as fresh.</param>
+    /// <param name="arrivedAtMs">The arrival time to set, in ms since 1970.</param>
     Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs);
 
     /// <summary>
@@ -44,10 +50,14 @@ namespace Buzzware.Cascade {
     /// <summary>
     /// Get the absolute file system path for a given blob path
     /// </summary>
-    /// <param name="blobPath"></param>
-    /// <returns></returns>
+    /// <param name="blobPath">The relative path of the blob.</param>
+    /// <returns>The absolute file system path where the blob is stored.</returns>
     string GetAbsoluteFilePath(string blobPath);
 
+    /// <summary>
+    /// Removes the blob at the given path from the cache.
+    /// </summary>
+    /// <param name="blobPath">The relative path of the blob to remove.</param>
     Task Clear(string blobPath);
   }
 }

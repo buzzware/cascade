@@ -53,7 +53,7 @@ namespace Buzzware.Cascade {
 		/// <param name="collectionName">The name of the collection to be updated.</param>
 		/// <param name="id">The id to prepend to the collection.</param>
 		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
-		/// <returns>The updated collection as an IEnumerable of objects.</returns>
+		/// <returns>The updated collection, or an empty array (without modifying the cache) if the collection is not present.</returns>
 		public async Task<IEnumerable<object>> CollectionPrepend<Model>(string collectionName, object id) where Model : class {
 			var collection = await GetCollection<Model>(collectionName);
 			if (collection == null)
@@ -71,7 +71,7 @@ namespace Buzzware.Cascade {
 		/// <param name="collectionName">The name of the collection to be updated.</param>
 		/// <param name="id">The id to append to the collection.</param>
 		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
-		/// <returns>The updated collection as an IEnumerable of objects.</returns>
+		/// <returns>The updated collection, or an empty array (without modifying the cache) if the collection is not present.</returns>
 		public async Task<IEnumerable<object>> CollectionAppend<Model>(string collectionName, object id) where Model : class {
 			var collection = await GetCollection<Model>(collectionName);
 			if (collection == null)
@@ -91,6 +91,8 @@ namespace Buzzware.Cascade {
 		/// <param name="item">the item - can be a string (eg. a collection name for a collection of collections) or number - doesn't have to be a valid id in the collection</param>
 		/// <param name="remove">Specifies whether to remove the item from the association.</param>
 		/// <param name="ensureItem">Indicates if the item should be ensured in the association, avoiding duplicates.</param>
+		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
+		/// <returns>The resulting collection after any modification.</returns>
 		protected async Task<IReadOnlyList<object>> CollectionReplaceRemoveItem<Model>(string collectionName, object item, bool remove = false, bool ensureItem = false) where Model : class {
 			var collection = (await GetCollection<Model>(collectionName) ?? ImmutableArray<Model>.Empty).ToImmutableArray() ;
 			
@@ -117,8 +119,10 @@ namespace Buzzware.Cascade {
 		/// <summary>
 		/// Replaces an item in the collection only if it already exists
 		/// </summary>
-		/// <param name="collectionName"></param>
-		/// <param name="item"></param>
+		/// <param name="collectionName">The name of the collection to modify.</param>
+		/// <param name="item">The item to replace the existing equal item with.</param>
+		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
+		/// <returns>The resulting collection.</returns>
 		public Task<IReadOnlyList<object>> CollectionReplaceItem<Model>(string collectionName, object item) where Model : class {
 			return CollectionReplaceRemoveItem<Model>(collectionName, item, remove: false);
 		}
@@ -126,8 +130,10 @@ namespace Buzzware.Cascade {
 		/// <summary>
 		/// Removes an item from the collection if it exists
 		/// </summary>
-		/// <param name="collectionName"></param>
-		/// <param name="item"></param>
+		/// <param name="collectionName">The name of the collection to modify.</param>
+		/// <param name="item">The item to remove.</param>
+		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
+		/// <returns>The resulting collection.</returns>
 		public Task<IReadOnlyList<object>> CollectionRemoveItem<Model>(string collectionName, object item) where Model : class {
 			return CollectionReplaceRemoveItem<Model>(collectionName, item, remove: true);
 		}
@@ -135,8 +141,10 @@ namespace Buzzware.Cascade {
 		/// <summary>
 		/// Ensures that an item exists in the collection - by replacing or adding
 		/// </summary>
-		/// <param name="collectionName"></param>
-		/// <param name="item"></param>
+		/// <param name="collectionName">The name of the collection to modify.</param>
+		/// <param name="item">The item to replace or add.</param>
+		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
+		/// <returns>The resulting collection.</returns>
 		public Task<IReadOnlyList<object>> CollectionEnsureItem<Model>(string collectionName, object item) where Model : class {
 			return CollectionReplaceRemoveItem<Model>(collectionName, item, remove: false, ensureItem: true);
 		}
@@ -148,7 +156,7 @@ namespace Buzzware.Cascade {
 		/// <param name="modelType">The type of model for which the association cache is being replaced.</param>
 		/// <param name="propertyName">The foreign key property name that defines the association.</param>
 		/// <param name="propertyValue">The foreign key property value that defines the association.</param>
-		/// <param name="collection">An enumerable of ids representing the new association values.</param>
+		/// <param name="collection">An enumerable of models or ids representing the new association values; models are converted to their ids before storing.</param>
 		public async Task SetCacheWhereCollection(Type modelType, string propertyName, string propertyValue, IEnumerable<object> collection) {
 			IEnumerable<object>? ids;
 			var enumerable = collection as object[] ?? collection.ToArray();
@@ -194,7 +202,7 @@ namespace Buzzware.Cascade {
 		/// </summary>
 		/// <param name="id">The unique identifier of the model.</param>
 		/// <typeparam name="Model">Specifies the model type of the record.</typeparam>
-		/// <returns>The arrivedAt time in milliseconds since 1970, or -1 if not present in any cache layer.</returns>
+		/// <returns>The arrivedAt time in milliseconds since 1970, or null if not present in any cache layer.</returns>
 		public async Task<long?> GetArrivedAt<Model>(object id) where Model : class {
 			var req = RequestOp.GetOp<Model>(id, NowMs, freshnessSeconds: RequestOp.FRESHNESS_ANY);
 			foreach (var layer in CacheLayers) {
@@ -205,6 +213,14 @@ namespace Buzzware.Cascade {
 			return null;
 		}
 
+		/// <summary>
+		/// Determines whether a cached record has expired based on its arrivedAt timestamp and the given freshness period.
+		/// Returns false if the record is not present in any cache layer.
+		/// </summary>
+		/// <param name="id">The unique identifier of the model.</param>
+		/// <param name="fallbackSeconds">Freshness period in seconds, defaulting to Config.GetFallbackFreshnessSeconds for the model type. FALLBACK_NEVER means always expired; FALLBACK_ANY means never expires.</param>
+		/// <typeparam name="Model">Specifies the model type of the record.</typeparam>
+		/// <returns>True if the record is cached and older than the freshness period, otherwise false.</returns>
 		public async Task<bool> HasExpired<Model>(object id, int? fallbackSeconds = null) where Model : class {
 			var arrivedAtMs = await GetArrivedAt<Model>(id);
 			if (arrivedAtMs == null)
@@ -223,7 +239,7 @@ namespace Buzzware.Cascade {
 		/// </summary>
 		/// <param name="name">The name of the collection.</param>
 		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
-		/// <returns>The arrivedAt time in milliseconds since 1970, or -1 if not present in any cache layer.</returns>
+		/// <returns>The arrivedAt time in milliseconds since 1970, or null if not present in any cache layer.</returns>
 		public async Task<long?> GetCollectionArrivedAt<Model>(string name) where Model : class {
 			var req = RequestOp.GetCollectionOp<Model>(name, NowMs, freshnessSeconds: RequestOp.FRESHNESS_ANY);
 			foreach (var layer in CacheLayers) {
@@ -234,6 +250,14 @@ namespace Buzzware.Cascade {
 			return null;
 		}
 
+		/// <summary>
+		/// Determines whether a cached collection has expired based on its arrivedAt timestamp and the given freshness period.
+		/// Returns false if the collection is not present in any cache layer.
+		/// </summary>
+		/// <param name="name">The name of the collection.</param>
+		/// <param name="fallbackSeconds">Freshness period in seconds, defaulting to Config.GetFallbackFreshnessSeconds for the model type.</param>
+		/// <typeparam name="Model">Specifies the model type of the collection.</typeparam>
+		/// <returns>True if the collection is cached and older than the freshness period, otherwise false.</returns>
 		public async Task<bool> HasCollectionExpired<Model>(string name, int? fallbackSeconds = null) where Model : class {
 			var arrivedAtMs = await GetCollectionArrivedAt<Model>(name);
 			if (arrivedAtMs == null)
@@ -247,6 +271,7 @@ namespace Buzzware.Cascade {
 		/// Store data in all previous cache layers that come before the current layer where the operation was found.
 		/// </summary>
 		/// <param name="opResponse">The response containing operation details, results, and layer information.</param>
+		/// <returns>The OpResponse, potentially updated by cache layer Store calls.</returns>
 		private async Task<OpResponse> StoreInPreviousCaches(OpResponse opResponse) {
 			if (opResponse.LayerIndex == 0)
 				return opResponse;
@@ -299,6 +324,13 @@ namespace Buzzware.Cascade {
 			}
 		}
 
+		/// <summary>
+		/// Clears cached records of the specified model types from all cache layers, optionally also clearing blobs.
+		/// </summary>
+		/// <param name="modelTypes">The model types whose cached records will be cleared.</param>
+		/// <param name="clearBlobs">If true, also clears blobs from each cache layer.</param>
+		/// <param name="exceptHeld">If true, entries marked as held will not be cleared.</param>
+		/// <param name="olderThan">Optional: clear only items older than this DateTime.</param>
 		public async Task ClearCache(
 			IEnumerable<Type>  modelTypes,
 			bool clearBlobs = false,

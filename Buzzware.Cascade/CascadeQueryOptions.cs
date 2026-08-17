@@ -3,8 +3,7 @@ using System.Collections.Generic;
 namespace Buzzware.Cascade {
 
   /// <summary>
-  /// Represents the options for a Cascade query including various settings 
-  /// and preferences that can influence the query execution and results.
+  /// Represents options for a Cascade query. Currently only specifies which associations to populate.
   /// </summary>
   class CascadeQueryOptions {
 

@@ -110,6 +110,13 @@ namespace Buzzware.Cascade {
 			await destinationStream.WriteAsync(content, 0, content.Length);
 		}
 
+    /// <summary>
+    /// Reads all remaining bytes from a stream into a byte array. MemoryStream and other
+    /// seekable streams are read directly from their current position (a MemoryStream's
+    /// position is restored afterwards); non-seekable streams are copied via a MemoryStream.
+    /// </summary>
+    /// <param name="stream">The stream to read bytes from. Must not be null.</param>
+    /// <returns>A byte array containing the bytes read from the stream.</returns>
 		public static byte[] BytesFromStream(Stream stream) {
 			if (stream == null)
 				throw new ArgumentNullException(nameof(stream));
@@ -186,6 +193,14 @@ namespace Buzzware.Cascade {
 			}
 		}    
     
+    /// <summary>
+    /// Asynchronously reads all remaining bytes from a stream into a byte array.
+    /// MemoryStream and other seekable streams are read from their current position;
+    /// non-seekable streams are copied via a MemoryStream.
+    /// </summary>
+    /// <param name="stream">The stream to read bytes from. Must not be null.</param>
+    /// <param name="cancellationToken">Token used to cancel the read operation.</param>
+    /// <returns>A byte array containing the bytes read from the stream.</returns>
 		public static async Task<byte[]> BytesFromStreamAsync(Stream stream, CancellationToken cancellationToken = default)
 		{
 			if (stream == null)
@@ -319,6 +334,14 @@ namespace Buzzware.Cascade {
 		}
     
     
+    /// <summary>
+    /// Copies the source stream to a file, then opens and returns a new read-only stream
+    /// on that file (FileShare.Read). If anything fails, the partially written file is
+    /// deleted and the original exception is rethrown.
+    /// </summary>
+    /// <param name="sourceStream">The stream whose contents are written to the file.</param>
+    /// <param name="filePath">The path of the file to create and then reopen for reading.</param>
+    /// <returns>A readable FileStream opened on the newly written file.</returns>
 		public static async Task<Stream> StreamToFileAndNewStream(Stream sourceStream, string filePath) {
 			try {
 				// 1. Create the file and copy the source data into it
@@ -346,14 +369,15 @@ namespace Buzzware.Cascade {
 		private const int MAX_WRITE_ATTEMPTS = 5;
 
     /// <summary>
-    /// Tries to perform a file operation with a specified number of attempts
-    /// and optional sleep time between attempts. Used to handle transient 
-    /// file sharing issues.
+    /// Tries to perform a file operation with a specified number of attempts,
+    /// sleeping a random 1..sleepMs milliseconds between attempts. Only file
+    /// sharing/locking exceptions are retried; any other exception is rethrown
+    /// immediately.
     /// </summary>
     /// <typeparam name="T">The type returned by the file operation.</typeparam>
     /// <param name="func">The file operation func to attempt.</param>
     /// <param name="maxAttempts">Maximum number of attempts before throwing an exception.</param>
-    /// <param name="sleepMs">Time in milliseconds to sleep between attempts.</param>
+    /// <param name="sleepMs">Upper bound in milliseconds for the random sleep between attempts; 0 disables sleeping.</param>
     /// <returns>The result of the file operation if successful.</returns>
 		public static T EnsureFileOperationSync<T>(
 			Func<T> func,
@@ -382,13 +406,14 @@ namespace Buzzware.Cascade {
 		}
 
     /// <summary>
-    /// Tries to perform a file operation with a specified number of attempts
-    /// and optional sleep time between attempts. Used to handle transient 
-    /// file sharing issues.
+    /// Tries to perform a void file operation with a specified number of attempts,
+    /// sleeping a random 1..sleepMs milliseconds between attempts. Only file
+    /// sharing/locking exceptions are retried; any other exception is rethrown
+    /// immediately.
     /// </summary>
     /// <param name="func">The file operation action to attempt.</param>
     /// <param name="maxAttempts">Maximum number of attempts before throwing an exception.</param>
-    /// <param name="sleepMs">Time in milliseconds to sleep between attempts.</param>
+    /// <param name="sleepMs">Upper bound in milliseconds for the random sleep between attempts; 0 disables sleeping.</param>
 		public static void EnsureFileOperationSync(
 			Action func,
 			int maxAttempts = 5,
@@ -406,7 +431,7 @@ namespace Buzzware.Cascade {
 		
     /// <summary>
     /// Asynchronously attempts a file operation multiple times, waiting between attempts.
-    /// Used to handle transient sharing issues with I/O operations.
+    /// Only IOException is retried; any other exception propagates immediately.
     /// </summary>
     /// <typeparam name="T">The type returned by the async operation.</typeparam>
     /// <param name="func">The async function to attempt.</param>
@@ -438,12 +463,11 @@ namespace Buzzware.Cascade {
 
     /// <summary>
     /// Asynchronously attempts a void file operation multiple times, waiting between attempts.
-    /// Used to handle transient sharing issues with I/O operations.
+    /// Only IOException is retried; any other exception propagates immediately.
     /// </summary>
     /// <param name="func">The async operation to attempt.</param>
     /// <param name="maxAttempts">Maximum number of attempts before failing.</param>
     /// <param name="sleepMs">Milliseconds to wait between attempts.</param>
-    /// <returns>An awaitable Task.</returns>
 		public static Task EnsureFileOperation(
 			Func<Task> func,
 			int maxAttempts = 5,
@@ -476,10 +500,11 @@ namespace Buzzware.Cascade {
 		}
 
     /// <summary>
-    /// Checks if an exception is related to network issues excluding typical file sharing problems.
+    /// Checks if an exception is an IOException other than a file sharing/locking error,
+    /// which is treated as indicating a network I/O issue.
     /// </summary>
     /// <param name="exception">The exception to evaluate.</param>
-    /// <returns>True if the exception is a network IO exception, but not due to file sharing.</returns>
+    /// <returns>True if the exception is an IOException not caused by file sharing/locking; otherwise, false.</returns>
 		public static bool IsNetworkIOException(Exception exception) {
 			var ioException = exception as IOException;
 			if (ioException == null)
@@ -584,8 +609,8 @@ namespace Buzzware.Cascade {
 		}		
 
     /// <summary>
-    /// Returns the path up to and including the named folder within a given path.
-    /// If the folder is not found, returns null.
+    /// Returns the path up to and including the last occurrence of the named folder
+    /// within a given '/'-separated path. If the folder is not found, returns null.
     /// </summary>
     /// <param name="path">The full path in which to search for the folder.</param>
     /// <param name="folderName">The name of the folder to find.</param>
@@ -614,6 +639,16 @@ namespace Buzzware.Cascade {
 		}
 
 		// run a series of tasks with the given limit of parallel threads 
+    /// <summary>
+    /// Runs the given async process over each item, limiting the number running
+    /// concurrently with a semaphore, and awaits them all.
+    /// </summary>
+    /// <typeparam name="In">The type of the items to process.</typeparam>
+    /// <typeparam name="Out">The type returned by process for each item.</typeparam>
+    /// <param name="items">The items to process.</param>
+    /// <param name="maxDegreeOfParallelism">Maximum number of items processed concurrently.</param>
+    /// <param name="process">The async operation to run for each item.</param>
+    /// <returns>The results of process for the items, in task creation order.</returns>
 		public static async Task<Out[]> ProcessParallel<In,Out>(IEnumerable<In> items, int maxDegreeOfParallelism, Func<In, Task<Out>> process) {
 			var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
 			var tasks = new List<Task<Out>>();
@@ -719,16 +754,34 @@ namespace Buzzware.Cascade {
       return System.Text.Encoding.UTF8.GetString(bytes.ToArray());
     }
 
+    /// <summary>
+    /// Determines whether a character is a hexadecimal digit (0-9, A-F or a-f).
+    /// </summary>
+    /// <param name="c">The character to test.</param>
+    /// <returns>True if the character is a hex digit; otherwise, false.</returns>
     private static bool IsHexDigit(char c) {
       return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
     }
 
+    /// <summary>
+    /// Returns the numeric value (0-15) of a hexadecimal digit character.
+    /// </summary>
+    /// <param name="c">The hex digit character to convert.</param>
+    /// <returns>The numeric value of the hex digit.</returns>
     private static int HexValue(char c) {
       if (c >= '0' && c <= '9') return c - '0';
       if (c >= 'A' && c <= 'F') return c - 'A' + 10;
       return c - 'a' + 10;
     }
 
+    /// <summary>
+    /// Runs the given async process over each item, limiting the number running
+    /// concurrently with a semaphore, and awaits them all.
+    /// </summary>
+    /// <typeparam name="In">The type of the items to process.</typeparam>
+    /// <param name="items">The items to process.</param>
+    /// <param name="maxDegreeOfParallelism">Maximum number of items processed concurrently.</param>
+    /// <param name="process">The async operation to run for each item.</param>
 		public static async Task ProcessParallel<In>(IReadOnlyList<In> items, int maxDegreeOfParallelism, Func<In, Task> process) {
 			var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
 			var tasks = new List<Task>();
@@ -916,6 +969,7 @@ namespace Buzzware.Cascade {
     /// Observes the eventual fault of an abandoned task so it cannot surface as an
     /// UnobservedTaskException, logging it for diagnostics.
     /// </summary>
+    /// <param name="task">The abandoned task whose eventual fault should be observed.</param>
 		private static void ObserveAbandoned(Task task) {
 			task.ContinueWith(
 				t => Log.Debug(t.Exception, "ProcessParallelFailFast: abandoned item later faulted"),
@@ -924,6 +978,15 @@ namespace Buzzware.Cascade {
 				TaskScheduler.Default);
 		}
 
+    /// <summary>
+    /// Determines whether a cached value that arrived at arrivedAtMs has expired
+    /// according to the given fallback period. FALLBACK_NEVER means always expired
+    /// and FALLBACK_ANY means never expires.
+    /// </summary>
+    /// <param name="nowMs">The current time in unix milliseconds.</param>
+    /// <param name="fallbackSeconds">The fallback period in seconds, or the special values RequestOp.FALLBACK_NEVER/FALLBACK_ANY.</param>
+    /// <param name="arrivedAtMs">The time the value arrived, in unix milliseconds.</param>
+    /// <returns>True if the value is considered expired; otherwise, false.</returns>
 		public static bool HasArrivedAtExpired(long nowMs, long fallbackSeconds, long arrivedAtMs) {
 			if (fallbackSeconds==RequestOp.FALLBACK_NEVER)	// always expired
 				return true;
@@ -932,6 +995,16 @@ namespace Buzzware.Cascade {
 			return arrivedAtMs < (nowMs-fallbackSeconds*1000L);
 		}
 
+    /// <summary>
+    /// Calculates the freshness state of a cached value. Returns Absent when arrivedAtMs
+    /// is null; Fresh when within freshnessSeconds (or freshnessSeconds is FRESHNESS_ANY);
+    /// Stale when within fallbackSeconds (or fallbackSeconds is FALLBACK_ANY); otherwise Expired.
+    /// </summary>
+    /// <param name="nowMs">The current time in unix milliseconds.</param>
+    /// <param name="arrivedAtMs">The time the value arrived in unix milliseconds, or null if it never arrived.</param>
+    /// <param name="freshnessSeconds">The freshness period in seconds, or the special values RequestOp.FRESHNESS_ANY/FRESHNESS_FRESHEST.</param>
+    /// <param name="fallbackSeconds">The fallback period in seconds, or the special values RequestOp.FALLBACK_ANY/FALLBACK_NEVER.</param>
+    /// <returns>The FreshnessState of the value: Absent, Fresh, Stale or Expired.</returns>
 		public static FreshnessState CalcFreshnessState(long nowMs, long? arrivedAtMs, long freshnessSeconds, long fallbackSeconds) {
 			if (!arrivedAtMs.HasValue)
 				return FreshnessState.Absent;
@@ -944,6 +1017,13 @@ namespace Buzzware.Cascade {
 			return withinFallback ? FreshnessState.Stale : FreshnessState.Expired;
 		}
 
+    /// <summary>
+    /// Returns the greater of two nullable freshness states. If either is null,
+    /// the other is returned; null is returned only when both are null.
+    /// </summary>
+    /// <param name="state1">The first freshness state to compare.</param>
+    /// <param name="state2">The second freshness state to compare.</param>
+    /// <returns>The maximum of the two states, or null if both are null.</returns>
 		public static FreshnessState? FreshnessStateMax(FreshnessState? state1, FreshnessState? state2) {
 			if (state1 == null || state2 == null) {
 				if (state1 == null)
@@ -960,6 +1040,12 @@ namespace Buzzware.Cascade {
 			}
 		}
 		
+    /// <summary>
+    /// Returns the greater of two freshness states.
+    /// </summary>
+    /// <param name="state1">The first freshness state to compare.</param>
+    /// <param name="state2">The second freshness state to compare.</param>
+    /// <returns>The maximum of the two states.</returns>
 		public static FreshnessState FreshnessStateMax(FreshnessState state1, FreshnessState state2) {
 			if (state1==state2)
 				return state1;
@@ -969,12 +1055,24 @@ namespace Buzzware.Cascade {
 				return state2;
 		}
 
+    /// <summary>
+    /// Produces a stable hash for a dictionary, independent of key order, by ordinally
+    /// sorting the keys, serializing to JSON and hashing the result with StringHexHash.
+    /// </summary>
+    /// <param name="mainListCriteria">The dictionary to hash.</param>
+    /// <returns>A hexadecimal hash string of the dictionary contents.</returns>
 		public static string HashDictionaryStable(IDictionary<string, object> mainListCriteria) {
 			var ordered =  new SortedDictionary<string, object>(mainListCriteria, StringComparer.Ordinal);  
 			var str = JsonSerializer.Serialize(ordered);
 			return StringHexHash(str);
 		}
 
+    /// <summary>
+    /// Hashes a string using a 64 bit FNV hash and returns it as an uppercase
+    /// hexadecimal string.
+    /// </summary>
+    /// <param name="str">The string to hash.</param>
+    /// <returns>The hexadecimal representation of the 64 bit hash.</returns>
 		public static string StringHexHash(string str)
 		{
 			var hash = (long)FNVHash.GetHash(str, 64);

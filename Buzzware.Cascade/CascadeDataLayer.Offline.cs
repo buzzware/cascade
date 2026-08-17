@@ -17,7 +17,7 @@ namespace Buzzware.Cascade {
 	public partial class CascadeDataLayer {
 
 		/// <summary>
-		/// Gets the count of pending changes when the connection is offline.
+		/// Gets the count of pending changes when the connection is offline. Returns 0 when online.
 		/// </summary>
 		public int PendingCount
 		{
@@ -296,7 +296,7 @@ namespace Buzzware.Cascade {
 		/// <summary>
 		/// Process a single change from GetChangesPending() and remove it from the ChangesPending store
 		/// </summary>
-		/// <param name="change"></param>
+		/// <param name="change">Tuple of (filename, RequestOp, externals dictionary) as returned by GetChangesPending()</param>
 		public async Task ProcessAndRemovePendingChange(
 			Tuple<string, RequestOp, IReadOnlyDictionary<string, string>?> change
 		) {

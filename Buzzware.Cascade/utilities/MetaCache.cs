@@ -108,7 +108,7 @@ namespace Buzzware.Cascade {
     /// <summary>
     /// Clears metadata from the local cache and optionally removes files older than a specified date from the data layer.
     /// </summary>
-    /// <param name="olderThan">An optional parameter to specify a date. Files older than this date will be removed.</param>
+    /// <param name="olderThan">Optional date; when given, only files older than this date are removed and the cache is then reloaded.</param>
 		public void MetaClear(DateTime? olderThan = null) {
 			store.Clear();
 

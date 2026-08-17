@@ -14,6 +14,7 @@ namespace Buzzware.Cascade {
     /// Queries the underlying data store using provided criteria and retrieves a collection of matching model objects.
     /// </summary>
     /// <param name="criteria">The search criteria used to filter data</param>
+    /// <param name="requestOp">The request operation</param>
     /// <returns>A collection of model objects that meet the specified criteria</returns>
 		Task<IEnumerable> Query(object criteria, RequestOp requestOp);
 

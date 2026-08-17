@@ -9,13 +9,13 @@ using System.Text.Json.Serialization;
 namespace Buzzware.Cascade {
 
   /// <summary>
-  /// Custom JSON converter for serializing and deserializing 
-  /// ImmutableDictionary<string, object?> using System.Text.Json.
+  /// Custom JSON converter for serializing and deserializing
+  /// <c>ImmutableDictionary&lt;string, object?&gt;</c> using System.Text.Json.
   /// </summary>
   public class ImmutableDictionaryJsonConverter : JsonConverter<ImmutableDictionary<string, object?>>
   {
     /// <summary>
-    /// Reads and converts JSON to an ImmutableDictionary<string, object?>. 
+    /// Reads and converts JSON to an <c>ImmutableDictionary&lt;string, object?&gt;</c>.
     /// Handles different token types and ensures proper deserialization.
     /// </summary>
     /// <param name="reader">The reference to the JSON reader.</param>
@@ -86,7 +86,7 @@ namespace Buzzware.Cascade {
     // writer.WriteStringValue(jsonString);
 
     /// <summary>
-    /// Writes the specified ImmutableDictionary<string, object?> to JSON.
+    /// Writes the specified <c>ImmutableDictionary&lt;string, object?&gt;</c> to JSON.
     /// Iterates over key-value pairs to handle serialization.
     /// </summary>
     /// <param name="writer">JSON writer to output the JSON.</param>

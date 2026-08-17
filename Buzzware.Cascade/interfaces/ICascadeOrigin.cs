@@ -32,7 +32,6 @@ namespace Buzzware.Cascade {
     /// Ensures that the session is authenticated, potentially for a specific type.
     /// </summary>
     /// <param name="type">The type for which authentication is being ensured. Defaults to null.</param>
-    /// <returns>A task representing the authentication process.</returns>
 		Task EnsureAuthenticated(Type? type=null);
 		
     /// <summary>

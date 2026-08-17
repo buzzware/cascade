@@ -21,17 +21,21 @@ namespace Buzzware.Cascade.Testing {
 
     private readonly Dictionary<Type,IModelClassOrigin> classOrigins;
     private readonly Dictionary<string,byte[]> blobs;
+    /// <summary>
+    /// Maps blob paths to their ETag values, for simulating ETag-based caching of blob requests.
+    /// </summary>
     public readonly FriendlyDictionary<string,string> ETags;
     
     /// <summary>
-    /// Simulates offline behavior when set to true, throwing a NoNetworkException during request processing.
+    /// Simulates offline behavior when set to true, causing ProcessRequest to throw
+    /// OriginAccessFailure (connection online) or DataNotAvailableOffline (connection offline).
     /// </summary>
     public bool ActLikeOffline { get; set; }
 
     /// <summary>
     /// MockOrigin2 Constructor for initializing the class with a set of class origins and an optional timestamp.
     /// </summary>
-    /// <param name="classOrigins">Dictionary associating type information with model class origins.</param>
+    /// <param name="classOrigins">Dictionary associating type information with model class origins. Each class origin's Origin property is set to this instance.</param>
     /// <param name="nowMs">The current timestamp in milliseconds. Defaults to 1000.</param>
     public MockOrigin2(
       Dictionary<Type, IModelClassOrigin> classOrigins, 
@@ -52,7 +56,8 @@ namespace Buzzware.Cascade.Testing {
     /// <param name="request">The request operation to process.</param>
     /// <param name="connectionOnline">Flag indicating if the connection is online or simulated to be offline.</param>
     /// <returns>An OpResponse representing the result of the operation.</returns>
-    /// <exception cref="NoNetworkException">Thrown if ActLikeOffline is true simulating a network failure.</exception>
+    /// <exception cref="OriginAccessFailure">Thrown if ActLikeOffline is true and connectionOnline is true.</exception>
+    /// <exception cref="DataNotAvailableOffline">Thrown if ActLikeOffline is true and connectionOnline is false.</exception>
     public override async Task<OpResponse> ProcessRequest(RequestOp request, bool connectionOnline) {
 
       RequestCount += 1;
@@ -199,24 +204,15 @@ namespace Buzzware.Cascade.Testing {
       return model;
     }
 
+    /// <summary>
+    /// Stores the given model in the matching MockModelClassOrigin, keyed by its cascade id.
+    /// </summary>
+    /// <typeparam name="M">The type of the model to store.</typeparam>
+    /// <param name="model">The model to store.</param>
     public async Task Put<M>(M model) where M : SuperModel {
       var id = CascadeTypeUtils.GetCascadeId(model);
       var co = classOrigins[typeof(M)] as MockModelClassOrigin<M>;
       await co!.Store(id, model);
     }
-
-    // public CascadeDataLayer Buzzware.Cascade { get; set; } 
-    //
-    // public long NowMs { get; set; }
-    //
-    // public long IncNowMs(long incMs=1000) {
-    //  return NowMs += incMs;
-    // }
-    //
-    // public Task<OpResponse> ProcessRequest(RequestOp request) {
-    //  if (HandleRequest != null)
-    //    return HandleRequest(this,request);
-    //  throw new NotImplementedException("Attach HandleRequest or override this");
-    // }
   }
 }

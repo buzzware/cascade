@@ -39,7 +39,7 @@ public class DataNotAvailableOffline : StandardException {
 public class OperationNotAvailableOffline : StandardException {
 
   /// <summary>
-  /// Default error message indicating the server could not be reached and the operation is unavailable offline.
+  /// Default error message indicating the operation is not available locally and the client is in offline mode.
   /// </summary>
   public new const string DefaultMessage = "The operation is not available locally and the client is in offline mode.";
 
@@ -80,11 +80,11 @@ public class OriginAccessFailure : NoNetworkException {
   public new const int DefaultStatus = 504;
 
   /// <summary>
-  /// DataNotAvailableOffline Constructor
+  /// OriginAccessFailure Constructor
   /// </summary>
   /// <param name="aMessage">Custom error message, defaults to predefined message if null.</param>
   /// <param name="aInnerException">The inner exception that caused this exception, if any.</param>
-  /// <param name="aStatus">HTTP status code for the error, defaults to 410.</param>
+  /// <param name="aStatus">HTTP status code for the error, defaults to 504.</param>
   public OriginAccessFailure(string aMessage=null, Exception aInnerException=null, int aStatus = DefaultStatus)
     : base (aMessage ?? DefaultMessage,aInnerException,aStatus) {
   }

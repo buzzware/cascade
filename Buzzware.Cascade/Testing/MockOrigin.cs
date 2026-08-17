@@ -37,9 +37,9 @@ namespace Buzzware.Cascade.Testing {
     public long NowMs { get; set; }
 
     /// <summary>
-    /// Ensures that the current session is authenticated for accessing models of a specific type.
+    /// No-op in this mock; authentication is assumed to always succeed.
     /// </summary>
-    /// <param name="type">The Type for which authentication is required.</param>
+    /// <param name="type">The Type for which authentication is required (unused by this mock).</param>
     public async Task EnsureAuthenticated(Type? type) {
     }
 
@@ -96,7 +96,7 @@ namespace Buzzware.Cascade.Testing {
     /// Utilizes the provided HandleRequest delegate if available, otherwise throws an exception.
     /// </summary>
     /// <param name="request">The request operation to be processed.</param>
-    /// <param name="connectionOnline">Indicates whether the connection is currently online.</param>
+    /// <param name="connectionOnline">Indicates whether the connection is currently online (not passed to the HandleRequest delegate).</param>
     /// <returns>OpResponse object detailing the result of the request processing.</returns>
     /// <exception cref="NotImplementedException">Thrown if no HandleRequest delegate is provided and the method is not overridden.</exception>
     public virtual Task<OpResponse> ProcessRequest(RequestOp request, bool connectionOnline) {

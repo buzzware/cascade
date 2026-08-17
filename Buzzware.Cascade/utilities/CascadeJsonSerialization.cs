@@ -57,9 +57,11 @@ namespace Buzzware.Cascade {
 		}
 		
     /// <summary>
-    /// Method used to determine whether certain properties should be ignored based on custom logic
+    /// JsonTypeInfo modifier that, for SuperModel subclasses, sets a ShouldSerialize predicate on each property
+    /// to exclude underscore-prefixed properties, association properties, non-data properties without attributes,
+    /// FromBlob/FromProperty properties, and properties with a CascadePropertyAttribute of Kind None or Unknown.
     /// </summary>
-    /// <param name="typeInfo">The JSON type information used to analyze properties for serialization</param>
+    /// <param name="typeInfo">The JSON type information whose properties are modified for serialization</param>
 		private void IgnoreProperties(JsonTypeInfo typeInfo) {
 			if (!typeInfo.Type.IsSubclassOf(typeof(SuperModel)))
 				return;

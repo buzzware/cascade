@@ -9,9 +9,9 @@ namespace Buzzware.Cascade.Testing {
   public class MockCascadePlatform : ICascadePlatform {
 
     /// <summary>
-    /// Invokes the specified action on the main thread. If an exception occurs, it can be handled
-    /// by the optional exceptionHandler function. If the exceptionHandler returns a new exception, 
-    /// it is thrown instead.
+    /// Simulates invoking the specified action on the main thread by executing it directly.
+    /// If an exception occurs, it can be handled by the optional exceptionHandler function.
+    /// If the exceptionHandler returns a new exception, it is thrown instead.
     /// </summary>
     /// <param name="action">The action to be invoked on the main thread.</param>
     /// <param name="exceptionHandler">Optional function to handle any exceptions that occur during the action.</param>

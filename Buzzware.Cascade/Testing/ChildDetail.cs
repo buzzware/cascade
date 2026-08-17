@@ -1,7 +1,7 @@
 namespace Buzzware.Cascade.Testing {
 
 	/// <summary>
-	/// A Child model for demonstrating SuperModel and associations (with Parent). Not a human child.
+	/// A sample detail model belonging to a Child, for demonstrating SuperModel and the HasOne/BelongsTo associations.
 	/// </summary>
 	public class ChildDetail : SuperModel {
 
@@ -15,12 +15,18 @@ namespace Buzzware.Cascade.Testing {
 		}
 		private string _id;
 
+		/// <summary>
+		/// The id of the Child this detail belongs to.
+		/// </summary>
 		public string? childId {
 			get => GetProperty(ref _childId);
 			set => SetProperty(ref _childId, value);
 		}
 		private string? _childId;
    
+		/// <summary>
+		/// The Child association model property, resolved from childId.
+		/// </summary>
 		[Cascade.BelongsTo(idProperty: "childId")]
 		public Child? Child {
 			get => GetProperty(ref _child);
@@ -28,6 +34,9 @@ namespace Buzzware.Cascade.Testing {
 		}
 		private Child? _child;
 		
+		/// <summary>
+		/// The description attribute of the detail.
+		/// </summary>
 		public string description {
 			get => GetProperty(ref _description);
 			set => SetProperty(ref _description, value);

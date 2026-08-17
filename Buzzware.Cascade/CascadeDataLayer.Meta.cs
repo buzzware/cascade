@@ -18,11 +18,11 @@ namespace Buzzware.Cascade {
 		// The "meta" feature offers key/value persistent storage 
 
 		/// <summary>
-		/// Resolves and returns the absolute path for the given relative meta path.
-		/// Ensures that the path does not contain any directory traversal sequences ('..').
+		/// Resolves and returns the full filesystem path for the given relative meta path, under Config.MetaPath.
+		/// Throws ArgumentException if the path contains any directory traversal sequences ('..').
 		/// </summary>
 		/// <param name="path">The relative path that needs resolution.</param>
-		/// <returns>The resolved absolute path.</returns>
+		/// <returns>The resolved full path under Config.MetaPath.</returns>
 		public string MetaResolvePath(string path) {
 			if (path != null && path.Contains(".."))
 				throw new ArgumentException("Path cannot contain ..");
@@ -74,6 +74,12 @@ namespace Buzzware.Cascade {
 			});
 		}
 
+		/// <summary>
+		/// Retrieves the string value for the specified key from the metadata store and deserializes it from JSON to type T.
+		/// </summary>
+		/// <typeparam name="T">The type to deserialize the stored JSON value to.</typeparam>
+		/// <param name="key">The relative path (key) in the metadata store.</param>
+		/// <returns>The deserialized value, or default(T) if the key is missing or its value is empty.</returns>
 		public T? MetaJsonGet<T>(string key) {
 			var list_s = MetaGet(key);
 			if (String.IsNullOrWhiteSpace(list_s))
@@ -82,6 +88,13 @@ namespace Buzzware.Cascade {
 			return result;
 		}        
         
+		/// <summary>
+		/// Serializes the given value to JSON and stores it in the metadata store under the specified key.
+		/// If the value is null, the key is removed from the store.
+		/// </summary>
+		/// <typeparam name="T">The type of the value to serialize.</typeparam>
+		/// <param name="key">The relative path (key) in the metadata store.</param>
+		/// <param name="value">The value to serialize and store. Null to remove the key.</param>
 		public void MetaJsonSet<T>(string key,  T? value) {
 			var value_s = value!=null ? serialization.Serialize(value) : null;
 			MetaSet(key, value_s);
@@ -123,11 +136,12 @@ namespace Buzzware.Cascade {
 		
 		/// <summary>
 		/// Clears files from the specified metadata path based on optional filter criteria.
-		/// Can remove files older than a specified date and can operate recursively.
+		/// When olderThan is null and recursive is true, the whole folder is deleted; otherwise files are
+		/// deleted individually, skipping any with a last write time after olderThan when it is given.
 		/// </summary>
 		/// <param name="path">The path to clear the files or folders.</param>
-		/// <param name="olderThan">The optional DateTime to check if files are older to be deleted.</param>
-		/// <param name="recursive">Whether to delete files recursively.</param>
+		/// <param name="olderThan">Optional DateTime; only files last written at or before this time are deleted.</param>
+		/// <param name="recursive">Whether to delete files recursively through subdirectories.</param>
 		public void MetaClearPath(string path, DateTime? olderThan=null, bool recursive = false) {
 			if (String.IsNullOrWhiteSpace(path))
 				throw new ArgumentException("path cannot be empty");
@@ -176,6 +190,9 @@ namespace Buzzware.Cascade {
 		#region Holding
 
 		// Separator used in encoded blob paths
+		/// <summary>
+		/// Separator substituted for '/' when encoding blob paths for use as hold metadata keys.
+		/// </summary>
 		public const string BLOB_PATH_ALT_SEPARATOR = "_%_";
 		
 		/// <summary>
@@ -440,11 +457,12 @@ namespace Buzzware.Cascade {
 		}
 
 		/// <summary>
-		/// Unholds all instances and collections of the specified model type. 
-		/// Optionally filter out entries older than a specified date.
+		/// Unholds all instances and collections of the specified model type.
+		/// Optionally only clears hold entries older than a specified date.
+		/// Throws ArgumentException for blob types - use UnholdAllBlobs instead.
 		/// </summary>
 		/// <param name="modelType">The Type of the model to clear holds for.</param>
-		/// <param name="olderThan">Optional DateTime to filter which holds should be cleared.</param>
+		/// <param name="olderThan">Optional DateTime; when given, only hold entries older than this are cleared.</param>
 		public void UnholdAll(Type modelType, DateTime? olderThan=null) {
 			if (CascadeTypeUtils.IsBlobType(modelType))
 				throw new ArgumentException("Don't use UnholdAll with a Blob type anymore - use UnholdAllBlobs()");
@@ -454,6 +472,11 @@ namespace Buzzware.Cascade {
 			MetaClearPath(HoldModelPath(modelType),olderThan);
 		}
 
+		/// <summary>
+		/// Unholds all held blobs by clearing their hold metadata entries.
+		/// Optionally only clears entries last written at or before the specified time.
+		/// </summary>
+		/// <param name="olderThan">Optional DateTime; when given, only hold entries older than this are cleared.</param>
 		public void UnholdAllBlobs(DateTime? olderThan=null) {
 			MetaClearPath(HoldModelPath(CascadeConstants.HOLD),olderThan);
 		}
@@ -468,7 +491,7 @@ namespace Buzzware.Cascade {
 		}
 
 		/// <summary>
-		/// Unholds all associations in both model and collection types, clearing all metadata.
+		/// Unholds everything by clearing the entire metadata store, including any non-hold metadata.
 		/// </summary>
 		public void UnholdAll() {
 			MetaClearAll();

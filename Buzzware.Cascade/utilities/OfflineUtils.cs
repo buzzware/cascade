@@ -8,8 +8,10 @@ namespace Buzzware.Cascade {
 	public static class OfflineUtils {
 
     /// <summary>
-    /// Creates an offline version of the given SuperModel instance. 
-    /// The method assigns a new negative ID if the model's ID is zero or null, ensuring the object has a unique offline identity.
+    /// Creates an offline version of the given SuperModel instance by cloning it.
+    /// When the model's ID is zero or null, a generated ID is assigned - a random int (from RandomUtils.IntNegativeId),
+    /// a random negative long, or a new GUID string, depending on the id type - giving the instance a unique offline identity.
+    /// Throws for unsupported id types.
     /// </summary>
     /// <param name="value">The SuperModel instance to create an offline version of.</param>
     /// <param name="newGuid">A delegate function that generates a new GUID in string format.</param>

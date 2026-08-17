@@ -8,18 +8,31 @@ namespace Buzzware.Cascade {
 	/// Enum representing various possible verbs for a request operation, such as Create, Get, Update, etc.
 	/// </summary>
 	public enum RequestVerb {
+		/// <summary>No operation specified</summary>
 		None,
+		/// <summary>Create a new model instance</summary>
 		Create,
+		/// <summary>Get a model instance by id</summary>
 		Get,
+		/// <summary>Update an existing model instance with a dictionary of changes</summary>
 		Update,
+		/// <summary>Replace an existing model instance entirely</summary>
 		Replace,
+		/// <summary>Destroy (delete) a model instance</summary>
 		Destroy,
+		/// <summary>Query a collection of models using criteria</summary>
 		Query,
+		/// <summary>Execute a named custom action</summary>
 		Execute,
+		/// <summary>Get a named collection of model ids</summary>
 		GetCollection,
+		/// <summary>Get the data of a binary large object (blob) by path</summary>
 		BlobGet,
+		/// <summary>Get the local file path of a binary large object (blob)</summary>
 		BlobGetFilePath,
+		/// <summary>Store a binary large object (blob) at a path</summary>
 		BlobPut,
+		/// <summary>Delete a binary large object (blob) at a path</summary>
 		BlobDestroy
 	};
 	
@@ -27,13 +40,20 @@ namespace Buzzware.Cascade {
 	/// Represents a request operation in the Cascade library. It encapsulates all necessary details such as the type, verb, id, value, etc.
 	/// </summary>
 	public class RequestOp {
+		/// <summary>Default freshness in seconds (5 minutes)</summary>
 		public const int FRESHNESS_DEFAULT = 5*60;
+		/// <summary>Freshness value meaning any age of cached data is acceptable</summary>
 		public const int FRESHNESS_ANY = int.MaxValue;
+		/// <summary>Freshness value requiring the freshest possible data</summary>
 		public const int FRESHNESS_FRESHEST = 0;		// allowing for the period of the request. When arrivedAfter is supported, set this back to 0 
+		/// <summary>Freshness value insisting on data direct from the origin</summary>
 		public const int FRESHNESS_INSIST = -1;
 		
+		/// <summary>Fallback freshness value meaning never fall back to cached data</summary>
 		public const int FALLBACK_NEVER = -1;
+		/// <summary>Fallback freshness value meaning cached data of any age may be used as a fallback</summary>
 		public const int FALLBACK_ANY = FRESHNESS_ANY;
+		/// <summary>Default fallback freshness (FALLBACK_ANY)</summary>
 		public const int FALLBACK_DEFAULT = FALLBACK_ANY;
 
 		/// <summary>
@@ -46,9 +66,9 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Indicates how fresh the data should be. Defaults to FRESHNESS_DEFAULT if not provided.</param>
 		/// <param name="populateFreshnessSeconds">Specific freshness requirement for populated relations. Defaults to FRESHNESS_DEFAULT if not provided.</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
-		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
-		/// <param name="criteria"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="hold">Specifies if the result should be held ie protected from cache clearing. Defaults to null (false).</param>
+		/// <param name="criteria">Optional criteria passed through to the origin with the request.</param>
+		/// <param name="localOnly">When true, the request is satisfied from local layers only, without requiring a connection to the origin.</param>
 		/// <returns>A new instance of RequestOp representing a "Get" request.</returns>
 		public static RequestOp GetOp<Model>(
 			object id,
@@ -89,9 +109,9 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Indicates how fresh the data should be. Defaults to FRESHNESS_DEFAULT if not provided.</param>
 		/// <param name="populateFreshnessSeconds">Specific freshness requirement for populated relations. Defaults to FRESHNESS_DEFAULT if not provided.</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
-		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
-		/// <param name="criteria"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="hold">Specifies if the result should be held ie protected from cache clearing. Defaults to null (false).</param>
+		/// <param name="criteria">Optional criteria passed through to the origin with the request.</param>
+		/// <param name="localOnly">When true, the request is satisfied from local layers only, without requiring a connection to the origin.</param>
 		/// <returns>A new instance of RequestOp representing a "Get" request.</returns>
 		public static RequestOp GetOp(
 			Type modelType,
@@ -130,9 +150,9 @@ namespace Buzzware.Cascade {
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created. If not specified, the current time is used.</param>
 		/// <param name="freshnessSeconds">Indicates how fresh the blob data should be. Defaults to FRESHNESS_DEFAULT if not provided.</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
-		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
-		/// <param name="eTag"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="hold">Specifies if the blob should be held ie protected from cache clearing. Defaults to null (false).</param>
+		/// <param name="eTag">Optional entity tag (version identifier) of the blob.</param>
+		/// <param name="localOnly">When true, the request is satisfied from local layers only, without requiring a connection to the origin.</param>
 		/// <returns>A new instance of RequestOp representing a "BlobGet" request.</returns>
 		public static RequestOp BlobGetOp(
 			string path,
@@ -165,10 +185,10 @@ namespace Buzzware.Cascade {
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created. If not specified, the current time is used.</param>
 		/// <param name="freshnessSeconds">Indicates how fresh the blob data should be. Defaults to FRESHNESS_DEFAULT if not provided.</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
-		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
-		/// <param name="eTag"></param>
-		/// <param name="localOnly"></param>
-		/// <returns>A new instance of RequestOp representing a "BlobGet" request.</returns>
+		/// <param name="hold">Specifies if the blob should be held ie protected from cache clearing. Defaults to null (false).</param>
+		/// <param name="eTag">Optional entity tag (version identifier) of the blob.</param>
+		/// <param name="localOnly">When true, the request is satisfied from local layers only, without requiring a connection to the origin.</param>
+		/// <returns>A new instance of RequestOp representing a "BlobGetFilePath" request.</returns>
 		public static RequestOp BlobGetFilePathOp(
 			string path,
 			long timeMs = -1,
@@ -199,9 +219,9 @@ namespace Buzzware.Cascade {
 		/// <param name="path">The path where the blob will be stored.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
 		/// <param name="data">The byte array or stream representing the blob data to be stored.</param>
-		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
-		/// <param name="criteria"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="hold">Specifies if the blob should be held ie protected from cache clearing. Defaults to null (false).</param>
+		/// <param name="criteria">Optional criteria passed through to the origin with the request.</param>
+		/// <param name="localOnly">When true, the operation is applied to local layers only, without requiring a connection to the origin.</param>
 		/// <returns>A new instance of RequestOp representing a "BlobPut" request.</returns>
 		public static RequestOp BlobPutOp(
 			string path,
@@ -228,7 +248,7 @@ namespace Buzzware.Cascade {
 		/// </summary>
 		/// <param name="path">The path of the blob to be deleted.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
-		/// <param name="criteria"></param>
+		/// <param name="criteria">Optional criteria passed through to the origin with the request.</param>
 		/// <returns>A new instance of RequestOp representing a "BlobDestroy" request.</returns>
 		public static RequestOp BlobDestroyOp(
 			string path, 
@@ -250,9 +270,8 @@ namespace Buzzware.Cascade {
 		/// <typeparam name="Model">The type of the model</typeparam>
 		/// <param name="collectionName">The name of the collection to be retrieved.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created. If not specified, the current time is used.</param>
-		/// <param name="freshnessSeconds"></param>
-		/// <param name="populateFreshnessSeconds"></param>
-		/// <param name="fallbackFreshnessSeconds"></param>
+		/// <param name="freshnessSeconds">Indicates how fresh the data should be. Defaults to FRESHNESS_DEFAULT if not provided.</param>
+		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FALLBACK_ANY.</param>
 		/// <returns>A new instance of RequestOp representing a "GetCollection" request.</returns>
 		public static RequestOp GetCollectionOp<Model>(
 			string collectionName, 
@@ -286,8 +305,8 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Indicates how fresh the data should be. Defaults to FRESHNESS_DEFAULT if not provided.</param>
 		/// <param name="populateFreshnessSeconds">Specific freshness requirement for populated relations. Defaults to FRESHNESS_DEFAULT if not provided.</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness requirement if the main requirement cannot be met. Defaults to FRESHNESS_ANY.</param>
-		/// <param name="hold">Specifies if the request should be held from processing. Defaults to null.</param>
-		/// <param name="localOnly"></param>
+		/// <param name="hold">Specifies if the results should be held ie protected from cache clearing. Defaults to null (false).</param>
+		/// <param name="localOnly">When true, the request is satisfied from local layers only, without requiring a connection to the origin.</param>
 		/// <returns>A new instance of RequestOp representing a "Query" request.</returns>
 		public static RequestOp QueryOp<Model>(
 			string? collectionName,
@@ -324,9 +343,9 @@ namespace Buzzware.Cascade {
 		/// </summary>
 		/// <param name="model">The model instance to be created.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
-		/// <param name="hold">Specifies if the request should be held from processing.</param>
-		/// <param name="criteria"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="hold">Specifies if the created model should be held ie protected from cache clearing.</param>
+		/// <param name="criteria">Optional criteria passed through to the origin with the request.</param>
+		/// <param name="localOnly">When true, the operation is applied to local layers only, without requiring a connection to the origin.</param>
 		/// <returns>A new instance of RequestOp representing a "Create" request.</returns>
 		public static RequestOp CreateOp(
 			object model,
@@ -353,8 +372,8 @@ namespace Buzzware.Cascade {
 		/// <typeparam name="Model">The type of the model to be deleted.</typeparam>
 		/// <param name="model">The model instance to be deleted.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
-		/// <param name="criteria"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="criteria">Optional criteria passed through to the origin with the request.</param>
+		/// <param name="localOnly">When true, the operation is applied to local layers only, without requiring a connection to the origin.</param>
 		/// <returns>A new instance of RequestOp representing a "Destroy" request.</returns>
 		public static RequestOp DestroyOp<Model>(
 			Model model, 
@@ -379,8 +398,8 @@ namespace Buzzware.Cascade {
 		/// <typeparam name="Model">The type of the model to be replaced.</typeparam>
 		/// <param name="model">The model instance to be replaced.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
-		/// <param name="criteria"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="criteria">Optional criteria passed through to the origin with the request.</param>
+		/// <param name="localOnly">When true, the operation is applied to local layers only, without requiring a connection to the origin.</param>
 		/// <returns>A new instance of RequestOp representing a "Replace" request.</returns>
 		public static RequestOp ReplaceOp<Model>(
 			Model model, 
@@ -406,8 +425,8 @@ namespace Buzzware.Cascade {
 		/// <param name="model">The model instance to be updated.</param>
 		/// <param name="changes">A dictionary containing the changes to be applied to the model.</param>
 		/// <param name="timeMs">The timestamp in milliseconds when the request was created.</param>
-		/// <param name="criteria"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="criteria">Optional criteria passed through to the origin with the request.</param>
+		/// <param name="localOnly">When true, the operation is applied to local layers only, without requiring a connection to the origin.</param>
 		/// <returns>A new instance of RequestOp representing an "Update" request.</returns>
 		public static RequestOp UpdateOp<Model>(
 			Model model, 
@@ -461,12 +480,12 @@ namespace Buzzware.Cascade {
 		/// <param name="freshnessSeconds">Desired freshness of the returned data in seconds.</param>
 		/// <param name="populateFreshnessSeconds">Desired freshness for populated relations in seconds.</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness in seconds to use if main freshness cannot be satisfied.</param>
-		/// <param name="hold">Specifies whether the request should be held for deferred processing.</param>
+		/// <param name="hold">Specifies whether the result(s) should be held ie protected from cache clearing. Defaults to false.</param>
 		/// <param name="criteria">Criteria for filtering results in certain operations like queries.</param>
 		/// <param name="key">Identifier for collection-level operations instead of individual instances.</param>
 		/// <param name="extra">Any additional data required by the request.</param>
-		/// <param name="eTag"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="eTag">Entity tag (version identifier) associated with a blob, if any.</param>
+		/// <param name="localOnly">When true, the operation is restricted to local layers, without requiring a connection to the origin.</param>
 		public RequestOp(
 			long timeMs,
 			Type? type,
@@ -525,8 +544,8 @@ namespace Buzzware.Cascade {
 		/// <param name="criteria">Optional new criteria.</param>
 		/// <param name="key">Optional new key for collection operations.</param>
 		/// <param name="extra">Optional new extra data.</param>
-		/// <param name="eTag"></param>
-		/// <param name="localOnly"></param>
+		/// <param name="eTag">Optional new entity tag.</param>
+		/// <param name="localOnly">Optional new localOnly setting.</param>
 		/// <returns>A cloned instance of RequestOp with optional modifications.</returns>
 		public RequestOp CloneWith(
 			long? timeMs = null,
@@ -565,10 +584,11 @@ namespace Buzzware.Cascade {
 		}
 
 		/// <summary>
-		/// Determines if a specified RequestVerb is associated with write operations such as Create, Update, or Execute.
+		/// Determines if a specified RequestVerb is one of the write operations Create, Update or Execute.
+		/// Note that Replace, Destroy and the blob verbs are not included.
 		/// </summary>
 		/// <param name="aVerb">The RequestVerb to be checked.</param>
-		/// <returns>bool indicating whether the verb is associated with a write operation.</returns>
+		/// <returns>True if the verb is Create, Update or Execute.</returns>
 		public static bool IsWriteVerb(RequestVerb aVerb) {
 			return aVerb == RequestVerb.Create ||
 			       aVerb == RequestVerb.Update ||
@@ -585,25 +605,44 @@ namespace Buzzware.Cascade {
 			return RequestVerb.TryParse(aString, true, out verb) ? verb : RequestVerb.None;
 		}
 
+		/// <summary>The timestamp in milliseconds when the request was created</summary>
 		public readonly long TimeMs;
+		/// <summary>The model type the operation applies to, or null for blob operations</summary>
 		public readonly Type? Type;
+		/// <summary>The action this operation performs</summary>
 		public readonly RequestVerb Verb;		// what we are doing
+		/// <summary>The identifier of the model instance, or the path for blob operations</summary>
 		public readonly object? Id;			// eg. 34
+		/// <summary>The operation payload eg. the model for Create, the changes dictionary for Update, the blob data for BlobPut, the action name for Execute</summary>
 		public readonly object? Value;
+		/// <summary>The collection name for Query and GetCollection operations</summary>
 		public readonly string? Key;		// eg. Products or Products__34
+		/// <summary>Criteria for filtering Query results, or parameters for Execute operations</summary>
 		public readonly object? Criteria;
+		/// <summary>Additional data required by the request eg. the original model for Update operations</summary>
 		public readonly object? Extra;
+		/// <summary>Entity tag (version identifier) associated with a blob, if any</summary>
 		public readonly string? ETag;
+		/// <summary>When true, the operation is restricted to local layers, without requiring a connection to the origin</summary>
 		public readonly bool? LocalOnly;
 		
+		/// <summary>Names of associations to populate on the returned model(s)</summary>
 		public readonly IEnumerable<string>? Populate;
+		/// <summary>Maximum acceptable age in seconds of cached data for this request</summary>
 		public readonly int FreshnessSeconds = FRESHNESS_DEFAULT;
+		/// <summary>Maximum acceptable age in seconds of cached data for populated associations</summary>
 		public readonly int PopulateFreshnessSeconds = FRESHNESS_DEFAULT;
+		/// <summary>Maximum acceptable age in seconds of cached data used as a fallback when offline</summary>
 		public readonly int FallbackFreshnessSeconds = FALLBACK_ANY;
+		/// <summary>When true, the result(s) are marked to be held ie protected from cache clearing</summary>
 		public readonly bool Hold;
+		/// <summary>App-specific parameters for the request</summary>
 		public readonly IDictionary<string, string> Params;	// app specific paramters for the request
+		/// <summary>The earliest arrival time in milliseconds that satisfies FreshnessSeconds, calculated from TimeMs</summary>
 		public readonly long FreshAfterMs;
+		/// <summary>The earliest arrival time in milliseconds that satisfies PopulateFreshnessSeconds, calculated from TimeMs</summary>
 		public readonly long PopulateFreshAfterMs;
+		/// <summary>The earliest arrival time in milliseconds that satisfies FallbackFreshnessSeconds, calculated from TimeMs</summary>
 		public readonly long FallbackFreshAfterMs;
 
 		/// <summary>
@@ -633,7 +672,7 @@ namespace Buzzware.Cascade {
 		}
 
 		/// <summary>
-		/// Attempts to return the Id field as a string, if it can be interpreted as long or int.
+		/// Returns the Id field as a string if it is a string, or converts it from int or long, otherwise null.
 		/// </summary>
 		public String? IdAsString {
 			get {

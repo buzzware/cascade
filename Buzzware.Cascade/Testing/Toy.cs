@@ -2,6 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace Buzzware.Cascade.Testing {
 
+  /// <summary>
+  /// A sample toy model owned by a Child2, used by tests for HasMany/BelongsTo associations.
+  /// </summary>
   public class Toy : SuperModel {
 
     [CascadeId]

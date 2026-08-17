@@ -21,10 +21,10 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <param name="requestOp">The original request operation.</param>
     /// <param name="timeMs">The time in milliseconds when the operation took place.</param>
-    /// <param name="exists">Indicates if the item is present in the cache.</param>
+    /// <param name="exists">Indicates if the item exists in the cache or at origin.</param>
     /// <param name="arrivedAtMs">The time in milliseconds when the response arrived.</param>
     /// <param name="result">The result of the operation, can be null.</param>
-    /// <param name="eTag"></param>
+    /// <param name="eTag">Entity tag (version identifier) associated with the result, if any.</param>
     [ImmutableObject(true)]
     public OpResponse(
       RequestOp requestOp,
@@ -44,13 +44,14 @@ namespace Buzzware.Cascade {
 
     /// <summary>
     /// Creates a new OpResponse with updated fields if given, otherwise base fields remain the same.
+    /// SourceName and LayerIndex are copied from this instance.
     /// </summary>
     /// <param name="requestOp">Updated request operation.</param>
     /// <param name="timeMs">Updated time in milliseconds.</param>
     /// <param name="exists">Updated existence status.</param>
     /// <param name="arrivedAtMs">Updated arrival time in milliseconds.</param>
     /// <param name="result">Updated operation result.</param>
-    /// <param name="eTag"></param>
+    /// <param name="eTag">Updated entity tag.</param>
     /// <returns>The new OpResponse instance with specified changes.</returns>
     public OpResponse withChanges(
       RequestOp? requestOp = null,
@@ -73,19 +74,27 @@ namespace Buzzware.Cascade {
       };
     }
     
+    /// <summary>The original request operation that produced this response</summary>
     public readonly RequestOp RequestOp;
+    /// <summary>The time in milliseconds when the operation took place</summary>
     public readonly long TimeMs;
+    /// <summary>Indicates if the item exists in the cache or at origin</summary>
     public readonly bool Exists; // Indicates if the item exists in the cache or at origin
+    /// <summary>The result value of the operation, if any</summary>
     public readonly object? Result; // Contains result for create, read, update operations
+    /// <summary>The time in milliseconds when the result originally arrived from the origin, or null</summary>
     public long? ArrivedAtMs;
+    /// <summary>The index of the layer that provided this response</summary>
     public int LayerIndex;
+    /// <summary>The name of the source (layer or origin) that provided this response</summary>
     public string? SourceName;
+    /// <summary>Entity tag (version identifier) associated with the result, if any</summary>
     public readonly string? ETag;
 
     /// <summary>
     /// Determines if the operation result is a binary large object (blob).
     /// </summary>
-    /// <returns>True if the result is a blob.</returns>
+    /// <returns>True if the verb is BlobGet, BlobGetFilePath or BlobPut and the Result is a byte array or Stream.</returns>
     public bool ResultIsBlob() {
       return (RequestOp.Verb == RequestVerb.BlobGet || RequestOp.Verb == RequestVerb.BlobGetFilePath || RequestOp.Verb == RequestVerb.BlobPut) 
              && Result is byte[] or Stream;
@@ -114,7 +123,8 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Provides an IEnumerable interface for the results.
+    /// The Result normalised to a read-only list: enumerables are converted to an immutable array of object,
+    /// while blobs and single objects are wrapped in a single-element array.
     /// </summary>
     public IReadOnlyList<object> Results {
       get {
@@ -175,9 +185,9 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Produces a summary string of the result including connection and existence status.
+    /// Produces a summary string of the serialized result and existence status. Serialization errors are swallowed.
     /// </summary>
-    /// <returns>A string summarizing the result, connection, and existence.</returns>
+    /// <returns>A string containing the JSON-serialized result and the Exists flag.</returns>
     public string ToSummaryString() {
       string? result = null;
 
@@ -196,7 +206,7 @@ namespace Buzzware.Cascade {
     /// <param name="requestOp">The original request operation.</param>
     /// <param name="timeMs">Time when the operation took place.</param>
     /// <param name="sourceName">The name of the source that provided this response.</param>
-    /// <returns>A new OpResponse indicating no response was received.</returns>
+    /// <returns>A new OpResponse with Exists false and a null Result.</returns>
     public static OpResponse None(RequestOp requestOp,long timeMs,string? sourceName = null) {
       var opResponse = new OpResponse(
         requestOp,

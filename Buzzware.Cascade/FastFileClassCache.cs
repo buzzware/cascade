@@ -15,8 +15,13 @@ namespace Buzzware.Cascade {
   /// in directory-based file storage.
   /// It uses hashing and memory storage to speed up some reads and writes
   /// </summary>
+  /// <typeparam name="Model">The model class stored by this cache</typeparam>
+  /// <typeparam name="IdType">The type of the model id</typeparam>
   public class FastFileClassCache<Model, IdType> : IModelClassCache where Model : class {
 
+    /// <summary>
+    /// Maximum content length in characters that will be kept in the memory cache; longer content is only written to file
+    /// </summary>
     protected const int MAX_STORED_LENGTH = 255;
     private const int EnsureFileOperationMaxAttempts = 10;
     private const int EnsureFileOperationSleepMs = 50;
@@ -25,17 +30,32 @@ namespace Buzzware.Cascade {
     /// Represents a memory record in the internal cache
     /// </summary>
     public record FastFileCacheRecord {
+      /// <summary>
+      /// The relative file path this record represents
+      /// </summary>
       public string Path { get; }
+      /// <summary>
+      /// The arrival timestamp of the content in unix milliseconds, matching the file last write time
+      /// </summary>
       public long TimeMs { get; set; }
+      /// <summary>
+      /// FNV hash of the content, used for change detection
+      /// </summary>
       public uint Hash { get; init; }
+      /// <summary>
+      /// True when Content holds the cached content
+      /// </summary>
       public bool HasContent { get; init; }
+      /// <summary>
+      /// The cached content when HasContent is true, otherwise null
+      /// </summary>
       public string? Content { get; init; }
 
       /// <summary>
       /// Initializes a new instance of the FastFileCacheRecord class with specified details.
       /// </summary>
       /// <param name="path">The file path associated with the record.</param>
-      /// <param name="timeMs">The timestamp in milliseconds indicating when the record was created.</param>
+      /// <param name="timeMs">The timestamp in milliseconds when the content arrived, matching the file last write time.</param>
       /// <param name="hash">The hash of the content for quick comparison.</param>
       /// <param name="hasContent">Flag indicating whether the record contains content.</param>
       /// <param name="content">The actual cached content if available.</param>
@@ -63,6 +83,9 @@ namespace Buzzware.Cascade {
 
     private readonly ConcurrentDictionary<string, FastFileCacheRecord> cache = new ConcurrentDictionary<string, FastFileCacheRecord>();
         
+    /// <summary>
+    /// Reference to the CascadeDataLayer that uses this cache
+    /// </summary>
     public CascadeDataLayer? Cascade { get; set; }
 
     /// <summary>
@@ -184,7 +207,7 @@ namespace Buzzware.Cascade {
     /// </summary>
     /// <typeparam name="T">The model type into which the content should be deserialized.</typeparam>
     /// <param name="aPath">Path from where the content is loaded for deserialization.</param>
-    /// <returns>An instance of type T, or null if deserialization fails.</returns>
+    /// <returns>An instance of type T, or default when no cached content exists for the path.</returns>
     protected async Task<T?> DeserializeFromPathAsync<T>(string aPath) {
       var content = FetchString(aPath);
       return DeserializeCacheString<T>(content);
@@ -253,7 +276,8 @@ namespace Buzzware.Cascade {
     }
         
     /// <summary>
-    /// Asynchronously fetches an object using a specified RequestOp, handling the operation depending on the verb.
+    /// Fetches a model by id (Get) or a collection of ids by key (Query/GetCollection) from the memory/file cache.
+    /// Freshness requirements are not checked - any cached value is returned.
     /// </summary>
     /// <param name="requestOp">The operation request defining the type, verb, and key/id for the fetch operation.</param>
     /// <returns>An OpResponse containing the result or indicating none found.</returns>
@@ -308,6 +332,9 @@ namespace Buzzware.Cascade {
       }
     }
 
+    /// <summary>
+    /// Performs any setup required by the cache. This implementation requires none.
+    /// </summary>
     public async Task Setup() {
     }
 
@@ -326,6 +353,11 @@ namespace Buzzware.Cascade {
       await SerializeToPathAsync(modelPath, model, arrivedAt);
     }
 
+    /// <summary>
+    /// Stores each of the given models using its cascade id.
+    /// </summary>
+    /// <param name="results">The model objects to store.</param>
+    /// <param name="arrivedAt">The timestamp in milliseconds when the models arrived.</param>
     public async Task StoreAll(IReadOnlyList<object> results, long arrivedAt) {
       foreach (var result in results)
         await Store(CascadeTypeUtils.GetCascadeId(result), result, arrivedAt);

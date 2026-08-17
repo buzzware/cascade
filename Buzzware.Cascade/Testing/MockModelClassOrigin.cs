@@ -10,11 +10,13 @@ namespace Buzzware.Cascade.Testing {
 
   /// <summary>
   /// MockModelClassOrigin is a mock implementation of the IModelClassOrigin interface used for testing purposes.
+  /// It maintains in-memory dictionaries of models and blobs.
   /// </summary>
+  /// <typeparam name="M">The SuperModel type handled by this origin.</typeparam>
   public class MockModelClassOrigin<M> : IModelClassOrigin where M : SuperModel {
 
     /// <summary>
-    /// origin instance
+    /// The ICascadeOrigin instance that owns this class origin.
     /// </summary>
     public ICascadeOrigin Origin { get; set; }
     
@@ -49,6 +51,11 @@ namespace Buzzware.Cascade.Testing {
     private readonly Dictionary<string, byte[]> blobs = new Dictionary<string, byte[]>();
 
     // create a new model instance of the generic type, optionally with the proxyFor parameter
+    /// <summary>
+    /// Creates a new model instance of the generic type, optionally passing proxyFor to its constructor.
+    /// </summary>
+    /// <param name="proxyFor">Optional model instance for the new model to act as a proxy for.</param>
+    /// <returns>A new instance of the model type M.</returns>
     private M CreateModel(M proxyFor = null) {
       if (proxyFor==null)
         return (M)Activator.CreateInstance(typeof(M));
@@ -61,6 +68,7 @@ namespace Buzzware.Cascade.Testing {
     /// The criteria are matched against model properties to filter the collection.
     /// </summary>
     /// <param name="criteria">The criteria used to filter the models.</param>
+    /// <param name="requestOp">The originating request operation (unused by this mock).</param>
     /// <returns>An enumerable of models that match the given criteria.</returns>
     public async Task<IEnumerable> Query(object criteria, RequestOp requestOp) {
       JsonElement? crit = criteria as JsonElement?;
@@ -87,6 +95,7 @@ namespace Buzzware.Cascade.Testing {
     /// Retrieves a model based on its identifier.
     /// </summary>
     /// <param name="id">The identifier of the model to retrieve.</param>
+    /// <param name="requestOp">The originating request operation (unused by this mock).</param>
     /// <returns>The model associated with the given id, or null if not found.</returns>
     public async Task<object?> Get(object id, RequestOp requestOp) {
       var idType = CascadeTypeUtils.GetCascadeIdType(typeof(M));
@@ -119,10 +128,11 @@ namespace Buzzware.Cascade.Testing {
     }
 
     /// <summary>
-    /// Creates a new model with the given initial data.
-    /// Uses the Origin to generate a new unique identifier for the model.
+    /// Creates a new model with the given initial data and stores it in the in-memory collection.
+    /// Uses the Origin to generate a new unique identifier for the model when needed.
     /// </summary>
     /// <param name="value">The initial data for the new model.</param>
+    /// <param name="requestOp">The originating request operation (unused by this mock).</param>
     /// <returns>The created model object.</returns>
     public async Task<object> Create(object value, RequestOp requestOp) {
       var result = OfflineUtils.CreateOffline((SuperModel)value, Origin.NewGuid);
@@ -131,7 +141,13 @@ namespace Buzzware.Cascade.Testing {
       return result;
     }
 
-    /// <summary></summary>
+    /// <summary>
+    /// Simulates replacing a model by returning a new instance with the id and data
+    /// property values copied from the given model. The result is not stored.
+    /// </summary>
+    /// <param name="model">The model whose values are copied into the replacement.</param>
+    /// <param name="requestOp">The originating request operation (unused by this mock).</param>
+    /// <returns>A new model instance with the copied id and data property values.</returns>
     public async Task<object> Replace(object model, RequestOp requestOp) {
       var classInfo = FastReflection.GetClassInfo(model);
       var blank = (Activator.CreateInstance(classInfo.Type) as SuperModel)!;
@@ -139,7 +155,15 @@ namespace Buzzware.Cascade.Testing {
       return blank;
     }
 
-    /// <summary></summary>
+    /// <summary>
+    /// Simulates updating a model by copying the given model into a new instance and
+    /// applying the given property changes. The result is not stored.
+    /// </summary>
+    /// <param name="id">The identifier of the model to update (unused by this mock).</param>
+    /// <param name="changes">A dictionary of property names and their new values.</param>
+    /// <param name="model">The existing model whose values are copied before applying changes.</param>
+    /// <param name="requestOp">The originating request operation (unused by this mock).</param>
+    /// <returns>A new model instance with the changes applied.</returns>
     public async Task<object> Update(object id, IDictionary<string, object?> changes, object? model, RequestOp requestOp) {
       var classInfo = FastReflection.GetClassInfo(model);
       var blank = (Activator.CreateInstance(classInfo.Type) as SuperModel)!;
@@ -148,29 +172,42 @@ namespace Buzzware.Cascade.Testing {
       return blank;
     }
 
-    /// <summary></summary>
+    /// <summary>
+    /// Not implemented in this mock; always throws NotImplementedException.
+    /// </summary>
+    /// <param name="model">The model to destroy.</param>
+    /// <param name="requestOp">The originating request operation.</param>
     public Task Destroy(object model, RequestOp requestOp) {
       throw new System.NotImplementedException();
     }
 
     /// <summary>
-    /// Ensures that the origin is authenticated.
+    /// No-op in this mock; authentication is assumed to always succeed.
     /// </summary>
     public async Task EnsureAuthenticated() {
     }
 
     /// <summary>
-    /// Clears the authentication data associated with the origin.
+    /// No-op in this mock; there is no authentication data to clear.
     /// </summary>
     public async Task ClearAuthentication() {
     }
 
-    /// <summary></summary>
+    /// <summary>
+    /// Not implemented in this mock; always throws NotImplementedException.
+    /// </summary>
+    /// <param name="request">The request operation to execute.</param>
+    /// <param name="connectionOnline">Indicates whether the connection is online.</param>
+    /// <returns>Never returns normally.</returns>
     public Task<object> Execute(RequestOp request, bool connectionOnline) {
       throw new System.NotImplementedException();
     }
     
-    /// <summary></summary>
+    /// <summary>
+    /// Not implemented in this mock; always throws NotImplementedException.
+    /// </summary>
+    /// <param name="action">The name of the action to execute.</param>
+    /// <param name="parameters">A dictionary of parameter names and values for the action.</param>
     public Task Execute(string action, IDictionary<string, object?> parameters) {
       throw new System.NotImplementedException();
     }

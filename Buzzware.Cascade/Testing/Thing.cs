@@ -1,7 +1,7 @@
 namespace Buzzware.Cascade.Testing {
 
   /// <summary>
-  /// Represents a Thing entity in the application, inheriting from SuperModel. 
+  /// A sample Thing model inheriting from SuperModel, used for testing.
   /// </summary>
   public class Thing : SuperModel {
 
@@ -14,7 +14,7 @@ namespace Buzzware.Cascade.Testing {
     }
 
     /// <summary>
-    /// Thing Constructor. Initializes a new Thing instance when deserializing from JSON.
+    /// Thing Constructor. Initializes a new non-proxy Thing instance, as used when deserializing from JSON.
     /// </summary>
     public Thing() : base(null) {
     }

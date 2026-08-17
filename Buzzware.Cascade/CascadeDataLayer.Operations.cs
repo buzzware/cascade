@@ -195,11 +195,13 @@ namespace Buzzware.Cascade {
 		}
 
 		/// <summary>
-		/// Transfer any associations that are set on the requestOp to the opResponse
+		/// Transfers association property values from the incoming model on the requestOp (Value or Extra) to the
+		/// outgoing result model on the opResponse. For BelongsTo/FromBlob associations the value is only copied when
+		/// the id/path key property matches on both models; otherwise the association is repopulated.
 		/// </summary>
-		/// <param name="requestOp"></param>
-		/// <param name="opResponse"></param>
-		/// <exception cref="ArgumentException"></exception>
+		/// <param name="requestOp">The request containing the incoming model whose association values are transferred.</param>
+		/// <param name="opResponse">The response whose result model receives the association values.</param>
+		/// <exception cref="ArgumentException">Thrown if the incoming and outgoing model types differ.</exception>
 		private async Task TransferAssociations(RequestOp requestOp, OpResponse opResponse) {
 			var incomingModel = (requestOp.Value as SuperModel) ?? (requestOp.Extra as SuperModel);
 			var outgoingModel = opResponse.Result as SuperModel;
@@ -333,12 +335,12 @@ namespace Buzzware.Cascade {
 		}
 		
 		/// <summary>
-		/// Processes a request to retrieve a collection of ids based on the given request operation and 
-		/// current connection state. Attempts to fetch data from cache layers and provides fallback if necessary.
+		/// Processes a request to retrieve a named collection of ids from the cache layers only - the origin is not contacted.
+		/// When offline (unless freshness is negative), freshness is relaxed to FRESHNESS_ANY so any cached collection is accepted.
 		/// </summary>
 		/// <param name="requestOp">The operation request detailing the type of operation and data parameters.</param>
 		/// <param name="connectionOnline">A boolean indicating if the connection is online or not.</param>
-		/// <returns>OpResponse object containing the operation response data.</returns>
+		/// <returns>OpResponse from the first cache layer holding the collection, or an empty (None) response if no layer has it.</returns>
 		private async Task<OpResponse> ProcessGetCollection(RequestOp requestOp, bool connectionOnline) {
 			object? value;
 			ICascadeCache? layerFound = null;
@@ -477,6 +479,11 @@ namespace Buzzware.Cascade {
 			return opResponse!;
 		}
 
+		/// <summary>
+		/// Notifies all cache layers that the blob at the given path is known to be fresh as at the given time.
+		/// </summary>
+		/// <param name="blobPath">The path identifying the blob.</param>
+		/// <param name="arrivedAtMs">The time (milliseconds since 1970) at which the blob was confirmed fresh.</param>
 		private async Task NotifyCacheBlobIsFresh(string blobPath, long arrivedAtMs) {
 			foreach (var cacheLayer in CacheLayers) {
 				await cacheLayer.NotifyBlobIsFresh(blobPath, arrivedAtMs);
@@ -527,8 +534,8 @@ namespace Buzzware.Cascade {
 		}
 
 		/// <summary>
-		/// Processes a replace operation request, handling both online and offline scenarios. Replaces an 
-		/// existing instance of the data model and manages pending changes if offline.
+		/// Processes a replace operation request (also used for BlobPut), handling both online and offline scenarios.
+		/// Replaces an existing instance of the data model and adds a pending change if offline.
 		/// </summary>
 		/// <param name="req">Request operation detailing the type of operation and data parameters.</param>
 		/// <param name="connectionOnline">A boolean indicating if the connection is online or not.</param>
@@ -556,7 +563,7 @@ namespace Buzzware.Cascade {
 
 		/// <summary>
 		/// Processes an update operation request, handling both online and offline scenarios. Updates an 
-		/// existing instance of the data model and adds a pending changes if offline.
+		/// existing instance of the data model and adds a pending change if offline.
 		/// </summary>
 		/// <param name="req">Request operation detailing the type of operation and data parameters.</param>
 		/// <param name="connectionOnline">A boolean indicating if the connection is online or not.</param>

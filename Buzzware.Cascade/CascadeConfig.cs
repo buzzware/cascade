@@ -4,11 +4,29 @@ using System.IO;
 
 namespace Buzzware.Cascade {
 
+  /// <summary>
+  /// Per-model-type freshness configuration, used via CascadeConfig.ModelConfig to override the CascadeConfig defaults.
+  /// </summary>
   public class ModelConfig {
+    /// <summary>
+    /// Duration, in seconds, for which data of this model type is considered fresh.
+    /// </summary>
     public readonly int FreshnessSeconds;
+    /// <summary>
+    /// Freshness, in seconds, accepted for cached data of this model type when network requests fail.
+    /// </summary>
     public readonly int FallbackFreshnessSeconds;
+    /// <summary>
+    /// Optional upper limit, in seconds, constraining any requested freshness for this model type.
+    /// </summary>
     public int? MaximumFreshnessSeconds;
 
+    /// <summary>
+    /// ModelConfig Constructor
+    /// </summary>
+    /// <param name="freshnessSeconds">Duration, in seconds, for which data of this model type is considered fresh.</param>
+    /// <param name="fallbackFreshnessSeconds">Freshness, in seconds, accepted for cached data when network requests fail.</param>
+    /// <param name="maximumFreshnessSeconds">Optional upper limit, in seconds, constraining any requested freshness.</param>
     public ModelConfig(int freshnessSeconds, int fallbackFreshnessSeconds, int? maximumFreshnessSeconds = null) {
       FreshnessSeconds = freshnessSeconds;
       FallbackFreshnessSeconds = fallbackFreshnessSeconds;
@@ -20,6 +38,9 @@ namespace Buzzware.Cascade {
   /// User configuration class for the Cascade library
   /// </summary>
   public class CascadeConfig {
+    /// <summary>
+    /// Maximum number of requests Cascade will execute in parallel.
+    /// </summary>
     public int MaxParallelRequests = 8;
 
     /// <summary>
@@ -77,6 +98,9 @@ namespace Buzzware.Cascade {
     /// </summary>
     public string FileCachePath => Path.Combine(StoragePath, "FileCache");
 
+    /// <summary>
+    /// Per-model-type freshness configuration, keyed by model type, overriding the defaults above.
+    /// </summary>
     public IDictionary<Type, ModelConfig> ModelConfig { get; init; }  = new Dictionary<Type, ModelConfig>();
 
     /// <summary>
@@ -85,8 +109,8 @@ namespace Buzzware.Cascade {
     /// A given customValue may override the above.
     /// If a MaximumFreshnessSeconds or DefaultMaximumFreshnessSeconds is set, the value is constrained by that and returned.
     /// </summary>
-    /// <param name="model"></param>
-    /// <param name="customValue"></param>
+    /// <param name="model">The model type to compute freshness seconds for.</param>
+    /// <param name="customValue">Optional freshness value overriding the configured defaults.</param>
     /// <returns>freshness value to use</returns>
     public int GetFreshnessSeconds(Type model, int? customValue = null) {
       ModelConfig.TryGetValue(model,out var modelConfig);
@@ -95,11 +119,22 @@ namespace Buzzware.Cascade {
       return maximum==null ? freshnessSeconds : Math.Min(freshnessSeconds, maximum.Value);
     }
     
+    /// <summary>
+    /// Gets the fallback freshness seconds for a type from its ModelConfig, defaulting to DefaultFallbackFreshnessSeconds.
+    /// </summary>
+    /// <param name="model">The model type to get the fallback freshness seconds for.</param>
+    /// <returns>fallback freshness value to use</returns>
     public int GetFallbackFreshnessSeconds(Type model) {
       ModelConfig.TryGetValue(model,out var modelConfig);
       return modelConfig?.FallbackFreshnessSeconds ?? DefaultFallbackFreshnessSeconds;
     }
 
+    /// <summary>
+    /// Computes freshness seconds for blobs, using customValue if given, otherwise BlobFreshnessSeconds,
+    /// constrained by DefaultMaximumFreshnessSeconds when that is set.
+    /// </summary>
+    /// <param name="customValue">Optional freshness value overriding BlobFreshnessSeconds.</param>
+    /// <returns>blob freshness value to use</returns>
     public int GetBlobFreshnessSeconds(int? customValue = null) {
       var freshnessSeconds = customValue ?? BlobFreshnessSeconds;
       return DefaultMaximumFreshnessSeconds==null ? freshnessSeconds : Math.Min(freshnessSeconds, DefaultMaximumFreshnessSeconds.Value);

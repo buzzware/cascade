@@ -16,6 +16,9 @@ namespace Buzzware.Cascade {
 	/// </summary>
 	public partial class CascadeDataLayer {
 
+		/// <summary>
+		/// The attribute types recognised as defining association properties (BelongsTo, HasMany, HasOne).
+		/// </summary>
 		public static ImmutableArray<Type> AssociationAttributes = ImmutableArray.Create<Type>(
 			typeof(BelongsToAttribute),
 			typeof(HasManyAttribute),
@@ -43,7 +46,7 @@ namespace Buzzware.Cascade {
 		/// Sets a property value on a model, taking into account whether the model is a SuperModel and ensure changes happen on the main thread which is necessary for any bound UI.
 		/// </summary>
 		/// <param name="model">The model to update.</param>
-		/// <param name="propertyInfo">The metadata of the property to set.</param>
+		/// <param name="name">The name of the property to set.</param>
 		/// <param name="value">The value to assign to the property.</param>
 		private Task SetModelProperty(object model, string name, object? value) {
 			var pi = FastReflection.GetPropertyInfo(model.GetType(),name);
@@ -97,7 +100,7 @@ namespace Buzzware.Cascade {
 		/// <param name="model">The model for which the property is being replaced.</param>
 		/// <param name="property">The name of the HasMany property on the model.</param>
 		/// <param name="models">The new models to set for the association.</param>
-		/// <exception cref="ArgumentException"></exception>
+		/// <exception cref="ArgumentException">Thrown if the property is not a HasMany property or its foreign model type cannot be determined.</exception>
 		public async Task HasManyReplace(SuperModel model, string property, IEnumerable<object> models) {
 			var ci = FastReflection.GetClassInfo(model);
 			var pi = ci.GetPropertyInfo(property);

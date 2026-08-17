@@ -117,35 +117,7 @@ namespace Easy.Common.Extensions
             attributes = null;
             return false;
         }
-
-        /// <summary>
-        /// Tries to get the generic type arguments for the given <paramref name="type"/>.
-        /// <example>For a type of List{int} the generic type is int</example>
-        /// </summary>
-        /// <param name="type">The type for which generic type should be retrieved</param>
-        /// <param name="genericArguments">The result</param>
-        /// <returns><c>True</c> if generic types can be retrieved otherwise <c>False</c></returns>
-        //[DebuggerStepThrough]
-        //public static bool TryGetGenericArguments(this Type type, out Type[] genericArguments)
-        //{
-        //    //Ensure.NotNull(type, nameof(type));
-
-        //    if (type.IsArray)
-        //    {
-        //        genericArguments = new[] { type.GetElementType() };
-        //        return true;
-        //    }
-
-        //    if (!type.IsGenericType())
-        //    {
-        //        genericArguments = null;
-        //        return false;
-        //    }
-
-        //    genericArguments = type.GetGenericArguments();
-        //    return true;
-        //}
-
+        
         /// <summary>
         /// Determines if the given <paramref name="type"/> is a sequence of elements.
         /// </summary>
@@ -306,25 +278,16 @@ namespace Easy.Common.Extensions
         /// <summary>
         /// Determines whether the <paramref name="type"/> implements <typeparamref name="T"/>.
         /// </summary>
+        /// <typeparam name="T">The type that <paramref name="type"/> may be assignable to.</typeparam>
+        /// <param name="type">The type to check.</param>
+        /// <returns><c>True</c> if <paramref name="type"/> is assignable to <typeparamref name="T"/> otherwise <c>False</c></returns>
         [DebuggerStepThrough]
         public static bool Implements<T>(this Type type)
         {
             //Ensure.NotNull(type, nameof(type));
             return typeof(T).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
         }
-
-        /// <summary>
-        /// Determines whether the given <paramref name="type"/> has a default constructor.
-        /// </summary>
-        /// <param name="type">Type to check.</param>
-        /// <returns><c>True</c> if <paramref name="type"/> has a default constructor, <c>False</c> otherwise.</returns>
-        //[DebuggerStepThrough]
-        //public static bool HasDefaultConstructor(this Type type)
-        //{
-        //    //Ensure.NotNull(type, nameof(type));
-        //    return type.IsValueType || type.GetConstructor(Type.EmptyTypes) != null;
-        //}
-
+        
         /// <summary>
         /// Determines whether the given <paramref name="type"/> is of simple type.
         /// </summary>
@@ -351,23 +314,6 @@ namespace Easy.Common.Extensions
         {
             return type == typeof(T[]);
         }
-
-        /// <summary>
-        /// Determines whether the given <paramref name="type"/> is a generic list
-        /// </summary>
-        /// <param name="type">The type to evaluate</param>
-        /// <returns><c>True</c> if is generic otherwise <c>False</c></returns>
-        //[DebuggerStepThrough]
-        //public static bool IsGenericList(this Type type)
-        //{
-        //    if (!type.IsGenericType) { return false; }
-
-        //    var typeDef = type.GetGenericTypeDefinition();
-
-        //    if (typeDef == typeof(List<>) || typeDef == typeof(IList<>)) { return true; }
-
-        //    return false;
-        //}
     }
 
     /// <summary>
@@ -537,12 +483,12 @@ namespace Easy.Common.Extensions
         GenericIDictionary,
 
         /// <summary>
-        /// Represents an <see> <cref>ICollection{KeyValuePair{TKey, TValue}}</cref></see>.
+        /// Represents an <see cref="ICollection{T}"/> of <see cref="KeyValuePair{TKey,TValue}"/>.
         /// </summary>
         GenericICollectionKeyValue,
 
         /// <summary>
-        /// Represents an <see> <cref>IEnumerable{KeyValuePair{TKey, TValue}}</cref></see>.
+        /// Represents an <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair{TKey,TValue}"/>.
         /// </summary>
         GenericIEnumerableKeyValue,
 

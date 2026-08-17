@@ -142,7 +142,7 @@ namespace Buzzware.Cascade {
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness duration if primary freshness cannot be achieved</param>
 		/// <param name="hold">Indicates if the blob and its associations should be held in cache</param>
 		/// <param name="sequenceBeganMs">The request timestamp in milliseconds since epoch, for caching optimization</param>
-		/// <returns>An absolute file path to the blob file, or null if not found</returns>
+		/// <returns>True if the blob exists, otherwise false</returns>
 		public async Task<bool> BlobExists(
 			string path,
 			int? freshnessSeconds = null,
@@ -160,14 +160,14 @@ namespace Buzzware.Cascade {
 		}
 		
 		/// <summary>
-		/// Retrieves a response containing a binary blob from the data layer based on the specified path.
+		/// Retrieves a response containing an absolute file path for the blob identified by the specified path.
 		/// </summary>
 		/// <param name="path">Path of the blob to be retrieved</param>
 		/// <param name="freshnessSeconds">Desired freshness of the blob in seconds</param>
 		/// <param name="fallbackFreshnessSeconds">Fallback freshness in case the primary cannot be achieved</param>
 		/// <param name="hold">Flag to hold the blob in cache for offline availability</param>
 		/// <param name="sequenceBeganMs">Request timestamp in milliseconds since epoch</param>
-		/// <returns>A task representing the operation, with OpResponse as the result</returns>
+		/// <returns>The OpResponse whose Result is the absolute file path string, or null if not found</returns>
 		public Task<OpResponse> BlobGetFilePathResponse(
 			string path,
 			int? freshnessSeconds = null,
@@ -208,6 +208,13 @@ namespace Buzzware.Cascade {
 			return null;
 		}
 
+		/// <summary>
+		/// Determines whether a cached blob has expired based on its arrivedAt timestamp and the given freshness period.
+		/// Returns false if the blob is not present in any cache layer.
+		/// </summary>
+		/// <param name="path">Identifier for the blob</param>
+		/// <param name="fallbackSeconds">Freshness period in seconds, defaulting to Config.BlobFallbackFreshnessSeconds. FALLBACK_NEVER means always expired; FALLBACK_ANY means never expires</param>
+		/// <returns>True if the blob is cached and older than the freshness period, otherwise false</returns>
 		public async Task<bool> BlobHasExpired(string path, int? fallbackSeconds = null) {
 			var arrivedAtMs = await BlobGetArrivedAt(path);
 			if (arrivedAtMs == null)
@@ -253,7 +260,7 @@ namespace Buzzware.Cascade {
 		/// One day this could be made more efficient for large blobs.
 		/// </summary>
 		/// <param name="path">Path where the blob will be stored</param>
-		/// <param name="data">The binary data to be stored</param>
+		/// <param name="stream">The binary stream to be stored</param>
 		public async Task BlobPut(
 			string path, 
 			Stream stream
@@ -329,6 +336,11 @@ namespace Buzzware.Cascade {
 			}
 		}
 
+		/// <summary>
+		/// Removes blobs from all cache layers without affecting the origin.
+		/// </summary>
+		/// <param name="exceptHeld">If true, blobs marked as held are not cleared</param>
+		/// <param name="olderThan">Optional: clear only blobs older than this DateTime</param>
 		public async Task ClearBlobs(bool exceptHeld = true, DateTime? olderThan = null) {
 			foreach (var layer in CacheLayers) {
 				await layer.ClearBlobs(exceptHeld, olderThan);

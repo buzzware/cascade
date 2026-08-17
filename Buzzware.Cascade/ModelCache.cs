@@ -39,9 +39,21 @@ namespace Buzzware.Cascade {
 			}
 		}
 
+    /// <summary>
+    /// True when a blob cache was provided to the constructor, so blob operations are supported.
+    /// </summary>
 		public bool SupportsBlobs => blobCache != null;
+
+    /// <summary>
+    /// True when the blob cache exists and can provide absolute file paths for blobs.
+    /// </summary>
 		public bool SupportsGetBlobAbsoluteFilePath => blobCache?.SupportsGetAbsoluteFilePath ?? false;
 
+    /// <summary>
+    /// Gets the absolute file system path for the given blob path from the blob cache.
+    /// </summary>
+    /// <param name="blobPath">The relative path of the blob.</param>
+    /// <returns>The absolute file path of the blob, or null when no blob cache is available.</returns>
 		public string? GetBlobAbsoluteFilePath(string blobPath) {
 			return blobCache?.GetAbsoluteFilePath(blobPath); 
 		}
@@ -58,21 +70,41 @@ namespace Buzzware.Cascade {
 			await ClearBlobs(exceptHeld, olderThan);
 		}
 
+    /// <summary>
+    /// Clears all cached data from the class cache registered for the given model type, if any.
+    /// </summary>
+    /// <param name="type">The model type whose cache should be cleared.</param>
+    /// <param name="exceptHeld">Flag indicating whether to exclude held items from being cleared.</param>
+    /// <param name="olderThan">If specified, only clear items older than this date/time.</param>
 		public async Task ClearByType(Type type, bool exceptHeld = true, DateTime? olderThan = null) {
 			var pair = classCache.FirstOrDefault(pair => pair.Key == type);
 			if (pair.Value != null)
 				await pair.Value.ClearAll(exceptHeld: exceptHeld, olderThan: olderThan);
 		}
 
+    /// <summary>
+    /// Clears all blobs from the blob cache, if one is available.
+    /// </summary>
+    /// <param name="exceptHeld">Flag indicating whether to exclude held blobs from being cleared.</param>
+    /// <param name="olderThan">If specified, only clear blobs older than this date/time.</param>
 		public async Task ClearBlobs(bool exceptHeld = true, DateTime? olderThan = null) {
 			if (blobCache != null) 
 				await blobCache.ClearAll(exceptHeld: exceptHeld, olderThan: olderThan);
 		}
 
+    /// <summary>
+    /// Clears the blob at the given path from the blob cache, if one is available.
+    /// </summary>
+    /// <param name="path">The relative path of the blob to clear.</param>
 		public async Task ClearBlob(string path) {
 			blobCache?.Clear(path);
 		}
 
+    /// <summary>
+    /// Notifies the blob cache, if one is available, that the blob at the given path is fresh as of the given arrival time.
+    /// </summary>
+    /// <param name="blobPath">The relative path of the blob to mark as fresh.</param>
+    /// <param name="arrivedAtMs">The arrival time to set, in ms since 1970.</param>
 		public Task NotifyBlobIsFresh(string blobPath, long arrivedAtMs) {
 			return blobCache?.NotifyBlobIsFresh(blobPath, arrivedAtMs) ?? Task.CompletedTask;
 		}
@@ -152,6 +184,7 @@ namespace Buzzware.Cascade {
     /// Manages storage differently depending on whether it's a Blob operation, single model, or a query collection.
     /// </summary>
     /// <param name="opResponse">The response of an operation that provides details about what to store.</param>
+    /// <returns>The given opResponse, possibly modified by the blob cache for blob operations.</returns>
 		public async Task<OpResponse> Store(OpResponse opResponse) {
 			long arrivedAt = opResponse.ArrivedAtMs ?? Cascade.NowMs;
 

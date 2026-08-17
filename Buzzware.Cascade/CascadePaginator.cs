@@ -14,6 +14,7 @@ namespace Buzzware.Cascade {
   /// mechanisms to query, clear, and manage state associated with pagination such as
   /// the highest page queried and whether the last page has been fully loaded.
   /// </summary>
+  /// <typeparam name="Model">The model class being paginated.</typeparam>
   public abstract class CascadePaginator<Model> where Model : class {
     /// <summary>
     /// Stores a set of queried page numbers to keep track of what has been loaded.
@@ -123,6 +124,11 @@ namespace Buzzware.Cascade {
       return CollectionNameForPage(CollectionPrefix, page);
     }
 
+    /// <summary>
+    /// Checks the cached page collections consecutively from page 0 for expiry against the fallback freshness configured for the Model type.
+    /// Stops at the first page with no recorded arrival time.
+    /// </summary>
+    /// <returns>True if any consecutively cached page collection has expired, otherwise false.</returns>
     public async Task<bool> HasAnyPageExpired() {
       var fallbackSeconds = Cascade.Config.GetFallbackFreshnessSeconds(typeof(Model));
       var nowMs = Cascade.NowMs;
@@ -151,6 +157,7 @@ namespace Buzzware.Cascade {
     /// Queries a specific page of data using the CascadeDataLayer and updates the state regarding loaded pages.
     /// </summary>
     /// <param name="page">The page number of the data to be queried.</param>
+    /// <param name="freshnessSeconds">Optional freshness override in seconds; defaults to the paginator's FreshnessSeconds.</param>
     /// <returns>An IEnumerable of Model containing the data for the specified page.</returns>
     public async Task<IEnumerable<Model>> Query(int page, int? freshnessSeconds = null) {
       Log.Debug($"BEGIN Paginator Query page {page}");
@@ -184,6 +191,11 @@ namespace Buzzware.Cascade {
       }
     }
 
+    /// <summary>
+    /// Queries pages sequentially from page 0 until an empty page is returned or the last page has been loaded.
+    /// </summary>
+    /// <param name="freshnessSeconds">Optional freshness override in seconds passed to each page query.</param>
+    /// <returns>A list of pages, each a list of Model instances in page order.</returns>
     public async Task<IReadOnlyList<IReadOnlyList<Model>>> QueryAllPages(int? freshnessSeconds = null) {
       var results = new List<IReadOnlyList<Model>>();
       var i = 0;
@@ -199,6 +211,11 @@ namespace Buzzware.Cascade {
       return results;
     }
 
+    /// <summary>
+    /// Reads the cached page collections consecutively from page 0, loading the models for each page's cached ids without contacting the origin.
+    /// Stops at the first missing or empty collection.
+    /// </summary>
+    /// <returns>A list of pages from the cache, each a list of Model instances in page order.</returns>
     public async Task<IReadOnlyList<IReadOnlyList<Model>>> GetAllCached() {
       var results = new List<IReadOnlyList<Model>>();
       var i = 0;
@@ -214,6 +231,10 @@ namespace Buzzware.Cascade {
       return results;
     }
 
+    /// <summary>
+    /// Determines the highest consecutively numbered page, starting from page 0, that has a collection present in the cache.
+    /// </summary>
+    /// <returns>The highest consecutive cached page number, or null if page 0 is not cached.</returns>
     public async Task<int?> HighestPageNumberInCache() {
       var i = 0;
       int? highest = null;
@@ -251,10 +272,10 @@ namespace Buzzware.Cascade {
     }
 
     /// <summary>
-    /// Refreshes the cached data in the collections for all the queried pages with a specified freshness.
-    /// The method is currently commented out but indicates where the logic would ordinarily be implemented.
+    /// Intended to refresh the cached data for all queried pages with the specified freshness.
+    /// Currently a no-op: the implementation is commented out.
     /// </summary>
-    /// <param name="freshnessSeconds">The freshness parameter indicating the number of seconds for the data to consider being fresh on query.</param>
+    /// <param name="freshnessSeconds">The number of seconds for the data to be considered fresh on query.</param>
     public async Task Refresh(int freshnessSeconds = 0) {
       // foreach (var page in queriedPages) {
       // 	await Query(page, freshnessSeconds);
