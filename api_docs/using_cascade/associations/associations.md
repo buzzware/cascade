@@ -152,7 +152,7 @@ supplied `IPropertyConverter` implementation, optionally with arguments. Like th
 the property is set when populated (it is not serialized).
 
 > Note: This pattern below is no longer recommended because it probably means keeping blobs in memory long-term. 
-> See [Blobs In Depth](../blobs_in_depth.md)
+> See [Blobs In Depth](@ref blobs_in_depth)
 
 
 ```csharp

@@ -61,8 +61,7 @@ is an unproductive waste of memory.
 
 A better approach is to keep the path on a model, set up `BlobFileCache`, and use 
 `cascade.BlobGetFilePath(model.image_path)` 
-to get a file system path that can be handed to UI components to load and show that blob. 
-See [Blobs In Depth](../blobs_in_depth.md)
+to get a file system path that can be handed to UI components to load and show that blob.
 
 Beware that the absolute file system path returned by `cascade.BlobGetFilePath` should not be persisted long term because 
 mobile platform such as iOS and Android provide ethereal container paths to apps, which are unstable and should only be 
